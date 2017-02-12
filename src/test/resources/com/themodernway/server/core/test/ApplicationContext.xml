@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/*
+ * Copyright (c) 2017, The Modern Way. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="BootstrapStringCryptoProvider" class="com.themodernway.server.core.security.BootstrapStringCryptoProvider">
+		<constructor-arg>
+			<value>file:/opt/properties/ahome-tooling-server-core/crypto.properties</value>
+		</constructor-arg>
+	</bean>
+
+	<bean id="PropertiesProvider" class="com.themodernway.server.core.support.spring.CoreEncryptedPropertiesProviderPlaceholderConfigurer">
+		<constructor-arg ref="BootstrapStringCryptoProvider"/>
+		<constructor-arg value="0xCAFEBABE;"/>
+		<property name="locations">
+			<list>
+				<value>file:/opt/properties/ahome-tooling-server-core/webapp.properties</value>
+				<value>file:/opt/properties/ahome-tooling-server-core/pubsub.properties</value>
+				<value>file:/opt/properties/ahome-tooling-server-core/jmxapp.properties</value>
+				<value>file:/opt/properties/ahome-tooling-server-core/psql93.properties</value>
+				<value>file:/opt/properties/ahome-tooling-server-core/mongod.properties</value>
+				<value>file:/opt/properties/ahome-tooling-server-core/hazelc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="ScriptingProvider" class="com.themodernway.server.core.scripting.ScriptingProvider" destroy-method="close">
+		<constructor-arg>
+			<list>
+				<bean class="com.themodernway.server.core.scripting.GroovyScriptingProperties"/>
+				<bean class="com.themodernway.server.core.scripting.JavaScriptScriptingProperties"/>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+</beans>

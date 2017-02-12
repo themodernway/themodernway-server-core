@@ -1,0 +1,13 @@
+---
+type: "API"
+active: true
+versions:
+- 1
+- 2
+- 3
+- false
+pojo:
+  name: "Rosaria"
+  cost: 100.0
+  time: 1461534127049
+list: []

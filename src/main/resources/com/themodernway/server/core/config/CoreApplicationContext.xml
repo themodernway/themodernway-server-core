@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/*
+ * Copyright (c) 2017, The Modern Way. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="CoreBuildDescriptor" class="com.themodernway.server.core.support.spring.BuildDescriptor">
+		<constructor-arg value="@GRADLE_BUILD_PROJECT_TITLE@"/>
+		<property name="buildUser">
+			<value><![CDATA[@GRADLE_BUILD_USER@]]></value>
+		</property>
+		<property name="buildDate" value="@GRADLE_BUILD_DATE@"/>
+		<property name="javaVersion" value="@GRADLE_JAVA_VERSION@"/>
+		<property name="buildGITCommitHash" value="@GRADLE_GIT_COMMIT_HASH@"/>
+		<property name="buildGITCommitUser">
+			<value><![CDATA[@GRADLE_GIT_COMMIT_USER@]]></value>
+		</property>
+		<property name="buildGITCommitMessage">
+			<value><![CDATA[@GRADLE_GIT_COMMIT_MESSAGE@]]></value>
+		</property>
+		<property name="buildServerHost" value="@GRADLE_BUILD_SERVER_HOST@"/>
+		<property name="buildServerBuild" value="@GRADLE_BUILD_SERVER_BUILD@"/>
+		<property name="buildModuleVersion" value="@GRADLE_BUILD_ARTIFACT_ID@-@GRADLE_BUILD_MODULE_VERSION@.jar"/>
+	</bean>
+		
+	<bean id="CorePropertiesResolver" class="com.themodernway.server.core.support.spring.CorePropertiesResolver" destroy-method="close"/>
+
+	<bean id="BuildDescriptorProvider" class="com.themodernway.server.core.support.spring.BuildDescriptorProvider" destroy-method="close"/>
+
+	<bean id="JMXAgent" class="com.themodernway.server.core.jmx.JMXAgent" destroy-method="close">
+		<constructor-arg value="${jmx.init}"/>
+		<constructor-arg value="${jmx.port}"/>
+		<constructor-arg value="${jmx.host}"/>
+		<constructor-arg value="${jmx.pass}"/>
+		<constructor-arg value="${jmx.role}"/>
+	</bean>
+
+	<bean id="CryptoProvider" class="com.themodernway.server.core.security.CryptoProvider" destroy-method="close">
+		<constructor-arg value="${crypto.provider.pass}"/>
+		<constructor-arg value="${crypto.provider.salt}"/>
+		<constructor-arg value="${crypto.provider.signing.pass}"/>
+		<constructor-arg value="${crypto.provider.bcrypt.iters}"/>
+	</bean>
+	
+	<bean id="NetworkProvider" class="com.themodernway.server.core.support.spring.network.CoreNetworkProvider" destroy-method="close"/>
+	
+	<bean id="WebSocketServiceProvider" class="com.themodernway.server.core.support.spring.network.websocket.WebSocketServiceProvider" destroy-method="close"/>
+
+	<bean id="SignatoryProvider" class="com.themodernway.server.core.security.SignatoryProvider" destroy-method="close"/>
+
+	<bean id="ServerSessionRepositoryProvider" class="com.themodernway.server.core.security.session.ServerSessionRepositoryProvider" destroy-method="close"/>
+	
+	<bean id="ServletContextCustomizerProvider" class="com.themodernway.server.core.support.spring.ServletContextCustomizerProvider" destroy-method="close"/>
+		
+	<context:component-scan base-package="com.themodernway.server.core.jmx"/>
+
+	<context:mbean-export default-domain="${jmx.default.domain}" registration="replaceExisting"/>
+	
+	<context:annotation-config/>
+	
+</beans>

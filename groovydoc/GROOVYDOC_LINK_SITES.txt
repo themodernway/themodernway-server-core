@@ -1,0 +1,13 @@
+https://docs.oracle.com/javase/8/docs/api
+http://docs.groovy-lang.org/docs/groovy-2.4.8/html/gapi
+http://junit.org/junit4/javadoc/latest
+https://logging.apache.org/log4j/1.2/apidocs
+http://hamcrest.org/JavaHamcrest/javadoc/1.3
+http://spockframework.github.io/spock/javadoc/1.0
+http://www.gebish.org/manual/current/api
+http://docs.spring.io/spring/docs/current/javadoc-api
+http://docs.spring.io/spring-security/site/docs/current/apidocs
+http://docs.spring.io/spring-integration/docs/current/api
+http://docs.spring.io/spring-session/docs/1.0.2.RELEASE/api
+https://docs.oracle.com/javaee/6/api
+https://lienzo-core.com/documents/javadoc/ahome-tooling-common

@@ -1,0 +1,9 @@
+x = 1
+public increment_x() {
+	x++
+	println "Groovy value is now ${x}"
+}
+public testargs(def a, def b) {
+	println "Groovy a is now ${a}"
+	println "Groovy b is now ${b}"
+}
