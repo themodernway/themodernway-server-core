@@ -41,7 +41,7 @@ https://lienzo-core.com/documents/reports/themodernway-server-core/checkstyle/
 
 License:
 
-Copyright (c) 2017, Ahome Innovation Technologies. All rights reserved.
+Copyright (c) 2017, The Modern Way. All rights reserved.
 
 The Modern Way Server Core is released under version 2.0 of the Apache License.
 
