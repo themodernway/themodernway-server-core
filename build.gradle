@@ -16,15 +16,6 @@
 
 buildscript {
     repositories {
-        /*
-         maven {
-         credentials {
-         username "${artifactory_user}"
-         password "${artifactory_pass}"
-         }
-         url "${artifactory_repo}"
-         }
-         */
         mavenCentral()
     }
     dependencies {
@@ -117,15 +108,6 @@ jar {
 }
 
 repositories {
-    /*
-     maven {
-     credentials {
-     username "${artifactory_user}"
-     password "${artifactory_pass}"
-     }
-     url "${artifactory_repo}"
-     }
-     */
     mavenCentral()
     maven {
         url "${sonatype_snapshotURL}"
@@ -330,7 +312,7 @@ uploadArchives {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
             //repository(url: "${sonatype_stageingURL}") {
                 repository(url: "${sonatype_snapshotURL}") {
-                authentication(userName: "${sonatype_user}", password: "${sonatype_password}")
+                authentication(userName: "${sonatype_user_tmw}", password: "${sonatype_password_tmw}")
             }
             pom.project {
                 name 'TheModernWay-Server-Core'
