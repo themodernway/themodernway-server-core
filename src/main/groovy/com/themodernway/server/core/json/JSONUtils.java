@@ -28,9 +28,12 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.themodernway.server.core.io.NoCloseProxyWriter;
 import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
 import com.themodernway.server.core.json.binder.JSONBinder;
 
@@ -65,6 +68,8 @@ public final class JSONUtils
     private final static BigInteger                     BIG_INT_DEC_MIN = BIG_DECIMAL_MIN.toBigInteger();
 
     private final static int                            INDENT_ADDED    = 4;
+
+    private static final ObjectMapper                   MAPPER          = new ObjectMapper();
 
     private static final LinkedHashMap<Integer, String> INDENT_CACHE    = new LinkedHashMap<Integer, String>();
 
@@ -311,6 +316,11 @@ public final class JSONUtils
             }
         }
         return lineno;
+    }
+
+    static final void writeObjectAsJSON(final Writer out, final Object object) throws IOException
+    {
+        MAPPER.writeValue(new NoCloseProxyWriter(Objects.requireNonNull(out)), Objects.requireNonNull(object));
     }
 
     public static final void writeJSONString(final Object value, final Writer out, final IJSONContext context, final boolean strict) throws IOException

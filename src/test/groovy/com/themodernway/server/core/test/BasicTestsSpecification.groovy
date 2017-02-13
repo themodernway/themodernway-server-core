@@ -401,7 +401,7 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         j.toString() == b.toString()
     }
     
-    def "Time Tiger JSON out"() {
+    def "Time Tiger JSON out strict true"() {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
         def j = new JSONParser().parse(r)
@@ -409,6 +409,51 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         def w = new NoOpWriter()
         for(int i = 0; i < 5000; i++) {
             j.writeJSONString(w, true)
+        }
+        println t.toString() + " Time Tiger JSON out"
+
+        expect:
+        "dean" == "dean"
+    }
+    
+    def "Time Tiger JSON out strict false"() {
+        setup:
+        def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
+        def j = new JSONParser().parse(r)
+        def t = new NanoTimer()
+        def w = new NoOpWriter()
+        for(int i = 0; i < 5000; i++) {
+            j.writeJSONString(w, false)
+        }
+        println t.toString() + " Time Tiger JSON out"
+
+        expect:
+        "dean" == "dean"
+    }
+    
+    def "Time Tiny JSON out strict true"() {
+        setup:
+        def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
+        def j = new JSONParser().parse(r)
+        def t = new NanoTimer()
+        def w = new NoOpWriter()
+        for(int i = 0; i < 5000; i++) {
+            j.writeJSONString(w, true)
+        }
+        println t.toString() + " Time Tiger JSON out"
+
+        expect:
+        "dean" == "dean"
+    }
+    
+    def "Time Tiny JSON out strict false"() {
+        setup:
+        def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
+        def j = new JSONParser().parse(r)
+        def t = new NanoTimer()
+        def w = new NoOpWriter()
+        for(int i = 0; i < 5000; i++) {
+            j.writeJSONString(w, false)
         }
         println t.toString() + " Time Tiger JSON out"
 

@@ -33,9 +33,9 @@ import com.ait.tooling.common.api.json.JSONType;
 
 public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {
-    private static final String NULL_FOR_OUTPUT  = "null".intern();
+    private static final String       NULL_FOR_OUTPUT  = "null".intern();
 
-    private static final long   serialVersionUID = 928145403133304801L;
+    private static final long         serialVersionUID = 928145403133304801L;
 
     public JSONArray()
     {
@@ -171,25 +171,46 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public void writeJSONString(final Writer out) throws IOException
     {
-        writeJSONString(this, out, null, false);
+        JSONUtils.writeObjectAsJSON(out, this);
     }
 
     @Override
     public void writeJSONString(final Writer out, final boolean strict) throws IOException
     {
-        writeJSONString(this, out, null, strict);
+        if (false == strict)
+        {
+            JSONUtils.writeObjectAsJSON(out, this);
+        }
+        else
+        {
+            writeJSONString(this, out, null, strict);
+        }
     }
 
     @Override
     public void writeJSONString(final Writer out, final IJSONContext context) throws IOException
     {
-        writeJSONString(this, out, context, false);
+        if (null == context)
+        {
+            JSONUtils.writeObjectAsJSON(out, this);
+        }
+        else
+        {
+            writeJSONString(this, out, context, false);
+        }
     }
 
     @Override
     public void writeJSONString(final Writer out, final IJSONContext context, final boolean strict) throws IOException
     {
-        writeJSONString(this, out, context, strict);
+        if ((false == strict) && (null == context))
+        {
+            JSONUtils.writeObjectAsJSON(out, this);
+        }
+        else
+        {
+            writeJSONString(this, out, context, strict);
+        }
     }
 
     @Override
