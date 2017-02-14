@@ -36,11 +36,11 @@ import com.themodernway.server.core.json.binder.JSONBinder;
 
 public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {
-    private static final long         serialVersionUID = -6811236788038367702L;
+    private static final long   serialVersionUID = -6811236788038367702L;
 
-    private static final String       NULL_FOR_OUTPUT  = "null".intern();
+    private static final String NULL_FOR_OUTPUT  = "null".intern();
 
-    private static final char[]       FLUSH_KEY_ARRAY  = { '"', ':' };
+    private static final char[] FLUSH_KEY_ARRAY  = { '"', ':' };
 
     public JSONObject()
     {
@@ -96,46 +96,55 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
     static final void writeJSONString(final Map<?, ?> map, final Writer out, final IJSONContext context, final boolean strict) throws IOException
     {
-        // Caution - DO NOT make the mistake that this would be faster iterating through the keys - keys is twice as slow!  DSJ
-
-        boolean first = true;
-
-        @SuppressWarnings("unchecked")
-        final Iterator<Entry<String, Object>> iter = ((Map<String, Object>) map).entrySet().iterator();
-
-        out.write('{');
-
-        while (iter.hasNext())
+        if (null == map)
         {
-            final Entry<String, Object> entry = iter.next();
+            out.write(NULL_FOR_OUTPUT);
 
-            final String name = entry.getKey();
-
-            final Object valu = entry.getValue();
-
-            if (first)
-            {
-                first = false;
-            }
-            else
-            {
-                out.write(',');
-            }
-            out.write('\"');
-
-            JSONUtils.escape(name, out);
-
-            out.write(FLUSH_KEY_ARRAY, 0, 2);
-
-            if (null == valu)
-            {
-                out.write(NULL_FOR_OUTPUT);
-
-                continue;
-            }
-            JSONUtils.writeJSONString(valu, out, context, strict);
+            return;
         }
-        out.write('}');
+        synchronized (map)
+        {
+            // Caution - DO NOT make the mistake that this would be faster iterating through the keys - keys is twice as slow!  DSJ
+
+            boolean first = true;
+
+            @SuppressWarnings("unchecked")
+            final Iterator<Entry<String, Object>> iter = ((Map<String, Object>) map).entrySet().iterator();
+
+            out.write('{');
+
+            while (iter.hasNext())
+            {
+                final Entry<String, Object> entry = iter.next();
+
+                final String name = entry.getKey();
+
+                final Object valu = entry.getValue();
+
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    out.write(',');
+                }
+                out.write('\"');
+
+                JSONUtils.escape(name, out);
+
+                out.write(FLUSH_KEY_ARRAY, 0, 2);
+
+                if (null == valu)
+                {
+                    out.write(NULL_FOR_OUTPUT);
+
+                    continue;
+                }
+                JSONUtils.writeJSONString(valu, out, context, strict);
+            }
+            out.write('}');
+        }
     }
 
     @Override
@@ -389,19 +398,19 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     }
 
     @Override
-    public synchronized String toString()
+    public String toString()
     {
         return toJSONString();
     }
 
     @Override
-    public synchronized String toJSONString()
+    public String toJSONString()
     {
-        return JSONUtils.toJSONString(this, false);
+        return toJSONString(false);
     }
 
     @Override
-    public synchronized String toJSONString(final boolean strict)
+    public String toJSONString(final boolean strict)
     {
         return JSONUtils.toJSONString(this, strict);
     }

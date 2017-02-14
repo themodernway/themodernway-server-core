@@ -437,10 +437,10 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         def j = new JSONParser().parse(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 10000; i++) {
             j.writeJSONString(w, true)
         }
-        println t.toString() + " Time Tiger JSON out"
+        println t.toString() + " Time Tiny JSON out true"
 
         expect:
         "dean" == "dean"
@@ -452,10 +452,70 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         def j = new JSONParser().parse(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 10000; i++) {
             j.writeJSONString(w, false)
         }
-        println t.toString() + " Time Tiger JSON out"
+        println t.toString() + " Time Tiny JSON out false"
+
+        expect:
+        "dean" == "dean"
+    }
+    
+    def "Time Tiny JSON string strict true"() {
+        setup:
+        def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
+        def j = new JSONParser().parse(r)
+        def t = new NanoTimer()
+        def w = new NoOpWriter()
+        for(int i = 0; i < 10000; i++) {
+            j.toJSONString(true)
+        }
+        println t.toString() + " Time Tiny JSON string true"
+
+        expect:
+        "dean" == "dean"
+    }
+    
+    def "Time Tiny JSON string strict false"() {
+        setup:
+        def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
+        def j = new JSONParser().parse(r)
+        def t = new NanoTimer()
+        def w = new NoOpWriter()
+        for(int i = 0; i < 10000; i++) {
+            def s = j.toJSONString(false)
+        }
+        println t.toString() + " Time Tiny JSON string false"
+
+        expect:
+        "dean" == "dean"
+    }
+    
+    def "Time Tiger JSON string strict true"() {
+        setup:
+        def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
+        def j = new JSONParser().parse(r)
+        def t = new NanoTimer()
+        def w = new NoOpWriter()
+        for(int i = 0; i < 10000; i++) {
+            j.toJSONString(true)
+        }
+        println t.toString() + " Time Tiger JSON string true"
+
+        expect:
+        "dean" == "dean"
+    }
+    
+    def "Time Tiger JSON string strict false"() {
+        setup:
+        def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
+        def j = new JSONParser().parse(r)
+        def t = new NanoTimer()
+        def w = new NoOpWriter()
+        for(int i = 0; i < 10000; i++) {
+            def s = j.toJSONString(false)
+        }
+        println t.toString() + " Time Tiger JSON string false"
 
         expect:
         "dean" == "dean"

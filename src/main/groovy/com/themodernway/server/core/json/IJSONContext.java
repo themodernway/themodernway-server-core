@@ -16,13 +16,16 @@
 
 package com.themodernway.server.core.json;
 
+import com.themodernway.server.core.lang.ThreadLocalDateFormat;
+import com.themodernway.server.core.lang.ThreadLocalNumberFormat;
+
 public interface IJSONContext extends IJSONReplacerUtil
 {
     public IJSONObjectReplacer getObjectReplacer();
 
     public IJSONArrayReplacer getArrayReplacer();
 
-    public JSONDateFormatter getDateFormatter();
+    public ThreadLocalDateFormat getDateFormatter();
 
-    public JSONNumberFormatter getNumberFormatter();
+    public ThreadLocalNumberFormat getNumberFormatter();
 }

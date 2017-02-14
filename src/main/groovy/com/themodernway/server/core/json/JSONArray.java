@@ -33,9 +33,9 @@ import com.ait.tooling.common.api.json.JSONType;
 
 public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {
-    private static final String       NULL_FOR_OUTPUT  = "null".intern();
+    private static final String NULL_FOR_OUTPUT  = "null".intern();
 
-    private static final long         serialVersionUID = 928145403133304801L;
+    private static final long   serialVersionUID = 928145403133304801L;
 
     public JSONArray()
     {
@@ -102,33 +102,42 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
 
     static final void writeJSONString(final List<?> list, final Writer out, final IJSONContext context, final boolean strict) throws IOException
     {
-        boolean first = true;
-
-        final int size = list.size();
-
-        out.write('[');
-
-        for (int i = 0; i < size; i++)
+        if (null == list)
         {
-            Object valu = list.get(i);
+            out.write(NULL_FOR_OUTPUT);
 
-            if (first)
-            {
-                first = false;
-            }
-            else
-            {
-                out.write(',');
-            }
-            if (null == valu)
-            {
-                out.write(NULL_FOR_OUTPUT);
-
-                continue;
-            }
-            JSONUtils.writeJSONString(valu, out, context, strict);
+            return;
         }
-        out.write(']');
+        synchronized (list)
+        {
+            boolean first = true;
+
+            final int size = list.size();
+
+            out.write('[');
+
+            for (int i = 0; i < size; i++)
+            {
+                Object valu = list.get(i);
+
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    out.write(',');
+                }
+                if (null == valu)
+                {
+                    out.write(NULL_FOR_OUTPUT);
+
+                    continue;
+                }
+                JSONUtils.writeJSONString(valu, out, context, strict);
+            }
+            out.write(']');
+        }
     }
 
     static final void writeJSONString(final Collection<?> list, final Writer out, final IJSONContext context, final boolean strict) throws IOException
@@ -139,33 +148,36 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
 
             return;
         }
-        boolean first = true;
-
-        final Iterator<?> iter = list.iterator();
-
-        out.write('[');
-
-        while (iter.hasNext())
+        synchronized (list)
         {
-            final Object valu = iter.next();
+            boolean first = true;
 
-            if (first)
-            {
-                first = false;
-            }
-            else
-            {
-                out.write(',');
-            }
-            if (null == valu)
-            {
-                out.write(NULL_FOR_OUTPUT);
+            final Iterator<?> iter = list.iterator();
 
-                continue;
+            out.write('[');
+
+            while (iter.hasNext())
+            {
+                final Object valu = iter.next();
+
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    out.write(',');
+                }
+                if (null == valu)
+                {
+                    out.write(NULL_FOR_OUTPUT);
+
+                    continue;
+                }
+                JSONUtils.writeJSONString(valu, out, context, strict);
             }
-            JSONUtils.writeJSONString(valu, out, context, strict);
+            out.write(']');
         }
-        out.write(']');
     }
 
     @Override
@@ -338,21 +350,21 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     }
 
     @Override
-    public synchronized String toJSONString()
-    {
-        return JSONUtils.toJSONString(this, false);
-    }
-
-    @Override
-    public synchronized String toJSONString(final boolean strict)
-    {
-        return JSONUtils.toJSONString(this, strict);
-    }
-
-    @Override
-    public synchronized String toString()
+    public String toString()
     {
         return toJSONString();
+    }
+
+    @Override
+    public String toJSONString()
+    {
+        return toJSONString(false);
+    }
+
+    @Override
+    public String toJSONString(final boolean strict)
+    {
+        return JSONUtils.toJSONString(this, strict);
     }
 
     @Override

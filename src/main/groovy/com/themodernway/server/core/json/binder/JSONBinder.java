@@ -55,7 +55,7 @@ public class JSONBinder extends AbstractDataBinder
 
         try
         {
-            if (object instanceof JSONObject)
+            if ((isStrict()) && (object instanceof JSONObject))
             {
                 final Writer writer = new FileWriter(file);
 
@@ -81,7 +81,7 @@ public class JSONBinder extends AbstractDataBinder
 
         try
         {
-            if (object instanceof JSONObject)
+            if ((isStrict()) && (object instanceof JSONObject))
             {
                 ((JSONObject) object).writeJSONString(new OutputStreamWriter(stream), isStrict());
             }
@@ -103,7 +103,7 @@ public class JSONBinder extends AbstractDataBinder
 
         try
         {
-            if (object instanceof JSONObject)
+            if ((isStrict()) && (object instanceof JSONObject))
             {
                 ((JSONObject) object).writeJSONString(writer, isStrict());
             }

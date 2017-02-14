@@ -16,15 +16,18 @@
 
 package com.themodernway.server.core.json;
 
+import com.themodernway.server.core.lang.ThreadLocalDateFormat;
+import com.themodernway.server.core.lang.ThreadLocalNumberFormat;
+
 public class JSONContext implements IJSONContext
 {
-    private IJSONObjectReplacer m_obreplacer;
+    private IJSONObjectReplacer     m_obreplacer;
 
-    private IJSONArrayReplacer  m_arreplacer;
+    private IJSONArrayReplacer      m_arreplacer;
 
-    private JSONDateFormatter   m_dformatter;
+    private ThreadLocalDateFormat   m_dformatter;
 
-    private JSONNumberFormatter m_nformatter;
+    private ThreadLocalNumberFormat m_nformatter;
 
     public JSONContext()
     {
@@ -68,12 +71,12 @@ public class JSONContext implements IJSONContext
     }
 
     @Override
-    public JSONDateFormatter getDateFormatter()
+    public ThreadLocalDateFormat getDateFormatter()
     {
         return m_dformatter;
     }
 
-    public JSONContext setDateFormatter(final JSONDateFormatter formatter)
+    public JSONContext setDateFormatter(final ThreadLocalDateFormat formatter)
     {
         m_dformatter = formatter;
 
@@ -81,12 +84,12 @@ public class JSONContext implements IJSONContext
     }
 
     @Override
-    public JSONNumberFormatter getNumberFormatter()
+    public ThreadLocalNumberFormat getNumberFormatter()
     {
         return m_nformatter;
     }
 
-    public JSONContext setNumberFormatter(final JSONNumberFormatter formatter)
+    public JSONContext setNumberFormatter(final ThreadLocalNumberFormat formatter)
     {
         m_nformatter = formatter;
 

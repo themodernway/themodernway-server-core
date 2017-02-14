@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.themodernway.server.core.io.NoCloseProxyWriter;
 import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
 import com.themodernway.server.core.json.binder.JSONBinder;
+import com.themodernway.server.core.lang.ThreadLocalDateFormat;
 
 public final class JSONUtils
 {
@@ -92,6 +93,10 @@ public final class JSONUtils
         if (null == value)
         {
             return NULL_FOR_OUTPUT;
+        }
+        if ((false == strict) && (null == context))
+        {
+            return writeObjectAsJSONString(value);
         }
         final NoSyncStringBuilderWriter out = new NoSyncStringBuilderWriter();
 
@@ -323,6 +328,22 @@ public final class JSONUtils
         MAPPER.writeValue(new NoCloseProxyWriter(Objects.requireNonNull(out)), Objects.requireNonNull(object));
     }
 
+    static final String writeObjectAsJSONString(final Object object)
+    {
+        try
+        {
+            return MAPPER.writeValueAsString(Objects.requireNonNull(object));
+        }
+        catch (NullPointerException n)
+        {
+            throw n;
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static final void writeJSONString(final Object value, final Writer out, final IJSONContext context, final boolean strict) throws IOException
     {
         if (null == value)
@@ -485,7 +506,7 @@ public final class JSONUtils
         }
         if (null != context)
         {
-            final JSONDateFormatter formatter = context.getDateFormatter();
+            final ThreadLocalDateFormat formatter = context.getDateFormatter();
 
             if (null != formatter)
             {
