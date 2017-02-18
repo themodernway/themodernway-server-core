@@ -26,7 +26,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import com.ait.tooling.common.api.java.util.StringOps;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
 import wslite.soap.SOAPClient;

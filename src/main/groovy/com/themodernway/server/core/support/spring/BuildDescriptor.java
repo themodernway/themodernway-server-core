@@ -16,7 +16,7 @@
 
 package com.themodernway.server.core.support.spring;
 
-import com.ait.tooling.common.api.java.util.StringOps;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
 public final class BuildDescriptor implements IBuildDescriptor

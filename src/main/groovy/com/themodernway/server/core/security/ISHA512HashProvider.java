@@ -16,7 +16,7 @@
 
 package com.themodernway.server.core.security;
 
-import com.ait.tooling.common.api.hash.IHasher;
+import com.themodernway.common.api.hash.IHasher;
 
 public interface ISHA512HashProvider extends IHasher
 {

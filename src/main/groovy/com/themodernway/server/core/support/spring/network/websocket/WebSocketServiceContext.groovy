@@ -18,7 +18,7 @@ package com.themodernway.server.core.support.spring.network.websocket
 
 import javax.websocket.Session
 
-import com.ait.tooling.common.api.java.util.StringOps
+import com.themodernway.common.api.java.util.StringOps
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
 

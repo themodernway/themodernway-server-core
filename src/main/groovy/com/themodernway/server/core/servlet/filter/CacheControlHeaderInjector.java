@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import com.ait.tooling.common.api.java.util.StringOps;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
 public class CacheControlHeaderInjector implements IHeaderInjector

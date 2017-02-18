@@ -34,7 +34,7 @@ import javax.script.ScriptEngineManager;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
-import com.ait.tooling.common.api.java.util.StringOps;
+import com.themodernway.common.api.java.util.StringOps;
 
 public class ScriptingProvider implements IScriptingProvider
 {

@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ait.tooling.common.api.json.JSONArrayDefinition;
-import com.ait.tooling.common.api.json.JSONType;
+import com.themodernway.common.api.json.JSONArrayDefinition;
+import com.themodernway.common.api.json.JSONType;
 
 public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {

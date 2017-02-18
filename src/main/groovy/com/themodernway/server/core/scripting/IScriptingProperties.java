@@ -19,7 +19,7 @@ package com.themodernway.server.core.scripting;
 import java.io.Closeable;
 import java.util.Properties;
 
-import com.ait.tooling.common.api.types.IActivatable;
+import com.themodernway.common.api.types.IActivatable;
 
 public interface IScriptingProperties extends IActivatable, Closeable
 {

@@ -18,7 +18,7 @@ package com.themodernway.server.core.support.spring;
 
 import java.util.Arrays;
 
-import com.ait.tooling.common.api.java.util.IHTTPConstants;
+import com.themodernway.common.api.java.util.IHTTPConstants;
 
 public final class DefaultPrincipalsKeysProvider extends AbstractPrincipalsKeysProvider implements IHTTPConstants
 {

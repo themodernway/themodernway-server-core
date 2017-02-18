@@ -21,7 +21,7 @@ import java.util.Map;
 
 import javax.websocket.Session;
 
-import com.ait.tooling.common.api.types.IIdentified;
+import com.themodernway.common.api.types.IIdentified;
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
 

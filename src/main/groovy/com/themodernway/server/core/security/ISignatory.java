@@ -23,7 +23,7 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-import com.ait.tooling.common.api.types.INamed;
+import com.themodernway.common.api.types.INamed;
 
 public interface ISignatory extends INamed
 {

@@ -22,8 +22,8 @@ import java.util.Objects;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
-import com.ait.tooling.common.api.hash.Hasher;
-import com.ait.tooling.common.api.java.util.IHTTPConstants;
+import com.themodernway.common.api.hash.Hasher;
+import com.themodernway.common.api.java.util.IHTTPConstants;
 
 public final class SimpleSHA512HashProvider implements ISHA512HashProvider
 {

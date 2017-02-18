@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.springframework.util.DefaultPropertiesPersister;
 import org.springframework.util.PropertiesPersister;
 
-import com.ait.tooling.common.api.java.util.StringOps;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.logging.ICoreLoggingOperations;
 import com.themodernway.server.core.security.IStringCryptoProvider;
 

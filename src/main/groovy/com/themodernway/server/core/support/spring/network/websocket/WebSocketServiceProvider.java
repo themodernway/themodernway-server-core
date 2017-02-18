@@ -34,7 +34,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
-import com.ait.tooling.common.api.types.INamedType;
+import com.themodernway.common.api.types.INamedType;
 
 public class WebSocketServiceProvider implements IWebSocketServiceProvider, BeanFactoryAware
 {

@@ -18,8 +18,8 @@ package com.themodernway.server.core.support.spring.network.websocket
 
 import org.springframework.stereotype.Service
 
-import com.ait.tooling.common.api.java.util.StringOps
-import com.ait.tooling.common.api.types.INamedType
+import com.themodernway.common.api.java.util.StringOps
+import com.themodernway.common.api.types.INamedType
 import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.support.CoreGroovySupport
 

@@ -42,7 +42,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.0.0-RC2'
+version = '1.0.0-RC3'
 
 group = 'com.themodernway'
 
@@ -217,7 +217,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.ahome-it', name: 'ahome-tooling-common', version: '2.0.7-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.0.0-RC3')
     compile(group: 'org.ow2.asm', name: 'asm', version: '5.1')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')

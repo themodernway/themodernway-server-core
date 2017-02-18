@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.springframework.session.ExpiringSession;
 
-import com.ait.tooling.common.api.json.JSONStringify;
+import com.themodernway.common.api.json.JSONStringify;
 import com.themodernway.server.core.json.JSONObject;
 
 public interface IServerSession extends ExpiringSession, JSONStringify, Serializable

@@ -16,8 +16,8 @@
 
 package com.themodernway.server.core.json.binder;
 
-import com.ait.tooling.common.api.java.util.StringOps;
-import com.ait.tooling.common.api.types.IStringValued;
+import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.common.api.types.IStringValued;
 
 public enum BinderType implements IStringValued
 {

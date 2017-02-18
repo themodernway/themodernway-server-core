@@ -30,8 +30,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import com.ait.tooling.common.api.json.JSONObjectDefinition;
-import com.ait.tooling.common.api.json.JSONType;
+import com.themodernway.common.api.json.JSONObjectDefinition;
+import com.themodernway.common.api.json.JSONType;
 import com.themodernway.server.core.json.binder.JSONBinder;
 
 public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled

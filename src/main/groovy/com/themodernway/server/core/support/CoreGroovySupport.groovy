@@ -26,7 +26,7 @@ import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.PollableChannel
 import org.springframework.messaging.SubscribableChannel
 
-import com.ait.tooling.common.api.java.util.StringOps
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.jmx.management.ICoreServerManager
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject

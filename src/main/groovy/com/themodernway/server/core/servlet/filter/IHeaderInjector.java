@@ -19,7 +19,7 @@ package com.themodernway.server.core.servlet.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ait.tooling.common.api.java.util.IHTTPConstants;
+import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.server.core.json.JSONObject;
 
 public interface IHeaderInjector extends IHTTPConstants

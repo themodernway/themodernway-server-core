@@ -23,7 +23,7 @@ import javax.websocket.EndpointConfig
 import javax.websocket.PongMessage
 import javax.websocket.Session
 
-import com.ait.tooling.common.api.java.util.StringOps
+import com.themodernway.common.api.java.util.StringOps
 import com.themodernway.server.core.support.CoreGroovySupport
 
 import groovy.transform.CompileStatic

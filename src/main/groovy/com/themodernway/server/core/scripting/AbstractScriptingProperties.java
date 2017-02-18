@@ -24,7 +24,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
-import com.ait.tooling.common.api.types.Activatable;
+import com.themodernway.common.api.types.Activatable;
 
 public abstract class AbstractScriptingProperties extends Activatable implements IScriptingProperties
 {

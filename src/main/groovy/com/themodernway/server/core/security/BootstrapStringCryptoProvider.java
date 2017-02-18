@@ -24,7 +24,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 
-import com.ait.tooling.common.api.java.util.StringOps;
+import com.themodernway.common.api.java.util.StringOps;
 
 public final class BootstrapStringCryptoProvider implements IStringCryptoProvider
 {

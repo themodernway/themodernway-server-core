@@ -18,7 +18,7 @@ package com.themodernway.server.core.support.spring.network.websocket;
 
 import java.io.Closeable;
 
-import com.ait.tooling.common.api.types.INamed;
+import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.json.JSONObject;
 
 public interface IWebSocketService extends INamed, Closeable
