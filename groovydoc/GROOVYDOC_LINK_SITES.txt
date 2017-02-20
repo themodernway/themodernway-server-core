@@ -10,4 +10,4 @@ http://docs.spring.io/spring-security/site/docs/current/apidocs
 http://docs.spring.io/spring-integration/docs/current/api
 http://docs.spring.io/spring-session/docs/1.0.2.RELEASE/api
 https://docs.oracle.com/javaee/6/api
-https://lienzo-core.com/documents/javadoc/ahome-tooling-common
+https://www.themodernway.com/documents/javadoc/themodernway-common
