@@ -25,19 +25,8 @@ dependencies {
 ```
 Javadoc URL:
 
-https://lienzo-core.com/documents/javadoc/themodernway-server-core
+https://www.themodernway.com/documents/javadoc/themodernway-server-core
 
-Latest unit test results:
-
-https://lienzo-core.com/documents/reports/themodernway-server-core/tests/
-
-Latest code coverage results:
-
-https://lienzo-core.com/documents/reports/themodernway-server-core/coverage/
-
-Latest CheckStyle results:
-
-https://lienzo-core.com/documents/reports/themodernway-server-core/checkstyle/
 
 License:
 
