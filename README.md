@@ -27,7 +27,6 @@ Javadoc URL:
 
 https://www.themodernway.com/documents/javadoc/themodernway-server-core
 
-
 License:
 
 Copyright (c) 2017, The Modern Way. All rights reserved.
