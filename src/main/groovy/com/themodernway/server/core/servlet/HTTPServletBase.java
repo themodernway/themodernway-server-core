@@ -34,6 +34,7 @@ import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.locking.IRateLimited;
 import com.themodernway.server.core.security.AuthorizationResult;
+import com.themodernway.server.core.security.session.IServerSession;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
@@ -183,7 +184,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         return principals;
     }
 
-    protected final AuthorizationResult isAuthorized(final Object target, final List<String> roles)
+    protected AuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)
     {
         return getServerContext().isAuthorized(target, roles);
     }
