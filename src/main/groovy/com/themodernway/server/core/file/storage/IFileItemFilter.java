@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.servlet.filter;
+package com.themodernway.server.core.file.storage;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.themodernway.common.api.java.util.IHTTPConstants;
-import com.themodernway.server.core.json.JSONObject;
-
-public interface IHeaderInjector extends IHTTPConstants
+@FunctionalInterface
+public interface IFileItemFilter
 {
-    public void config(JSONObject config);
-    
-    public int inject(HttpServletRequest request, HttpServletResponse response);
+    public boolean accept(IFileItem item, String name);
 }

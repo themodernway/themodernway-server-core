@@ -31,6 +31,7 @@ import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.io.NoCloseProxyInputStream;
 import com.themodernway.server.core.io.NoCloseProxyOutputStream;
 import com.themodernway.server.core.io.NoCloseProxyReader;
@@ -176,13 +177,21 @@ public abstract class AbstractDataBinder implements IBinder
     @Override
     public <T> T bind(final Resource resource, final Class<T> claz) throws ParserException
     {
+        InputStream stream = null;
+
         try
         {
-            return m_mapper.readValue(resource.getInputStream(), claz);
+            stream = resource.getInputStream();
+
+            return m_mapper.readValue(stream, claz);
         }
         catch (Exception e)
         {
             throw new ParserException(e);
+        }
+        finally
+        {
+            IO.close(stream);
         }
     }
 

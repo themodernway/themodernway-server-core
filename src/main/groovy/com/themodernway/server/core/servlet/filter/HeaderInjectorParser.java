@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.parser.JSONParser;
 
@@ -110,6 +111,10 @@ public class HeaderInjectorParser
         catch (Throwable t)
         {
             logger.error("Could not create injectors", t);
+        }
+        finally
+        {
+            IO.close(in);
         }
     }
 }

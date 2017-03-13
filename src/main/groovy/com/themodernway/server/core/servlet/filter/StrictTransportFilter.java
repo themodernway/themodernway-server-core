@@ -19,19 +19,14 @@ package com.themodernway.server.core.servlet.filter;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
-
 public class StrictTransportFilter extends HeaderInjectorFilter
 {
-    private static final Logger logger = Logger.getLogger(StrictTransportFilter.class);
-
     public StrictTransportFilter()
     {
-        logger.info("StrictTransportFilter()");
     }
 
     @Override
-    public void init(final FilterConfig fc) throws ServletException
+    public void doInit(final FilterConfig fc) throws ServletException
     {
         addHeaderInjector(new StrictTransportHeaderInjector());
     }

@@ -65,9 +65,11 @@
 	<bean id="WebSocketServiceProvider" class="com.themodernway.server.core.support.spring.network.websocket.WebSocketServiceProvider" destroy-method="close"/>
 
 	<bean id="SignatoryProvider" class="com.themodernway.server.core.security.SignatoryProvider" destroy-method="close"/>
+	
+	<bean id="FileItemStorageProvider" class="com.themodernway.server.core.file.storage.FileItemStorageProvider" destroy-method="close"/>
 
 	<bean id="ServerSessionRepositoryProvider" class="com.themodernway.server.core.security.session.ServerSessionRepositoryProvider" destroy-method="close"/>
-	
+		
 	<bean id="ServletContextCustomizerProvider" class="com.themodernway.server.core.support.spring.ServletContextCustomizerProvider" destroy-method="close"/>
 		
 	<context:component-scan base-package="com.themodernway.server.core.jmx"/>

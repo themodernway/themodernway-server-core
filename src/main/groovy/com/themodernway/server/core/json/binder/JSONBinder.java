@@ -24,10 +24,9 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.io.IOUtils;
-
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
 
@@ -61,7 +60,9 @@ public class JSONBinder extends AbstractDataBinder
 
                 ((JSONObject) object).writeJSONString(writer, isStrict());
 
-                IOUtils.closeQuietly(writer);
+                writer.flush();
+                
+                IO.close(writer);
             }
             else
             {
@@ -83,7 +84,11 @@ public class JSONBinder extends AbstractDataBinder
         {
             if ((isStrict()) && (object instanceof JSONObject))
             {
-                ((JSONObject) object).writeJSONString(new OutputStreamWriter(stream), isStrict());
+                final Writer writer = new OutputStreamWriter(stream);
+                
+                ((JSONObject) object).writeJSONString(writer, isStrict());
+                
+                writer.flush();
             }
             else
             {

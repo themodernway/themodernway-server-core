@@ -17,8 +17,7 @@
 package com.themodernway.server.core.servlet;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -29,163 +28,118 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.google.common.util.concurrent.RateLimiter;
-import com.themodernway.common.api.java.util.IHTTPConstants;
-import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.locking.IRateLimited;
-import com.themodernway.server.core.security.AuthorizationResult;
-import com.themodernway.server.core.security.session.IServerSession;
-import com.themodernway.server.core.support.spring.IServerContext;
-import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 @SuppressWarnings("serial")
-public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IHTTPConstants
+public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IServletCommonOperations
 {
-    private static final Logger logger                             = Logger.getLogger(HTTPServletBase.class);
+    private Logger      m_logger    = Logger.getLogger(getClass());
 
-    public static final String  SESSION_PROVIDER_DOMAIN_NAME_PARAM = "core.server.session.provider.domain.name";
+    private RateLimiter m_ratelimit = null;
 
-    public static final String  UNKNOWN_USER                       = "%-UNKNOWN-USER-%";
-
-    public static final String  NULL_SESSION                       = "%-NULL-SESSION-%";
-
-    private final RateLimiter   m_ratelimit;
+    private int         m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
     protected HTTPServletBase()
     {
-        m_ratelimit = RateLimiterFactory.create(getClass());
+        setRateLimiter(RateLimiterFactory.create(getClass()));
     }
 
     protected HTTPServletBase(final double rate)
     {
-        m_ratelimit = RateLimiterFactory.create(rate);
+        setRateLimit(rate);
     }
 
     @Override
-    public final void acquire()
+    public String getName()
     {
-        if (null != m_ratelimit)
+        return getServletConfig().getServletName();
+    }
+
+    @Override
+    public Logger logger()
+    {
+        return m_logger;
+    }
+
+    public RateLimiter getRateLimiter()
+    {
+        return m_ratelimit;
+    }
+
+    public void setRateLimiter(final RateLimiter rate)
+    {
+        m_ratelimit = rate;
+    }
+
+    public void setRateLimit(final double rate)
+    {
+        setRateLimiter(RateLimiterFactory.create(rate));
+    }
+
+    @Override
+    public void acquire()
+    {
+        final RateLimiter rate = getRateLimiter();
+
+        if (null != rate)
         {
-            m_ratelimit.acquire();
+            rate.acquire();
         }
     }
 
-    protected String getSessionProviderDomainName()
+    @Override
+    public int getMaxContentTypeLength()
     {
-        return StringOps.toTrimOrElse(getInitParameter(SESSION_PROVIDER_DOMAIN_NAME_PARAM), "default");
+        return m_contentmx;
     }
 
-    protected boolean isRunning()
+    public void setMaxContentTypeLength(final int contentmx)
     {
-        return getServerContext().getCoreServerManager().isRunning();
+        m_contentmx = Math.min(Math.max(0, contentmx), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH);
     }
 
-    protected final static IServerContext getServerContext()
+    @Override
+    public String getConfigurationParameter(final String name)
     {
-        return ServerContextInstance.getServerContextInstance();
+        return getInitParameter(name);
     }
 
-    protected void doNoCache(final HttpServletResponse response)
+    @Override
+    public List<String> getConfigurationParameterNames()
     {
-        final long time = System.currentTimeMillis();
-
-        response.setDateHeader(DATE_HEADER, time);
-
-        response.setDateHeader(EXPIRES_HEADER, time - YEAR_IN_MILLISECONDS);
-
-        response.setHeader(PRAGMA_HEADER, NO_CACHE_PRAGMA_HEADER_VALUE);
-
-        response.setHeader(CACHE_CONTROL_HEADER, NO_CACHE_CONTROL_HEADER_VALUE);
+        return Collections.list(getInitParameterNames());
     }
 
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        if (false == isRunning())
+        try
         {
-            logger.error("server is suspended, refused request");
+            if (false == isRunning())
+            {
+                logger().error("Server is suspended, refused request.");
 
-            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+                response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+
+                return;
+            }
+            if (false == isMaxContentTypeHeaderLengthValid(request, response))
+            {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
+                return;
+            }
+            acquire();
+
+            super.service(request, response);
+        }
+        catch (Exception e)
+        {
+            logger().error("Captured overall exception for security.", e);
+
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
             return;
         }
-        acquire();
-
-        super.service(request, response);
-    }
-
-    public static final LinkedHashMap<String, String> getParametersFromRequest(final HttpServletRequest request)
-    {
-        final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-
-        final Enumeration<String> names = request.getParameterNames();
-
-        while (names.hasMoreElements())
-        {
-            final String name = names.nextElement();
-
-            params.put(name, request.getParameter(name));
-        }
-        return params;
-    }
-
-    public static final JSONObject getJSONParametersFromRequest(final HttpServletRequest request)
-    {
-        return new JSONObject(getParametersFromRequest(request));
-    }
-
-    public static final LinkedHashMap<String, String> getHeadersFromRequest(final HttpServletRequest request)
-    {
-        final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-
-        final Enumeration<String> names = request.getHeaderNames();
-
-        while (names.hasMoreElements())
-        {
-            final String name = names.nextElement();
-
-            params.put(name, request.getHeader(name));
-        }
-        return params;
-    }
-
-    public static final JSONObject getJSONHeadersFromRequest(final HttpServletRequest request)
-    {
-        return new JSONObject(getHeadersFromRequest(request));
-    }
-
-    public static final JSONObject getUserPrincipalsFromRequest(final HttpServletRequest request, final List<String> keys)
-    {
-        final JSONObject principals = new JSONObject();
-
-        for (String k : keys)
-        {
-            final String name = StringOps.toTrimOrNull(k);
-
-            if (null != name)
-            {
-                String valu = request.getHeader(name);
-
-                if (null != valu)
-                {
-                    principals.put(name, valu);
-                }
-                else
-                {
-                    valu = getServerContext().getPropertyByName(name);
-
-                    if (null != valu)
-                    {
-                        principals.put(name, valu);
-                    }
-                }
-            }
-        }
-        return principals;
-    }
-
-    protected AuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)
-    {
-        return getServerContext().isAuthorized(target, roles);
     }
 }

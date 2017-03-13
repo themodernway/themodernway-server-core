@@ -28,40 +28,24 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
-
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.io.IO;
 
-public class HeaderInjectorFilter extends AbstractHTTPFilter
+public class HeaderInjectorFilter extends HTTPFilterBase
 {
-    private static final Logger              logger      = Logger.getLogger(HeaderInjectorFilter.class);
-
     private final ArrayList<IHeaderInjector> m_injectors = new ArrayList<IHeaderInjector>();
 
     public HeaderInjectorFilter()
     {
-        logger.info("HeaderInjectorFilter()");
-    }
-
-    public HeaderInjectorFilter(final IHeaderInjector injector)
-    {
-        this();
-
-        addHeaderInjector(injector);
     }
 
     public HeaderInjectorFilter(final List<IHeaderInjector> injectors)
     {
-        this();
-
         addHeaderInjectors(injectors);
     }
 
     public HeaderInjectorFilter(final IHeaderInjector... injectors)
     {
-        this();
-
         addHeaderInjectors(injectors);
     }
 
@@ -75,8 +59,15 @@ public class HeaderInjectorFilter extends AbstractHTTPFilter
             }
             m_injectors.add(injector);
 
-            logger.info("HeaderInjectorFilter.addHeaderInjector(" + injector.getClass().getName() + ")");
+            logger().info("HeaderInjectorFilter.addHeaderInjector(" + injector.getClass().getName() + ")");
         }
+    }
+
+    public final void setHeaderInjectors(final List<IHeaderInjector> injectors)
+    {
+        m_injectors.clear();
+
+        addHeaderInjectors(injectors);
     }
 
     public final void addHeaderInjectors(final List<IHeaderInjector> injectors)
@@ -88,6 +79,13 @@ public class HeaderInjectorFilter extends AbstractHTTPFilter
                 addHeaderInjector(injector);
             }
         }
+    }
+
+    public final void setHeaderInjectors(final IHeaderInjector... injectors)
+    {
+        m_injectors.clear();
+
+        addHeaderInjectors(injectors);
     }
 
     public final void addHeaderInjectors(final IHeaderInjector... injectors)
@@ -115,11 +113,22 @@ public class HeaderInjectorFilter extends AbstractHTTPFilter
             {
                 try
                 {
-                    injector.inject(request, response);
+                    final int code = injector.inject(request, response);
+
+                    if (code != HttpServletResponse.SC_OK)
+                    {
+                        response.setStatus(code);
+
+                        return;
+                    }
                 }
                 catch (Throwable t)
                 {
-                    logger.error("Could not inject headers " + injector.getClass().getName(), t);
+                    logger().error("Could not inject headers " + injector.getClass().getName(), t);
+
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+                    return;
                 }
             }
         }
@@ -127,7 +136,7 @@ public class HeaderInjectorFilter extends AbstractHTTPFilter
     }
 
     @Override
-    public void init(final FilterConfig fc) throws ServletException
+    public void doInit(final FilterConfig fc) throws ServletException
     {
         try
         {
@@ -147,17 +156,17 @@ public class HeaderInjectorFilter extends AbstractHTTPFilter
                 }
                 catch (Throwable t)
                 {
-                    logger.error("Could not create injectors", t);
+                    logger().error("Could not create injectors", t);
                 }
                 finally
                 {
-                    IOUtils.closeQuietly(in);
+                    IO.close(in);
                 }
             }
         }
         catch (Throwable t)
         {
-            logger.error("Could not create injectors", t);
+            logger().error("Could not create injectors", t);
         }
     }
 }

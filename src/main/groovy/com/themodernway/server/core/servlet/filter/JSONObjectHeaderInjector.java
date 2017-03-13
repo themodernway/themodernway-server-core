@@ -47,18 +47,14 @@ public class JSONObjectHeaderInjector implements IHeaderInjector
         return m_enabled;
     }
 
-    public JSONObjectHeaderInjector setEnabled(final boolean enabled)
+    public void setEnabled(final boolean enabled)
     {
         m_enabled = enabled;
-
-        return this;
     }
 
-    public JSONObjectHeaderInjector setHeaders(final JSONObject headers)
+    public void setHeaders(final JSONObject headers)
     {
         m_headers = headers;
-
-        return this;
     }
 
     public JSONObject getHeaders()
@@ -67,7 +63,7 @@ public class JSONObjectHeaderInjector implements IHeaderInjector
     }
 
     @Override
-    public void inject(final HttpServletRequest request, final HttpServletResponse response)
+    public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
         if (isEnabled())
         {
@@ -78,6 +74,7 @@ public class JSONObjectHeaderInjector implements IHeaderInjector
                 ; // TODO - implement
             }
         }
+        return HttpServletResponse.SC_OK;
     }
 
     @Override

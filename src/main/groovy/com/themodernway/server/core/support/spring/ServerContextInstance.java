@@ -33,8 +33,10 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.SubscribableChannel;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.file.storage.IFileItemStorageProvider;
 import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.JSONUtilitiesInstance;
@@ -87,6 +89,18 @@ public class ServerContextInstance extends JSONUtilitiesInstance implements ISer
     public final ApplicationContext getApplicationContext()
     {
         return Objects.requireNonNull(APPCONTEXT, "ApplicationContext is null, initialization error.");
+    }
+
+    @Override
+    public final WebApplicationContext getWebApplicationContext()
+    {
+        final ApplicationContext context = getApplicationContext();
+
+        if (context instanceof WebApplicationContext)
+        {
+            return (WebApplicationContext) context;
+        }
+        return null;
     }
 
     @Override
@@ -214,6 +228,12 @@ public class ServerContextInstance extends JSONUtilitiesInstance implements ISer
         logger().trace("Using PrincipalsKeysProvider default " + DEFAULT_KEYS.getClass().getName());
 
         return DEFAULT_KEYS.getPrincipalsKeys();
+    }
+
+    @Override
+    public final IFileItemStorageProvider getFileItemStorageProvider()
+    {
+        return Objects.requireNonNull(getBeanSafely("FileItemStorageProvider", IFileItemStorageProvider.class), "FileItemStorageProvider is null, initialization error.");
     }
 
     @Override

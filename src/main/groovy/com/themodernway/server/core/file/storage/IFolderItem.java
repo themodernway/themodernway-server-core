@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.servlet.filter;
+package com.themodernway.server.core.file.storage;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.stream.Stream;
 
-import com.themodernway.common.api.java.util.IHTTPConstants;
-import com.themodernway.server.core.json.JSONObject;
+import org.springframework.core.io.Resource;
 
-public interface IHeaderInjector extends IHTTPConstants
-{
-    public void config(JSONObject config);
+public interface IFolderItem extends IFileItem
+{    
+    public Stream<IFileItem> items();
+
+    public Stream<IFileItem> items(IFileItemFilter filter);
+
+    public IFileItem find(String name);
     
-    public int inject(HttpServletRequest request, HttpServletResponse response);
+    public IFileItem file(String name);
+    
+    public IFileItem create(String name, Resource resource) throws IOException;
+
+    public IFileItem create(String name, InputStream input) throws IOException;
 }

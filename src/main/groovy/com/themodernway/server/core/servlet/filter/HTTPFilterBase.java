@@ -17,6 +17,8 @@
 package com.themodernway.server.core.servlet.filter;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -27,14 +29,34 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.themodernway.common.api.java.util.IHTTPConstants;
+import org.apache.log4j.Logger;
 
-public abstract class AbstractHTTPFilter implements Filter, IHTTPConstants
+import com.themodernway.server.core.servlet.IServletCommonOperations;
+
+public abstract class HTTPFilterBase implements Filter, IServletCommonOperations
 {
     public abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
 
-    protected AbstractHTTPFilter()
+    public abstract void doInit(FilterConfig fc) throws ServletException;
+
+    private FilterConfig m_config = null;
+
+    private Logger       m_logger = Logger.getLogger(getClass());
+
+    protected HTTPFilterBase()
     {
+    }
+
+    @Override
+    public String getName()
+    {
+        return getFilterConfig().getFilterName();
+    }
+
+    @Override
+    public Logger logger()
+    {
+        return m_logger;
     }
 
     @Override
@@ -43,13 +65,33 @@ public abstract class AbstractHTTPFilter implements Filter, IHTTPConstants
     }
 
     @Override
-    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
+    public String getConfigurationParameter(final String name)
+    {
+        return getFilterConfig().getInitParameter(name);
+    }
+
+    @Override
+    public List<String> getConfigurationParameterNames()
+    {
+        return Collections.list(getFilterConfig().getInitParameterNames());
+    }
+
+    public FilterConfig getFilterConfig()
+    {
+        return m_config;
+    }
+
+    @Override
+    public final void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
     {
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
     @Override
-    public void init(FilterConfig fc) throws ServletException
+    public final void init(final FilterConfig fc) throws ServletException
     {
+        m_config = fc;
+
+        doInit(m_config);
     }
 }

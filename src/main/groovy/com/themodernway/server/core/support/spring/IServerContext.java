@@ -30,7 +30,9 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.SubscribableChannel;
+import org.springframework.web.context.WebApplicationContext;
 
+import com.themodernway.server.core.file.storage.IFileItemStorageProvider;
 import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.IJSONUtilities;
@@ -50,6 +52,8 @@ public interface IServerContext extends IJSONUtilities, IAuthorizer, IProperties
     public boolean isApplicationContextInitialized();
 
     public ApplicationContext getApplicationContext();
+    
+    public WebApplicationContext getWebApplicationContext();
 
     public boolean containsBean(String name);
 
@@ -64,6 +68,8 @@ public interface IServerContext extends IJSONUtilities, IAuthorizer, IProperties
     public List<String> getPrincipalsKeys();
 
     public IServerSessionRepositoryProvider getServerSessionRepositoryProvider();
+    
+    public IFileItemStorageProvider getFileItemStorageProvider();
 
     public IServerSessionRepository getServerSessionRepository(String domain);
 

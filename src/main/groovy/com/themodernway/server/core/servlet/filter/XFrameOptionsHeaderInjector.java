@@ -46,15 +46,13 @@ public class XFrameOptionsHeaderInjector implements IHeaderInjector
         return m_options;
     }
 
-    public XFrameOptionsHeaderInjector setOptions(final String options)
+    public void setOptions(final String options)
     {
         m_options = StringOps.toTrimOrNull(options);
-
-        return this;
     }
 
     @Override
-    public void inject(final HttpServletRequest request, final HttpServletResponse response)
+    public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
         final String options = StringOps.toTrimOrNull(getOptions());
 
@@ -66,10 +64,11 @@ public class XFrameOptionsHeaderInjector implements IHeaderInjector
                 {
                     response.setHeader(X_FRAME_OPTIONS_HEADER, options);
 
-                    return;
+                    return HttpServletResponse.SC_OK;
                 }
             }
         }
+        return HttpServletResponse.SC_OK;
     }
 
     @Override

@@ -46,12 +46,13 @@ public class StrictTransportHeaderInjector implements IHeaderInjector
     }
 
     @Override
-    public void inject(final HttpServletRequest request, final HttpServletResponse response)
+    public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
         if ((isAlways()) || (request.isSecure()))
         {
             response.setHeader(STRICT_TRANSPORT_SECURITY_HEADER, CACHE_CONTROL_MAX_AGE_PREFIX + YEAR_IN_SECONDS + ";includeSubdomains");
         }
+        return HttpServletResponse.SC_OK;
     }
 
     @Override

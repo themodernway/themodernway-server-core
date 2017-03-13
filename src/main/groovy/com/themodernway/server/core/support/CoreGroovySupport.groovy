@@ -25,8 +25,10 @@ import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.PollableChannel
 import org.springframework.messaging.SubscribableChannel
+import org.springframework.web.context.WebApplicationContext
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.file.storage.IFileItemStorageProvider
 import com.themodernway.server.core.jmx.management.ICoreServerManager
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
@@ -93,6 +95,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     {
         getServerContext().getApplicationContext()
     }
+    
+    @Memoized
+    public WebApplicationContext getWebApplicationContext()
+    {
+        getServerContext().getWebApplicationContext()
+    }
 
     @Memoized
     public Environment getEnvironment()
@@ -116,6 +124,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public IBuildDescriptorProvider getBuildDescriptorProvider()
     {
         getServerContext().getBuildDescriptorProvider()
+    }
+    
+    @Memoized
+    public IFileItemStorageProvider getFileItemStorageProvider()
+    {
+        getServerContext().getFileItemStorageProvider()
     }
     
     @Memoized

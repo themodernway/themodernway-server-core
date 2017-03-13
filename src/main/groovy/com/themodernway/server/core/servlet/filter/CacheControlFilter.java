@@ -19,19 +19,14 @@ package com.themodernway.server.core.servlet.filter;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
-
 public class CacheControlFilter extends HeaderInjectorFilter
 {
-    private static final Logger logger = Logger.getLogger(CacheControlFilter.class);
-
     public CacheControlFilter()
     {
-        logger.info("CacheControlFilter()");
     }
 
     @Override
-    public void init(final FilterConfig fc) throws ServletException
+    public void doInit(final FilterConfig fc) throws ServletException
     {
         addHeaderInjector(new CacheControlHeaderInjector());
     }

@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.servlet.filter;
+package com.themodernway.server.core.file.storage;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.Closeable;
 
-import com.themodernway.common.api.java.util.IHTTPConstants;
-import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.common.api.types.INamed;
 
-public interface IHeaderInjector extends IHTTPConstants
+public interface IFileItemStorage extends INamed, Closeable
 {
-    public void config(JSONObject config);
+    public boolean isOpen();
     
-    public int inject(HttpServletRequest request, HttpServletResponse response);
+    public String getBasePath();
+    
+    public IFolderItem getRoot();
+    
+    public String getAbsolutePath(String name);
+    
+    public IFileItemMetaDataFactory getFileItemMetaDataFactory();
+    
+    public void setFileItemMetaDataFactory(IFileItemMetaDataFactory meta);
 }

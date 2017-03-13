@@ -40,20 +40,19 @@ public class XSSProtectionHeaderInjector implements IHeaderInjector
         return m_enabled;
     }
 
-    public XSSProtectionHeaderInjector setEnabled(final boolean enabled)
+    public void setEnabled(final boolean enabled)
     {
         m_enabled = enabled;
-
-        return this;
     }
 
     @Override
-    public void inject(final HttpServletRequest request, final HttpServletResponse response)
+    public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
         if (isEnabled())
         {
             response.setHeader(X_XSS_PROTECTION_HEADER, "1; mode=block");
         }
+        return HttpServletResponse.SC_OK;
     }
 
     @Override

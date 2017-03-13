@@ -48,12 +48,13 @@ public class XContentTypeProtectionHeaderInjector implements IHeaderInjector
     }
 
     @Override
-    public void inject(final HttpServletRequest request, final HttpServletResponse response)
+    public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
         if (isEnabled())
         {
-            response.setHeader("X-Content-Type-Options", "nosniff");
+            response.setHeader(X_CONTENT_TYPE_OPTIONS_HEADER, NO_SNIFF_VALUE);
         }
+        return HttpServletResponse.SC_OK;
     }
 
     @Override

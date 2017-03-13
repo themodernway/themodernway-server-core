@@ -20,7 +20,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
@@ -38,21 +37,17 @@ public class CoreWebContextLoaderListener extends ContextLoaderListener
 
         if (isServletContextCustomizerEnabled())
         {
-            final ApplicationContext context = getServerContext().getApplicationContext();
+            final WebApplicationContext context = getServerContext().getWebApplicationContext();
 
             if (null != context)
             {
-                if (context instanceof WebApplicationContext)
-                {
-                    final ServletContext sc = event.getServletContext();
+                final ServletContext sc = event.getServletContext();
 
-                    for (IServletContextCustomizer customizer : getServerContext().getServletContextCustomizerProvider().getServletContextCustomizers())
-                    {
-                        customizer.customize(sc, (WebApplicationContext) context);
-                    }
+                for (IServletContextCustomizer customizer : getServerContext().getServletContextCustomizerProvider().getServletContextCustomizers())
+                {
+                    customizer.customize(sc, context);
                 }
             }
-
         }
         logger.info("CoreWebContextLoaderListener.contextInitialized() COMPLETE");
     }

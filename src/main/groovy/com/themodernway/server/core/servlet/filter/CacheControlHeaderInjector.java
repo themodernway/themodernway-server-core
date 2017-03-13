@@ -41,7 +41,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
     }
 
     @Override
-    public void inject(final HttpServletRequest request, final HttpServletResponse response)
+    public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
         final String url = StringOps.toTrimOrNull(request.getRequestURI());
 
@@ -53,7 +53,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
             {
                 doNeverCache(request, response);
 
-                return;
+                return HttpServletResponse.SC_OK;
             }
             regex = StringOps.toTrimOrNull(getLongCacheRegex());
 
@@ -61,7 +61,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
             {
                 doLongFuture(request, response);
 
-                return;
+                return HttpServletResponse.SC_OK;
             }
             regex = StringOps.toTrimOrNull(getNearCacheRegex());
 
@@ -69,16 +69,17 @@ public class CacheControlHeaderInjector implements IHeaderInjector
             {
                 doNearFuture(request, response);
 
-                return;
+                return HttpServletResponse.SC_OK;
             }
             regex = StringOps.toTrimOrNull(getSkipCacheRegex());
 
             if ((null != regex) && (url.matches(regex)))
             {
-                return;
+                return HttpServletResponse.SC_OK;
             }
             doCacheByURL(url, request, response);
         }
+        return HttpServletResponse.SC_OK;
     }
 
     public String getDontCacheRegex()
@@ -86,7 +87,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
         return m_dont_cache_regex;
     }
 
-    public CacheControlHeaderInjector setDontCacheRegex(final String regex)
+    public void setDontCacheRegex(final String regex)
     {
         m_dont_cache_regex = StringOps.toTrimOrNull(regex);
 
@@ -94,7 +95,6 @@ public class CacheControlHeaderInjector implements IHeaderInjector
         {
             logger.info("CacheControlHeaderInjector().setDontCacheRegex(" + m_dont_cache_regex + ")");
         }
-        return this;
     }
 
     public String getLongCacheRegex()
@@ -102,7 +102,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
         return m_long_cache_regex;
     }
 
-    public CacheControlHeaderInjector setLongCacheRegex(final String regex)
+    public void setLongCacheRegex(final String regex)
     {
         m_long_cache_regex = StringOps.toTrimOrNull(regex);
 
@@ -110,7 +110,6 @@ public class CacheControlHeaderInjector implements IHeaderInjector
         {
             logger.info("CacheControlHeaderInjector().setLongCacheRegex(" + m_long_cache_regex + ")");
         }
-        return this;
     }
 
     public String getNearCacheRegex()
@@ -118,7 +117,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
         return m_near_cache_regex;
     }
 
-    public CacheControlHeaderInjector setNearCacheRegex(final String regex)
+    public void setNearCacheRegex(final String regex)
     {
         m_near_cache_regex = StringOps.toTrimOrNull(regex);
 
@@ -126,7 +125,6 @@ public class CacheControlHeaderInjector implements IHeaderInjector
         {
             logger.info("CacheControlHeaderInjector().setNearCacheRegex(" + m_near_cache_regex + ")");
         }
-        return this;
     }
 
     public String getSkipCacheRegex()
@@ -134,7 +132,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
         return m_skip_cache_regex;
     }
 
-    public CacheControlHeaderInjector setSkipCacheRegex(final String regex)
+    public void setSkipCacheRegex(final String regex)
     {
         m_skip_cache_regex = StringOps.toTrimOrNull(regex);
 
@@ -142,7 +140,6 @@ public class CacheControlHeaderInjector implements IHeaderInjector
         {
             logger.info("CacheControlHeaderInjector().setSkipCacheRegex(" + m_skip_cache_regex + ")");
         }
-        return this;
     }
 
     protected void doCacheByURL(String url, final HttpServletRequest request, final HttpServletResponse response)
