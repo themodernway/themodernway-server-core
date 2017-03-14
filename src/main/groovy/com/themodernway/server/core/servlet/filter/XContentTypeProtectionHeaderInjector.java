@@ -19,55 +19,22 @@ package com.themodernway.server.core.servlet.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.themodernway.server.core.json.JSONObject;
-
-public class XContentTypeProtectionHeaderInjector implements IHeaderInjector
+public class XContentTypeProtectionHeaderInjector extends HeaderInjectorBase
 {
-    private boolean m_enabled = true;
-
     public XContentTypeProtectionHeaderInjector()
     {
-        this(true);
     }
-
-    public XContentTypeProtectionHeaderInjector(final boolean enabled)
+    
+    public XContentTypeProtectionHeaderInjector(final IHeaderInjectorFilter filter)
     {
-        setEnabled(enabled);
-    }
-
-    public boolean isEnabled()
-    {
-        return m_enabled;
-    }
-
-    public XContentTypeProtectionHeaderInjector setEnabled(final boolean enabled)
-    {
-        m_enabled = enabled;
-
-        return this;
+        setHeaderInjectorFilter(filter);
     }
 
     @Override
     public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
-        if (isEnabled())
-        {
-            response.setHeader(X_CONTENT_TYPE_OPTIONS_HEADER, NO_SNIFF_VALUE);
-        }
+        response.setHeader(X_CONTENT_TYPE_OPTIONS_HEADER, NO_SNIFF_VALUE);
+
         return HttpServletResponse.SC_OK;
-    }
-
-    @Override
-    public void config(final JSONObject config)
-    {
-        if (null != config)
-        {
-            final Boolean enabled = config.getAsBoolean("enabled");
-
-            if (null != enabled)
-            {
-                setEnabled(enabled);
-            }
-        }
     }
 }

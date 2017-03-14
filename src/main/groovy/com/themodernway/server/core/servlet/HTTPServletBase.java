@@ -37,6 +37,8 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
     private RateLimiter m_ratelimit = null;
 
+    private boolean     m_iscontent = false;
+
     private int         m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
     protected HTTPServletBase()
@@ -86,6 +88,12 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
             rate.acquire();
         }
     }
+    
+    @Override
+    public boolean isMaxContentTypeLengthInitialized()
+    {
+        return m_iscontent;
+    }
 
     @Override
     public int getMaxContentTypeLength()
@@ -93,8 +101,11 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         return m_contentmx;
     }
 
+    @Override
     public void setMaxContentTypeLength(final int contentmx)
     {
+        m_iscontent = true;
+
         m_contentmx = Math.min(Math.max(0, contentmx), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH);
     }
 
@@ -141,5 +152,11 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
             return;
         }
+    }
+
+    @Override
+    public void init()
+    {
+        doInitializeMaxContentTypeLength();
     }
 }

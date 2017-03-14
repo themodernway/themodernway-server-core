@@ -16,41 +16,22 @@
 
 package com.themodernway.server.core.servlet.filter;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import com.themodernway.server.core.servlet.IServletCommonOperations;
-
-public abstract class HTTPFilterBase implements Filter, IServletCommonOperations
+public abstract class HTTPFilterBase implements IHTTPFilter
 {
-    public abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
+    private boolean      m_iscontent = false;
 
-    public abstract void doInit(FilterConfig fc) throws ServletException;
+    private int          m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    private FilterConfig m_config = null;
+    private FilterConfig m_config    = null;
 
-    private Logger       m_logger = Logger.getLogger(getClass());
+    private Logger       m_logger    = Logger.getLogger(getClass());
 
     protected HTTPFilterBase()
     {
-    }
-
-    @Override
-    public String getName()
-    {
-        return getFilterConfig().getFilterName();
     }
 
     @Override
@@ -58,40 +39,36 @@ public abstract class HTTPFilterBase implements Filter, IServletCommonOperations
     {
         return m_logger;
     }
-
+    
     @Override
-    public void destroy()
+    public boolean isMaxContentTypeLengthInitialized()
     {
+        return m_iscontent;
     }
 
     @Override
-    public String getConfigurationParameter(final String name)
+    public int getMaxContentTypeLength()
     {
-        return getFilterConfig().getInitParameter(name);
+        return m_contentmx;
     }
 
     @Override
-    public List<String> getConfigurationParameterNames()
+    public void setMaxContentTypeLength(final int contentmx)
     {
-        return Collections.list(getFilterConfig().getInitParameterNames());
+        m_iscontent = true;
+
+        m_contentmx = Math.min(Math.max(0, contentmx), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH);
     }
 
+    @Override
     public FilterConfig getFilterConfig()
     {
         return m_config;
     }
-
+    
     @Override
-    public final void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
-    {
-        doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
-    }
-
-    @Override
-    public final void init(final FilterConfig fc) throws ServletException
+    public void setFilterConfig(final FilterConfig fc)
     {
         m_config = fc;
-
-        doInit(m_config);
     }
 }

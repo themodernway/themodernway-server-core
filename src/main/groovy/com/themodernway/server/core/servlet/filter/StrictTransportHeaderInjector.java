@@ -19,20 +19,20 @@ package com.themodernway.server.core.servlet.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.server.core.json.JSONObject;
 
-public class StrictTransportHeaderInjector implements IHeaderInjector
+public class StrictTransportHeaderInjector extends HeaderInjectorBase
 {
     private boolean m_always = true;
 
     public StrictTransportHeaderInjector()
     {
-        this(true);
     }
 
-    public StrictTransportHeaderInjector(final boolean always)
+    public StrictTransportHeaderInjector(final IHeaderInjectorFilter filter)
     {
-        setAlways(always);
+        setHeaderInjectorFilter(filter);
     }
 
     public boolean isAlways()
@@ -50,7 +50,7 @@ public class StrictTransportHeaderInjector implements IHeaderInjector
     {
         if ((isAlways()) || (request.isSecure()))
         {
-            response.setHeader(STRICT_TRANSPORT_SECURITY_HEADER, CACHE_CONTROL_MAX_AGE_PREFIX + YEAR_IN_SECONDS + ";includeSubdomains");
+            response.setHeader(STRICT_TRANSPORT_SECURITY_HEADER, IHTTPConstants.doStrictTransportSecurityHeader());
         }
         return HttpServletResponse.SC_OK;
     }

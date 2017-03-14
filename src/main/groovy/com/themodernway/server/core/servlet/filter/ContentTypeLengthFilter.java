@@ -16,68 +16,17 @@
 
 package com.themodernway.server.core.servlet.filter;
 
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import com.themodernway.common.api.java.util.StringOps;
-
-public class ContentTypeLengthFilter extends HTTPFilterBase
+public class ContentTypeLengthFilter extends HeaderInjectorFilter
 {
-    private boolean m_iscontent = false;
-
-    private int     m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
-
     public ContentTypeLengthFilter()
     {
     }
 
     @Override
-    public int getMaxContentTypeLength()
+    public void initialize() throws ServletException
     {
-        return m_contentmx;
-    }
-
-    public void setMaxContentTypeLength(final int contentmx)
-    {
-        m_iscontent = true;
-
-        m_contentmx = Math.min(Math.max(0, contentmx), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH);
-    }
-
-    @Override
-    public void doInit(final FilterConfig fc) throws ServletException
-    {
-        if (false == m_iscontent)
-        {
-            final String size = StringOps.toTrimOrNull(getConfigurationParameter(CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM));
-
-            if (null != size)
-            {
-                try
-                {
-                    setMaxContentTypeLength(Integer.parseInt(size));
-                }
-                catch (Exception e)
-                {
-                }
-            }
-        }
-    }
-
-    @Override
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException
-    {
-        if (false == isMaxContentTypeHeaderLengthValid(request, response))
-        {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
-            return;
-        }
-        chain.doFilter(request, response);
+        addHeaderInjector(new ContentTypeLengthHeaderInjector(this));
     }
 }

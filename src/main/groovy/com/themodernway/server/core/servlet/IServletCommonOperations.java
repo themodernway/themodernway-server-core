@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -188,6 +189,13 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
         return DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
     }
 
+    public default boolean isMaxContentTypeLengthInitialized()
+    {
+        return false;
+    }
+
+    public void setMaxContentTypeLength(int max);
+
     public default boolean isMaxContentTypeHeaderLengthValid(final HttpServletRequest request, final HttpServletResponse response)
     {
         return isMaxHeaderLengthValid(request, response, CONTENT_TYPE_HEADER, Math.min(Math.max(0, getMaxContentTypeLength()), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH));
@@ -212,6 +220,10 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
         return true;
     }
 
+    public default void destroy()
+    {
+    }
+
     public default String getSessionProviderDomainName()
     {
         return StringOps.toTrimOrElse(getConfigurationParameter(SESSION_PROVIDER_DOMAIN_NAME_PARAM), "default");
@@ -225,5 +237,41 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
     public default String getConfigurationParameter(String name)
     {
         return null;
+    }
+
+    public default void doInitializeMaxContentTypeLength()
+    {
+        if (false == isMaxContentTypeLengthInitialized())
+        {
+            final String size = StringOps.toTrimOrNull(getConfigurationParameter(CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM));
+
+            if (null != size)
+            {
+                try
+                {
+                    setMaxContentTypeLength(Integer.parseInt(size));
+                }
+                catch (Exception e)
+                {
+                    logger().error(String.format("Error parsing parameter %s, value (%s)", CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM, size), e);
+                }
+            }
+        }
+    }
+
+    public default Map<String, String> getConfigurationParameters()
+    {
+        final LinkedHashMap<String, String> conf = new LinkedHashMap<String, String>();
+
+        for (String name : getConfigurationParameterNames())
+        {
+            final String valu = getConfigurationParameter(name);
+
+            if (null != valu)
+            {
+                conf.put(name, valu);
+            }
+        }
+        return conf;
     }
 }

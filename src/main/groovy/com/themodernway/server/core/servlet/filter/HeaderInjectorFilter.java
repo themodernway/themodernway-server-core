@@ -17,21 +17,18 @@
 package com.themodernway.server.core.servlet.filter;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.json.JSONObject;
 
-public class HeaderInjectorFilter extends HTTPFilterBase
+public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjectorFilter
 {
     private final ArrayList<IHeaderInjector> m_injectors = new ArrayList<IHeaderInjector>();
 
@@ -48,7 +45,21 @@ public class HeaderInjectorFilter extends HTTPFilterBase
     {
         addHeaderInjectors(injectors);
     }
+    
+    @Override
+    public void destroy()
+    {
+        for (IHeaderInjector injector : getHeaderInjectors())
+        {
+            if (null != injector)
+            {
+                injector.destroy();
+            }
+        }
+        m_injectors.clear();
+    }
 
+    @Override
     public final void addHeaderInjector(final IHeaderInjector injector)
     {
         if (null != injector)
@@ -59,10 +70,17 @@ public class HeaderInjectorFilter extends HTTPFilterBase
             }
             m_injectors.add(injector);
 
-            logger().info("HeaderInjectorFilter.addHeaderInjector(" + injector.getClass().getName() + ")");
+            if (null == injector.getHeaderInjectorFilter())
+            {
+                injector.setHeaderInjectorFilter(this);
+            }
+            injector.config(new JSONObject(getConfigurationParameters()));
+
+            logger().info("HeaderInjectorFilter.addHeaderInjector(" + injector.getName() + ")");
         }
     }
 
+    @Override
     public final void setHeaderInjectors(final List<IHeaderInjector> injectors)
     {
         m_injectors.clear();
@@ -70,6 +88,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase
         addHeaderInjectors(injectors);
     }
 
+    @Override
     public final void addHeaderInjectors(final List<IHeaderInjector> injectors)
     {
         if (null != injectors)
@@ -81,6 +100,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase
         }
     }
 
+    @Override
     public final void setHeaderInjectors(final IHeaderInjector... injectors)
     {
         m_injectors.clear();
@@ -88,6 +108,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase
         addHeaderInjectors(injectors);
     }
 
+    @Override
     public final void addHeaderInjectors(final IHeaderInjector... injectors)
     {
         if (null != injectors)
@@ -99,15 +120,16 @@ public class HeaderInjectorFilter extends HTTPFilterBase
         }
     }
 
-    public final List<IHeaderInjector> getInjectors()
+    @Override
+    public final List<IHeaderInjector> getHeaderInjectors()
     {
         return Collections.unmodifiableList(m_injectors);
     }
 
     @Override
-    public void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain) throws IOException, ServletException
+    public void filter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain) throws IOException, ServletException
     {
-        for (IHeaderInjector injector : getInjectors())
+        for (IHeaderInjector injector : getHeaderInjectors())
         {
             if (null != injector)
             {
@@ -124,7 +146,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase
                 }
                 catch (Throwable t)
                 {
-                    logger().error("Could not inject headers " + injector.getClass().getName(), t);
+                    logger().error("Could not inject headers " + injector.getName(), t);
 
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
@@ -133,40 +155,5 @@ public class HeaderInjectorFilter extends HTTPFilterBase
             }
         }
         chain.doFilter(request, response);
-    }
-
-    @Override
-    public void doInit(final FilterConfig fc) throws ServletException
-    {
-        try
-        {
-            final String name = StringOps.toTrimOrNull(fc.getInitParameter("config"));
-
-            if (null != name)
-            {
-                final InputStream in = fc.getServletContext().getResourceAsStream(name);
-
-                try
-                {
-                    final HeaderInjectorParser parser = new HeaderInjectorParser();
-
-                    parser.parse(in);
-
-                    addHeaderInjectors(parser.getInjectors());
-                }
-                catch (Throwable t)
-                {
-                    logger().error("Could not create injectors", t);
-                }
-                finally
-                {
-                    IO.close(in);
-                }
-            }
-        }
-        catch (Throwable t)
-        {
-            logger().error("Could not create injectors", t);
-        }
     }
 }

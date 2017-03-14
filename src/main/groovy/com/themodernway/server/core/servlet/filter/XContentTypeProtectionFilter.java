@@ -18,15 +18,15 @@ package com.themodernway.server.core.servlet.filter;
 
 import javax.servlet.ServletException;
 
-public class CacheControlFilter extends HeaderInjectorFilter
+public class XContentTypeProtectionFilter extends HeaderInjectorFilter
 {
-    public CacheControlFilter()
+    public XContentTypeProtectionFilter()
     {
     }
 
     @Override
     public void initialize() throws ServletException
     {
-        addHeaderInjector(new CacheControlHeaderInjector(this));
+        addHeaderInjector(new XContentTypeProtectionHeaderInjector(this));
     }
 }

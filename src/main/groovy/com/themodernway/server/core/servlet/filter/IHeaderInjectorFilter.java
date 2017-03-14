@@ -16,25 +16,19 @@
 
 package com.themodernway.server.core.servlet.filter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
-public class XSSProtectionHeaderInjector extends HeaderInjectorBase
+public interface IHeaderInjectorFilter extends IHTTPFilter
 {
-    public XSSProtectionHeaderInjector()
-    {
-    }
+    public void addHeaderInjector(IHeaderInjector injector);
 
-    public XSSProtectionHeaderInjector(final IHeaderInjectorFilter filter)
-    {
-        setHeaderInjectorFilter(filter);
-    }
+    public void setHeaderInjectors(List<IHeaderInjector> injectors);
 
-    @Override
-    public int inject(final HttpServletRequest request, final HttpServletResponse response)
-    {
-        response.setHeader(X_XSS_PROTECTION_HEADER, "1; mode=block");
+    public void addHeaderInjectors(List<IHeaderInjector> injectors);
 
-        return HttpServletResponse.SC_OK;
-    }
+    public void setHeaderInjectors(IHeaderInjector... injectors);
+
+    public void addHeaderInjectors(IHeaderInjector... injectors);
+
+    public List<IHeaderInjector> getHeaderInjectors();
 }

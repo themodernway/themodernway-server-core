@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
-public class XFrameOptionsHeaderInjector implements IHeaderInjector
+public class XFrameOptionsHeaderInjector extends HeaderInjectorBase
 {
     private static final List<String> PREFIXES  = Arrays.asList("DENY", "SAMEORIGIN", "ALLOW-FROM ");
 
@@ -33,12 +33,11 @@ public class XFrameOptionsHeaderInjector implements IHeaderInjector
 
     public XFrameOptionsHeaderInjector()
     {
-        this("DENY");
     }
 
-    public XFrameOptionsHeaderInjector(final String options)
+    public XFrameOptionsHeaderInjector(final IHeaderInjectorFilter filter)
     {
-        setOptions(options);
+        setHeaderInjectorFilter(filter);
     }
 
     public String getOptions()

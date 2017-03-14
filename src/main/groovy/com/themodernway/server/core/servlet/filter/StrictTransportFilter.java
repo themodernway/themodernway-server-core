@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.servlet.filter;
 
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
 public class StrictTransportFilter extends HeaderInjectorFilter
@@ -26,8 +25,8 @@ public class StrictTransportFilter extends HeaderInjectorFilter
     }
 
     @Override
-    public void doInit(final FilterConfig fc) throws ServletException
+    public void initialize() throws ServletException
     {
-        addHeaderInjector(new StrictTransportHeaderInjector());
+        addHeaderInjector(new StrictTransportHeaderInjector(this));
     }
 }

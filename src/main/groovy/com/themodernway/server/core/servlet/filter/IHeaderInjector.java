@@ -16,15 +16,41 @@
 
 package com.themodernway.server.core.servlet.filter;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.servlet.IServletCommonOperations;
 
-public interface IHeaderInjector extends IHTTPConstants
+public interface IHeaderInjector extends IServletCommonOperations
 {
-    public void config(JSONObject config);
+    @Override
+    public default String getName()
+    {
+        return getClass().getName();
+    }
+
+    @Override
+    public default String getConfigurationParameter(final String name)
+    {
+        return getHeaderInjectorFilter().getConfigurationParameter(name);
+    }
+
+    @Override
+    public default List<String> getConfigurationParameterNames()
+    {
+        return getHeaderInjectorFilter().getConfigurationParameterNames();
+    }
+
+    public default void config(final JSONObject config)
+    {
+    }
+
+    public IHeaderInjectorFilter getHeaderInjectorFilter();
     
+    public void setHeaderInjectorFilter(final IHeaderInjectorFilter filter);
+
     public int inject(HttpServletRequest request, HttpServletResponse response);
 }

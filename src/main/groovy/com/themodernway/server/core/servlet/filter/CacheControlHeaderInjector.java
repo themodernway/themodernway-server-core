@@ -19,15 +19,11 @@ package com.themodernway.server.core.servlet.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
-public class CacheControlHeaderInjector implements IHeaderInjector
+public class CacheControlHeaderInjector extends HeaderInjectorBase
 {
-    private static final Logger logger             = Logger.getLogger(CacheControlHeaderInjector.class);
-
     private String              m_dont_cache_regex = null;
 
     private String              m_long_cache_regex = null;
@@ -35,9 +31,14 @@ public class CacheControlHeaderInjector implements IHeaderInjector
     private String              m_near_cache_regex = null;
 
     private String              m_skip_cache_regex = null;
-
+    
     public CacheControlHeaderInjector()
     {
+    }
+
+    public CacheControlHeaderInjector(final IHeaderInjectorFilter filter)
+    {
+        setHeaderInjectorFilter(filter);
     }
 
     @Override
@@ -93,7 +94,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
 
         if (null != m_dont_cache_regex)
         {
-            logger.info("CacheControlHeaderInjector().setDontCacheRegex(" + m_dont_cache_regex + ")");
+            logger().info("CacheControlHeaderInjector().setDontCacheRegex(" + m_dont_cache_regex + ")");
         }
     }
 
@@ -108,7 +109,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
 
         if (null != m_long_cache_regex)
         {
-            logger.info("CacheControlHeaderInjector().setLongCacheRegex(" + m_long_cache_regex + ")");
+            logger().info("CacheControlHeaderInjector().setLongCacheRegex(" + m_long_cache_regex + ")");
         }
     }
 
@@ -123,7 +124,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
 
         if (null != m_near_cache_regex)
         {
-            logger.info("CacheControlHeaderInjector().setNearCacheRegex(" + m_near_cache_regex + ")");
+            logger().info("CacheControlHeaderInjector().setNearCacheRegex(" + m_near_cache_regex + ")");
         }
     }
 
@@ -138,7 +139,7 @@ public class CacheControlHeaderInjector implements IHeaderInjector
 
         if (null != m_skip_cache_regex)
         {
-            logger.info("CacheControlHeaderInjector().setSkipCacheRegex(" + m_skip_cache_regex + ")");
+            logger().info("CacheControlHeaderInjector().setSkipCacheRegex(" + m_skip_cache_regex + ")");
         }
     }
 
@@ -209,33 +210,6 @@ public class CacheControlHeaderInjector implements IHeaderInjector
                 doNeverCache(request, response);
             }
         }
-    }
-
-    protected void doNeverCache(final HttpServletRequest request, final HttpServletResponse response)
-    {
-        final long time = System.currentTimeMillis();
-
-        response.setDateHeader(DATE_HEADER, time);
-
-        response.setDateHeader(EXPIRES_HEADER, time - YEAR_IN_MILLISECONDS);
-
-        response.setHeader(PRAGMA_HEADER, NO_CACHE_PRAGMA_HEADER_VALUE);
-
-        response.setHeader(CACHE_CONTROL_HEADER, NO_CACHE_CONTROL_HEADER_VALUE);
-    }
-
-    protected void doLongFuture(final HttpServletRequest request, final HttpServletResponse response)
-    {
-        response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_MAX_AGE_PREFIX + YEAR_IN_SECONDS);
-
-        response.setDateHeader(EXPIRES_HEADER, System.currentTimeMillis() + YEAR_IN_MILLISECONDS);
-    }
-
-    protected void doNearFuture(final HttpServletRequest request, final HttpServletResponse response)
-    {
-        response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_MAX_AGE_PREFIX + WEEK_IN_SECONDS);
-
-        response.setDateHeader(EXPIRES_HEADER, System.currentTimeMillis() + WEEK_IN_MILLISECONDS);
     }
 
     @Override

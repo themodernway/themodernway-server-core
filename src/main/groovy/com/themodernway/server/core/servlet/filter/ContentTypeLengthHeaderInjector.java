@@ -19,13 +19,13 @@ package com.themodernway.server.core.servlet.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class XSSProtectionHeaderInjector extends HeaderInjectorBase
+public class ContentTypeLengthHeaderInjector extends HeaderInjectorBase
 {
-    public XSSProtectionHeaderInjector()
+    public ContentTypeLengthHeaderInjector()
     {
     }
-
-    public XSSProtectionHeaderInjector(final IHeaderInjectorFilter filter)
+    
+    public ContentTypeLengthHeaderInjector(final IHeaderInjectorFilter filter)
     {
         setHeaderInjectorFilter(filter);
     }
@@ -33,8 +33,10 @@ public class XSSProtectionHeaderInjector extends HeaderInjectorBase
     @Override
     public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
-        response.setHeader(X_XSS_PROTECTION_HEADER, "1; mode=block");
-
+        if (false == isMaxContentTypeHeaderLengthValid(request, response))
+        {
+            return HttpServletResponse.SC_BAD_REQUEST;
+        }
         return HttpServletResponse.SC_OK;
     }
 }
