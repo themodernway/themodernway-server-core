@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -32,6 +33,7 @@ import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.SubscribableChannel;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.themodernway.server.core.file.storage.IFileItemStorage;
 import com.themodernway.server.core.file.storage.IFileItemStorageProvider;
 import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
@@ -70,6 +72,8 @@ public interface IServerContext extends IJSONUtilities, IAuthorizer, IProperties
     public IServerSessionRepositoryProvider getServerSessionRepositoryProvider();
     
     public IFileItemStorageProvider getFileItemStorageProvider();
+    
+    public IFileItemStorage getFileItemStorage(String name);
 
     public IServerSessionRepository getServerSessionRepository(String domain);
 
@@ -118,6 +122,8 @@ public interface IServerContext extends IJSONUtilities, IAuthorizer, IProperties
     public String toTrimOrNull(String string);
 
     public String toTrimOrElse(String string, String otherwise);
+    
+    public String toTrimOrElse(String string, Supplier<String> otherwise);
 
     public <T> T requireNonNull(T object);
 

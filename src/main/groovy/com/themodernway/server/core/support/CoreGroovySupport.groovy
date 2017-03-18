@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.support
 
+import java.util.function.Supplier
+
 import org.apache.log4j.Logger
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
@@ -27,7 +29,7 @@ import org.springframework.messaging.PollableChannel
 import org.springframework.messaging.SubscribableChannel
 import org.springframework.web.context.WebApplicationContext
 
-import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.file.storage.IFileItemStorage
 import com.themodernway.server.core.file.storage.IFileItemStorageProvider
 import com.themodernway.server.core.jmx.management.ICoreServerManager
 import com.themodernway.server.core.json.JSONArray
@@ -133,6 +135,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
     
     @Memoized
+    public IFileItemStorage getFileItemStorage(String name)
+    {
+        getFileItemStorageProvider().getFileItemStorage(Objects.requireNonNull(name))
+    }
+    
+    @Memoized
     public IServletContextCustomizerProvider getServletContextCustomizerProvider()
     {
         getServerContext().getServletContextCustomizerProvider()
@@ -152,6 +160,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
 
     @Memoized
     public String getPropertyByName(String name, String otherwise)
+    {
+        getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
+    }
+    
+    @Override
+    public String getPropertyByName(String name, Supplier<String> otherwise)
     {
         getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
     }
@@ -386,13 +400,19 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public String toTrimOrNull(String string)
     {
-        StringOps.toTrimOrNull(string)
+        getServerContext().toTrimOrNull(string)
     }
 
     @Override
     public String toTrimOrElse(String string, String otherwise)
     {
-        StringOps.toTrimOrElse(string, otherwise)
+        getServerContext().toTrimOrElse(string, otherwise)
+    }
+    
+    @Override
+    public String toTrimOrElse(String string, Supplier<String> otherwise)
+    {
+        getServerContext().toTrimOrElse(string, otherwise)
     }
 
     @Override

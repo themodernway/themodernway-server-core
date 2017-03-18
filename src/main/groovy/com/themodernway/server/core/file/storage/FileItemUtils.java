@@ -74,9 +74,16 @@ public final class FileItemUtils
         {
             path = StringOps.toTrimOrNull(FilenameUtils.normalizeNoEndSeparator(patch(path)));
 
-            if ((null != path) && (path.startsWith("~/")))
+            if (null != path)
             {
-                return normalize(path.substring(2));
+                if (path.startsWith("~/"))
+                {
+                    return normalize(path.substring(2));
+                }
+                if (path.startsWith("~"))
+                {
+                    return normalize(path.substring(1));
+                }
             }
         }
         return path;

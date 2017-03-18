@@ -52,12 +52,12 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
 
     public static final String NULL_SESSION                           = "%-NULL-SESSION-%";
 
-    public static IServerContext getServerContext()
+    public static IServerContext getServerContextInstance()
     {
         return ServerContextInstance.getServerContextInstance();
     }
 
-    public static LinkedHashMap<String, String> getParametersFromRequest(final HttpServletRequest request)
+    public default LinkedHashMap<String, String> getParametersFromRequest(final HttpServletRequest request)
     {
         final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 
@@ -72,12 +72,12 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
         return params;
     }
 
-    public static JSONObject getJSONParametersFromRequest(final HttpServletRequest request)
+    public default JSONObject getJSONParametersFromRequest(final HttpServletRequest request)
     {
         return new JSONObject(getParametersFromRequest(request));
     }
 
-    public static LinkedHashMap<String, String> getHeadersFromRequest(final HttpServletRequest request)
+    public default LinkedHashMap<String, String> getHeadersFromRequest(final HttpServletRequest request)
     {
         final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 
@@ -92,12 +92,12 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
         return params;
     }
 
-    public static JSONObject getJSONHeadersFromRequest(final HttpServletRequest request)
+    public default JSONObject getJSONHeadersFromRequest(final HttpServletRequest request)
     {
         return new JSONObject(getHeadersFromRequest(request));
     }
 
-    public static JSONObject getUserPrincipalsFromRequest(final HttpServletRequest request, final List<String> keys)
+    public default JSONObject getUserPrincipalsFromRequest(final HttpServletRequest request, final List<String> keys)
     {
         final JSONObject principals = new JSONObject();
 
@@ -115,7 +115,7 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
                 }
                 else
                 {
-                    valu = getServerContext().getPropertyByName(name);
+                    valu = getServerContextInstance().getPropertyByName(name);
 
                     if (null != valu)
                     {
@@ -125,6 +125,11 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
             }
         }
         return principals;
+    }
+
+    public default IServerContext getServerContext()
+    {
+        return getServerContextInstance();
     }
 
     public default AuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)
@@ -273,5 +278,15 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
             }
         }
         return conf;
+    }
+
+    public default String getConfigurationParameterOrProperty(final String name)
+    {
+        return StringOps.toTrimOrElse(getConfigurationParameter(name), getServerContext().getPropertyByName(name));
+    }
+
+    public default String getConfigurationParameterOrPropertyOtherwise(final String name, final String otherwise)
+    {
+        return StringOps.toTrimOrElse(getConfigurationParameter(name), getServerContext().getPropertyByName(name, otherwise));
     }
 }

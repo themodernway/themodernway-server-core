@@ -18,6 +18,7 @@ package com.themodernway.server.core.file.storage;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -504,6 +505,26 @@ public class SimpleFileItemStorage implements IFileItemStorage
                     else
                     {
                         throw new IOException("Can't delete folder " + item.getPath());
+                    }
+                    final File file = new File(item.getAbsolutePath());
+
+                    file.mkdirs();
+
+                    file.createNewFile();
+
+                    final FileOutputStream fios = new FileOutputStream(file);
+
+                    try
+                    {
+                        IO.copy(input, fios);
+
+                        fios.flush();
+
+                        return item;
+                    }
+                    finally
+                    {
+                        IO.close(fios);
                     }
                 }
             }

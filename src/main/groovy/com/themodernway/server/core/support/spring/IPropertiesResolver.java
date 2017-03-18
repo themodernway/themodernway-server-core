@@ -16,9 +16,13 @@
 
 package com.themodernway.server.core.support.spring;
 
+import java.util.function.Supplier;
+
 public interface IPropertiesResolver
 {
     public String getPropertyByName(String name);
 
     public String getPropertyByName(String name, String otherwise);
+    
+    public String getPropertyByName(String name, Supplier<String> otherwise);
 }

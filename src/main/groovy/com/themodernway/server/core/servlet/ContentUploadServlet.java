@@ -29,29 +29,18 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.themodernway.server.core.file.storage.IFileItem;
-import com.themodernway.server.core.file.storage.IFileItemStorage;
 import com.themodernway.server.core.file.storage.IFolderItem;
 import com.themodernway.server.core.io.IO;
 
 @SuppressWarnings("serial")
-public class ContentUploadServlet extends HTTPServletBase
+public class ContentUploadServlet extends AbstractContentServlet
 {
     private static final long FILE_SIZE_LIMIT = 16 * 1024 * 1024;
 
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        final IFileItemStorage stor = getFileItemStorage();
-
-        if (null == stor)
-        {
-            logger().error("Can't find storage.");
-
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            return;
-        }
-        final IFolderItem fold = stor.getRoot();
+        final IFolderItem fold = getRoot();
 
         if (null == fold)
         {
@@ -144,15 +133,5 @@ public class ContentUploadServlet extends HTTPServletBase
     public long getFileSizeLimit()
     {
         return FILE_SIZE_LIMIT;
-    }
-
-    public String getFileItemStorageName()
-    {
-        return "content";
-    }
-
-    public IFileItemStorage getFileItemStorage()
-    {
-        return IServletCommonOperations.getServerContext().getFileItemStorageProvider().getFileItemStorage(getFileItemStorageName());
     }
 }

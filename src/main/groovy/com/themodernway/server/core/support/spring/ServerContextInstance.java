@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -36,6 +37,7 @@ import org.springframework.messaging.SubscribableChannel;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.file.storage.IFileItemStorage;
 import com.themodernway.server.core.file.storage.IFileItemStorageProvider;
 import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
@@ -203,6 +205,18 @@ public class ServerContextInstance extends JSONUtilitiesInstance implements ISer
     }
 
     @Override
+    public String getPropertyByName(final String name, final Supplier<String> otherwise)
+    {
+        final String valu = getEnvironment().getProperty(Objects.requireNonNull(name));
+
+        if (null != valu)
+        {
+            return valu;
+        }
+        return getCorePropertiesResolver().getPropertyByName(name, otherwise);
+    }
+
+    @Override
     public final IAuthorizationProvider getAuthorizationProvider()
     {
         final IAuthorizationProvider auth = getBeanSafely("AuthorizationProvider", IAuthorizationProvider.class);
@@ -234,6 +248,12 @@ public class ServerContextInstance extends JSONUtilitiesInstance implements ISer
     public final IFileItemStorageProvider getFileItemStorageProvider()
     {
         return Objects.requireNonNull(getBeanSafely("FileItemStorageProvider", IFileItemStorageProvider.class), "FileItemStorageProvider is null, initialization error.");
+    }
+
+    @Override
+    public IFileItemStorage getFileItemStorage(final String name)
+    {
+        return getFileItemStorageProvider().getFileItemStorage(Objects.requireNonNull(name));
     }
 
     @Override
@@ -407,6 +427,18 @@ public class ServerContextInstance extends JSONUtilitiesInstance implements ISer
     public final String toTrimOrElse(final String string, final String otherwise)
     {
         return StringOps.toTrimOrElse(string, otherwise);
+    }
+
+    @Override
+    public final String toTrimOrElse(final String string, final Supplier<String> otherwise)
+    {
+        final String value = StringOps.toTrimOrNull(string);
+
+        if (null != value)
+        {
+            return value;
+        }
+        return otherwise.get();
     }
 
     @Override

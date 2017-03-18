@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.support
 
+import java.util.function.Supplier
+
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
@@ -26,7 +28,7 @@ import org.springframework.messaging.PollableChannel
 import org.springframework.messaging.SubscribableChannel
 import org.springframework.web.context.WebApplicationContext
 
-import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.file.storage.IFileItemStorage
 import com.themodernway.server.core.file.storage.IFileItemStorageProvider
 import com.themodernway.server.core.jmx.management.ICoreServerManager
 import com.themodernway.server.core.json.JSONObject
@@ -108,6 +110,12 @@ public trait CoreGroovyTrait implements JSONTrait
     }
     
     @Memoized
+    public IFileItemStorage getFileItemStorage(String name)
+    {
+        getFileItemStorageProvider().getFileItemStorage(Objects.requireNonNull(name))
+    }
+    
+    @Memoized
     public IServletContextCustomizerProvider getServletContextCustomizerProvider()
     {
         getServerContext().getServletContextCustomizerProvider()
@@ -127,6 +135,11 @@ public trait CoreGroovyTrait implements JSONTrait
 
     @Memoized
     public String getPropertyByName(String name, String otherwise)
+    {
+        getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
+    }
+    
+    public String getPropertyByName(String name, Supplier<String> otherwise)
     {
         getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
     }
@@ -248,12 +261,17 @@ public trait CoreGroovyTrait implements JSONTrait
 
     public String toTrimOrNull(String string)
     {
-        StringOps.toTrimOrNull(string)
+        getServerContext().toTrimOrNull(string)
     }
 
     public String toTrimOrElse(String string, String otherwise)
     {
-        StringOps.toTrimOrElse(string, otherwise)
+        getServerContext().toTrimOrElse(string, otherwise)
+    }
+    
+    public String toTrimOrElse(String string, Supplier<String> otherwise)
+    {
+        getServerContext().toTrimOrElse(string, otherwise)
     }
 
     public <T> T requireNonNull(T object)
