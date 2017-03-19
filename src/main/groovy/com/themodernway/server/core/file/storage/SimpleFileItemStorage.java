@@ -520,7 +520,9 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
                         fios.flush();
 
-                        return item;
+                        IO.close(fios);
+
+                        return MAKE(file, getFileItemStorage());
                     }
                     finally
                     {
