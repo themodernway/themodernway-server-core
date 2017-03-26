@@ -38,6 +38,8 @@ public class ContentGetServletContextCustomizer implements IServletContextCustom
 
     private int                 m_load = 1;
 
+    private String              m_stor = null;
+
     public ContentGetServletContextCustomizer(final String name, final String maps)
     {
         final String path = StringOps.requireTrimOrNull(maps);
@@ -56,6 +58,16 @@ public class ContentGetServletContextCustomizer implements IServletContextCustom
     public ContentGetServletContextCustomizer(final String name, final Collection<String> maps)
     {
         this(name, StringOps.toCommaSeparated(maps));
+    }
+
+    public String getFileItemStorageName()
+    {
+        return m_stor;
+    }
+
+    public void setFileItemStorageName(final String name)
+    {
+        m_stor = StringOps.toTrimOrNull(name);
     }
 
     public void setLoadOnStartup(final int load)
@@ -126,6 +138,14 @@ public class ContentGetServletContextCustomizer implements IServletContextCustom
 
     protected ContentGetServlet doMakeContentGetServlet(final ServletContext sc, final WebApplicationContext context)
     {
-        return new ContentGetServlet();
+        final ContentGetServlet inst = new ContentGetServlet();
+
+        final String name = StringOps.toTrimOrNull(getFileItemStorageName());
+
+        if (null != name)
+        {
+            inst.setFileItemStorageName(name);
+        }
+        return inst;
     }
 }

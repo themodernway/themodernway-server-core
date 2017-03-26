@@ -15,9 +15,7 @@
  */
 
 buildscript {
-    repositories {
-        mavenCentral()
-    }
+    repositories { mavenCentral() }
     dependencies {
         classpath(group: 'org.ajoberstar', name: 'grgit', version: '1.7.2')
         classpath(group: 'commons-codec', name: 'commons-codec', version: '1.10')
@@ -42,14 +40,12 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.0.1-RELEASE'
+version = '1.0.1.1-RELEASE'
 
 group = 'com.themodernway'
 
 eclipse {
-    classpath {
-        downloadJavadoc = true
-    }
+    classpath { downloadJavadoc = true }
 }
 
 checkstyle {
@@ -57,9 +53,7 @@ checkstyle {
     ignoreFailures = true
 }
 
-tasks.withType(Checkstyle) {
-    source 'src/main'
-}
+tasks.withType(Checkstyle) { source 'src/main' }
 
 task deleteConfigs(type: Delete) {
     FileTree tree = fileTree(dir: "${buildDir}/resources/main")
@@ -81,7 +75,9 @@ task doJavaDocs(type: Groovydoc) {
     destinationDir = file("${buildDir}/docs/javadoc")
     docTitle = "${getProjectCommonName()}"
     footer = "<small><a href=\"${getBuildGITHomeURL()}\" target=\"_blank\">${getProjectCommonName()} - &copy; 2017, - ${getBuildModuleVersion()} - Author: Dean S. Jones</a></small>"
-    includes = ['com/themodernway/server/core/**']
+    includes = [
+        'com/themodernway/server/core/**'
+    ]
     getGroovydocLinks().each { name, list ->
         link(name, *list)
     }
@@ -109,14 +105,10 @@ jar {
 
 repositories {
     mavenCentral()
-    maven {
-        url "${sonatype_snapshotURL}"
-    }
+    maven { url "${sonatype_snapshotURL}" }
 }
 
-task codeCoverage << {
-    println ":codeCoverage-done"
-}
+task codeCoverage << { println ":codeCoverage-done" }
 
 codeCoverage.dependsOn jacocoTestReport
 
@@ -141,9 +133,7 @@ test {
     }
 }
 
-task checkCodeQuality << {
-    println ":checkCodeQuality-done"
-}
+task checkCodeQuality << { println ":checkCodeQuality-done" }
 
 checkCodeQuality.dependsOn codeCoverage,checkstyleMain
 
@@ -304,15 +294,13 @@ artifacts {
     archives jar
 }
 
-signing {
-    sign configurations.archives
-}
+signing { sign configurations.archives }
 
 uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-                repository(url: "${sonatype_stageingURL}") {
+            repository(url: "${sonatype_stageingURL}") {
                 //repository(url: "${sonatype_snapshotURL}") {
                 authentication(userName: "${sonatype_user_tmw}", password: "${sonatype_password_tmw}")
             }
@@ -374,9 +362,7 @@ task(buildGroovydocLinks) << {
     def save = make.newPrintWriter()
     site.each { link, list ->
         def show = "${link}"
-        list.each { line ->
-            show = "${show},${line}"
-        }
+        list.each { line -> show = "${show},${line}" }
         save.println("${show}")
     }
     save.flush()
