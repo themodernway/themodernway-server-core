@@ -432,13 +432,7 @@ public class ServerContextInstance extends JSONUtilitiesInstance implements ISer
     @Override
     public final String toTrimOrElse(final String string, final Supplier<String> otherwise)
     {
-        final String value = StringOps.toTrimOrNull(string);
-
-        if (null != value)
-        {
-            return value;
-        }
-        return otherwise.get();
+        return StringOps.toTrimOrElse(string, otherwise);
     }
 
     @Override
