@@ -66,7 +66,7 @@
 
 	<bean id="SignatoryProvider" class="com.themodernway.server.core.security.SignatoryProvider" destroy-method="close"/>
 	
-	<bean id="FileItemStorageProvider" class="com.themodernway.server.core.file.storage.FileItemStorageProvider" destroy-method="close"/>
+	<bean id="FileItemStorageProvider" class="com.themodernway.server.core.file.vfs.FileItemStorageProvider" destroy-method="close"/>
 
 	<bean id="ServerSessionRepositoryProvider" class="com.themodernway.server.core.security.session.ServerSessionRepositoryProvider" destroy-method="close"/>
 		

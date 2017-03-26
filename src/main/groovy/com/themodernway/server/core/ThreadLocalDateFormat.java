@@ -14,22 +14,22 @@
  * limitations under the License. ThreadLocal.withInitial(supplier);
  */
 
-package com.themodernway.server.core.lang;
+package com.themodernway.server.core;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Objects;
+import java.util.function.Supplier;
 
-public class Memoizer<T, R>
+public final class ThreadLocalDateFormat extends ThreadLocalFormat<Date, DateFormat>
 {
-    private final ConcurrentHashMap<T, R> m_cache = new ConcurrentHashMap<T, R>();
-
-    private Function<T, R> doMemoize(final Function<T, R> function)
+    public final static ThreadLocalDateFormat withInitial(final Supplier<DateFormat> supplier)
     {
-        return input -> m_cache.computeIfAbsent(input, function);
+        return new ThreadLocalDateFormat(Objects.requireNonNull(supplier));
     }
 
-    public static <T, R> Function<T, R> memoize(final Function<T, R> function)
+    private ThreadLocalDateFormat(final Supplier<DateFormat> supplier)
     {
-        return new Memoizer<T, R>().doMemoize(function);
+        super(Objects.requireNonNull(supplier));
     }
 }

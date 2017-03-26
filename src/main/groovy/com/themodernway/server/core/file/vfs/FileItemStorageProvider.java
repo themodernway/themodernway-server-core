@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.storage;
+package com.themodernway.server.core.file.vfs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,7 +53,14 @@ public class FileItemStorageProvider implements IFileItemStorageProvider, BeanFa
     {
         for (IFileItemStorage storage : m_storage.values())
         {
-            storage.close();
+            try
+            {
+                storage.close();
+            }
+            catch (IOException e)
+            {
+                logger.error("FileItemStorageProvider.close(" + storage.getName() + ") error.", e);
+            }
         }
     }
 

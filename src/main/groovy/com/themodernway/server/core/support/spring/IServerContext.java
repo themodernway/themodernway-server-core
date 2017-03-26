@@ -33,8 +33,8 @@ import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.SubscribableChannel;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.themodernway.server.core.file.storage.IFileItemStorage;
-import com.themodernway.server.core.file.storage.IFileItemStorageProvider;
+import com.themodernway.server.core.file.vfs.IFileItemStorage;
+import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.IJSONUtilities;

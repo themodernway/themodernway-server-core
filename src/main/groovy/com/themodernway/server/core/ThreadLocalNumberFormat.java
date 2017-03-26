@@ -14,7 +14,7 @@
  * limitations under the License. ThreadLocal.withInitial(supplier);
  */
 
-package com.themodernway.server.core.lang;
+package com.themodernway.server.core;
 
 import java.text.NumberFormat;
 import java.util.Objects;

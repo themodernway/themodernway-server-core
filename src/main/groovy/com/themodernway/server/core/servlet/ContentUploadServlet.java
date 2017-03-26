@@ -28,8 +28,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.themodernway.server.core.file.storage.IFileItem;
-import com.themodernway.server.core.file.storage.IFolderItem;
+import com.themodernway.server.core.file.vfs.IFileItem;
+import com.themodernway.server.core.file.vfs.IFolderItem;
 import com.themodernway.server.core.io.IO;
 
 @SuppressWarnings("serial")

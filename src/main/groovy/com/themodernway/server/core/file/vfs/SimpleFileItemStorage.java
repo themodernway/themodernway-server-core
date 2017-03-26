@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.storage;
+package com.themodernway.server.core.file.vfs;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,6 +35,7 @@ import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.file.FilePathUtils;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 
@@ -63,25 +63,25 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
     }
 
-    private static final Logger                 logger = Logger.getLogger(SimpleFileItemStorage.class);
+    private static final Logger               logger = Logger.getLogger(SimpleFileItemStorage.class);
 
-    protected static final MimetypesFileTypeMap mapper = new MimetypesFileTypeMap();
+    private static final MimetypesFileTypeMap mapper = new MimetypesFileTypeMap();
 
-    private final String                        m_name;
+    private final String                      m_name;
 
-    private final String                        m_base;
+    private final String                      m_base;
 
-    private final IFolderItem                   m_root;
+    private final IFolderItem                 m_root;
 
-    private boolean                             m_open = false;
+    private boolean                           m_open = false;
 
-    private IFileItemMetaDataFactory            m_meta = null;
+    private IFileItemMetaDataFactory          m_meta = null;
 
     public SimpleFileItemStorage(final String name, final String base)
     {
         m_name = StringOps.requireTrimOrNull(name);
 
-        m_base = StringOps.requireTrimOrNull(FileItemUtils.normalize(StringOps.requireTrimOrNull(base)));
+        m_base = StringOps.requireTrimOrNull(FilePathUtils.normalize(StringOps.requireTrimOrNull(base)));
 
         m_root = new SimpleFolderItem(new File(m_base), this);
 
@@ -94,59 +94,6 @@ public class SimpleFileItemStorage implements IFileItemStorage
         else
         {
             logger.error("SimpleFileItemStorage(" + m_name + "," + m_base + ") can't access.");
-        }
-    }
-
-    @SuppressWarnings("resource")
-    public static void main(String... args)
-    {
-        IFolderItem root = new SimpleFileItemStorage("content", "/Users/deanjones/content").getRoot();
-
-        System.out.println(root.getPath());
-
-        IFileItem item = root.find("IFileItem.java");
-
-        try
-        {
-            item.writeTo(System.out);
-
-            System.out.println();
-
-            System.out.println(item.getPath());
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        item = root.find("/sdl/IFolderItem.java");
-
-        try
-        {
-            item.writeTo(System.out);
-
-            System.out.println();
-
-            System.out.println(item.getContentType());
-
-            System.out.println(item.getPath());
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        item = root.find("/sdl/");
-
-        try
-        {
-            System.out.println();
-
-            System.out.println(item.getContentType());
-
-            System.out.println(item.getPath());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
     }
 
@@ -192,12 +139,6 @@ public class SimpleFileItemStorage implements IFileItemStorage
     public String getBasePath()
     {
         return m_base;
-    }
-
-    @Override
-    public String getAbsolutePath(final String name)
-    {
-        return FileItemUtils.concat(getBasePath(), StringOps.toTrimOrElse(name, StringOps.EMPTY_STRING));
     }
 
     protected static class SimpleFileItem implements IFileItem
@@ -301,19 +242,19 @@ public class SimpleFileItemStorage implements IFileItemStorage
         @Override
         public String getPath()
         {
-            return FileItemUtils.normalize(getAbsolutePath().replace(getFileItemStorage().getBasePath(), "/"));
+            return FilePathUtils.normalize(getAbsolutePath().replace(getFileItemStorage().getBasePath(), FilePathUtils.SINGLE_SLASH));
         }
 
         @Override
         public String getAbsolutePath()
         {
-            return FileItemUtils.normalize(getFile().toPath().toString());
+            return FilePathUtils.normalize(getFile().toPath().toString());
         }
 
         @Override
         public IFolderItem getParent()
         {
-            if (getPath().equals("/"))
+            if (getPath().equals(FilePathUtils.SINGLE_SLASH))
             {
                 return null;
             }
@@ -373,7 +314,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
         @Override
         public boolean rename(final String name)
         {
-            return getFile().renameTo(new File(FileItemUtils.normalize(name)));
+            return getFile().renameTo(new File(FilePathUtils.normalize(name)));
         }
 
         @Override
@@ -417,29 +358,6 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public Stream<IFileItem> items(final IFileItemFilter filter)
-        {
-            final ArrayList<IFileItem> list = new ArrayList<IFileItem>();
-
-            if (isFolder())
-            {
-                final FilenameFilter look = new FilenameFilter()
-                {
-                    @Override
-                    public boolean accept(File file, String name)
-                    {
-                        return filter.accept(MAKE(file, getFileItemStorage()), name);
-                    }
-                };
-                for (File file : getFile().listFiles(look))
-                {
-                    list.add(MAKE(file, getFileItemStorage()));
-                }
-            }
-            return list.stream();
-        }
-
-        @Override
         public IFileItem find(final String name)
         {
             final IFileItem item = file(name);
@@ -454,13 +372,13 @@ public class SimpleFileItemStorage implements IFileItemStorage
         @Override
         public IFileItem file(final String name)
         {
-            String path = FileItemUtils.normalize(name);
+            String path = FilePathUtils.normalize(name);
 
-            if (false == path.startsWith("/"))
+            if (false == path.startsWith(FilePathUtils.SINGLE_SLASH))
             {
-                path = FileItemUtils.concat(getPath(), path);
+                path = FilePathUtils.concat(getPath(), path);
             }
-            path = getFileItemStorage().getAbsolutePath(path);
+            path = FilePathUtils.concat(getFileItemStorage().getBasePath(), StringOps.toTrimOrElse(path, StringOps.EMPTY_STRING));
 
             if (null != path)
             {
@@ -506,28 +424,29 @@ public class SimpleFileItemStorage implements IFileItemStorage
                     {
                         throw new IOException("Can't delete folder " + item.getPath());
                     }
-                    final File file = new File(item.getAbsolutePath());
 
-                    file.mkdirs();
+                }
+                final File file = new File(item.getAbsolutePath());
 
-                    file.createNewFile();
+                file.getParentFile().mkdirs();
 
-                    final FileOutputStream fios = new FileOutputStream(file);
+                file.createNewFile();
 
-                    try
-                    {
-                        IO.copy(input, fios);
+                final FileOutputStream fios = new FileOutputStream(file);
 
-                        fios.flush();
+                try
+                {
+                    IO.copy(input, fios);
 
-                        IO.close(fios);
+                    fios.flush();
 
-                        return MAKE(file, getFileItemStorage());
-                    }
-                    finally
-                    {
-                        IO.close(fios);
-                    }
+                    IO.close(fios);
+
+                    return MAKE(file, getFileItemStorage());
+                }
+                finally
+                {
+                    IO.close(fios);
                 }
             }
             throw new IOException("Can't resolve file " + name);
@@ -548,7 +467,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
         @Override
         public long writeTo(final OutputStream output) throws IOException
         {
-            throw new IOException("Can't read folder " + getPath());
+            throw new IOException("Can't write folder " + getPath());
         }
     }
 }

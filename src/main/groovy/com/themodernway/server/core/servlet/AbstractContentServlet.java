@@ -20,10 +20,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.file.storage.FileItemUtils;
-import com.themodernway.server.core.file.storage.IFileItemStorage;
-import com.themodernway.server.core.file.storage.IFileItemStorageProvider;
-import com.themodernway.server.core.file.storage.IFolderItem;
+import com.themodernway.server.core.file.FilePathUtils;
+import com.themodernway.server.core.file.vfs.IFileItemStorage;
+import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
+import com.themodernway.server.core.file.vfs.IFolderItem;
 
 @SuppressWarnings("serial")
 public abstract class AbstractContentServlet extends HTTPServletBase
@@ -49,7 +49,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
 
     public String getPathNormalized(final String path)
     {
-        return FileItemUtils.normalize(path);
+        return FilePathUtils.normalize(path);
     }
 
     public String getContentServletStorageNameParam()

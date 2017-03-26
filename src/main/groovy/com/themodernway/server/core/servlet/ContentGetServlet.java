@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.file.storage.IFileItem;
-import com.themodernway.server.core.file.storage.IFolderItem;
+import com.themodernway.server.core.file.vfs.IFileItem;
+import com.themodernway.server.core.file.vfs.IFolderItem;
 
 @SuppressWarnings("serial")
 public class ContentGetServlet extends AbstractContentServlet

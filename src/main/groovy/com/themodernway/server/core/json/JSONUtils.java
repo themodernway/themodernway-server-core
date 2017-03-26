@@ -33,10 +33,10 @@ import java.util.Objects;
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.themodernway.server.core.ThreadLocalDateFormat;
 import com.themodernway.server.core.io.NoCloseProxyWriter;
 import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
 import com.themodernway.server.core.json.binder.JSONBinder;
-import com.themodernway.server.core.lang.ThreadLocalDateFormat;
 
 public final class JSONUtils
 {

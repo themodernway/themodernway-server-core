@@ -31,7 +31,7 @@ import java.net.URLConnection;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 
-import com.themodernway.server.core.file.storage.IFileItem;
+import com.themodernway.server.core.file.vfs.IFileItem;
 
 public final class IO
 {

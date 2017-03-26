@@ -14,7 +14,7 @@
  * limitations under the License. ThreadLocal.withInitial(supplier);
  */
 
-package com.themodernway.server.core.lang;
+package com.themodernway.server.core;
 
 import java.text.Format;
 import java.text.ParseException;

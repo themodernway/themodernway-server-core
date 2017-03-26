@@ -14,23 +14,12 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.storage;
+package com.themodernway.server.core.file.vfs;
 
-import java.io.Closeable;
+import com.themodernway.server.core.json.JSONObject;
 
-import com.themodernway.common.api.types.INamed;
-
-public interface IFileItemStorage extends INamed, Closeable
+@FunctionalInterface
+public interface IFileItemMetaDataFactory
 {
-    public boolean isOpen();
-    
-    public String getBasePath();
-    
-    public IFolderItem getRoot();
-    
-    public String getAbsolutePath(String name);
-    
-    public IFileItemMetaDataFactory getFileItemMetaDataFactory();
-    
-    public void setFileItemMetaDataFactory(IFileItemMetaDataFactory meta);
+    public JSONObject getMetaData(IFileItem item);
 }

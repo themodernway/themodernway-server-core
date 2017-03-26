@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.storage;
+package com.themodernway.server.core.file.vfs;
 
-import java.io.Closeable;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.stream.Stream;
 
-public interface IFileItemStorageProvider extends Closeable
-{
-    public List<String> getFileItemStorageNames();
+import org.springframework.core.io.Resource;
 
-    public IFileItemStorage getFileItemStorage(String name);
+public interface IFolderItem extends IFileItem
+{    
+    public Stream<IFileItem> items();
+
+    public IFileItem find(String name);
+    
+    public IFileItem file(String name);
+    
+    public IFileItem create(String name, Resource resource) throws IOException;
+
+    public IFileItem create(String name, InputStream input) throws IOException;
 }

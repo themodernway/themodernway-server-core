@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.storage;
+package com.themodernway.server.core.file.vfs;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.stream.Stream;
+import java.io.Closeable;
 
-import org.springframework.core.io.Resource;
+import com.themodernway.common.api.types.INamed;
 
-public interface IFolderItem extends IFileItem
-{    
-    public Stream<IFileItem> items();
-
-    public Stream<IFileItem> items(IFileItemFilter filter);
-
-    public IFileItem find(String name);
+public interface IFileItemStorage extends INamed, Closeable
+{
+    public boolean isOpen();
     
-    public IFileItem file(String name);
+    public String getBasePath();
     
-    public IFileItem create(String name, Resource resource) throws IOException;
-
-    public IFileItem create(String name, InputStream input) throws IOException;
+    public IFolderItem getRoot();
+        
+    public IFileItemMetaDataFactory getFileItemMetaDataFactory();
+    
+    public void setFileItemMetaDataFactory(IFileItemMetaDataFactory meta);
 }
