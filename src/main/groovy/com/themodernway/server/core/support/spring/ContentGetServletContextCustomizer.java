@@ -24,13 +24,13 @@ import javax.servlet.ServletRegistration.Dynamic;
 
 import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.servlet.ContentGetServlet;
 
-public class SpringDispatcherServletContextCustomizer implements IServletContextCustomizer
+public class ContentGetServletContextCustomizer implements IServletContextCustomizer
 {
-    private static final Logger logger = Logger.getLogger(SpringDispatcherServletContextCustomizer.class);
+    private static final Logger logger = Logger.getLogger(ContentGetServletContextCustomizer.class);
 
     private final String        m_name;
 
@@ -38,7 +38,7 @@ public class SpringDispatcherServletContextCustomizer implements IServletContext
 
     private int                 m_load = 1;
 
-    public SpringDispatcherServletContextCustomizer(final String name, final String maps)
+    public ContentGetServletContextCustomizer(final String name, final String maps)
     {
         final String path = StringOps.requireTrimOrNull(maps);
 
@@ -53,7 +53,7 @@ public class SpringDispatcherServletContextCustomizer implements IServletContext
         m_name = StringOps.requireTrimOrNull(name);
     }
 
-    public SpringDispatcherServletContextCustomizer(final String name, final Collection<String> maps)
+    public ContentGetServletContextCustomizer(final String name, final Collection<String> maps)
     {
         this(name, StringOps.toCommaSeparated(maps));
     }
@@ -94,7 +94,7 @@ public class SpringDispatcherServletContextCustomizer implements IServletContext
 
             if ((null != maps) && (maps.length > 0))
             {
-                final Dynamic dispatcher = sc.addServlet(name, doMakeDispatcherServlet(sc, context));
+                final Dynamic dispatcher = sc.addServlet(name, doMakeContentGetServlet(sc, context));
 
                 if (null != dispatcher)
                 {
@@ -124,8 +124,8 @@ public class SpringDispatcherServletContextCustomizer implements IServletContext
         }
     }
 
-    protected DispatcherServlet doMakeDispatcherServlet(final ServletContext sc, final WebApplicationContext context)
+    protected ContentGetServlet doMakeContentGetServlet(final ServletContext sc, final WebApplicationContext context)
     {
-        return new DispatcherServlet(context);
+        return new ContentGetServlet();
     }
 }
