@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.google.common.util.concurrent.RateLimiter;
-import com.themodernway.server.core.locking.IRateLimited;
+import com.themodernway.server.core.limiting.IRateLimited;
 
 @SuppressWarnings("serial")
 public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IServletCommonOperations

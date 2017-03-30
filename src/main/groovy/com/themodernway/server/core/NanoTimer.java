@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.logging;
+package com.themodernway.server.core;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ public final class NanoTimer implements Serializable
     public final static long  NANOS_IN_MILLIS  = 1000000;
 
     private final long        m_nanos;
-    
+
     private final long        m_mills;
 
     public static final long mills()
@@ -41,7 +41,7 @@ public final class NanoTimer implements Serializable
     public NanoTimer()
     {
         m_nanos = nanos();
-        
+
         m_mills = mills();
     }
 
@@ -49,7 +49,7 @@ public final class NanoTimer implements Serializable
     {
         return (nanos() - m_nanos);
     }
-    
+
     public final long elapsed_m()
     {
         return (mills() - m_mills);
@@ -86,6 +86,6 @@ public final class NanoTimer implements Serializable
     @Override
     public final String toString()
     {
-        return String.format("%.3f mill's", ((double) elapsed() / (double) NANOS_IN_MILLIS));
+        return toPrintable();
     }
 }

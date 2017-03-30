@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.locking;
+package com.themodernway.server.core.limiting;
 
 import com.google.common.util.concurrent.RateLimiter;
 

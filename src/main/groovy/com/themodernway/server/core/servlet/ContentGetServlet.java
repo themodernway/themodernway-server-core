@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.file.FilePathUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 
@@ -32,85 +33,114 @@ public class ContentGetServlet extends AbstractContentServlet
     @Override
     public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        String path = StringOps.toTrimOrElse(request.getPathInfo(), "/");
-
-        if (path.endsWith("/"))
-        {
-            path = path + "index.html";
-        }
-        path = getPathNormalized(path);
-
-        if (null == path)
-        {
-            logger().error("Can't find path info.");
-
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-            return;
-        }
-        final IFolderItem fold = getRoot();
-
-        if (null == fold)
-        {
-            logger().error("Can't find storage root.");
-
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            return;
-        }
-        if (false == fold.isReadable())
-        {
-            logger().error("Can't read storage root.");
-
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            return;
-        }
-        final IFileItem file = fold.file(path);
-
-        if (null == file)
-        {
-            logger().error(String.format("Can't find path (%s).", path));
-
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-            return;
-        }
-        if (false == file.exists())
-        {
-            logger().error(String.format("Path does not exist (%s).", path));
-
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-            return;
-        }
-        if (false == file.isReadable())
-        {
-            logger().error(String.format("Can't read path (%s).", path));
-
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-            return;
-        }
-        if (false == file.isFile())
-        {
-            logger().error(String.format("Path is not file (%s).", path));
-
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-            return;
-        }
         try
         {
-            file.writeTo(response.getOutputStream());
+            String path = StringOps.toTrimOrElse(request.getPathInfo(), FilePathUtils.SINGLE_SLASH);
+
+            String send = StringOps.toTrimOrNull(getRedirect(request, response, path));
+
+            if (null != send)
+            {
+                response.sendRedirect(send);
+
+                return;
+            }
+            if (path.equals(FilePathUtils.SINGLE_SLASH))
+            {
+                response.sendRedirect(getHomePage());
+
+                return;
+            }
+            if (path.endsWith(FilePathUtils.SINGLE_SLASH))
+            {
+                path = path + getHomePage();
+            }
+            path = getPathNormalized(path);
+
+            if (null == path)
+            {
+                logger().error("Can't find path info.");
+
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+                return;
+            }
+            final IFolderItem fold = getRoot();
+
+            if (null == fold)
+            {
+                logger().error("Can't find storage root.");
+
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+                return;
+            }
+            if (false == fold.isReadable())
+            {
+                logger().error("Can't read storage root.");
+
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+                return;
+            }
+            final IFileItem file = fold.file(path);
+
+            if (null == file)
+            {
+                logger().error(String.format("Can't find path (%s).", path));
+
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+                return;
+            }
+            if (false == file.exists())
+            {
+                logger().error(String.format("Path does not exist (%s).", path));
+
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+                return;
+            }
+            if (false == file.isReadable())
+            {
+                logger().error(String.format("Can't read path (%s).", path));
+
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+                return;
+            }
+            if (false == file.isFile())
+            {
+                logger().error(String.format("Path is not file (%s).", path));
+
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+                return;
+            }
+            send(request, response, file);
         }
         catch (Exception e)
         {
             logger().error("Captured overall exception for security.", e);
 
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            return;
         }
+    }
+
+    public String getRedirect(final HttpServletRequest request, final HttpServletResponse response, final String path) throws Exception
+    {
+        return null;
+    }
+
+    public void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file) throws Exception
+    {
+        file.writeTo(response.getOutputStream());
+
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    public String getHomePage()
+    {
+        return "index.html";
     }
 }
