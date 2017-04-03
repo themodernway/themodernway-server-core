@@ -25,7 +25,7 @@ dependencies {
 ```
 Javadoc URL:
 
-https://www.themodernway.com/documents/javadoc/themodernway-server-core
+http://docs.themodernway.com/documents/javadoc/themodernway-server-core/
 
 License:
 
