@@ -18,6 +18,7 @@ package com.themodernway.server.core.support
 
 import java.util.function.Supplier
 
+import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
@@ -310,5 +311,11 @@ public trait CoreGroovyTrait implements JSONTrait
     public IWebSocketService getWebSocketService(String name)
     {
         getWebSocketServiceProvider().getWebSocketService(name)
+    }
+    
+    @Memoized
+    public CacheManager getCacheManager(String name)
+    {
+        getServerContext().getCacheManager(name)
     }
 }

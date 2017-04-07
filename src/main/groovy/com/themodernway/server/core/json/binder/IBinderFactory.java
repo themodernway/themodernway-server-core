@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.vfs;
+package com.themodernway.server.core.json.binder;
 
-import java.io.Closeable;
-import java.io.IOException;
-
-import com.themodernway.common.api.types.INamed;
-
-public interface IFileItemStorage extends INamed, Closeable
+@FunctionalInterface
+public interface IBinderFactory
 {
-    public boolean isOpen();
-    
-    public void validate() throws IOException;
-    
-    public String getBasePath();
-    
-    public IFolderItem getRoot();
-        
-    public IFileItemMetaDataFactory getFileItemMetaDataFactory();
-    
-    public void setFileItemMetaDataFactory(IFileItemMetaDataFactory meta);
+    public IBinder getBinder();
 }

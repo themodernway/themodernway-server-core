@@ -33,7 +33,7 @@ public abstract class AbstractWebSocketEndPointByPathPart extends CoreGroovySupp
 {
     private final String                m_pathpart
 
-    private WebSocketServiceContext     m_context
+    private WebSocketServiceContext     m_wcontext
 
     protected AbstractWebSocketEndPointByPathPart(final String pathpart)
     {
@@ -52,9 +52,15 @@ public abstract class AbstractWebSocketEndPointByPathPart extends CoreGroovySupp
         {
             logger().info("onOpen(${name},${iden})")
 
-            m_context = new WebSocketServiceContext(session, service)
+            if (m_wcontext)
+            {
+                getWebSocketServiceProvider().removeWebSocketServiceSession(m_wcontext)
+                
+                m_wcontext = null
+            }
+            m_wcontext = new WebSocketServiceContext(session, service)
 
-            getWebSocketServiceProvider().addWebSocketServiceSession(m_context)
+            getWebSocketServiceProvider().addWebSocketServiceSession(m_wcontext)
         }
         else
         {
@@ -79,9 +85,15 @@ public abstract class AbstractWebSocketEndPointByPathPart extends CoreGroovySupp
 
         logger().info("onClose(${name},${iden})")
 
-        if (m_context)
+        if (m_wcontext)
         {
-            getWebSocketServiceProvider().removeWebSocketServiceSession(m_context)
+            getWebSocketServiceProvider().removeWebSocketServiceSession(m_wcontext)
+            
+            m_wcontext = null
+        }
+        else
+        {
+            logger().error("onClose(${name},${iden}) No context")
         }
     }
 
@@ -95,7 +107,18 @@ public abstract class AbstractWebSocketEndPointByPathPart extends CoreGroovySupp
         {
             if (session.isOpen())
             {
-                m_context.getService().onMessage(m_context, text, last)
+                IWebSocketService service = m_wcontext.getService()
+                
+                if (service)
+                {
+                    service.acquire()
+                
+                    service.onMessage(m_wcontext, text, last)
+                }
+                else
+                {
+                    logger().error("onText(${name},${iden}) No service in context")
+                }
             }
             else
             {

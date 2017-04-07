@@ -98,6 +98,15 @@ public class SimpleFileItemStorage implements IFileItemStorage
     }
 
     @Override
+    public void validate() throws IOException
+    {
+        if (false == isOpen())
+        {
+            throw new IOException("SimpleFileItemStorage(" + m_name + "," + m_base + ") closed.");
+        }
+    }
+
+    @Override
     public IFileItemMetaDataFactory getFileItemMetaDataFactory()
     {
         return m_meta;
@@ -155,6 +164,12 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
+        public void validate() throws IOException
+        {
+            getFileItemStorage().validate();
+        }
+
+        @Override
         public String getContentType()
         {
             return mapper.getContentType(getFile());
@@ -186,6 +201,8 @@ public class SimpleFileItemStorage implements IFileItemStorage
         @Override
         public Stream<String> lines() throws IOException
         {
+            validate();
+
             if (exists() && isReadable())
             {
                 if (isFolder())
@@ -212,7 +229,17 @@ public class SimpleFileItemStorage implements IFileItemStorage
         @Override
         public boolean isHidden()
         {
-            return getFile().isHidden();
+            if (getFile().isHidden())
+            {
+                return true;
+            }
+            final IFolderItem item = getParent();
+
+            if (null != item)
+            {
+                return item.isHidden();
+            }
+            return false;
         }
 
         @Override
@@ -290,6 +317,8 @@ public class SimpleFileItemStorage implements IFileItemStorage
         @Override
         public InputStream getInputStream() throws IOException
         {
+            validate();
+
             return new FileInputStream(getFile());
         }
 
@@ -312,14 +341,10 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public boolean rename(final String name)
-        {
-            return getFile().renameTo(new File(FilePathUtils.normalize(name)));
-        }
-
-        @Override
         public long writeTo(final OutputStream output) throws IOException
         {
+            validate();
+
             return IO.copy(this, Objects.requireNonNull(output));
         }
 
@@ -390,6 +415,8 @@ public class SimpleFileItemStorage implements IFileItemStorage
         @Override
         public IFileItem create(final String name, final Resource resource) throws IOException
         {
+            validate();
+
             InputStream stream = null;
 
             try
@@ -407,6 +434,8 @@ public class SimpleFileItemStorage implements IFileItemStorage
         @Override
         public IFileItem create(final String name, final InputStream input) throws IOException
         {
+            validate();
+
             IFileItem item = file(name);
 
             if (null != item)
@@ -461,12 +490,16 @@ public class SimpleFileItemStorage implements IFileItemStorage
         @Override
         public InputStream getInputStream() throws IOException
         {
+            validate();
+
             throw new IOException("Can't read folder " + getPath());
         }
 
         @Override
         public long writeTo(final OutputStream output) throws IOException
         {
+            validate();
+
             throw new IOException("Can't write folder " + getPath());
         }
     }

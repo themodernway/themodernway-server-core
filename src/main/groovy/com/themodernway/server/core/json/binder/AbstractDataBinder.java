@@ -338,7 +338,7 @@ public abstract class AbstractDataBinder implements IBinder
             {
                 return MAKE(object);
             }
-            else if (object instanceof String)
+            else if (object instanceof CharSequence)
             {
                 return bindJSON(object.toString());
             }

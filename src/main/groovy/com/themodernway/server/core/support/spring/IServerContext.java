@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import org.apache.log4j.Logger;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -134,4 +135,6 @@ public interface IServerContext extends IJSONUtilities, IAuthorizer, IProperties
     public Resource resource(String location);
 
     public Reader reader(String location) throws IOException;
+    
+    public CacheManager getCacheManager(String name);
 }

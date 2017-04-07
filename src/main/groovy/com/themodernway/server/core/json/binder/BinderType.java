@@ -16,18 +16,26 @@
 
 package com.themodernway.server.core.json.binder;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+
+import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.IStringValued;
 
-public enum BinderType implements IStringValued
+public enum BinderType implements IBinderFactory, IStringValued
 {
-    JSON("JSON"), YAML("YAML"), XML("XML");
+    JSON("JSON", JSONBinder::new), YAML("YAML", YAMLBinder::new), XML("XML", XMLBinder::new);
 
-    private final String m_value;
+    private final String         m_value;
 
-    private BinderType(final String value)
+    private final IBinderFactory m_maker;
+
+    private BinderType(final String value, final IBinderFactory maker)
     {
-        m_value = StringOps.requireTrimOrNull(value);
+        m_value = StringOps.requireTrimOrNull(value).toUpperCase();
+
+        m_maker = Objects.requireNonNull(maker);
     }
 
     @Override
@@ -40,5 +48,82 @@ public enum BinderType implements IStringValued
     public final String toString()
     {
         return m_value;
+    }
+
+    @Override
+    public final IBinder getBinder()
+    {
+        return m_maker.getBinder();
+    }
+
+    public static final BinderType forContentType(final String type)
+    {
+        return BinderTypeOp.forContentType(type);
+    }
+
+    public static final BinderType forContentType(final Supplier<String> type)
+    {
+        return BinderTypeOp.forContentType(type.get());
+    }
+    
+    public static final BinderType forName(final String name)
+    {
+        return BinderTypeOp.forName(name);
+    }
+
+    public static final BinderType forName(final Supplier<String> name)
+    {
+        return BinderTypeOp.forName(name.get());
+    }
+
+    static final class BinderTypeOp implements IHTTPConstants
+    {
+        private BinderTypeOp()
+        {
+        }
+
+        static final BinderType forContentType(final String type)
+        {
+            final String cont = StringOps.toTrimOrElse(type, CONTENT_TYPE_APPLICATION_JSON).toLowerCase();
+
+            if (cont.contains(CONTENT_TYPE_APPLICATION_JSON))
+            {
+                return BinderType.JSON;
+            }
+            else if ((cont.contains(CONTENT_TYPE_TEXT_XML)) || (cont.contains(CONTENT_TYPE_APPLICATION_XML)))
+            {
+                return BinderType.XML;
+            }
+            else if ((cont.contains(CONTENT_TYPE_TEXT_YAML)) || (cont.contains(CONTENT_TYPE_APPLICATION_YAML)))
+            {
+                return BinderType.YAML;
+            }
+            else
+            {
+                return BinderType.JSON;
+            }
+        }
+        
+        static final BinderType forName(final String name)
+        {
+            final String cont = StringOps.toTrimOrElse(name, BinderType.JSON.getValue()).toUpperCase();
+
+            if (cont.equals(BinderType.JSON.getValue()))
+            {
+                return BinderType.JSON;
+            }
+            else if (cont.equals(BinderType.XML.getValue()))
+            {
+                return BinderType.XML;
+            }
+            else if (cont.equals(BinderType.YAML.getValue()))
+            {
+                return BinderType.YAML;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

@@ -20,8 +20,9 @@ import java.io.Closeable;
 
 import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.limiting.IRateLimited;
 
-public interface IWebSocketService extends INamed, Closeable
+public interface IWebSocketService extends IRateLimited, INamed, Closeable
 {
     public void onMessage(IWebSocketServiceContext context, String text, boolean last) throws Exception;
     

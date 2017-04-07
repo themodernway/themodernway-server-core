@@ -18,6 +18,7 @@ package com.themodernway.server.core.support.spring.network.websocket
 
 import org.springframework.stereotype.Service
 
+import com.google.common.util.concurrent.RateLimiter
 import com.themodernway.common.api.java.util.StringOps
 import com.themodernway.common.api.types.INamedType
 import com.themodernway.server.core.json.JSONObject
@@ -31,12 +32,16 @@ public abstract class WebSocketServiceSupport extends CoreGroovySupport implemen
 {
     private String      m_name
     
+    private RateLimiter m_rate
+    
     private JSONObject  m_attr = json()
     
     protected WebSocketServiceSupport()
     {
+        m_rate = RateLimiterFactory.create(getClass())
     }
 
+    @Override
     public String getName()
     {
         if (m_name)
@@ -55,6 +60,15 @@ public abstract class WebSocketServiceSupport extends CoreGroovySupport implemen
             }
         }
         claz.getSimpleName()
+    }
+    
+    @Override
+    public void acquire()
+    {
+        if (m_rate)
+        {
+            m_rate.acquire()
+        }
     }
 
     @Memoized

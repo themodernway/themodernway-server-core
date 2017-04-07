@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.apache.log4j.Logger;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -481,5 +482,11 @@ public class ServerContextInstance extends JSONUtilitiesInstance implements ISer
     public final IWebSocketService getWebSocketService(final String name)
     {
         return getWebSocketServiceProvider().getWebSocketService(name);
+    }
+
+    @Override
+    public CacheManager getCacheManager(final String name)
+    {
+        return getBeanSafely(Objects.requireNonNull(name), CacheManager.class);
     }
 }

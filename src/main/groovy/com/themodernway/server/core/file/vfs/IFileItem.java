@@ -43,8 +43,6 @@ public interface IFileItem extends INamed
 
     public boolean delete();
 
-    public boolean rename(String name);
-
     public Date getLastModified();
 
     public long getFileSizeLimit();
@@ -64,6 +62,8 @@ public interface IFileItem extends INamed
     public IFolderItem getAsFolderItem();
 
     public IFileItemStorage getFileItemStorage();
+    
+    public void validate() throws IOException;
 
     public Stream<String> lines() throws IOException;
 

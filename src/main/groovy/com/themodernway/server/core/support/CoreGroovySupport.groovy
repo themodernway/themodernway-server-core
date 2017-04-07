@@ -19,6 +19,7 @@ package com.themodernway.server.core.support
 import java.util.function.Supplier
 
 import org.apache.log4j.Logger
+import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
@@ -455,5 +456,11 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public IWebSocketService getWebSocketService(String name)
     {
         getWebSocketServiceProvider().getWebSocketService(name)
+    }
+    
+    @Memoized
+    public CacheManager getCacheManager(String name)
+    {
+        getServerContext().getCacheManager(name)
     }
 }
