@@ -22,47 +22,46 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.stream.Stream;
 
-import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.json.JSONObject;
 
-public interface IFileItem extends INamed
+public interface IFileItem
 {
-    public long getSize();
-
-    public boolean exists();
-
-    public boolean isHidden();
-
-    public boolean isReadable();
-
-    public boolean isWritable();
-
-    public boolean isFile();
-
-    public boolean isFolder();
-
-    public boolean delete();
-
-    public Date getLastModified();
-
-    public long getFileSizeLimit();
-
-    public String getPath();
+    public String getName() throws IOException;
     
-    public String getAbsolutePath();
+    public long getSize() throws IOException;
 
-    public String getContentType();
+    public boolean exists() throws IOException;
 
-    public JSONObject getMetaData();
+    public boolean isHidden() throws IOException;
 
-    public IFolderItem getRoot();
+    public boolean isReadable() throws IOException;
 
-    public IFolderItem getParent();
+    public boolean isWritable() throws IOException;
 
-    public IFolderItem getAsFolderItem();
+    public boolean isFile() throws IOException;
 
-    public IFileItemStorage getFileItemStorage();
-    
+    public boolean isFolder() throws IOException;
+
+    public boolean delete() throws IOException;
+
+    public Date getLastModified() throws IOException;
+
+    public long getFileSizeLimit() throws IOException;
+
+    public String getPath() throws IOException;
+
+    public String getAbsolutePath() throws IOException;
+
+    public String getContentType() throws IOException;
+
+    public JSONObject getMetaData() throws IOException;
+
+    public IFolderItem getRoot() throws IOException;
+
+    public IFolderItem getParent() throws IOException;
+
+    public IFolderItem getAsFolderItem() throws IOException;
+
     public void validate() throws IOException;
 
     public Stream<String> lines() throws IOException;
@@ -70,4 +69,6 @@ public interface IFileItem extends INamed
     public InputStream getInputStream() throws IOException;
 
     public long writeTo(OutputStream output) throws IOException;
+    
+    public IFileItemStorage getFileItemStorage();
 }

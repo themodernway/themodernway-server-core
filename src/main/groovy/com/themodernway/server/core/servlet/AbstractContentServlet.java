@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.servlet;
 
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -82,7 +83,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
         m_storage_name = StringOps.toTrimOrNull(name);
     }
 
-    public IFolderItem getRoot()
+    public IFolderItem getRoot() throws IOException
     {
         final IFileItemStorage stor = getFileItemStorage();
 
@@ -93,7 +94,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
         return null;
     }
 
-    public IFolderItem getRoot(final String name)
+    public IFolderItem getRoot(final String name) throws IOException
     {
         final IFileItemStorage stor = getFileItemStorage(name);
 

@@ -28,9 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.json.JSONArrayDefinition;
 import com.themodernway.common.api.json.JSONType;
 
+@JacksonXmlRootElement(localName = "results")
 public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {
     private static final String NULL_FOR_OUTPUT  = "null".intern();

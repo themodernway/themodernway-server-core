@@ -33,13 +33,15 @@ import com.themodernway.server.core.limiting.IRateLimited;
 @SuppressWarnings("serial")
 public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IServletCommonOperations
 {
-    private Logger      m_logger    = Logger.getLogger(getClass());
+    private Logger       m_logger    = Logger.getLogger(getClass());
 
-    private RateLimiter m_ratelimit = null;
+    private RateLimiter  m_ratelimit = null;
 
-    private boolean     m_iscontent = false;
+    private boolean      m_iscontent = false;
 
-    private int         m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private List<String> m_roleslist = Collections.emptyList();
+
+    private int          m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
     protected HTTPServletBase()
     {
@@ -88,7 +90,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
             rate.acquire();
         }
     }
-    
+
     @Override
     public boolean isMaxContentTypeLengthInitialized()
     {
@@ -119,6 +121,16 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
     public List<String> getConfigurationParameterNames()
     {
         return Collections.list(getInitParameterNames());
+    }
+
+    public List<String> getRequiredRoles()
+    {
+        return Collections.unmodifiableList(m_roleslist);
+    }
+
+    public void setRequiredRoles(final List<String> roles)
+    {
+        m_roleslist = (roles == null ? Collections.emptyList() : roles);
     }
 
     @Override

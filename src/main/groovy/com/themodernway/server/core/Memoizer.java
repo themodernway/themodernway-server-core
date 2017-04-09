@@ -19,17 +19,21 @@ package com.themodernway.server.core;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-public class Memoizer<T, R>
+public final class Memoizer<T, R>
 {
     private final ConcurrentHashMap<T, R> m_cache = new ConcurrentHashMap<T, R>();
 
-    private Function<T, R> doMemoize(final Function<T, R> function)
+    private Memoizer()
+    {
+    }
+
+    private final Function<T, R> remember(final Function<T, R> function)
     {
         return input -> m_cache.computeIfAbsent(input, function);
     }
 
-    public static <T, R> Function<T, R> memoize(final Function<T, R> function)
+    public static final <T, R> Function<T, R> memoize(final Function<T, R> function)
     {
-        return new Memoizer<T, R>().doMemoize(function);
+        return new Memoizer<T, R>().remember(function);
     }
 }

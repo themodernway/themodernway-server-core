@@ -24,14 +24,14 @@ import com.themodernway.common.api.types.INamed;
 public interface IFileItemStorage extends INamed, Closeable
 {
     public boolean isOpen();
-    
+
     public void validate() throws IOException;
-    
+
     public String getBasePath();
-    
-    public IFolderItem getRoot();
-        
+
+    public IFolderItem getRoot() throws IOException;
+
     public IFileItemMetaDataFactory getFileItemMetaDataFactory();
-    
+
     public void setFileItemMetaDataFactory(IFileItemMetaDataFactory meta);
 }

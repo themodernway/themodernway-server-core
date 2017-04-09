@@ -40,26 +40,26 @@ public class ContentUploadServlet extends AbstractContentServlet
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        final IFolderItem fold = getRoot();
-
-        if (null == fold)
-        {
-            logger().error("Can't find storage root.");
-
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            return;
-        }
-        if (false == fold.isWritable())
-        {
-            logger().error("Can't write storage root.");
-
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            return;
-        }
         try
         {
+            final IFolderItem fold = getRoot();
+
+            if (null == fold)
+            {
+                logger().error("Can't find storage root.");
+
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+                return;
+            }
+            if (false == fold.isWritable())
+            {
+                logger().error("Can't write storage root.");
+
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+                return;
+            }
             final ServletFileUpload upload = new ServletFileUpload(getDiskFileItemFactory());
 
             upload.setSizeMax(getFileSizeLimit());

@@ -19,8 +19,10 @@ package com.themodernway.server.core.json.schema;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.server.core.json.JSONObject;
 
+@JacksonXmlRootElement(localName = "schema")
 public class JSONSchema extends JSONObject
 {
     private static final long serialVersionUID = 9136364739594699014L;

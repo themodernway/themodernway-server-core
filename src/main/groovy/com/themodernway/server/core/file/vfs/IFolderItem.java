@@ -23,13 +23,13 @@ import java.util.stream.Stream;
 import org.springframework.core.io.Resource;
 
 public interface IFolderItem extends IFileItem
-{    
-    public Stream<IFileItem> items();
+{
+    public Stream<IFileItem> items() throws IOException;
 
-    public IFileItem find(String name);
-    
-    public IFileItem file(String name);
-    
+    public IFileItem find(String name) throws IOException;
+
+    public IFileItem file(String name) throws IOException;
+
     public IFileItem create(String name, Resource resource) throws IOException;
 
     public IFileItem create(String name, InputStream input) throws IOException;

@@ -30,10 +30,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.json.JSONObjectDefinition;
 import com.themodernway.common.api.json.JSONType;
 import com.themodernway.server.core.json.binder.JSONBinder;
 
+@JacksonXmlRootElement(localName = "result")
 public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {
     private static final long   serialVersionUID = -6811236788038367702L;

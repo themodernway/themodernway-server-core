@@ -16,11 +16,18 @@
 
 package com.themodernway.server.core;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.support.spring.IServerContext;
+import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 public interface ICoreCommon
 {
@@ -77,5 +84,98 @@ public interface ICoreCommon
     default public <T> T requireNonNull(T object, Supplier<String> reason)
     {
         return Objects.requireNonNull(object, reason);
+    }
+
+    default public String getEnvironmentProperty(final String name)
+    {
+        return System.getenv(requireNonNull(name));
+    }
+
+    default public String getEnvironmentProperty(final String name, final String otherwise)
+    {
+        final String prop = getEnvironmentProperty(name);
+
+        if (null != prop)
+        {
+            return prop;
+        }
+        return otherwise;
+    }
+
+    default public String getEnvironmentProperty(final String name, final Supplier<String> otherwise)
+    {
+        final String prop = getEnvironmentProperty(name);
+
+        if (null != prop)
+        {
+            return prop;
+        }
+        return otherwise.get();
+    }
+
+    default public String getSystemProperty(final String name)
+    {
+        return System.getProperty(requireNonNull(name));
+    }
+
+    default public String getSystemProperty(final String name, final String otherwise)
+    {
+        final String prop = getSystemProperty(name);
+
+        if (null != prop)
+        {
+            return prop;
+        }
+        return otherwise;
+    }
+
+    default public String getSystemProperty(final String name, final Supplier<String> otherwise)
+    {
+        final String prop = getSystemProperty(name);
+
+        if (null != prop)
+        {
+            return prop;
+        }
+        return otherwise.get();
+    }
+
+    default public List<String> toUniqueStringList(final Stream<String> strings)
+    {
+        return toUniqueStringList(strings.collect(Collectors.toList()));
+    }
+
+    default public List<String> toUniqueStringList(final Supplier<String> strings)
+    {
+        return toUniqueStringList(strings.get());
+    }
+
+    default public List<String> toUniqueStringList(String strings)
+    {
+        strings = requireTrimOrNull(strings);
+
+        if (strings.contains(","))
+        {
+            return Arrays.asList(StringOps.toUniqueArray(StringOps.tokenizeToStringCollection(strings, ",", true, true)));
+        }
+        else
+        {
+            return Arrays.asList(StringOps.toUniqueArray(strings));
+        }
+    }
+
+    default public List<String> toUniqueStringList(final String[] strings)
+    {
+        return Arrays.asList(StringOps.toUniqueArray(requireNonNull(strings)));
+    }
+
+    default public List<String> toUniqueStringList(final Collection<String> strings)
+    {
+        return Arrays.asList(StringOps.toUniqueArray(requireNonNull(strings)));
+    }
+
+    default public IServerContext getServerContext()
+    {
+        return ServerContextInstance.getServerContextInstance();
     }
 }

@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.servlet;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -24,6 +26,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -35,6 +38,7 @@ import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.security.AuthorizationResult;
 import com.themodernway.server.core.security.session.IServerSession;
+import com.themodernway.server.core.security.session.IServerSessionRepository;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
@@ -127,14 +131,82 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
         return principals;
     }
 
+    public default IServerSession getSession(final HttpServletRequest request)
+    {
+        final IServerSessionRepository repository = getServerContext().getServerSessionRepository(getSessionProviderDomainName());
+
+        if (null != repository)
+        {
+            String sessid = StringOps.toTrimOrNull(request.getHeader(X_SESSION_ID_HEADER));
+
+            if (null != sessid)
+            {
+                final IServerSession session = repository.getSession(sessid);
+
+                if (null != session)
+                {
+                    return session;
+                }
+            }
+            final HttpSession httpsession = request.getSession(false);
+
+            if (null != httpsession)
+            {
+                final Object attribute = httpsession.getAttribute(X_SESSION_ID_HEADER);
+
+                if (attribute instanceof String)
+                {
+                    sessid = StringOps.toTrimOrNull(attribute.toString());
+
+                    if (null != sessid)
+                    {
+                        final IServerSession session = repository.getSession(sessid);
+
+                        if (null != session)
+                        {
+                            return session;
+                        }
+                    }
+                }
+                sessid = StringOps.toTrimOrNull(httpsession.getId());
+
+                if (null != sessid)
+                {
+                    final IServerSession session = repository.getSession(sessid);
+
+                    if (null != session)
+                    {
+                        return session;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public default IServerContext getServerContext()
     {
         return getServerContextInstance();
     }
 
+    public default List<String> getCombinedRoles(final IServerSession sess, final List<String> role)
+    {
+        final ArrayList<String> list = new ArrayList<String>();
+
+        if (null != role)
+        {
+            list.addAll(role);
+        }
+        if (null != sess)
+        {
+            list.addAll(sess.getRoles());
+        }
+        return Arrays.asList(StringOps.toUniqueArray(list));
+    }
+
     public default AuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)
     {
-        return getServerContext().isAuthorized(target, roles);
+        return getServerContext().isAuthorized(target, getCombinedRoles(session, roles));
     }
 
     public default boolean isApplicationContextInitialized()

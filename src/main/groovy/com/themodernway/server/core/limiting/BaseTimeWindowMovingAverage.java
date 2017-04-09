@@ -20,6 +20,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.themodernway.server.core.ITimeSupplier;
+
 public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
 {
     private final long          m_window;

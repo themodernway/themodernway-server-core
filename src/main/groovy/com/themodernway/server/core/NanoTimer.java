@@ -18,41 +18,27 @@ package com.themodernway.server.core;
 
 import java.io.Serializable;
 
+import com.themodernway.common.api.java.util.IHTTPConstants;
+
 public final class NanoTimer implements Serializable
 {
     private static final long serialVersionUID = 3808909409015875020L;
 
-    public final static long  NANOS_IN_MILLIS  = 1000000;
-
-    private final long        m_nanos;
-
-    private final long        m_mills;
-
-    public static final long mills()
-    {
-        return System.currentTimeMillis();
-    }
-
-    public static final long nanos()
-    {
-        return System.nanoTime();
-    }
+    private volatile long     m_nanos;
 
     public NanoTimer()
     {
-        m_nanos = nanos();
-
-        m_mills = mills();
+        m_nanos = System.nanoTime();
     }
 
     public final long elapsed()
     {
-        return (nanos() - m_nanos);
+        return (System.nanoTime() - m_nanos);
     }
 
-    public final long elapsed_m()
+    public synchronized void reset()
     {
-        return (mills() - m_mills);
+        m_nanos = System.nanoTime();
     }
 
     public final String toPrintable()
@@ -64,7 +50,7 @@ public final class NanoTimer implements Serializable
     {
         final long diff = elapsed();
 
-        if (diff < NANOS_IN_MILLIS)
+        if (diff < IHTTPConstants.NANOSECONDS_IN_MILLISECONDS)
         {
             return diff + " nano's";
         }
@@ -74,7 +60,7 @@ public final class NanoTimer implements Serializable
 
             if (places > 0)
             {
-                return String.format("%." + places + "f mill's", ((double) diff / (double) NANOS_IN_MILLIS));
+                return String.format("%." + places + "f mill's", ((double) diff / (double) IHTTPConstants.NANOSECONDS_IN_MILLISECONDS));
             }
             else
             {

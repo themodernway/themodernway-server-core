@@ -67,6 +67,8 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
     private static final MimetypesFileTypeMap mapper = new MimetypesFileTypeMap();
 
+    private final File                        m_file;
+
     private final String                      m_name;
 
     private final String                      m_base;
@@ -83,9 +85,11 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
         m_base = StringOps.requireTrimOrNull(FilePathUtils.normalize(StringOps.requireTrimOrNull(base)));
 
-        m_root = new SimpleFolderItem(new File(m_base), this);
+        m_file = new File(m_base);
 
-        if ((m_root.exists()) && (m_root.isFolder()) && (m_root.isReadable()))
+        m_root = new SimpleFolderItem(m_file, this);
+
+        if ((m_file.exists()) && (m_file.isDirectory()) && (m_file.canRead()))
         {
             m_open = true;
 
@@ -125,8 +129,10 @@ public class SimpleFileItemStorage implements IFileItemStorage
     }
 
     @Override
-    public IFolderItem getRoot()
+    public IFolderItem getRoot() throws IOException
     {
+        validate();
+        
         return m_root;
     }
 
@@ -170,14 +176,18 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public String getContentType()
+        public String getContentType() throws IOException
         {
+            validate();
+
             return mapper.getContentType(getFile());
         }
 
         @Override
-        public JSONObject getMetaData()
+        public JSONObject getMetaData() throws IOException
         {
+            validate();
+
             final IFileItemMetaDataFactory fact = getFileItemStorage().getFileItemMetaDataFactory();
 
             if (null != fact)
@@ -193,8 +203,10 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public long getFileSizeLimit()
+        public long getFileSizeLimit() throws IOException
         {
+            validate();
+
             return getFile().getUsableSpace();
         }
 
@@ -215,20 +227,26 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public String getName()
+        public String getName() throws IOException
         {
+            validate();
+
             return getFile().getName();
         }
 
         @Override
-        public long getSize()
+        public long getSize() throws IOException
         {
+            validate();
+
             return getFile().length();
         }
 
         @Override
-        public boolean isHidden()
+        public boolean isHidden() throws IOException
         {
+            validate();
+
             if (getFile().isHidden())
             {
                 return true;
@@ -243,44 +261,58 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public boolean isReadable()
+        public boolean isReadable() throws IOException
         {
+            validate();
+
             return getFile().canRead();
         }
 
         @Override
-        public boolean isWritable()
+        public boolean isWritable() throws IOException
         {
+            validate();
+
             return getFile().canWrite();
         }
 
         @Override
-        public boolean isFile()
+        public boolean isFile() throws IOException
         {
+            validate();
+
             return getFile().isFile();
         }
 
         @Override
-        public boolean isFolder()
+        public boolean isFolder() throws IOException
         {
+            validate();
+
             return getFile().isDirectory();
         }
 
         @Override
-        public String getPath()
+        public String getPath() throws IOException
         {
+            validate();
+
             return FilePathUtils.normalize(getAbsolutePath().replace(getFileItemStorage().getBasePath(), FilePathUtils.SINGLE_SLASH));
         }
 
         @Override
-        public String getAbsolutePath()
+        public String getAbsolutePath() throws IOException
         {
+            validate();
+
             return FilePathUtils.normalize(getFile().toPath().toString());
         }
 
         @Override
-        public IFolderItem getParent()
+        public IFolderItem getParent() throws IOException
         {
+            validate();
+
             if (getPath().equals(FilePathUtils.SINGLE_SLASH))
             {
                 return null;
@@ -295,8 +327,10 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public IFolderItem getAsFolderItem()
+        public IFolderItem getAsFolderItem() throws IOException
         {
+            validate();
+
             if (this instanceof IFolderItem)
             {
                 return (IFolderItem) this;
@@ -309,8 +343,10 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public IFolderItem getRoot()
+        public IFolderItem getRoot() throws IOException
         {
+            validate();
+
             return getFileItemStorage().getRoot();
         }
 
@@ -323,20 +359,26 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public Date getLastModified()
+        public Date getLastModified() throws IOException
         {
+            validate();
+
             return new Date(getFile().lastModified());
         }
 
         @Override
-        public boolean exists()
+        public boolean exists() throws IOException
         {
+            validate();
+
             return getFile().exists();
         }
 
         @Override
-        public boolean delete()
+        public boolean delete() throws IOException
         {
+            validate();
+
             return getFile().delete();
         }
 
@@ -368,8 +410,10 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public Stream<IFileItem> items()
+        public Stream<IFileItem> items() throws IOException
         {
+            validate();
+
             final ArrayList<IFileItem> list = new ArrayList<IFileItem>();
 
             if (isFolder())
@@ -383,8 +427,10 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public IFileItem find(final String name)
+        public IFileItem find(final String name) throws IOException
         {
+            validate();
+
             final IFileItem item = file(name);
 
             if ((null != item) && (item.exists()))
@@ -395,8 +441,10 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public IFileItem file(final String name)
+        public IFileItem file(final String name) throws IOException
         {
+            validate();
+
             String path = FilePathUtils.normalize(name);
 
             if (false == path.startsWith(FilePathUtils.SINGLE_SLASH))
@@ -482,8 +530,10 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
-        public IFolderItem getAsFolderItem()
+        public IFolderItem getAsFolderItem() throws IOException
         {
+            validate();
+
             return this;
         }
 
