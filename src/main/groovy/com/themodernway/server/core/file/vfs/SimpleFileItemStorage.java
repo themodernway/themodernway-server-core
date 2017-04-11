@@ -17,8 +17,6 @@
 package com.themodernway.server.core.file.vfs;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -364,7 +362,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
             readtest();
 
-            return new FileInputStream(getFile());
+            return Files.newInputStream(getFile().toPath());
         }
 
         @Override
@@ -550,7 +548,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
                 file.createNewFile();
 
-                final FileOutputStream fios = new FileOutputStream(file);
+                final OutputStream fios = Files.newOutputStream(file.toPath());
 
                 try
                 {

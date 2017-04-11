@@ -18,7 +18,6 @@ package com.themodernway.server.core.io;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URLConnection;
+import java.nio.file.Files;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
@@ -125,7 +125,7 @@ public final class IO
 
         try
         {
-            stream = new FileInputStream(file);
+            stream = Files.newInputStream(file.toPath());
 
             return copy(stream, output);
         }
@@ -153,7 +153,7 @@ public final class IO
 
         try
         {
-            stream = new FileInputStream(file);
+            stream = Files.newInputStream(file.toPath());
 
             return copy(stream, output);
         }
