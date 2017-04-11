@@ -16,9 +16,6 @@
 
 package com.themodernway.server.core.servlet;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,8 +30,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.common.api.java.util.IHTTPConstants;
-import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.INamed;
+import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.server.core.ITimeSupplier;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.security.AuthorizationResult;
 import com.themodernway.server.core.security.session.IServerSession;
@@ -42,7 +40,7 @@ import com.themodernway.server.core.security.session.IServerSessionRepository;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
-public interface IServletCommonOperations extends IHTTPConstants, INamed
+public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, INamed
 {
     public static final int    DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH = 64;
 
@@ -107,7 +105,7 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
 
         for (String k : keys)
         {
-            final String name = StringOps.toTrimOrNull(k);
+            final String name = toTrimOrNull(k);
 
             if (null != name)
             {
@@ -131,77 +129,68 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
         return principals;
     }
 
-    public default IServerSession getSession(final HttpServletRequest request)
+    public default String getSessionID(final HttpServletRequest request)
     {
-        final IServerSessionRepository repository = getServerContext().getServerSessionRepository(getSessionProviderDomainName());
+        String sessid = toTrimOrNull(request.getHeader(X_SESSION_ID_HEADER));
 
-        if (null != repository)
+        if (null != sessid)
         {
-            String sessid = StringOps.toTrimOrNull(request.getHeader(X_SESSION_ID_HEADER));
+            return sessid;
+        }
+        final HttpSession httpsession = request.getSession(false);
 
-            if (null != sessid)
+        if (null != httpsession)
+        {
+            final Object attribute = httpsession.getAttribute(X_SESSION_ID_HEADER);
+
+            if (attribute instanceof String)
             {
-                final IServerSession session = repository.getSession(sessid);
-
-                if (null != session)
-                {
-                    return session;
-                }
-            }
-            final HttpSession httpsession = request.getSession(false);
-
-            if (null != httpsession)
-            {
-                final Object attribute = httpsession.getAttribute(X_SESSION_ID_HEADER);
-
-                if (attribute instanceof String)
-                {
-                    sessid = StringOps.toTrimOrNull(attribute.toString());
-
-                    if (null != sessid)
-                    {
-                        final IServerSession session = repository.getSession(sessid);
-
-                        if (null != session)
-                        {
-                            return session;
-                        }
-                    }
-                }
-                sessid = StringOps.toTrimOrNull(httpsession.getId());
+                sessid = toTrimOrNull(attribute.toString());
 
                 if (null != sessid)
                 {
-                    final IServerSession session = repository.getSession(sessid);
-
-                    if (null != session)
-                    {
-                        return session;
-                    }
+                    return sessid;
                 }
             }
         }
         return null;
     }
 
+    public default IServerSession getSession(String sessid)
+    {
+        if (null == (sessid = toTrimOrNull(sessid)))
+        {
+            return null;
+        }
+        final IServerSessionRepository repository = getServerContext().getServerSessionRepository(getSessionProviderDomainName());
+
+        if (null != repository)
+        {
+            final IServerSession session = repository.getSession(sessid);
+
+            if (null != session)
+            {
+                return session;
+            }
+        }
+        return null;
+    }
+
+    public default IServerSession getSession(final HttpServletRequest request)
+    {
+        return getSession(getSessionID(request));
+    }
+
+    @Override
     public default IServerContext getServerContext()
     {
         return getServerContextInstance();
     }
 
+    @SuppressWarnings("unchecked")
     public default List<String> getCombinedRoles(final IServerSession sess, final List<String> role)
     {
-        final ArrayList<String> list = new ArrayList<String>();
-
-        if (null != role)
-        {
-            list.addAll(role);
-        }
-        if (null != sess)
-        {
-            list.addAll(sess.getRoles());
-        }
-        return Arrays.asList(StringOps.toUniqueArray(list));
+        return toUniqueStringList(arrayListOfListSuppliers(() -> role, () -> (sess == null) ? arrayList() : sess.getRoles()));
     }
 
     public default AuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)
@@ -231,7 +220,7 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
 
     public default void doNeverCache(final HttpServletRequest request, final HttpServletResponse response)
     {
-        final long time = System.currentTimeMillis();
+        final long time = ITimeSupplier.now();
 
         response.setDateHeader(DATE_HEADER, time);
 
@@ -246,14 +235,14 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
     {
         response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_MAX_AGE_PREFIX + YEAR_IN_SECONDS);
 
-        response.setDateHeader(EXPIRES_HEADER, System.currentTimeMillis() + YEAR_IN_MILLISECONDS);
+        response.setDateHeader(EXPIRES_HEADER, ITimeSupplier.now() + YEAR_IN_MILLISECONDS);
     }
 
     public default void doNearFuture(final HttpServletRequest request, final HttpServletResponse response)
     {
         response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_MAX_AGE_PREFIX + WEEK_IN_SECONDS);
 
-        response.setDateHeader(EXPIRES_HEADER, System.currentTimeMillis() + WEEK_IN_MILLISECONDS);
+        response.setDateHeader(EXPIRES_HEADER, ITimeSupplier.now() + WEEK_IN_MILLISECONDS);
     }
 
     public default Logger logger()
@@ -280,15 +269,15 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
 
     public default boolean isMaxHeaderLengthValid(final HttpServletRequest request, final HttpServletResponse response, String head, int leng)
     {
-        if (null != (head = StringOps.toTrimOrNull(head)))
+        if (null != (head = toTrimOrNull(head)))
         {
             if ((leng = Math.max(0, leng)) > 0)
             {
-                final String valu = StringOps.toTrimOrNull(request.getHeader(head));
+                final String valu = toTrimOrNull(request.getHeader(head));
 
                 if ((null != valu) && (valu.length() > leng))
                 {
-                    logger().error(String.format("Possible header attack on %s, max is %d, found %d, value (%s).", head, leng, valu.length(), valu));
+                    logger().error(format("possible header attack on (%s), max is (%d), found (%d), value (%s).", head, leng, valu.length(), valu));
 
                     return false;
                 }
@@ -303,12 +292,12 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
 
     public default String getSessionProviderDomainName()
     {
-        return StringOps.toTrimOrElse(getConfigurationParameter(SESSION_PROVIDER_DOMAIN_NAME_PARAM), "default");
+        return toTrimOrElse(getConfigurationParameter(SESSION_PROVIDER_DOMAIN_NAME_PARAM), "default");
     }
 
     public default List<String> getConfigurationParameterNames()
     {
-        return Collections.emptyList();
+        return emptyList();
     }
 
     public default String getConfigurationParameter(String name)
@@ -320,17 +309,17 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
     {
         if (false == isMaxContentTypeLengthInitialized())
         {
-            final String size = StringOps.toTrimOrNull(getConfigurationParameter(CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM));
+            final String size = toTrimOrNull(getConfigurationParameter(CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM));
 
             if (null != size)
             {
                 try
                 {
-                    setMaxContentTypeLength(Integer.parseInt(size));
+                    setMaxContentTypeLength(Math.min(Math.max(0, Integer.parseInt(size)), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH));
                 }
                 catch (Exception e)
                 {
-                    logger().error(String.format("Error parsing parameter %s, value (%s)", CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM, size), e);
+                    logger().error(format("error parsing parameter (%s), value (%s).", CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM, size), e);
                 }
             }
         }
@@ -354,11 +343,11 @@ public interface IServletCommonOperations extends IHTTPConstants, INamed
 
     public default String getConfigurationParameterOrProperty(final String name)
     {
-        return StringOps.toTrimOrElse(getConfigurationParameter(name), getServerContext().getPropertyByName(name));
+        return toTrimOrElse(getConfigurationParameter(name), getServerContext().getPropertyByName(name));
     }
 
     public default String getConfigurationParameterOrPropertyOtherwise(final String name, final String otherwise)
     {
-        return StringOps.toTrimOrElse(getConfigurationParameter(name), getServerContext().getPropertyByName(name, otherwise));
+        return toTrimOrElse(getConfigurationParameter(name), getServerContext().getPropertyByName(name, otherwise));
     }
 }

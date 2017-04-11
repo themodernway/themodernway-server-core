@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.themodernway.server.core.limiting.IRateLimited;
+import com.themodernway.server.core.security.session.IServerSession;
 
 @SuppressWarnings("serial")
 public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IServletCommonOperations
@@ -39,7 +40,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
     private boolean      m_iscontent = false;
 
-    private List<String> m_roleslist = Collections.emptyList();
+    private List<String> m_roleslist = arrayList();
 
     private int          m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
@@ -120,17 +121,29 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
     @Override
     public List<String> getConfigurationParameterNames()
     {
-        return Collections.list(getInitParameterNames());
+        return toList(getInitParameterNames());
     }
 
     public List<String> getRequiredRoles()
     {
-        return Collections.unmodifiableList(m_roleslist);
+        return toUnmodifiableList(m_roleslist);
+    }
+
+    public void setRequiredRoles(String roles)
+    {
+        if (null == (roles = toTrimOrNull(roles)))
+        {
+            setRequiredRoles(arrayList());
+        }
+        else
+        {
+            setRequiredRoles(toUniqueStringList(roles));
+        }
     }
 
     public void setRequiredRoles(final List<String> roles)
     {
-        m_roleslist = (roles == null ? Collections.emptyList() : roles);
+        m_roleslist = (roles == null ? arrayList() : roles);
     }
 
     @Override
@@ -140,7 +153,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         {
             if (false == isRunning())
             {
-                logger().error("Server is suspended, refused request.");
+                logger().error("server is suspended, refused request.");
 
                 response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
 
@@ -154,11 +167,77 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
             }
             acquire();
 
+            IServerSession session = null;
+
+            String sessid = getSessionID(request);
+
+            if (null != sessid)
+            {
+                session = getSession(sessid);
+
+                if (null == session)
+                {
+                    logger().error(format("invalid session (%s).", sessid));
+
+                    response.addHeader(WWW_AUTHENTICATE, "no permission");
+
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+                    return;
+                }
+                if (session.isExpired())
+                {
+                    logger().error(format("expired session (%s).", session.getId()));
+
+                    response.addHeader(WWW_AUTHENTICATE, "expired session");
+
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+                    return;
+                }
+            }
+            final List<String> roles = getRequiredRoles();
+
+            if ((null != roles) && (false == roles.isEmpty()))
+            {
+                if (null == session)
+                {
+                    logger().error(format("no session with required roles in (%s).", toPrintableString(roles)));
+
+                    response.addHeader(WWW_AUTHENTICATE, "no permission");
+
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+                    return;
+                }
+                final List<String> perms = session.getRoles();
+
+                if ((null == perms) || (perms.isEmpty()))
+                {
+                    logger().error(format("session (%s) with empty roles in (%s).", session.getId(), toPrintableString(roles)));
+
+                    response.addHeader(WWW_AUTHENTICATE, "no permission");
+
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+                    return;
+                }
+                if (Collections.disjoint(roles, perms))
+                {
+                    logger().error(format("session (%s) with no matching roles of (%s) in (%s).", session.getId(), toPrintableString(perms), toPrintableString(roles)));
+
+                    response.addHeader(WWW_AUTHENTICATE, "no permission");
+
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+                    return;
+                }
+            }
             super.service(request, response);
         }
         catch (Exception e)
         {
-            logger().error("Captured overall exception for security.", e);
+            logger().error("captured overall exception for security.", e);
 
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 

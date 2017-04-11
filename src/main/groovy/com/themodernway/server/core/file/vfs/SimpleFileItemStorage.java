@@ -132,7 +132,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
     public IFolderItem getRoot() throws IOException
     {
         validate();
-        
+
         return m_root;
     }
 
@@ -215,15 +215,22 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
-            if (exists() && isReadable())
+            readtest();
+
+            if (isFolder())
             {
-                if (isFolder())
+                final ArrayList<String> list = new ArrayList<String>();
+
+                for (File file : getFile().listFiles((node, name) -> false == node.isHidden()))
                 {
-                    return Stream.of(getFile().list());
+                    list.add(file.getName());
                 }
+                return list.stream();
+            }
+            else
+            {
                 return Files.lines(getFile().toPath());
             }
-            throw new IOException("Can't read " + getPath());
         }
 
         @Override
@@ -355,6 +362,8 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
+            readtest();
+
             return new FileInputStream(getFile());
         }
 
@@ -379,13 +388,23 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
-            return getFile().delete();
+            if (false == exists())
+            {
+                throw new IOException("Can't delete missing " + getPath());
+            }
+            if (isHidden())
+            {
+                throw new IOException("Can't delete hidden " + getPath());
+            }
+            return Files.deleteIfExists(getFile().toPath());
         }
 
         @Override
         public long writeTo(final OutputStream output) throws IOException
         {
             validate();
+
+            readtest();
 
             return IO.copy(this, Objects.requireNonNull(output));
         }
@@ -399,6 +418,22 @@ public class SimpleFileItemStorage implements IFileItemStorage
         protected File getFile()
         {
             return m_file;
+        }
+
+        protected void readtest() throws IOException
+        {
+            if (false == exists())
+            {
+                throw new IOException("Can't read missing " + getPath());
+            }
+            if (false == isReadable())
+            {
+                throw new IOException("Can't read " + getPath());
+            }
+            if (isHidden())
+            {
+                throw new IOException("Can't read hidden " + getPath());
+            }
         }
     }
 
@@ -414,11 +449,13 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
+            readtest();
+
             final ArrayList<IFileItem> list = new ArrayList<IFileItem>();
 
             if (isFolder())
             {
-                for (File file : getFile().listFiles())
+                for (File file : getFile().listFiles((node, name) -> false == node.isHidden()))
                 {
                     list.add(MAKE(file, getFileItemStorage()));
                 }
@@ -488,6 +525,10 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
             if (null != item)
             {
+                if (item.isHidden())
+                {
+                    throw new IOException("Can't create hidden file " + item.getPath());
+                }
                 if (item.exists())
                 {
                     if (item.isFile())

@@ -16,8 +16,11 @@
 
 package com.themodernway.server.core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -140,6 +143,11 @@ public interface ICoreCommon
         return otherwise.get();
     }
 
+    default public String toPrintableString(final Collection<String> collection)
+    {
+        return StringOps.toPrintableString(collection);
+    }
+
     default public List<String> toUniqueStringList(final Stream<String> strings)
     {
         return toUniqueStringList(strings.collect(Collectors.toList()));
@@ -162,6 +170,79 @@ public interface ICoreCommon
         {
             return Arrays.asList(StringOps.toUniqueArray(strings));
         }
+    }
+
+    default public <T> List<T> emptyList()
+    {
+        return Collections.emptyList();
+    }
+
+    default public <T> List<T> arrayList()
+    {
+        return new ArrayList<T>();
+    }
+
+    default public <T> List<T> toList(final Enumeration<T> source)
+    {
+        return Collections.list(source);
+    }
+
+    default public <T> List<T> toUnmodifiableList(final List<T> list)
+    {
+        return Collections.unmodifiableList(list);
+    }
+
+    @SuppressWarnings("unchecked")
+    default public <T> List<T> arrayListOfListSuppliers(Supplier<List<T>>... lists)
+    {
+        final List<T> list = arrayList();
+
+        for (Supplier<List<T>> supp : lists)
+        {
+            final List<T> adds = supp.get();
+
+            if ((null != adds) && (false == adds.isEmpty()))
+            {
+                list.addAll(adds);
+            }
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    default public <T> List<T> arrayListOfLists(List<T>... lists)
+    {
+        final List<T> list = arrayList();
+
+        for (List<T> adds : lists)
+        {
+            if ((null != adds) && (false == adds.isEmpty()))
+            {
+                list.addAll(adds);
+            }
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    default public <T> List<T> arrayListOfListsUnique(List<T>... lists)
+    {
+        final List<T> list = arrayList();
+
+        for (List<T> adds : lists)
+        {
+            if ((null != adds) && (false == adds.isEmpty()))
+            {
+                for (T item : adds)
+                {
+                    if (false == list.contains(item))
+                    {
+                        list.add(item);
+                    }
+                }
+            }
+        }
+        return list;
     }
 
     default public List<String> toUniqueStringList(final String[] strings)

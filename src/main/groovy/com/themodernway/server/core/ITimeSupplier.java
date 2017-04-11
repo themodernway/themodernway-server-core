@@ -25,6 +25,11 @@ public interface ITimeSupplier
 {
     public long getTime();
 
+    public static long now()
+    {
+        return System.currentTimeMillis();
+    }
+
     public static ITimeSupplier mills()
     {
         return System::currentTimeMillis;
@@ -34,22 +39,22 @@ public interface ITimeSupplier
     {
         return System::nanoTime;
     }
-    
+
     public static ITimeSupplier ofLong(final Long time)
     {
         return () -> time;
     }
-    
+
     public static ITimeSupplier ofLong(final Date date)
     {
         return ofLong(date.getTime());
     }
-    
+
     public static ITimeSupplier ofLong(final Supplier<Long> time)
     {
         return () -> time.get();
     }
-    
+
     public static ITimeSupplier ofLong(final LongSupplier time)
     {
         return () -> time.getAsLong();
