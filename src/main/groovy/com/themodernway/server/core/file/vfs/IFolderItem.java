@@ -16,8 +16,10 @@
 
 package com.themodernway.server.core.file.vfs;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import org.springframework.core.io.Resource;
@@ -29,6 +31,10 @@ public interface IFolderItem extends IFileItem
     public IFileItem find(String name) throws IOException;
 
     public IFileItem file(String name) throws IOException;
+    
+    public IFileItem create(String name, File file) throws IOException;
+    
+    public IFileItem create(String name, Path path) throws IOException;
 
     public IFileItem create(String name, Resource resource) throws IOException;
 

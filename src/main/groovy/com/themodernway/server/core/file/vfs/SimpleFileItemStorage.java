@@ -496,6 +496,31 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
 
         @Override
+        public IFileItem create(final String name, final File file) throws IOException
+        {
+            return create(name, file.toPath());
+        }
+
+        @Override
+        public IFileItem create(final String name, final Path path) throws IOException
+        {
+            validate();
+
+            InputStream stream = null;
+
+            try
+            {
+                stream = Files.newInputStream(path);
+
+                return create(name, stream);
+            }
+            finally
+            {
+                IO.close(stream);
+            }
+        }
+
+        @Override
         public IFileItem create(final String name, final Resource resource) throws IOException
         {
             validate();

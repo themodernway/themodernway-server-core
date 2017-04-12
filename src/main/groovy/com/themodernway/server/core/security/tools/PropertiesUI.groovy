@@ -44,7 +44,7 @@ public class PropertiesUI {
 
     JFileChooser m_mast_file = new JFileChooser()
 
-    public static main(String...args) {
+    public static void main(String...args) {
         new PropertiesUI(args)
     }
 
