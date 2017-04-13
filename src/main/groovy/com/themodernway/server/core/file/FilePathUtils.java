@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.file;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -25,18 +26,30 @@ import com.themodernway.common.api.java.util.StringOps;
 
 public final class FilePathUtils
 {
-    public static final String SINGLE_SLASH = "/";
+    public static final String                SINGLE_SLASH = "/";
 
-    public static final String SINGLE_TILDE = "~";
+    public static final String                SINGLE_TILDE = "~";
 
-    public static final String DOUBLE_SLASH = SINGLE_SLASH + SINGLE_SLASH;
+    public static final String                DOUBLE_SLASH = SINGLE_SLASH + SINGLE_SLASH;
 
-    public static final String SLASHY_TILDE = SINGLE_SLASH + SINGLE_TILDE;
+    public static final String                SLASHY_TILDE = SINGLE_SLASH + SINGLE_TILDE;
 
-    public static final String TILDE_SLASHY = SINGLE_TILDE + SINGLE_SLASH;
+    public static final String                TILDE_SLASHY = SINGLE_TILDE + SINGLE_SLASH;
+
+    public static final CoreContentTypeMapper MIME_TYPE_OF = new CoreContentTypeMapper();
 
     private FilePathUtils()
     {
+    }
+
+    public static final String getContentTypeOf(final File file)
+    {
+        return MIME_TYPE_OF.getContentTypeOf(file);
+    }
+
+    public static final String getContentTypeOf(final String path)
+    {
+        return MIME_TYPE_OF.getContentTypeOf(normalize(path));
     }
 
     public static final String patch(String path)

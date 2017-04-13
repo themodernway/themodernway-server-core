@@ -16,28 +16,29 @@
 
 package com.themodernway.server.core.file.vfs;
 
+import static com.themodernway.server.core.file.FilePathUtils.SINGLE_SLASH;
+import static com.themodernway.server.core.file.FilePathUtils.concat;
+import static com.themodernway.server.core.file.FilePathUtils.getContentTypeOf;
+import static com.themodernway.server.core.file.FilePathUtils.normalize;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
+import java.util.List;
 import java.util.stream.Stream;
-
-import javax.activation.MimetypesFileTypeMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
-import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.file.FilePathUtils;
+import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 
-public class SimpleFileItemStorage implements IFileItemStorage
+public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 {
     protected static final IFileItem MAKE(String path, IFileItemStorage stor)
     {
@@ -61,27 +62,25 @@ public class SimpleFileItemStorage implements IFileItemStorage
         }
     }
 
-    private static final Logger               logger = Logger.getLogger(SimpleFileItemStorage.class);
+    private static final Logger      logger = Logger.getLogger(SimpleFileItemStorage.class);
 
-    private static final MimetypesFileTypeMap mapper = new MimetypesFileTypeMap();
+    private final File               m_file;
 
-    private final File                        m_file;
+    private final String             m_name;
 
-    private final String                      m_name;
+    private final String             m_base;
 
-    private final String                      m_base;
+    private final IFolderItem        m_root;
 
-    private final IFolderItem                 m_root;
+    private boolean                  m_open = false;
 
-    private boolean                           m_open = false;
-
-    private IFileItemMetaDataFactory          m_meta = null;
+    private IFileItemMetaDataFactory m_meta = null;
 
     public SimpleFileItemStorage(final String name, final String base)
     {
-        m_name = StringOps.requireTrimOrNull(name);
+        m_name = requireTrimOrNull(name);
 
-        m_base = StringOps.requireTrimOrNull(FilePathUtils.normalize(StringOps.requireTrimOrNull(base)));
+        m_base = requireTrimOrNull(normalize(requireTrimOrNull(base)));
 
         m_file = new File(m_base);
 
@@ -91,11 +90,11 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             m_open = true;
 
-            logger.info("SimpleFileItemStorage(" + m_name + "," + m_base + ") open.");
+            logger.info(format("SimpleFileItemStorage(%s,%s) open.", m_name, m_base));
         }
         else
         {
-            logger.error("SimpleFileItemStorage(" + m_name + "," + m_base + ") can't access.");
+            logger.error(format("SimpleFileItemStorage(%s,%s) can't access.", m_name, m_base));
         }
     }
 
@@ -104,7 +103,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
     {
         if (false == isOpen())
         {
-            throw new IOException("SimpleFileItemStorage(" + m_name + "," + m_base + ") closed.");
+            throw new IOException(format("SimpleFileItemStorage(%s,%s) is closed.", getName(), getBasePath()));
         }
     }
 
@@ -139,7 +138,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
     {
         m_open = false;
 
-        logger.info("SimpleFileItemStorage(" + m_name + "," + m_base + ") closed.");
+        logger.info(format("SimpleFileItemStorage(%s,%s).close().", getName(), getBasePath()));
     }
 
     @Override
@@ -154,7 +153,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
         return m_base;
     }
 
-    protected static class SimpleFileItem implements IFileItem
+    protected static class SimpleFileItem implements IFileItem, ICoreCommon
     {
         private final File             m_file;
 
@@ -162,9 +161,9 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
         public SimpleFileItem(final File file, final IFileItemStorage stor)
         {
-            m_file = Objects.requireNonNull(file);
+            m_file = requireNonNull(file);
 
-            m_stor = Objects.requireNonNull(stor);
+            m_stor = requireNonNull(stor);
         }
 
         @Override
@@ -178,7 +177,15 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
-            return mapper.getContentType(getFile());
+            if (false == exists())
+            {
+                throw new IOException(format("Can't type missing (%s).", getPath()));
+            }
+            if (isHidden())
+            {
+                throw new IOException(format("Can't type hidden (%s).", getPath()));
+            }
+            return getContentTypeOf(getFile());
         }
 
         @Override
@@ -205,6 +212,14 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
+            if (false == exists())
+            {
+                throw new IOException(format("Can't get limit missing (%s).", getPath()));
+            }
+            if (isHidden())
+            {
+                throw new IOException(format("Can't get limit hidden (%s).", getPath()));
+            }
             return getFile().getUsableSpace();
         }
 
@@ -217,9 +232,9 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
             if (isFolder())
             {
-                final ArrayList<String> list = new ArrayList<String>();
+                final List<String> list = arrayList();
 
-                for (File file : getFile().listFiles((node, name) -> false == node.isHidden()))
+                for (File file : listFiles())
                 {
                     list.add(file.getName());
                 }
@@ -244,6 +259,14 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
+            if (false == exists())
+            {
+                throw new IOException(format("Can't size missing (%s).", getPath()));
+            }
+            if (isHidden())
+            {
+                throw new IOException(format("Can't size hidden (%s).", getPath()));
+            }
             return getFile().length();
         }
 
@@ -302,7 +325,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
-            return FilePathUtils.normalize(getAbsolutePath().replace(getFileItemStorage().getBasePath(), FilePathUtils.SINGLE_SLASH));
+            return normalize(getAbsolutePath().replace(getFileItemStorage().getBasePath(), SINGLE_SLASH));
         }
 
         @Override
@@ -310,7 +333,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
-            return FilePathUtils.normalize(getFile().toPath().toString());
+            return normalize(getFile().toPath().toString());
         }
 
         @Override
@@ -318,7 +341,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
-            if (getPath().equals(FilePathUtils.SINGLE_SLASH))
+            if (getPath().equals(SINGLE_SLASH))
             {
                 return null;
             }
@@ -370,6 +393,14 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
+            if (false == exists())
+            {
+                throw new IOException(format("Can't date missing (%s).", getPath()));
+            }
+            if (isHidden())
+            {
+                throw new IOException(format("Can't date hidden (%s).", getPath()));
+            }
             return new Date(getFile().lastModified());
         }
 
@@ -388,11 +419,11 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
             if (false == exists())
             {
-                throw new IOException("Can't delete missing " + getPath());
+                throw new IOException(format("Can't delete missing (%s).", getPath()));
             }
             if (isHidden())
             {
-                throw new IOException("Can't delete hidden " + getPath());
+                throw new IOException(format("Can't delete hidden (%s).", getPath()));
             }
             return Files.deleteIfExists(getFile().toPath());
         }
@@ -404,7 +435,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
             readtest();
 
-            return IO.copy(this, Objects.requireNonNull(output));
+            return IO.copy(this, requireNonNull(output));
         }
 
         @Override
@@ -418,24 +449,29 @@ public class SimpleFileItemStorage implements IFileItemStorage
             return m_file;
         }
 
+        protected File[] listFiles()
+        {
+            return getFile().listFiles((node, name) -> false == node.isHidden());
+        }
+
         protected void readtest() throws IOException
         {
             if (false == exists())
             {
-                throw new IOException("Can't read missing " + getPath());
+                throw new IOException(format("Can't read missing (%s).", getPath()));
             }
             if (false == isReadable())
             {
-                throw new IOException("Can't read " + getPath());
+                throw new IOException(format("Can't read (%s).", getPath()));
             }
             if (isHidden())
             {
-                throw new IOException("Can't read hidden " + getPath());
+                throw new IOException(format("Can't read hidden (%s).", getPath()));
             }
         }
     }
 
-    protected static class SimpleFolderItem extends SimpleFileItem implements IFolderItem
+    protected static class SimpleFolderItem extends SimpleFileItem implements IFolderItem, ICoreCommon
     {
         public SimpleFolderItem(final File file, final IFileItemStorage stor)
         {
@@ -449,11 +485,11 @@ public class SimpleFileItemStorage implements IFileItemStorage
 
             readtest();
 
-            final ArrayList<IFileItem> list = new ArrayList<IFileItem>();
+            final List<IFileItem> list = arrayList();
 
             if (isFolder())
             {
-                for (File file : getFile().listFiles((node, name) -> false == node.isHidden()))
+                for (File file : listFiles())
                 {
                     list.add(MAKE(file, getFileItemStorage()));
                 }
@@ -480,13 +516,13 @@ public class SimpleFileItemStorage implements IFileItemStorage
         {
             validate();
 
-            String path = FilePathUtils.normalize(name);
+            String path = normalize(name);
 
-            if (false == path.startsWith(FilePathUtils.SINGLE_SLASH))
+            if (false == path.startsWith(SINGLE_SLASH))
             {
-                path = FilePathUtils.concat(getPath(), path);
+                path = concat(getPath(), path);
             }
-            path = FilePathUtils.concat(getFileItemStorage().getBasePath(), StringOps.toTrimOrElse(path, StringOps.EMPTY_STRING));
+            path = concat(getFileItemStorage().getBasePath(), toTrimOrElse(path, EMPTY_STRING));
 
             if (null != path)
             {
@@ -550,7 +586,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
             {
                 if (item.isHidden())
                 {
-                    throw new IOException("Can't create hidden file " + item.getPath());
+                    throw new IOException(format("Can't create hidden (%s).", item.getPath()));
                 }
                 if (item.exists())
                 {
@@ -558,14 +594,13 @@ public class SimpleFileItemStorage implements IFileItemStorage
                     {
                         if (false == item.delete())
                         {
-                            throw new IOException("Can't delete file " + item.getPath());
+                            throw new IOException(format("Can't delete (%s).", item.getPath()));
                         }
                     }
                     else
                     {
-                        throw new IOException("Can't delete folder " + item.getPath());
+                        throw new IOException(format("Can't delete folder (%s).", item.getPath()));
                     }
-
                 }
                 final File file = new File(item.getAbsolutePath());
 
@@ -590,7 +625,7 @@ public class SimpleFileItemStorage implements IFileItemStorage
                     IO.close(fios);
                 }
             }
-            throw new IOException("Can't resolve file " + name);
+            throw new IOException(format("Can't resolve (%s).", name));
         }
 
         @Override
@@ -605,16 +640,20 @@ public class SimpleFileItemStorage implements IFileItemStorage
         public InputStream getInputStream() throws IOException
         {
             validate();
+            
+            readtest();
 
-            throw new IOException("Can't read folder " + getPath());
+            throw new IOException(format("Can't stream folder (%s).", getPath()));
         }
 
         @Override
         public long writeTo(final OutputStream output) throws IOException
         {
             validate();
+            
+            readtest();
 
-            throw new IOException("Can't write folder " + getPath());
+            throw new IOException(format("Can't stream folder (%s).", getPath()));
         }
     }
 }

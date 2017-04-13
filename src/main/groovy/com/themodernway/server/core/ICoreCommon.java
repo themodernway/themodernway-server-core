@@ -34,6 +34,10 @@ import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 public interface ICoreCommon
 {
+    public static String TOKEN_STRING = ",";
+
+    public static String EMPTY_STRING = StringOps.EMPTY_STRING;
+
     default public String format(String format, Object... args)
     {
         return String.format(format, args);
@@ -162,9 +166,9 @@ public interface ICoreCommon
     {
         strings = requireTrimOrNull(strings);
 
-        if (strings.contains(","))
+        if (strings.contains(TOKEN_STRING))
         {
-            return Arrays.asList(StringOps.toUniqueArray(StringOps.tokenizeToStringCollection(strings, ",", true, true)));
+            return Arrays.asList(StringOps.toUniqueArray(StringOps.tokenizeToStringCollection(strings, TOKEN_STRING, true, true)));
         }
         else
         {

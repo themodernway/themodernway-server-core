@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.file.FilePathUtils;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
@@ -71,7 +70,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
             {
                 if (null == m_storage_name)
                 {
-                    setFileItemStorageName(getConfigurationParameterOrPropertyOtherwise(StringOps.toTrimOrElse(getContentServletStorageNameParam(), CONTENT_SERVLET_STORAGE_NAME_PARAM), StringOps.toTrimOrElse(getContentServletStorageNameDefault(), CONTENT_SERVLET_STORAGE_NAME_DEFAULT)));
+                    setFileItemStorageName(getConfigurationParameterOrPropertyOtherwise(toTrimOrElse(getContentServletStorageNameParam(), CONTENT_SERVLET_STORAGE_NAME_PARAM), toTrimOrElse(getContentServletStorageNameDefault(), CONTENT_SERVLET_STORAGE_NAME_DEFAULT)));
                 }
             }
         }
@@ -80,7 +79,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
 
     public void setFileItemStorageName(final String name)
     {
-        m_storage_name = StringOps.toTrimOrNull(name);
+        m_storage_name = toTrimOrNull(name);
     }
 
     public IFolderItem getRoot() throws IOException
@@ -119,7 +118,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
     {
         return name -> {
 
-            logger().info(String.format("firstFileItemStorageLookup(%s, %s)", getName(), name));
+            logger().info(format("firstFileItemStorageLookup(%s, %s)", getName(), name));
 
             return getServerContext().getFileItemStorage(name);
         };

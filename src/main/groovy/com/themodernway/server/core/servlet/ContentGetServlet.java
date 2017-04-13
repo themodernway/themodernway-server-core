@@ -22,7 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.file.FilePathUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
@@ -30,14 +29,16 @@ import com.themodernway.server.core.file.vfs.IFolderItem;
 @SuppressWarnings("serial")
 public class ContentGetServlet extends AbstractContentServlet
 {
+    private boolean m_nocache = true;
+
     @Override
     public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
         try
         {
-            String path = StringOps.toTrimOrElse(request.getPathInfo(), FilePathUtils.SINGLE_SLASH);
+            String path = toTrimOrElse(request.getPathInfo(), FilePathUtils.SINGLE_SLASH);
 
-            String send = StringOps.toTrimOrNull(getRedirect(request, response, path));
+            String send = toTrimOrNull(getRedirect(request, response, path));
 
             if (null != send)
             {
@@ -87,7 +88,7 @@ public class ContentGetServlet extends AbstractContentServlet
 
             if (null == file)
             {
-                logger().error(String.format("Can't find path (%s).", path));
+                logger().error(format("Can't find path (%s).", path));
 
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
@@ -95,7 +96,7 @@ public class ContentGetServlet extends AbstractContentServlet
             }
             if (false == file.exists())
             {
-                logger().error(String.format("Path does not exist (%s).", path));
+                logger().error(format("Path does not exist (%s).", path));
 
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
@@ -103,7 +104,7 @@ public class ContentGetServlet extends AbstractContentServlet
             }
             if (false == file.isReadable())
             {
-                logger().error(String.format("Can't read path (%s).", path));
+                logger().error(format("Can't read path (%s).", path));
 
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
@@ -111,7 +112,15 @@ public class ContentGetServlet extends AbstractContentServlet
             }
             if (false == file.isFile())
             {
-                logger().error(String.format("Path is not file (%s).", path));
+                logger().error(format("Path is not file (%s).", path));
+
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+                return;
+            }
+            if (file.isHidden())
+            {
+                logger().error(format("Path is hidden file (%s).", path));
 
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
@@ -127,6 +136,16 @@ public class ContentGetServlet extends AbstractContentServlet
         }
     }
 
+    public boolean isNeverCache()
+    {
+        return m_nocache;
+    }
+
+    public void setNeverCache(final boolean nocache)
+    {
+        m_nocache = nocache;
+    }
+
     public String getRedirect(final HttpServletRequest request, final HttpServletResponse response, final String path) throws Exception
     {
         return null;
@@ -134,6 +153,10 @@ public class ContentGetServlet extends AbstractContentServlet
 
     public void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file) throws Exception
     {
+        if (isNeverCache())
+        {
+            doNeverCache(request, response);
+        }
         file.writeTo(response.getOutputStream());
 
         response.setStatus(HttpServletResponse.SC_OK);
