@@ -29,7 +29,7 @@ import com.themodernway.server.core.file.vfs.IFolderItem;
 @SuppressWarnings("serial")
 public class ContentGetServlet extends AbstractContentServlet
 {
-    private boolean m_nocache = true;
+    private boolean m_nocache = false;
 
     @Override
     public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
