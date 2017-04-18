@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
@@ -80,6 +81,16 @@ public class JSONUtilitiesInstance implements IJSONUtilities
         {
             return json(new ArrayList<Object>(collection));
         }
+    }
+
+    @Override
+    public final JSONObject json(final Optional<Collection<?>> collection)
+    {
+        if (collection.isPresent())
+        {
+            return json(collection.get());
+        }
+        return json();
     }
 
     @Override

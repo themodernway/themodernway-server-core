@@ -69,6 +69,15 @@ public trait JSONTrait
             json(new ArrayList<Object>(collection))
         }
     }
+    
+    public JSONObject json(final Optional<Collection<?>> collection)
+    {
+        if (collection.isPresent())
+        {
+            return json(collection.get())
+        }
+        json()
+    }
 
     public JSONObject json(List<?> list)
     {

@@ -146,6 +146,20 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         m_roleslist = (roles == null ? arrayList() : roles);
     }
 
+    protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        String protocol = request.getProtocol();
+
+        if (protocol.endsWith("1.1"))
+        {
+            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "PATCH");
+        }
+        else
+        {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "PATCH");
+        }
+    }
+
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
@@ -232,6 +246,12 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
                     return;
                 }
+            }
+            if ("PATCH".equalsIgnoreCase(request.getMethod()))
+            {
+                doPatch(request, response);
+
+                return;
             }
             super.service(request, response);
         }

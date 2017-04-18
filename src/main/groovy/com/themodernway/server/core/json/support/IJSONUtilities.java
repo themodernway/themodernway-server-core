@@ -19,6 +19,7 @@ package com.themodernway.server.core.json.support;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
@@ -35,6 +36,8 @@ public interface IJSONUtilities
     public JSONObject json(String name, Object value);
 
     public JSONObject json(Collection<?> collection);
+    
+    public JSONObject json(Optional<Collection<?>> collection);
 
     public JSONObject json(List<?> list);
 

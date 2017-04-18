@@ -320,6 +320,16 @@ public class CoreGroovySupport implements IServerContext, Closeable
     {
         getServerContext().json(Objects.requireNonNull(name), value)
     }
+    
+    @Override
+    public JSONObject json(final Optional<Collection<?>> collection)
+    {
+        if (collection.isPresent())
+        {
+            return json(collection.get())
+        }
+        json()
+    }
 
     @Override
     public JSONObject json(Collection<?> collection)
