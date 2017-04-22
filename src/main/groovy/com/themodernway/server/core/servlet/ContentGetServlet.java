@@ -32,17 +32,28 @@ public class ContentGetServlet extends AbstractContentServlet
     private boolean m_nocache = false;
 
     @Override
-    public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
+    protected void doHead(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
+    {
+        content(request, response, false);
+    }
+
+    @Override
+    protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
+    {
+        content(request, response, true);
+    }
+
+    protected void content(final HttpServletRequest request, final HttpServletResponse response, final boolean send) throws ServletException, IOException
     {
         try
         {
             String path = toTrimOrElse(request.getPathInfo(), FilePathUtils.SINGLE_SLASH);
 
-            String send = toTrimOrNull(getRedirect(request, response, path));
+            String redi = toTrimOrNull(getRedirect(request, response, path));
 
-            if (null != send)
+            if (null != redi)
             {
-                response.sendRedirect(send);
+                response.sendRedirect(redi);
 
                 return;
             }
@@ -126,7 +137,7 @@ public class ContentGetServlet extends AbstractContentServlet
 
                 return;
             }
-            send(request, response, file);
+            send(request, response, file, send);
         }
         catch (Exception e)
         {
@@ -151,14 +162,46 @@ public class ContentGetServlet extends AbstractContentServlet
         return null;
     }
 
-    public void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file) throws Exception
+    public void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
     {
         if (isNeverCache())
         {
             doNeverCache(request, response);
         }
-        file.writeTo(response.getOutputStream());
+        else
+        {
+            final long last = file.getLastModified().getTime();
 
+            final long ifmd = request.getDateHeader(IF_MODIFIED_SINCE_HEADER);
+
+            if (ifmd < last)
+            {
+                if ((false == response.containsHeader(LAST_MODIFIED_HEADER)) && (last >= 0))
+                {
+                    response.setDateHeader(LAST_MODIFIED_HEADER, last);
+                }
+            }
+            else
+            {
+                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+
+                return;
+            }
+        }
+        if (send)
+        {
+            final long size = file.getSize();
+
+            if (size >= 0)
+            {
+                response.setContentLengthLong(size);
+            }
+            file.writeTo(response.getOutputStream());
+        }
+        else
+        {
+            response.setContentLengthLong(0);
+        }
         response.setStatus(HttpServletResponse.SC_OK);
     }
 

@@ -247,9 +247,53 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
                     return;
                 }
             }
-            if ("PATCH".equalsIgnoreCase(request.getMethod()))
+            final String meth = toTrimOrElse(request.getMethod(), EMPTY_STRING).toUpperCase();
+
+            if (HTTP_METHOD_GET.equals(meth))
+            {
+                doGet(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_HEAD.equals(meth))
+            {
+                doHead(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_POST.equals(meth))
+            {
+                doPost(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_PUT.equals(meth))
+            {
+                doPut(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_DELETE.equals(meth))
+            {
+                doDelete(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_PATCH.equals(meth))
             {
                 doPatch(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_OPTIONS.equals(meth))
+            {
+                doOptions(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_TRACE.equals(meth))
+            {
+                doTrace(request, response);
 
                 return;
             }
