@@ -526,7 +526,7 @@ public final class JSONUtils
 
             if (((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z')) || (c == ' ') || ((c >= '0') && (c <= '9')))
             {
-                out.write(c);// ASCII will be most common, this improves write speed about 5%, FWIW.
+                out.write(c); // ASCII will be most common, this improves write speed about 5%, FWIW.
             }
             else
             {

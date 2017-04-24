@@ -38,7 +38,7 @@ import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.support.IJSONUtilities;
+import com.themodernway.server.core.json.support.ICoreJSONOperations;
 import com.themodernway.server.core.scripting.IScriptingProvider;
 import com.themodernway.server.core.security.IAuthorizationProvider;
 import com.themodernway.server.core.security.IAuthorizer;
@@ -50,7 +50,7 @@ import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider;
 import com.themodernway.server.core.support.spring.network.websocket.IWebSocketService;
 import com.themodernway.server.core.support.spring.network.websocket.IWebSocketServiceProvider;
 
-public interface IServerContext extends IJSONUtilities, IAuthorizer, IPropertiesResolver
+public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPropertiesResolver
 {
     public boolean isApplicationContextInitialized();
 

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-import com.themodernway.server.core.file.FilePathUtils;
+import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.file.vfs.IFolderItem;
@@ -49,7 +49,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
 
     public String getPathNormalized(final String path)
     {
-        return FilePathUtils.normalize(path);
+        return FileAndPathUtils.normalize(path);
     }
 
     public String getContentServletStorageNameParam()

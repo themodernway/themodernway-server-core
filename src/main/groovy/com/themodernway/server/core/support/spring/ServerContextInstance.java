@@ -42,7 +42,7 @@ import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.support.JSONUtilitiesInstance;
+import com.themodernway.server.core.json.support.CoreJSONOperations;
 import com.themodernway.server.core.pubsub.JSONMessageBuilder;
 import com.themodernway.server.core.scripting.IScriptingProvider;
 import com.themodernway.server.core.security.AuthorizationResult;
@@ -56,7 +56,7 @@ import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider;
 import com.themodernway.server.core.support.spring.network.websocket.IWebSocketService;
 import com.themodernway.server.core.support.spring.network.websocket.IWebSocketServiceProvider;
 
-public class ServerContextInstance extends JSONUtilitiesInstance implements IServerContext
+public class ServerContextInstance extends CoreJSONOperations implements IServerContext
 {
     private static ApplicationContext                  APPCONTEXT   = null;
 

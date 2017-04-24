@@ -21,18 +21,19 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.themodernway.server.core.limiting.IRateLimited;
 import com.themodernway.server.core.security.session.IServerSession;
 
 @SuppressWarnings("serial")
-public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IServletCommonOperations
+public class CoreSpringDispatcherServler extends DispatcherServlet implements IRateLimited, IServletCommonOperations
 {
     private final Logger m_logger    = Logger.getLogger(getClass());
 
@@ -40,30 +41,30 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
     private boolean      m_iscontent = false;
 
-    private List<String> m_roleslist = arrayList();
-
     private int          m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    protected HTTPServletBase()
-    {
-        setRateLimiter(RateLimiterFactory.create(getClass()));
-    }
+    private List<String> m_roleslist = arrayList();
 
-    protected HTTPServletBase(final double rate)
+    public CoreSpringDispatcherServler(final WebApplicationContext context)
     {
-        setRateLimit(rate);
-    }
-
-    @Override
-    public String getName()
-    {
-        return getServletConfig().getServletName();
+        super(context);
     }
 
     @Override
     public Logger logger()
     {
         return m_logger;
+    }
+
+    @Override
+    public void acquire()
+    {
+        final RateLimiter rate = getRateLimiter();
+
+        if (null != rate)
+        {
+            rate.acquire();
+        }
     }
 
     public RateLimiter getRateLimiter()
@@ -79,49 +80,6 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
     public void setRateLimit(final double rate)
     {
         setRateLimiter(RateLimiterFactory.create(rate));
-    }
-
-    @Override
-    public void acquire()
-    {
-        final RateLimiter rate = getRateLimiter();
-
-        if (null != rate)
-        {
-            rate.acquire();
-        }
-    }
-
-    @Override
-    public boolean isMaxContentTypeLengthInitialized()
-    {
-        return m_iscontent;
-    }
-
-    @Override
-    public int getMaxContentTypeLength()
-    {
-        return m_contentmx;
-    }
-
-    @Override
-    public void setMaxContentTypeLength(final int contentmx)
-    {
-        m_iscontent = true;
-
-        m_contentmx = Math.min(Math.max(0, contentmx), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH);
-    }
-
-    @Override
-    public String getConfigurationParameter(final String name)
-    {
-        return getInitParameter(name);
-    }
-
-    @Override
-    public List<String> getConfigurationParameterNames()
-    {
-        return toList(getInitParameterNames());
     }
 
     public List<String> getRequiredRoles()
@@ -146,20 +104,8 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         m_roleslist = (roles == null ? arrayList() : roles);
     }
 
-    protected void doPatch(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
-    {
-        if (request.getProtocol().endsWith("1.1"))
-        {
-            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "PATCH");
-        }
-        else
-        {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "PATCH");
-        }
-    }
-
     @Override
-    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
+    protected void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
         try
         {
@@ -245,56 +191,6 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
                     return;
                 }
             }
-            final String meth = toTrimOrElse(request.getMethod(), EMPTY_STRING).toUpperCase();
-
-            if (HTTP_METHOD_GET.equals(meth))
-            {
-                doGet(request, response);
-
-                return;
-            }
-            else if (HTTP_METHOD_HEAD.equals(meth))
-            {
-                doHead(request, response);
-
-                return;
-            }
-            else if (HTTP_METHOD_POST.equals(meth))
-            {
-                doPost(request, response);
-
-                return;
-            }
-            else if (HTTP_METHOD_PUT.equals(meth))
-            {
-                doPut(request, response);
-
-                return;
-            }
-            else if (HTTP_METHOD_DELETE.equals(meth))
-            {
-                doDelete(request, response);
-
-                return;
-            }
-            else if (HTTP_METHOD_PATCH.equals(meth))
-            {
-                doPatch(request, response);
-
-                return;
-            }
-            else if (HTTP_METHOD_OPTIONS.equals(meth))
-            {
-                doOptions(request, response);
-
-                return;
-            }
-            else if (HTTP_METHOD_TRACE.equals(meth))
-            {
-                doTrace(request, response);
-
-                return;
-            }
             super.service(request, response);
         }
         catch (Exception e)
@@ -308,7 +204,33 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
     }
 
     @Override
-    public void init()
+    public String getName()
+    {
+        return getServletConfig().getServletName();
+    }
+
+    @Override
+    public boolean isMaxContentTypeLengthInitialized()
+    {
+        return m_iscontent;
+    }
+
+    @Override
+    public int getMaxContentTypeLength()
+    {
+        return m_contentmx;
+    }
+
+    @Override
+    public void setMaxContentTypeLength(final int contentmx)
+    {
+        m_iscontent = true;
+
+        m_contentmx = Math.min(Math.max(0, contentmx), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH);
+    }
+
+    @Override
+    protected void initFrameworkServlet() throws ServletException
     {
         doInitializeMaxContentTypeLength();
     }

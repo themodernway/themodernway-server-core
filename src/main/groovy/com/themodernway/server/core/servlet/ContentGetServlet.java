@@ -22,7 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.themodernway.server.core.file.FilePathUtils;
+import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 
@@ -30,6 +30,15 @@ import com.themodernway.server.core.file.vfs.IFolderItem;
 public class ContentGetServlet extends AbstractContentServlet
 {
     private boolean m_nocache = false;
+
+    public ContentGetServlet()
+    {
+    }
+
+    public ContentGetServlet(final double rate)
+    {
+        super(rate);
+    }
 
     @Override
     protected void doHead(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
@@ -47,25 +56,24 @@ public class ContentGetServlet extends AbstractContentServlet
     {
         try
         {
-            String path = toTrimOrElse(request.getPathInfo(), FilePathUtils.SINGLE_SLASH);
+            String path = toTrimOrElse(request.getPathInfo(), FileAndPathUtils.SINGLE_SLASH);
 
-            String redi = toTrimOrNull(getRedirect(request, response, path));
-
-            if (null != redi)
+            if (isRedirectOn())
             {
-                response.sendRedirect(redi);
+                String redi = toTrimOrNull(getRedirect(request, response, path));
 
-                return;
-            }
-            if (path.equals(FilePathUtils.SINGLE_SLASH))
-            {
-                response.sendRedirect(getHomePage());
+                if (null != redi)
+                {
+                    response.sendRedirect(redi);
 
-                return;
-            }
-            if (path.endsWith(FilePathUtils.SINGLE_SLASH))
-            {
-                path = path + getHomePage();
+                    return;
+                }
+                if (path.endsWith(FileAndPathUtils.SINGLE_SLASH))
+                {
+                    response.sendRedirect(getHomePage());
+
+                    return;
+                }
             }
             path = getPathNormalized(path);
 
@@ -137,6 +145,8 @@ public class ContentGetServlet extends AbstractContentServlet
 
                 return;
             }
+            head(request, response, file, send);
+
             send(request, response, file, send);
         }
         catch (Exception e)
@@ -145,6 +155,11 @@ public class ContentGetServlet extends AbstractContentServlet
 
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public boolean isRedirectOn()
+    {
+        return true;
     }
 
     public boolean isNeverCache()
@@ -162,7 +177,7 @@ public class ContentGetServlet extends AbstractContentServlet
         return null;
     }
 
-    public void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
+    public void head(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
     {
         if (isNeverCache())
         {
@@ -184,10 +199,12 @@ public class ContentGetServlet extends AbstractContentServlet
             else
             {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-
-                return;
             }
         }
+    }
+
+    public void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
+    {
         if (send)
         {
             final long size = file.getSize();

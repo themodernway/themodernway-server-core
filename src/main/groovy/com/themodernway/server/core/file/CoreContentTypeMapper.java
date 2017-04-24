@@ -74,7 +74,7 @@ public class CoreContentTypeMapper
             IO.close(stream);
         }
     }
-    
+
     public CoreContentTypeMapper(final Path path) throws IOException
     {
         InputStream stream = null;

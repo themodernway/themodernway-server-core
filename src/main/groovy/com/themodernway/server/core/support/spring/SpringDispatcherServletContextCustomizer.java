@@ -16,116 +16,36 @@
 
 package com.themodernway.server.core.support.spring;
 
-import java.io.IOException;
 import java.util.Collection;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRegistration.Dynamic;
 
-import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 
-import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.servlet.CoreSpringDispatcherServler;
 
-public class SpringDispatcherServletContextCustomizer implements IServletContextCustomizer
+public class SpringDispatcherServletContextCustomizer extends AbstractServletContextCustomizer
 {
-    private static final Logger logger = Logger.getLogger(SpringDispatcherServletContextCustomizer.class);
-
-    private final String        m_name;
-
-    private final String[]      m_maps;
-
-    private int                 m_load = 1;
-
     public SpringDispatcherServletContextCustomizer(final String name, final String maps)
     {
-        final String path = StringOps.requireTrimOrNull(maps);
-
-        if (path.contains(","))
-        {
-            m_maps = StringOps.toUniqueArray(StringOps.tokenizeToStringCollection(path, ",", true, true));
-        }
-        else
-        {
-            m_maps = StringOps.toUniqueArray(path);
-        }
-        m_name = StringOps.requireTrimOrNull(name);
+        super(name, maps);
     }
 
     public SpringDispatcherServletContextCustomizer(final String name, final Collection<String> maps)
     {
-        this(name, StringOps.toCommaSeparated(maps));
-    }
-
-    public void setLoadOnStartup(final int load)
-    {
-        m_load = load;
-    }
-
-    public int getLoadOnStartup()
-    {
-        return m_load;
-    }
-
-    public String getServletName()
-    {
-        return m_name;
-    }
-
-    public String[] getMappings()
-    {
-        return m_maps;
+        super(name, maps);
     }
 
     @Override
-    public void close() throws IOException
+    protected Servlet doMakeServlet(final ServletContext sc, final WebApplicationContext context)
     {
-    }
-
-    @Override
-    public void customize(final ServletContext sc, final WebApplicationContext context)
-    {
-        final String name = StringOps.toTrimOrNull(getServletName());
-
-        if (null != name)
-        {
-            final String[] maps = getMappings();
-
-            if ((null != maps) && (maps.length > 0))
-            {
-                final Dynamic dispatcher = sc.addServlet(name, doMakeDispatcherServlet(sc, context));
-
-                if (null != dispatcher)
-                {
-                    final Collection<String> done = dispatcher.addMapping(maps);
-
-                    if (false == done.isEmpty())
-                    {
-                        logger.error("customize(" + name + ",\"" + StringOps.toCommaSeparated(done) + "\"): already mapped.");
-                    }
-                    dispatcher.setLoadOnStartup(getLoadOnStartup());
-
-                    logger.info("customize(" + name + ",\"" + StringOps.toCommaSeparated(maps) + "\"): COMPLETE");
-                }
-                else
-                {
-                    logger.error("customize(" + name + ",\"" + StringOps.toCommaSeparated(maps) + "\"): already registered.");
-                }
-            }
-            else
-            {
-                logger.error("customize(" + name + "): empty mapping.");
-            }
-        }
-        else
-        {
-            logger.error("customize(): no name.");
-        }
-    }
-
-    protected DispatcherServlet doMakeDispatcherServlet(final ServletContext sc, final WebApplicationContext context)
-    {
-        return new DispatcherServlet(context);
+        final CoreSpringDispatcherServler inst = new CoreSpringDispatcherServler(context);
+        
+        inst.setRateLimit(getRateLimit());
+        
+        inst.setRequiredRoles(getRequiredRoles());
+        
+        return inst;
     }
 }

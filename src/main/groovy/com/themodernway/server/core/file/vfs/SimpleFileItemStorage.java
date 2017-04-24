@@ -16,10 +16,10 @@
 
 package com.themodernway.server.core.file.vfs;
 
-import static com.themodernway.server.core.file.FilePathUtils.SINGLE_SLASH;
-import static com.themodernway.server.core.file.FilePathUtils.concat;
-import static com.themodernway.server.core.file.FilePathUtils.getContentTypeOf;
-import static com.themodernway.server.core.file.FilePathUtils.normalize;
+import static com.themodernway.server.core.file.FileAndPathUtils.SINGLE_SLASH;
+import static com.themodernway.server.core.file.FileAndPathUtils.concat;
+import static com.themodernway.server.core.file.FileAndPathUtils.getContentTypeOf;
+import static com.themodernway.server.core.file.FileAndPathUtils.normalize;
 
 import java.io.File;
 import java.io.IOException;

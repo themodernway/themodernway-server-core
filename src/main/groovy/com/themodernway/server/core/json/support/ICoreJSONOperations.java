@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Future;
+import java.util.stream.Stream;
 
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
@@ -27,23 +29,17 @@ import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.json.schema.JSONSchema;
 
-public interface IJSONUtilities
+public interface ICoreJSONOperations
 {
-    public JSONObject json();
+    public IBinder binder();
 
-    public JSONObject json(Map<String, ?> map);
-
-    public JSONObject json(String name, Object value);
-
-    public JSONObject json(Collection<?> collection);
-    
-    public JSONObject json(Optional<Collection<?>> collection);
-
-    public JSONObject json(List<?> list);
-
-    public JSONSchema jsonSchema(Map<String, ?> schema);
+    public IBinder binder(BinderType type);
 
     public JSONArray jarr();
+
+    public JSONArray jarr(Collection<?> collection);
+
+    public JSONArray jarr(Future<?> future);
 
     public JSONArray jarr(JSONObject object);
 
@@ -51,11 +47,29 @@ public interface IJSONUtilities
 
     public JSONArray jarr(Map<String, ?> map);
 
+    public JSONArray jarr(Object object);
+
+    public JSONArray jarr(Optional<?> optional);
+
+    public JSONArray jarr(Stream<?> stream);
+    
     public JSONArray jarr(String name, Object value);
 
-    public JSONArray jarr(Collection<?> collection);
+    public JSONObject json();
 
-    public IBinder binder();
+    public JSONObject json(Collection<?> collection);
 
-    public IBinder binder(BinderType type);
+    public JSONObject json(Future<?> future);
+
+    public JSONObject json(List<?> list);
+
+    public JSONObject json(Map<String, ?> map);
+
+    public JSONObject json(Object object);
+
+    public JSONObject json(Optional<?> optional);
+
+    public JSONObject json(String name, Object value);
+
+    public JSONSchema jsonSchema(Map<String, ?> schema);
 }

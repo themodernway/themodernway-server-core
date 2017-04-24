@@ -38,7 +38,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 {
     private static final Logger logger   = Logger.getLogger(CoreEncryptedPropertiesProviderPlaceholderConfigurer.class);
 
-    private Level               m_levels = Level.OFF;
+    private Level               m_levels = Level.DEBUG;
 
     private boolean             m_onsave = false;
 
@@ -77,7 +77,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
     {
         try
         {
-            setLoggingLevel(Level.toLevel(StringOps.toTrimOrNull(level), Level.OFF));
+            setLoggingLevel(Level.toLevel(StringOps.toTrimOrNull(level), Level.DEBUG));
         }
         catch (Exception e)
         {
@@ -202,8 +202,6 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
                         if (logson)
                         {
-                            logger.log(level, "decrypt(name: '" + k + "', encrypted string: '" + v + "')");
-
                             logger.log(level, "decrypt(name: '" + k + "', decrypted length: '" + d.length() + "')");
                         }
                         saved.put(k, d);

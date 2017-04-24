@@ -16,7 +16,9 @@
 
 package com.themodernway.server.core.support
 
+import java.util.concurrent.Future
 import java.util.function.Supplier
+import java.util.stream.Stream
 
 import org.apache.log4j.Logger
 import org.springframework.cache.CacheManager
@@ -98,7 +100,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     {
         getServerContext().getApplicationContext()
     }
-    
+
     @Memoized
     public WebApplicationContext getWebApplicationContext()
     {
@@ -128,19 +130,19 @@ public class CoreGroovySupport implements IServerContext, Closeable
     {
         getServerContext().getBuildDescriptorProvider()
     }
-    
+
     @Memoized
     public IFileItemStorageProvider getFileItemStorageProvider()
     {
         getServerContext().getFileItemStorageProvider()
     }
-    
+
     @Memoized
     public IFileItemStorage getFileItemStorage(String name)
     {
         getFileItemStorageProvider().getFileItemStorage(Objects.requireNonNull(name))
     }
-    
+
     @Memoized
     public IServletContextCustomizerProvider getServletContextCustomizerProvider()
     {
@@ -164,7 +166,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     {
         getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
     }
-    
+
     @Override
     public String getPropertyByName(String name, Supplier<String> otherwise)
     {
@@ -176,7 +178,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     {
         getServerContext().getAuthorizationProvider()
     }
-    
+
     @Memoized
     public IServerSessionRepositoryProvider getServerSessionRepositoryProvider()
     {
@@ -304,52 +306,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Override
-    public JSONObject json()
-    {
-        getServerContext().json()
-    }
-
-    @Override
-    public JSONObject json(Map<String, ?> map)
-    {
-        getServerContext().json(Objects.requireNonNull(map))
-    }
-
-    @Override
-    public JSONObject json(String name, Object value)
-    {
-        getServerContext().json(Objects.requireNonNull(name), value)
-    }
-    
-    @Override
-    public JSONObject json(final Optional<Collection<?>> collection)
-    {
-        if (collection.isPresent())
-        {
-            return json(collection.get())
-        }
-        json()
-    }
-
-    @Override
-    public JSONObject json(Collection<?> collection)
-    {
-        getServerContext().json(Objects.requireNonNull(collection))
-    }
-
-    @Override
-    public JSONObject json(List<?> list)
-    {
-        getServerContext().json(Objects.requireNonNull(list))
-    }
-
-    @Override
-    public JSONSchema jsonSchema(Map<String, ?> schema)
-    {
-        getServerContext().jsonSchema(Objects.requireNonNull(schema))
-    }
-
-    @Override
     public void close() throws IOException
     {
     }
@@ -358,54 +314,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public String uuid()
     {
         getServerContext().uuid()
-    }
-
-    @Override
-    public JSONArray jarr()
-    {
-        getServerContext().jarr()
-    }
-
-    @Override
-    public JSONArray jarr(JSONObject object)
-    {
-        getServerContext().jarr(Objects.requireNonNull(object))
-    }
-
-    @Override
-    public JSONArray jarr(List<?> list)
-    {
-        getServerContext().jarr(Objects.requireNonNull(list))
-    }
-
-    @Override
-    public JSONArray jarr(Map<String, ?> map)
-    {
-        getServerContext().jarr(Objects.requireNonNull(map))
-    }
-
-    @Override
-    public JSONArray jarr(String name, Object value)
-    {
-        getServerContext().jarr(Objects.requireNonNull(name), value)
-    }
-
-    @Override
-    public JSONArray jarr(Collection<?> collection)
-    {
-        getServerContext().jarr(Objects.requireNonNull(collection))
-    }
-
-    @Override
-    public IBinder binder()
-    {
-        getServerContext().binder()
-    }
-
-    @Override
-    public IBinder binder(final BinderType type)
-    {
-        getServerContext().binder(type)
     }
 
     @Override
@@ -419,7 +327,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     {
         getServerContext().toTrimOrElse(string, otherwise)
     }
-    
+
     @Override
     public String toTrimOrElse(String string, Supplier<String> otherwise)
     {
@@ -467,10 +375,136 @@ public class CoreGroovySupport implements IServerContext, Closeable
     {
         getWebSocketServiceProvider().getWebSocketService(name)
     }
-    
+
     @Memoized
     public CacheManager getCacheManager(String name)
     {
         getServerContext().getCacheManager(name)
+    }
+
+    @Override
+    public IBinder binder()
+    {
+        getServerContext().binder()
+    }
+
+    @Override
+    public IBinder binder(BinderType type)
+    {
+        getServerContext().binder(type)
+    }
+
+    @Override
+    public JSONArray jarr()
+    {
+        new JSONArray()
+    }
+
+    @Override
+    public JSONArray jarr(Collection<?> collection)
+    {
+        getServerContext().jarr(collection)
+    }
+
+    @Override
+    public JSONArray jarr(Future<?> future)
+    {
+        getServerContext().jarr(future)
+    }
+
+    @Override
+    public JSONArray jarr(JSONObject object)
+    {
+        getServerContext().jarr(object)
+    }
+
+    @Override
+    public JSONArray jarr(List<?> list)
+    {
+        getServerContext().jarr(list)
+    }
+
+    @Override
+    public JSONArray jarr(Map<String, ?> map)
+    {
+        getServerContext().jarr(map)
+    }
+
+    @Override
+    public JSONArray jarr(Object object)
+    {
+        getServerContext().jarr(object)
+    }
+
+    @Override
+    public JSONArray jarr(Optional<?> optional)
+    {
+        getServerContext().jarr(optional)
+    }
+
+    @Override
+    public JSONArray jarr(Stream<?> stream)
+    {
+        getServerContext().jarr(stream)
+    }
+
+    @Override
+    public JSONArray jarr(String name, Object value)
+    {
+        getServerContext().jarr(name, value)
+    }
+
+    @Override
+    public JSONObject json()
+    {
+        new JSONObject()
+    }
+
+    @Override
+    public JSONObject json(Collection<?> collection)
+    {
+        getServerContext().json(collection)
+    }
+
+    @Override
+    public JSONObject json(Future<?> future)
+    {
+        getServerContext().json(future)
+    }
+
+    @Override
+    public JSONObject json(List<?> list)
+    {
+        getServerContext().json(list)
+    }
+
+    @Override
+    public JSONObject json(Map<String, ?> map)
+    {
+        new JSONObject(Objects.requireNonNull(map))
+    }
+
+    @Override
+    public JSONObject json(Object object)
+    {
+        getServerContext().json(object)
+    }
+
+    @Override
+    public JSONObject json(Optional<?> optional)
+    {
+        getServerContext().json(optional)
+    }
+
+    @Override
+    public JSONObject json(String name, Object value)
+    {
+        new JSONObject(Objects.requireNonNull(name), value)
+    }
+
+    @Override
+    public JSONSchema jsonSchema(Map<String, ?> schema)
+    {
+        getServerContext().jsonSchema(schema)
     }
 }

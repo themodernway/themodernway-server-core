@@ -19,26 +19,33 @@ package com.themodernway.server.core.file;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 
 import com.themodernway.common.api.java.util.StringOps;
 
-public final class FilePathUtils
+public final class FileAndPathUtils
 {
-    public static final String                SINGLE_SLASH = "/";
+    public static final String                SINGLE_SLASH         = "/";
 
-    public static final String                SINGLE_TILDE = "~";
+    public static final String                SINGLE_TILDE         = "~";
 
-    public static final String                DOUBLE_SLASH = SINGLE_SLASH + SINGLE_SLASH;
+    public static final String                EMPTY_STRING         = StringOps.EMPTY_STRING;
 
-    public static final String                SLASHY_TILDE = SINGLE_SLASH + SINGLE_TILDE;
+    public static final String                DOUBLE_SLASH         = SINGLE_SLASH + SINGLE_SLASH;
 
-    public static final String                TILDE_SLASHY = SINGLE_TILDE + SINGLE_SLASH;
+    public static final String                SLASHY_TILDE         = SINGLE_SLASH + SINGLE_TILDE;
 
-    public static final CoreContentTypeMapper MIME_TYPE_OF = new CoreContentTypeMapper();
+    public static final String                TILDE_SLASHY         = SINGLE_TILDE + SINGLE_SLASH;
 
-    private FilePathUtils()
+    public static final CoreContentTypeMapper MIME_TYPE_OF         = new CoreContentTypeMapper();
+
+    public static final Pattern               NOWHITESPACE_PATTERN = Pattern.compile("\\s");
+
+    public static final Pattern               DOUBLE_SLASH_PATTERN = Pattern.compile(DOUBLE_SLASH);
+
+    private FileAndPathUtils()
     {
     }
 
@@ -58,7 +65,7 @@ public final class FilePathUtils
 
         while (path.contains(DOUBLE_SLASH))
         {
-            path = path.replaceAll(DOUBLE_SLASH, SINGLE_SLASH).trim();
+            path = DOUBLE_SLASH_PATTERN.matcher(path).replaceAll(SINGLE_SLASH).trim();
         }
         return path;
     }
@@ -139,5 +146,25 @@ public final class FilePathUtils
     public static final String concat(String path, String last)
     {
         return normalize(FilenameUtils.concat(normalize(path), normalize(trunk(last))));
+    }
+
+    public static final String fixPathBinding(String path)
+    {
+        if (null != (path = StringOps.toTrimOrNull(path)))
+        {
+            if (null != (path = StringOps.toTrimOrNull(normalize(NOWHITESPACE_PATTERN.matcher(path).replaceAll(EMPTY_STRING)))))
+            {
+                if (false == path.startsWith(SINGLE_SLASH))
+                {
+                    path = SINGLE_SLASH + path;
+                }
+                while ((path.length() > 1) && (path.endsWith(SINGLE_SLASH)))
+                {
+                    path = path.substring(0, path.length() - 1);
+                }
+                path = StringOps.toTrimOrNull(path);
+            }
+        }
+        return path;
     }
 }
