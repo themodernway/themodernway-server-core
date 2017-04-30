@@ -29,7 +29,7 @@ import org.springframework.core.io.Resource;
 
 import com.themodernway.server.core.io.IO;
 
-public class CoreContentTypeMapper
+public class CoreContentTypeMapper implements ICoreContentTypeMapper
 {
     private final MimetypesFileTypeMap m_maps;
 
@@ -91,13 +91,21 @@ public class CoreContentTypeMapper
         }
     }
 
+    @Override
     public String getContentTypeOf(final String file)
     {
         return m_maps.getContentType(Objects.requireNonNull(file));
     }
 
+    @Override
     public String getContentTypeOf(final File file)
     {
         return m_maps.getContentType(Objects.requireNonNull(file));
+    }
+
+    @Override
+    public String getContentTypeOf(final Path path)
+    {
+        return getContentTypeOf(path.toString());
     }
 }

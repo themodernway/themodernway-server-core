@@ -24,12 +24,15 @@ import javax.servlet.ServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.servlet.ContentGetServlet;
+import com.themodernway.server.core.servlet.IServletCommonOperations;
 
 public class ContentGetServletContextCustomizer extends AbstractServletContextCustomizer
 {
     private String  m_stor = null;
 
     private boolean m_noch = false;
+
+    private long    m_cdim = IServletCommonOperations.DEFAULT_CACHE_DELTA_IN_MILLISECONDS;
 
     public ContentGetServletContextCustomizer(final String name, final String maps)
     {
@@ -61,6 +64,16 @@ public class ContentGetServletContextCustomizer extends AbstractServletContextCu
         m_noch = nocache;
     }
 
+    public long getCacheDelta()
+    {
+        return m_cdim;
+    }
+
+    public void setCacheDelta(final long deltams)
+    {
+        m_cdim = deltams;
+    }
+
     @Override
     protected Servlet doMakeServlet(final ServletContext sc, final WebApplicationContext context)
     {
@@ -75,6 +88,8 @@ public class ContentGetServletContextCustomizer extends AbstractServletContextCu
         inst.setRateLimit(getRateLimit());
 
         inst.setNeverCache(isNeverCache());
+
+        inst.setCacheDelta(getCacheDelta());
 
         inst.setRequiredRoles(getRequiredRoles());
 

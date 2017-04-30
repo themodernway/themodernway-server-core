@@ -46,6 +46,8 @@ public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, I
 
     public static final int    MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH = 128;
 
+    public static final long   DEFAULT_CACHE_DELTA_IN_MILLISECONDS    = 1000L;
+
     public static final String SESSION_PROVIDER_DOMAIN_NAME_PARAM     = "core.server.session.provider.domain.name";
 
     public static final String CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM   = "core.server.content.type.max.header.length";

@@ -25,16 +25,21 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Stream;
 
+import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.server.core.file.ICoreContentTypeMapper;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 
@@ -73,6 +78,8 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     private final IFolderItem        m_root;
 
     private boolean                  m_open = false;
+
+    private ICoreContentTypeMapper   m_maps = null;
 
     private IFileItemMetaDataFactory m_meta = null;
 
@@ -117,6 +124,18 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     public void setFileItemMetaDataFactory(final IFileItemMetaDataFactory meta)
     {
         m_meta = meta;
+    }
+
+    @Override
+    public ICoreContentTypeMapper getContentTypeMapper()
+    {
+        return m_maps;
+    }
+
+    @Override
+    public void setContentTypeMapper(final ICoreContentTypeMapper maps)
+    {
+        m_maps = maps;
     }
 
     @Override
@@ -185,6 +204,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             {
                 throw new IOException(format("Can't type hidden (%s).", getPath()));
             }
+            final ICoreContentTypeMapper maps = getFileItemStorage().getContentTypeMapper();
+
+            if (null != maps)
+            {
+                return maps.getContentTypeOf(getFile());
+            }
             return getContentTypeOf(getFile());
         }
 
@@ -193,6 +218,14 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
+            if (false == exists())
+            {
+                throw new IOException(format("Can't meta-data missing (%s).", getPath()));
+            }
+            if (isHidden())
+            {
+                throw new IOException(format("Can't meta-data hidden (%s).", getPath()));
+            }
             final IFileItemMetaDataFactory fact = getFileItemStorage().getFileItemMetaDataFactory();
 
             if (null != fact)
@@ -232,17 +265,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             if (isFolder())
             {
-                final List<String> list = arrayList();
-
-                for (File file : listFiles())
-                {
-                    list.add(file.getName());
-                }
-                return list.stream();
+                return Arrays.stream(listFiles()).map(file -> file.getName());
             }
             else
             {
-                return Files.lines(getFile().toPath());
+                return IO.lines(getFile());
             }
         }
 
@@ -485,16 +512,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             readtest();
 
-            final List<IFileItem> list = arrayList();
-
             if (isFolder())
             {
-                for (File file : listFiles())
-                {
-                    list.add(MAKE(file, getFileItemStorage()));
-                }
+                return Arrays.stream(listFiles()).map(file -> MAKE(file, getFileItemStorage()));
             }
-            return list.stream();
+            return Stream.empty();
         }
 
         @Override
@@ -576,6 +598,60 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
+        public IFileItem create(final String name, final Reader reader) throws IOException
+        {
+            validate();
+
+            InputStream stream = null;
+
+            try
+            {
+                stream = new ReaderInputStream(reader);
+
+                return create(name, stream);
+            }
+            finally
+            {
+                IO.close(stream);
+            }
+        }
+
+        @Override
+        public IFileItem create(final String name, final URL url) throws IOException
+        {
+            validate();
+
+            InputStream stream = null;
+
+            if ("file".equals(url.getProtocol()))
+            {
+                final String host = url.getHost();
+
+                if ((null == host) || ((host.trim()).isEmpty()))
+                {
+                    final String path = url.getPath();
+
+                    if (path.indexOf('%') < 0)
+                    {
+                        stream = Files.newInputStream(Paths.get(path));
+                    }
+                }
+            }
+            try
+            {
+                if (null == stream)
+                {
+                    stream = url.openStream();
+                }
+                return create(name, stream);
+            }
+            finally
+            {
+                IO.close(stream);
+            }
+        }
+
+        @Override
         public IFileItem create(final String name, final InputStream input) throws IOException
         {
             validate();
@@ -640,7 +716,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         public InputStream getInputStream() throws IOException
         {
             validate();
-            
+
             readtest();
 
             throw new IOException(format("Can't stream folder (%s).", getPath()));
@@ -650,10 +726,26 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         public long writeTo(final OutputStream output) throws IOException
         {
             validate();
-            
+
             readtest();
 
             throw new IOException(format("Can't stream folder (%s).", getPath()));
+        }
+    }
+
+    public static void main(String... strings)
+    {
+        try
+        {
+            SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content");
+
+            stor.getRoot().file("index.html").writeTo(System.out);
+
+            stor.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 }

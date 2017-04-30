@@ -40,7 +40,7 @@ public class ContentDownloadServlet extends ContentGetServlet
     }
 
     @Override
-    public void head(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
+    protected boolean head(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
     {
         doNeverCache(request, response);
 
@@ -50,5 +50,6 @@ public class ContentDownloadServlet extends ContentGetServlet
 
             response.setContentType(toTrimOrElse(file.getContentType(), CONTENT_TYPE_APPLCATION_OCTET_STREAM));
         }
+        return true;
     }
 }

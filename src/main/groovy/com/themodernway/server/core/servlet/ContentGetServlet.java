@@ -31,6 +31,8 @@ public class ContentGetServlet extends AbstractContentServlet
 {
     private boolean m_nocache = false;
 
+    private long    m_deltams = DEFAULT_CACHE_DELTA_IN_MILLISECONDS;
+
     public ContentGetServlet()
     {
     }
@@ -50,6 +52,31 @@ public class ContentGetServlet extends AbstractContentServlet
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
         content(request, response, true);
+    }
+
+    public long getCacheDelta()
+    {
+        return m_deltams;
+    }
+
+    public void setCacheDelta(final long deltams)
+    {
+        m_deltams = deltams;
+    }
+
+    public boolean isRedirectOn()
+    {
+        return true;
+    }
+
+    public boolean isNeverCache()
+    {
+        return m_nocache;
+    }
+
+    public void setNeverCache(final boolean nocache)
+    {
+        m_nocache = nocache;
     }
 
     protected void content(final HttpServletRequest request, final HttpServletResponse response, final boolean send) throws ServletException, IOException
@@ -105,49 +132,17 @@ public class ContentGetServlet extends AbstractContentServlet
             }
             final IFileItem file = fold.file(path);
 
-            if (null == file)
+            if (isFileFoundForReading(file, path))
             {
-                logger().error(format("Can't find path (%s).", path));
-
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-                return;
+                if (head(request, response, file, send))
+                {
+                    send(request, response, file, send);
+                }
             }
-            if (false == file.exists())
+            else
             {
-                logger().error(format("Path does not exist (%s).", path));
-
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-                return;
             }
-            if (false == file.isReadable())
-            {
-                logger().error(format("Can't read path (%s).", path));
-
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-                return;
-            }
-            if (false == file.isFile())
-            {
-                logger().error(format("Path is not file (%s).", path));
-
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-                return;
-            }
-            if (file.isHidden())
-            {
-                logger().error(format("Path is hidden file (%s).", path));
-
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-                return;
-            }
-            head(request, response, file, send);
-
-            send(request, response, file, send);
         }
         catch (Exception e)
         {
@@ -157,53 +152,63 @@ public class ContentGetServlet extends AbstractContentServlet
         }
     }
 
-    public boolean isRedirectOn()
-    {
-        return true;
-    }
-
-    public boolean isNeverCache()
-    {
-        return m_nocache;
-    }
-
-    public void setNeverCache(final boolean nocache)
-    {
-        m_nocache = nocache;
-    }
-
-    public String getRedirect(final HttpServletRequest request, final HttpServletResponse response, final String path) throws Exception
+    protected String getRedirect(final HttpServletRequest request, final HttpServletResponse response, final String path) throws Exception
     {
         return null;
     }
 
-    public void head(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
+    protected boolean head(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
     {
         if (isNeverCache())
         {
             doNeverCache(request, response);
+
+            return true;
         }
         else
         {
-            final long last = file.getLastModified().getTime();
+            long delt = Math.max(0, getCacheDelta());
 
-            final long ifmd = request.getDateHeader(IF_MODIFIED_SINCE_HEADER);
+            long last = file.getLastModified().getTime();
 
-            if (ifmd < last)
+            try
             {
-                if ((false == response.containsHeader(LAST_MODIFIED_HEADER)) && (last >= 0))
+                long date = request.getDateHeader(IF_UNMODIFIED_SINCE_HEADER);
+
+                if (date >= 0)
                 {
-                    response.setDateHeader(LAST_MODIFIED_HEADER, last);
+                    if (last >= (date + delt))
+                    {
+                        response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+
+                        return false;
+                    }
+                }
+                date = request.getDateHeader(IF_MODIFIED_SINCE_HEADER);
+
+                if (date >= 0)
+                {
+                    if ((last < (date + delt)) && (null == request.getHeader(IF_NONE_MATCH_HEADER)))
+                    {
+                        response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+
+                        return false;
+                    }
                 }
             }
-            else
+            catch (IllegalArgumentException e)
             {
-                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                logger().error("Captured header exception.", e);
             }
+            if ((false == response.containsHeader(LAST_MODIFIED_HEADER)) && (last >= 0))
+            {
+                response.setDateHeader(LAST_MODIFIED_HEADER, last);
+            }
+            return true;
         }
     }
 
-    public void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
+    protected void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
     {
         if (send)
         {

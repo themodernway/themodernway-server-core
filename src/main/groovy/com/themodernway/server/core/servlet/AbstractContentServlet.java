@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import com.themodernway.server.core.file.FileAndPathUtils;
+import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.file.vfs.IFolderItem;
@@ -127,5 +128,40 @@ public abstract class AbstractContentServlet extends HTTPServletBase
     public IFileItemStorageProvider getFileItemStorageProvider()
     {
         return getServerContext().getFileItemStorageProvider();
+    }
+
+    public boolean isFileFoundForReading(final IFileItem file, final String path) throws IOException
+    {
+        if (null == file)
+        {
+            logger().error(format("Can't find path (%s).", path));
+
+            return false;
+        }
+        if (false == file.exists())
+        {
+            logger().error(format("Path does not exist (%s).", path));
+
+            return false;
+        }
+        if (false == file.isReadable())
+        {
+            logger().error(format("Can't read path (%s).", path));
+
+            return false;
+        }
+        if (false == file.isFile())
+        {
+            logger().error(format("Path is not file (%s).", path));
+
+            return false;
+        }
+        if (file.isHidden())
+        {
+            logger().error(format("Path is hidden file (%s).", path));
+
+            return false;
+        }
+        return true;
     }
 }

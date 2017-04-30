@@ -27,7 +27,7 @@ import com.themodernway.server.core.json.JSONObject;
 public interface IFileItem
 {
     public String getName() throws IOException;
-    
+
     public long getSize() throws IOException;
 
     public boolean exists() throws IOException;
@@ -69,6 +69,6 @@ public interface IFileItem
     public InputStream getInputStream() throws IOException;
 
     public long writeTo(OutputStream output) throws IOException;
-    
+
     public IFileItemStorage getFileItemStorage();
 }

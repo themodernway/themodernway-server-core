@@ -26,15 +26,23 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 
+import com.google.common.collect.Streams;
+import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.server.core.file.vfs.IFileItem;
 
 public final class IO
 {
+    public static final Charset UTF_8_CHARSET = Charset.forName(IHTTPConstants.CHARSET_UTF_8);
+
     private IO()
     {
     }
@@ -165,18 +173,6 @@ public final class IO
 
     public static final long copy(final IFileItem file, final OutputStream output) throws IOException
     {
-        if (false == file.exists())
-        {
-            throw new IOException("File doesn't exist.");
-        }
-        if (false == file.isFile())
-        {
-            throw new IOException("Can't copy directory.");
-        }
-        if (false == file.isReadable())
-        {
-            throw new IOException("Can't read file.");
-        }
         InputStream stream = null;
 
         try
@@ -193,18 +189,6 @@ public final class IO
 
     public static final long copy(final IFileItem file, final Writer output) throws IOException
     {
-        if (false == file.exists())
-        {
-            throw new IOException("File doesn't exist.");
-        }
-        if (false == file.isFile())
-        {
-            throw new IOException("Can't copy directory.");
-        }
-        if (false == file.isReadable())
-        {
-            throw new IOException("Can't read file.");
-        }
         InputStream stream = null;
 
         try
@@ -217,5 +201,46 @@ public final class IO
         {
             IO.close(stream);
         }
+    }
+
+    public static final Stream<String> lines(final Path path) throws IOException
+    {
+        return Files.lines(Objects.requireNonNull(path));
+    }
+
+    public static final Stream<String> lines(final Resource resource) throws IOException
+    {
+        InputStream stream = null;
+
+        try
+        {
+            stream = resource.getInputStream();
+
+            return lines(stream);
+        }
+        finally
+        {
+            IO.close(stream);
+        }
+    }
+
+    public static final Stream<String> lines(final Reader reader) throws IOException
+    {
+        return Streams.stream(IOUtils.lineIterator(Objects.requireNonNull(reader)));
+    }
+
+    public static final Stream<String> lines(final InputStream stream) throws IOException
+    {
+        return Streams.stream(IOUtils.lineIterator(Objects.requireNonNull(stream), UTF_8_CHARSET));
+    }
+
+    public static final Stream<String> lines(final File file) throws IOException
+    {
+        return lines(file.toPath());
+    }
+
+    public static final Stream<String> lines(final IFileItem file) throws IOException
+    {
+        return file.lines();
     }
 }

@@ -20,6 +20,7 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import com.themodernway.common.api.types.INamed;
+import com.themodernway.server.core.file.ICoreContentTypeMapper;
 
 public interface IFileItemStorage extends INamed, Closeable
 {
@@ -34,4 +35,8 @@ public interface IFileItemStorage extends INamed, Closeable
     public IFileItemMetaDataFactory getFileItemMetaDataFactory();
 
     public void setFileItemMetaDataFactory(IFileItemMetaDataFactory meta);
+    
+    public ICoreContentTypeMapper getContentTypeMapper();
+    
+    public void setContentTypeMapper(ICoreContentTypeMapper maps);
 }
