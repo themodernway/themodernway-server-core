@@ -16,16 +16,9 @@
 
 package com.themodernway.server.core.support.spring.testing.cucumber;
 
-import org.junit.runner.RunWith;
-
 import com.themodernway.server.core.support.CoreGroovySupport;
 import com.themodernway.server.core.support.spring.testing.IServerCoreTesting;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
-
-@RunWith(Cucumber.class)
-@CucumberOptions(plugin = { "json" })
 public abstract class ServerCoreCucumberTest extends CoreGroovySupport implements IServerCoreTesting
 {
     public static final CoreGroovySupport support()

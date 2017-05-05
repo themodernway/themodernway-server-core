@@ -18,10 +18,16 @@ package com.themodernway.server.core.test;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
 
 import com.themodernway.server.core.logging.MDC;
 import com.themodernway.server.core.support.spring.testing.cucumber.ServerCoreCucumberTest;
 
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(plugin = { "json" })
 public class RunCukesTest extends ServerCoreCucumberTest
 {
     @BeforeClass
