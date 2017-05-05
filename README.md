@@ -27,6 +27,14 @@ Javadoc URL:
 
 http://docs.themodernway.com/documents/javadoc/themodernway-server-core/
 
+Tests URL:
+
+http://docs.themodernway.com/documents/reports/themodernway-server-core/tests/
+
+Code Coverage URL:
+
+http://docs.themodernway.com/documents/reports/themodernway-server-core/coverage/
+
 License:
 
 Copyright (c) 2017, The Modern Way. All rights reserved.
