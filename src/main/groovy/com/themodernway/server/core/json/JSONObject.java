@@ -249,6 +249,12 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         return (get(Objects.requireNonNull(key)) instanceof Boolean);
     }
+    
+    @Override
+    public boolean isDate(final String key)
+    {
+        return (get(Objects.requireNonNull(key)) instanceof Date);
+    }
 
     @Override
     public boolean isNumber(final String key)
@@ -294,6 +300,18 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         if (object instanceof String)
         {
             return ((String) object);
+        }
+        return null;
+    }
+    
+    @Override
+    public Date getAsDate(final String key)
+    {
+        final Object object = get(Objects.requireNonNull(key));
+
+        if (object instanceof Date)
+        {
+            return ((Date) object);
         }
         return null;
     }

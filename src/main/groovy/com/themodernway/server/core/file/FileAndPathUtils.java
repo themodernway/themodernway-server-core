@@ -45,18 +45,18 @@ public final class FileAndPathUtils
 
     public static final Pattern               DOUBLE_SLASH_PATTERN = Pattern.compile(DOUBLE_SLASH);
 
-    private FileAndPathUtils()
+    protected FileAndPathUtils()
     {
     }
 
-    public static final String getContentTypeOf(final File file)
+    public static final String getContentType(final File file)
     {
-        return MIME_TYPE_OF.getContentTypeOf(file);
+        return MIME_TYPE_OF.getContentType(file);
     }
 
-    public static final String getContentTypeOf(final String path)
+    public static final String getContentType(final String path)
     {
-        return MIME_TYPE_OF.getContentTypeOf(normalize(path));
+        return MIME_TYPE_OF.getContentType(normalize(path));
     }
 
     public static final String patch(String path)

@@ -218,6 +218,12 @@ public class ContentGetServlet extends AbstractContentServlet
             {
                 response.setContentLengthLong(size);
             }
+            final String type = file.getContentType();
+
+            if ((null == type) || (false == CONTENT_TYPE_APPLCATION_OCTET_STREAM.equals(type)))
+            {
+                response.setContentType(type);
+            }
             file.writeTo(response.getOutputStream());
         }
         else

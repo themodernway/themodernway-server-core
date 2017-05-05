@@ -18,7 +18,6 @@ package com.themodernway.server.core.file.vfs;
 
 import static com.themodernway.server.core.file.FileAndPathUtils.SINGLE_SLASH;
 import static com.themodernway.server.core.file.FileAndPathUtils.concat;
-import static com.themodernway.server.core.file.FileAndPathUtils.getContentTypeOf;
 import static com.themodernway.server.core.file.FileAndPathUtils.normalize;
 
 import java.io.File;
@@ -26,12 +25,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.net.URL;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.input.ReaderInputStream;
@@ -39,23 +43,14 @@ import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.ICoreContentTypeMapper;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 
 public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 {
-    protected static final IFileItem MAKE(String path, IFileItemStorage stor)
-    {
-        return MAKE(new File(path), stor);
-    }
-
-    protected static final IFileItem MAKE(Path path, IFileItemStorage stor)
-    {
-        return MAKE(path.toFile(), stor);
-    }
-
-    protected static final IFileItem MAKE(File file, IFileItemStorage stor)
+    protected static final IFileItem MAKE(final File file, final IFileItemStorage stor)
     {
         if (file.isDirectory())
         {
@@ -186,6 +181,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
+        public IFileItemWrapper wrap()
+        {
+            return new FileItemWrapper(this);
+        }
+
+        @Override
         public void validate() throws IOException
         {
             getFileItemStorage().validate();
@@ -208,9 +209,9 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             if (null != maps)
             {
-                return maps.getContentTypeOf(getFile());
+                return maps.getContentType(getFile());
             }
-            return getContentTypeOf(getFile());
+            return FileAndPathUtils.getContentType(getFile());
         }
 
         @Override
@@ -237,7 +238,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                     return json;
                 }
             }
-            return new JSONObject();
+            return new JSONObject().set("path", getPath()).set("size", getSize()).set("last", getLastModified()).set("type", getContentType()).set("mode", String.format("%s%s%s", (isFolder() ? "d" : "-"), (isReadable() ? "r" : "-"), (isWritable() ? "w" : "-")));
         }
 
         @Override
@@ -265,7 +266,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             if (isFolder())
             {
-                return Arrays.stream(listFiles()).map(file -> file.getName());
+                return Arrays.stream(getFile().listFiles()).filter(file -> false == file.isHidden()).map(file -> file.getName());
             }
             else
             {
@@ -412,7 +413,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             readtest();
 
-            return Files.newInputStream(getFile().toPath());
+            return IO.toInputStream(getFile());
         }
 
         @Override
@@ -476,11 +477,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             return m_file;
         }
 
-        protected File[] listFiles()
-        {
-            return getFile().listFiles((node, name) -> false == node.isHidden());
-        }
-
         protected void readtest() throws IOException
         {
             if (false == exists())
@@ -506,7 +502,13 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
-        public Stream<IFileItem> items() throws IOException
+        public IFolderItemWrapper wrap()
+        {
+            return new FolderItemWrapper(this);
+        }
+
+        @Override
+        public Stream<IFileItem> items(ItemsOptions... options) throws IOException
         {
             validate();
 
@@ -514,9 +516,84 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             if (isFolder())
             {
-                return Arrays.stream(listFiles()).map(file -> MAKE(file, getFileItemStorage()));
+                EnumSet<ItemsOptions> look = ItemsOptions.make(options);
+
+                if (look.isEmpty())
+                {
+                    return normal(file -> true);
+                }
+                else if (look.contains(ItemsOptions.RECURSIVE))
+                {
+                    if (look.size() == 1)
+                    {
+                        look = EnumSet.of(ItemsOptions.FILE, ItemsOptions.FOLDER);
+                    }
+                    final boolean node = look.contains(ItemsOptions.FILE);
+
+                    final boolean fold = look.contains(ItemsOptions.FOLDER);
+
+                    final ArrayList<File> list = new ArrayList<File>();
+
+                    final SimpleFileVisitor<Path> visitor = new SimpleFileVisitor<Path>()
+                    {
+                        @Override
+                        public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes attr) throws IOException
+                        {
+                            final File file = path.toFile();
+
+                            if (file.isHidden())
+                            {
+                                return FileVisitResult.SKIP_SUBTREE;
+                            }
+                            if (fold)
+                            {
+                                list.add(file);
+                            }
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        @Override
+                        public FileVisitResult visitFile(Path path, BasicFileAttributes attr) throws IOException
+                        {
+                            final File file = path.toFile();
+
+                            if ((node) && (false == file.isHidden()))
+                            {
+                                list.add(file);
+                            }
+                            return FileVisitResult.CONTINUE;
+                        }
+                    };
+                    Files.walkFileTree(getFile().toPath(), EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, visitor);
+
+                    return list.stream().map(file -> MAKE(file, getFileItemStorage()));
+                }
+                else
+                {
+                    final boolean node = look.contains(ItemsOptions.FILE);
+
+                    final boolean fold = look.contains(ItemsOptions.FOLDER);
+
+                    if ((node) && (fold))
+                    {
+                        return normal(file -> true);
+                    }
+                    if (node)
+                    {
+                        return normal(file -> file.isFile());
+                    }
+                    if (fold)
+                    {
+                        return normal(file -> file.isDirectory());
+                    }
+                }
             }
             return Stream.empty();
+        }
+
+        private final Stream<IFileItem> normal(final Predicate<File> test)
+        {
+            return Arrays.stream(getFile().listFiles()).filter(file -> false == file.isHidden()).filter(test).map(file -> MAKE(file, getFileItemStorage()));
         }
 
         @Override
@@ -548,7 +625,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             if (null != path)
             {
-                return MAKE(path, getFileItemStorage());
+                return MAKE(new File(path), getFileItemStorage());
             }
             return null;
         }
@@ -568,7 +645,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             try
             {
-                stream = Files.newInputStream(path);
+                stream = IO.toInputStream(path);
 
                 return create(name, stream);
             }
@@ -617,45 +694,8 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
-        public IFileItem create(final String name, final URL url) throws IOException
-        {
-            validate();
-
-            InputStream stream = null;
-
-            if ("file".equals(url.getProtocol()))
-            {
-                final String host = url.getHost();
-
-                if ((null == host) || ((host.trim()).isEmpty()))
-                {
-                    final String path = url.getPath();
-
-                    if (path.indexOf('%') < 0)
-                    {
-                        stream = Files.newInputStream(Paths.get(path));
-                    }
-                }
-            }
-            try
-            {
-                if (null == stream)
-                {
-                    stream = url.openStream();
-                }
-                return create(name, stream);
-            }
-            finally
-            {
-                IO.close(stream);
-            }
-        }
-
-        @Override
         public IFileItem create(final String name, final InputStream input) throws IOException
         {
-            validate();
-
             IFileItem item = file(name);
 
             if (null != item)
@@ -684,15 +724,13 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
                 file.createNewFile();
 
-                final OutputStream fios = Files.newOutputStream(file.toPath());
+                final OutputStream fios = IO.toOutputStream(file);
 
                 try
                 {
                     IO.copy(input, fios);
 
                     fios.flush();
-
-                    IO.close(fios);
 
                     return MAKE(file, getFileItemStorage());
                 }
@@ -739,8 +777,16 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content");
 
-            stor.getRoot().file("index.html").writeTo(System.out);
-
+            stor.getRoot().items(ItemsOptions.RECURSIVE).forEach(item -> {
+                try
+                {
+                    System.out.println(String.format("file (%s) type (%s).", item.getPath(), item.getMetaData()));
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            });
             stor.close();
         }
         catch (IOException e)

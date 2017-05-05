@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file;
+package com.themodernway.server.core.file.vfs;
 
-import java.io.File;
-import java.nio.file.Path;
-
-public interface ICoreContentTypeMapper
+public class FileStorageException extends RuntimeException
 {
-    public String getContentType(String file);
+    private static final long serialVersionUID = 1L;
+
+    public FileStorageException(Throwable e)
+    {
+        super(e);
+    }
+
+    public FileStorageException(String message)
+    {
+        super(message);
+    }
     
-    public String getContentType(Path path);
-    
-    public String getContentType(File file);
+    public FileStorageException(String message, Throwable e)
+    {
+        super(message, e);
+    }
 }

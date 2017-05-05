@@ -19,39 +19,64 @@ package com.themodernway.server.core.file;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import javax.activation.FileTypeMap;
 import javax.activation.MimetypesFileTypeMap;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.server.core.io.IO;
 
-public class CoreContentTypeMapper implements ICoreContentTypeMapper
+public class CoreContentTypeMapper implements ICoreContentTypeMapper, InitializingBean
 {
-    private final MimetypesFileTypeMap m_maps;
+    private Logger               m_logs = Logger.getLogger(getClass());
+
+    private String[]             m_type = null;
+
+    private MimetypesFileTypeMap m_maps = null;
+
+    private Resource             m_rsrc = new ClassPathResource("mime.types", getClass());
 
     public CoreContentTypeMapper()
     {
-        m_maps = new MimetypesFileTypeMap();
     }
 
-    public CoreContentTypeMapper(final InputStream stream) throws IOException
+    public CoreContentTypeMapper(final Resource resource)
     {
-        m_maps = new MimetypesFileTypeMap(Objects.requireNonNull(stream));
+        m_rsrc = Objects.requireNonNull(resource);
     }
 
-    public CoreContentTypeMapper(final Resource resource) throws IOException
+    private final MimetypesFileTypeMap iniFileTypeMap() throws IOException
     {
+        if (null != m_maps)
+        {
+            return m_maps;
+        }
         InputStream stream = null;
 
         try
         {
-            stream = resource.getInputStream();
+            m_logs.info(String.format("loading (%s) mime file.", m_rsrc));
+
+            stream = m_rsrc.getInputStream();
 
             m_maps = new MimetypesFileTypeMap(stream);
+
+            if (null != m_type)
+            {
+                for (String type : m_type)
+                {
+                    m_logs.info(String.format("adding to (%s) mime type (%s).", m_rsrc, type));
+
+                    m_maps.addMimeTypes(type);
+                }
+            }
+            return m_maps;
         }
         finally
         {
@@ -59,53 +84,48 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper
         }
     }
 
-    public CoreContentTypeMapper(final File file) throws IOException
+    protected final FileTypeMap getFileTypeMap()
     {
-        InputStream stream = null;
-
-        try
+        if (null == m_maps)
         {
-            stream = Files.newInputStream(file.toPath());
-
-            m_maps = new MimetypesFileTypeMap(stream);
+            try
+            {
+                m_maps = iniFileTypeMap();
+            }
+            catch (IOException e)
+            {
+                throw new IllegalStateException("Could not load specified MIME type mapping file: " + m_rsrc, e);
+            }
         }
-        finally
-        {
-            IO.close(stream);
-        }
+        return m_maps;
     }
 
-    public CoreContentTypeMapper(final Path path) throws IOException
+    public void setMappings(final String... type)
     {
-        InputStream stream = null;
-
-        try
-        {
-            stream = Files.newInputStream(path);
-
-            m_maps = new MimetypesFileTypeMap(stream);
-        }
-        finally
-        {
-            IO.close(stream);
-        }
+        m_type = type;
     }
 
     @Override
-    public String getContentTypeOf(final String file)
+    public String getContentType(final String file)
     {
-        return m_maps.getContentType(Objects.requireNonNull(file));
+        return getFileTypeMap().getContentType(Objects.requireNonNull(file));
     }
 
     @Override
-    public String getContentTypeOf(final File file)
+    public String getContentType(final File file)
     {
-        return m_maps.getContentType(Objects.requireNonNull(file));
+        return getFileTypeMap().getContentType(Objects.requireNonNull(file));
     }
 
     @Override
-    public String getContentTypeOf(final Path path)
+    public String getContentType(final Path path)
     {
-        return getContentTypeOf(path.toString());
+        return getContentType(path.toString());
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        getFileTypeMap();
     }
 }

@@ -274,6 +274,12 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     {
         return (get(index) instanceof String);
     }
+    
+    @Override
+    public boolean isDate(final int index)
+    {
+        return (get(index) instanceof Date);
+    }
 
     @Override
     public boolean isNativeFunction(int index)
@@ -331,6 +337,18 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         if (value instanceof String)
         {
             return ((String) value);
+        }
+        return null;
+    }
+    
+    @Override
+    public Date getAsDate(final int index)
+    {
+        final Object value = get(index);
+
+        if (value instanceof Date)
+        {
+            return ((Date) value);
         }
         return null;
     }

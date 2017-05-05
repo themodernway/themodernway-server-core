@@ -26,6 +26,8 @@ import com.themodernway.server.core.json.JSONObject;
 
 public interface IFileItem
 {
+    public IFileItemWrapper wrap();
+    
     public String getName() throws IOException;
 
     public long getSize() throws IOException;

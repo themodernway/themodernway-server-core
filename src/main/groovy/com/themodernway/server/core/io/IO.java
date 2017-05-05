@@ -28,6 +28,7 @@ import java.io.Writer;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -41,6 +42,8 @@ import com.themodernway.server.core.file.vfs.IFileItem;
 
 public final class IO
 {
+    public static final int     EOF           = (0 - 1);
+
     public static final Charset UTF_8_CHARSET = Charset.forName(IHTTPConstants.CHARSET_UTF_8);
 
     private IO()
@@ -133,7 +136,7 @@ public final class IO
 
         try
         {
-            stream = Files.newInputStream(file.toPath());
+            stream = toInputStream(file);
 
             return copy(stream, output);
         }
@@ -161,7 +164,7 @@ public final class IO
 
         try
         {
-            stream = Files.newInputStream(file.toPath());
+            stream = toInputStream(file);
 
             return copy(stream, output);
         }
@@ -242,5 +245,25 @@ public final class IO
     public static final Stream<String> lines(final IFileItem file) throws IOException
     {
         return file.lines();
+    }
+
+    public static final InputStream toInputStream(final File file, final OpenOption... options) throws IOException
+    {
+        return toInputStream(file.toPath(), options);
+    }
+    
+    public static final InputStream toInputStream(final Path path, final OpenOption... options) throws IOException
+    {
+        return Files.newInputStream(Objects.requireNonNull(path), options);
+    }
+    
+    public static final OutputStream toOutputStream(final File file, final OpenOption... options) throws IOException
+    {
+        return toOutputStream(file.toPath(), options);
+    }
+    
+    public static final OutputStream toOutputStream(final Path path, final OpenOption... options) throws IOException
+    {
+        return Files.newOutputStream(Objects.requireNonNull(path), options);
     }
 }

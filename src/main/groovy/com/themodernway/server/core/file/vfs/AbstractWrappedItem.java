@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file;
+package com.themodernway.server.core.file.vfs;
 
-import java.io.File;
-import java.nio.file.Path;
+import java.util.Objects;
 
-public interface ICoreContentTypeMapper
+public abstract class AbstractWrappedItem<T extends IFileItem> implements IWrappedItem<T>
 {
-    public String getContentType(String file);
-    
-    public String getContentType(Path path);
-    
-    public String getContentType(File file);
+    private final T m_item;
+
+    protected AbstractWrappedItem(final T item)
+    {
+        m_item = Objects.requireNonNull(item);
+    }
+
+    @Override
+    public T getWrappedItem()
+    {
+        return m_item;
+    }
 }

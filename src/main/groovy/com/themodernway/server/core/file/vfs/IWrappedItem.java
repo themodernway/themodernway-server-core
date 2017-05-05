@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file;
+package com.themodernway.server.core.file.vfs;
 
-import java.io.File;
-import java.nio.file.Path;
-
-public interface ICoreContentTypeMapper
+public interface IWrappedItem<T extends IFileItem>
 {
-    public String getContentType(String file);
-    
-    public String getContentType(Path path);
-    
-    public String getContentType(File file);
+    public T getWrappedItem();
 }

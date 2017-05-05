@@ -24,7 +24,7 @@
 
 	<bean id="BootstrapStringCryptoProvider" class="com.themodernway.server.core.security.BootstrapStringCryptoProvider">
 		<constructor-arg>
-			<value>file:/opt/properties/ahome-tooling-server-core/crypto.properties</value>
+			<value>file:/opt/development/properties/themodernway-server-core/crypto.properties</value>
 		</constructor-arg>
 	</bean>
 
@@ -33,12 +33,7 @@
 		<constructor-arg value="0xCAFEBABE;"/>
 		<property name="locations">
 			<list>
-				<value>file:/opt/properties/ahome-tooling-server-core/webapp.properties</value>
-				<value>file:/opt/properties/ahome-tooling-server-core/pubsub.properties</value>
-				<value>file:/opt/properties/ahome-tooling-server-core/jmxapp.properties</value>
-				<value>file:/opt/properties/ahome-tooling-server-core/psql93.properties</value>
-				<value>file:/opt/properties/ahome-tooling-server-core/mongod.properties</value>
-				<value>file:/opt/properties/ahome-tooling-server-core/hazelc.properties</value>
+				<value>file:/opt/development/properties/themodernway-server-core/webapp.properties</value>
 			</list>
 		</property>
 	</bean>
