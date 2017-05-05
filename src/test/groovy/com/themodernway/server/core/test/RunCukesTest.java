@@ -20,21 +20,21 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
-import com.themodernway.server.core.logging.MDC;
 import com.themodernway.server.core.support.spring.testing.cucumber.ServerCoreCucumberTest;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(plugin = { "json" })
+@CucumberOptions(
+        plugin = { "json" },
+        features = {"src/test/groovy/com/themodernway/server/core/test/features"}
+)
 public class RunCukesTest extends ServerCoreCucumberTest
 {
     @BeforeClass
     public static void setUp() throws Exception
     {
-        MDC.put("session", support().uuid() + "-GLOBAL");
-
         TestingOps.setupServerCoreDefault("classpath:/com/themodernway/server/core/test/ApplicationContext.xml", "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml");
     }
 
