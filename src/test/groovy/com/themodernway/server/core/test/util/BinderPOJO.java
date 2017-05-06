@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.test;
+package com.themodernway.server.core.test.util;
 
 public class BinderPOJO
 {

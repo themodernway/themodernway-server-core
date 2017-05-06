@@ -266,7 +266,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             if (isFolder())
             {
-                return Arrays.stream(getFile().listFiles()).filter(file -> false == file.isHidden()).map(file -> file.getName());
+                return getAsFolderItem().items().map(file -> file.wrap().getName());
             }
             else
             {
@@ -279,7 +279,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            return getFile().getName();
+            return toTrimOrElse(FileAndPathUtils.name(getPath()), SINGLE_SLASH);
         }
 
         @Override
@@ -534,11 +534,17 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
                     final ArrayList<File> list = new ArrayList<File>();
 
+                    final Path root = getFile().toPath();
+
                     final SimpleFileVisitor<Path> visitor = new SimpleFileVisitor<Path>()
                     {
                         @Override
                         public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes attr) throws IOException
                         {
+                            if (root.equals(path))
+                            {
+                                return FileVisitResult.CONTINUE;
+                            }
                             final File file = path.toFile();
 
                             if (file.isHidden())
@@ -564,7 +570,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                             return FileVisitResult.CONTINUE;
                         }
                     };
-                    Files.walkFileTree(getFile().toPath(), EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, visitor);
+                    Files.walkFileTree(root, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, visitor);
 
                     return list.stream().map(file -> MAKE(file, getFileItemStorage()));
                 }
@@ -780,7 +786,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             stor.getRoot().items(ItemsOptions.RECURSIVE).forEach(item -> {
                 try
                 {
-                    System.out.println(String.format("file (%s) type (%s).", item.getPath(), item.getMetaData()));
+                    System.out.println(String.format("file (%s) type (%s).", item.getName(), item.getMetaData()));
                 }
                 catch (IOException e)
                 {

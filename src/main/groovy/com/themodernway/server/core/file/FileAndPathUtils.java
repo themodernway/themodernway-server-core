@@ -59,6 +59,15 @@ public final class FileAndPathUtils
         return MIME_TYPE_OF.getContentType(normalize(path));
     }
 
+    public static final String name(String path)
+    {
+        if (null != (path = normalize(path)))
+        {
+            return FilenameUtils.getName(path);
+        }
+        return path;
+    }
+
     public static final String patch(String path)
     {
         path = path.trim();

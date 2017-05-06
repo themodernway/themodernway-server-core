@@ -18,6 +18,7 @@ package com.themodernway.server.core.support.spring.testing.spock
 
 import org.apache.log4j.Logger
 
+import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.support.spring.testing.IServerCoreTesting
 
 import groovy.transform.CompileStatic
@@ -26,8 +27,15 @@ import spock.lang.Specification
 @CompileStatic
 public abstract class ServerCoreSpecification extends Specification implements IServerCoreTesting
 {
-    private Logger m_logger
+    private Logger      m_logger
 
+    private boolean     m_logging = true
+    
+    def setup()
+    {
+        m_logging = true
+    }
+    
     public Logger logger()
     {
         if (null == m_logger)
@@ -35,5 +43,34 @@ public abstract class ServerCoreSpecification extends Specification implements I
             m_logger = Logger.getLogger(getClass())
         }
         m_logger
+    }
+    
+    public void logging(boolean on = true)
+    {
+        m_logging = on
+    }
+    
+    public void echo(JSONObject o)
+    {
+        if (m_logging)
+        {
+            logger().info("" + o?.toJSONString())
+        }
+        else
+        {
+            println "" + o?.toJSONString()
+        }
+    }
+
+    public void echo(def o)
+    {
+        if (m_logging)
+        {
+            logger().info("" + o?.toString())
+        }
+        else
+        {
+            println "" + o?.toString()
+        }
     }
 }

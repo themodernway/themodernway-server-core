@@ -24,35 +24,32 @@ import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.binder.BinderType
 import com.themodernway.server.core.json.parser.JSONParser
 import com.themodernway.server.core.json.support.JSONMapToTreeSolver
-import com.themodernway.server.core.logging.MDC;
+import com.themodernway.server.core.logging.MDC
 import com.themodernway.server.core.scripting.ScriptType
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.IServerCoreTesting.TestingOps
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
+import com.themodernway.server.core.test.util.BinderPOJO
 
-class BasicTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait {
-    def setupSpec() {
-        MDC.put('session', uuid() + "-GLOBAL")
-
+class BasicTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
+{
+    def setupSpec()
+    {
         TestingOps.setupServerCoreDefault([
             "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
             "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
         ])
     }
 
-    def cleanupSpec() {
+    def cleanupSpec()
+    {
         TestingOps.closeServerCoreDefault()
     }
 
-    def "test server context property provider"() {
-        expect: getPropertyByName("core.server.events.keep.alive") == "30"
-    }
-
-    def "test server context crypto provider"() {
+    def "test server context crypto provider"()
+    {
         setup:
         def text = getCryptoProvider().encrypt("ok")
-        def list = 1..100
-        println list instanceof List
 
         expect:
         getCryptoProvider().decrypt(text) != null
@@ -60,7 +57,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         getCryptoProvider().decrypt(text) != text
     }
 
-    def "test JSONObject"() {
+    def "test JSONObject"()
+    {
         setup:
         def valu = json(name: "Dean")
 
@@ -68,7 +66,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         valu['name'] == "Dean"
     }
 
-    def "test JSONObject 2"() {
+    def "test JSONObject 2"()
+    {
         setup:
         def valu = json(count: 1L)
         def text = valu as String
@@ -78,7 +77,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         valu['count'] == 1L
     }
 
-    def "test JSONObject 3"() {
+    def "test JSONObject 3"()
+    {
         setup:
         def valu = json(count: 1L, name: "Dean", last: 1.5)
         println valu as String
@@ -89,7 +89,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         valu['count'] == 1L
     }
 
-    def "test Keys"() {
+    def "test Keys"()
+    {
         setup:
         String pass = getCryptoProvider().getRandomPass()
         String salt = getCryptoProvider().getRandomSalt()
@@ -100,7 +101,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         getCryptoProvider().isPassValid(pass) == true
     }
 
-    def "test script types"() {
+    def "test script types"()
+    {
         setup:
         def lang = scripting().getScriptingLanguageNames()
         println json(languages: lang)
@@ -109,7 +111,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "test JS Script"() {
+    def "test JS Script"()
+    {
         setup:
         ScriptEngine engine = scripting().engine(ScriptType.JAVASCRIPT, reader('classpath:/com/themodernway/server/core/test/test.js'))
         println "JavaScript " + engine.get('x')
@@ -120,7 +123,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "test Groovy Script"() {
+    def "test Groovy Script"()
+    {
         setup:
         ScriptEngine engine = scripting().engine(ScriptType.GROOVY, reader('classpath:/com/themodernway/server/core/test/test.gy'))
         println "Groovy " + engine.get('x')
@@ -131,65 +135,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "test Groovy soap"() {
-        setup:
-        def soap = network().soap('http://www.holidaywebservice.com/Holidays/US/Dates/USHolidayDates.asmx')
-        def resp = soap.send(SOAPAction: 'http://www.27seconds.com/Holidays/US/Dates/GetMothersDay') {
-            body {
-                GetMothersDay(xmlns: 'http://www.27seconds.com/Holidays/US/Dates/') { year(2016) }
-            }
-        }
-        def code = resp.code()
-        def answ = resp.body().GetMothersDayResponse.GetMothersDayResult.text()
-        println answ
-        println resp.headers().toString()
-
-        expect:
-        code == 200
-        answ == '2016-05-08T00:00:00'
-    }
-
-    def "test Spring rest 1"() {
-        setup:
-        def resp = network().get('http://jsonplaceholder.typicode.com/posts/100')
-        def code = resp.code()
-        def answ = resp.json()
-
-        expect:
-        true == resp.good()
-        answ != null
-        answ['id'] == 100
-    }
-
-    /*
-     def "test Spring rest 2"()
-     {
-     setup:
-     def resp = network().get('http://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: 100))
-     def code = resp.code()
-     def answ = resp.json()
-     expect:
-     code == 200
-     answ != null
-     answ['id'] == 100
-     }
-     */
-
-    def "test Spring rest 3"() {
-        setup:
-        def resp = network().post('http://jsonplaceholder.typicode.com/posts', json(data: [body: 'hi', value: 888]))
-        def code = resp.code()
-        def answ = resp.json()
-        if (answ) {
-            println "POST(" + answ.toString() + ")"
-        }
-        expect:
-        true == resp.good()
-        answ != null
-        answ['id'] > 100
-    }
-
-    def "test binder"() {
+    def "test binder"()
+    {
         setup:
         BinderPOJO pojo = new BinderPOJO()
         pojo.setName('Dean S. /Jones')
@@ -209,7 +156,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         text == valu
     }
 
-    def "test yaml pojo 1"() {
+    def "test yaml pojo 1"()
+    {
         setup:
         BinderPOJO make = binder(BinderType.YAML).bind(resource('classpath:/com/themodernway/server/core/test/pojo.yml'), BinderPOJO)
         String valu = binder(BinderType.YAML).toString(make)
@@ -219,7 +167,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         valu == valu
     }
 
-    def "test yaml pojo 2"() {
+    def "test yaml pojo 2"()
+    {
         setup:
         JSONObject json = binder(BinderType.YAML).bindJSON(resource('classpath:/com/themodernway/server/core/test/pojo.yml'))
         String valu = json.toJSONString()
@@ -229,7 +178,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         valu == valu
     }
 
-    def "test yaml json 1"() {
+    def "test yaml json 1"()
+    {
         setup:
         JSONObject json = json(type: 'API', active: true, versions: [1, 2, 3, false], pojo: new BinderPOJO("Rosaria", 100), list:[])
         String valu = binder(BinderType.YAML).toString(json)
@@ -240,7 +190,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         valu == valu
     }
 
-    def "test yaml json 3"() {
+    def "test yaml json 3"()
+    {
         setup:
         JSONObject json = binder(BinderType.YAML).bindJSON(resource('classpath:/com/themodernway/server/core/test/test.yml'))
         String valu = json.toJSONString()
@@ -250,7 +201,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         valu == valu
     }
 
-    def "test yaml pojo recycle"() {
+    def "test yaml pojo recycle"()
+    {
         setup:
         BinderPOJO pojo = new BinderPOJO()
         pojo.setName('Dean S. Jones')
@@ -265,7 +217,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         text == valu
     }
 
-    def "test xml pojo recycle"() {
+    def "test xml pojo recycle"()
+    {
         setup:
         BinderPOJO pojo = new BinderPOJO()
         pojo.setName('Dean S. Jones')
@@ -280,7 +233,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         text == valu
     }
 
-    def "test tree"() {
+    def "test tree"()
+    {
         setup:
         JSONMapToTreeSolver tree = new JSONMapToTreeSolver([
             [linked: 'tree', parent: 'level', column: 'children']
@@ -296,12 +250,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         valu == valu
     }
 
-    def "test MDC"() {
+    def "test MDC"()
+    {
         setup:
         def keep = MDC.get('session')
         MDC.put('session', 'LOCAL')
         logger().info('MDC test')
-        if (keep) {
+        if (keep)
+        {
             MDC.put('session', keep)
         }
 
@@ -309,7 +265,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "test JavaScript scripting Proxy"() {
+    def "test JavaScript scripting Proxy"()
+    {
         setup:
         def p = scripting().proxy(ScriptType.JAVASCRIPT, reader('classpath:/com/themodernway/server/core/test/test.js'))
 
@@ -323,7 +280,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         z == 5
     }
 
-    def "test Groovy scripting Proxy"() {
+    def "test Groovy scripting Proxy"()
+    {
         setup:
         def p = scripting().proxy(ScriptType.GROOVY, reader('classpath:/com/themodernway/server/core/test/test.gy'))
 
@@ -337,7 +295,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         z == 5
     }
 
-    def "Nano Timer"() {
+    def "Nano Timer"()
+    {
         setup:
         def t = new NanoTimer()
         println t
@@ -346,7 +305,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Nano Timer Delay"() {
+    def "Nano Timer Delay"()
+    {
         setup:
         def t = new NanoTimer()
         Thread.sleep(500)
@@ -356,7 +316,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse Lion JSON out"() {
+    def "Parse Lion JSON out"()
+    {
         setup:
         def t = new NanoTimer()
         def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
@@ -371,13 +332,15 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         j.toString() == b.toString()
     }
 
-    def "Parse Lion JSON out many"() {
+    def "Parse Lion JSON out many"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
         def j = new JSONParser().parse(r)
         def b = binder().bindJSON(r)
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 5000; i++)
+        {
             b.toString()
         }
         println t.toString() + " Lion JSON out many"
@@ -385,14 +348,16 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         expect:
         j.toString() == b.toString()
     }
-    
-    def "Parse Lion JSON out many 2"() {
+
+    def "Parse Lion JSON out many 2"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
         def j = new JSONParser().parse(r)
         def b = binder().bindJSON(r)
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 5000; i++)
+        {
             binder().toString(j)
         }
         println t.toString() + " Lion JSON out many 2"
@@ -400,14 +365,16 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         expect:
         j.toString() == b.toString()
     }
-    
-    def "Time Tiger JSON out strict true"() {
+
+    def "Time Tiger JSON out strict true"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
         def j = new JSONParser().parse(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 5000; i++)
+        {
             j.writeJSONString(w, true)
         }
         println t.toString() + " Time Tiger JSON out"
@@ -415,14 +382,16 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         expect:
         "dean" == "dean"
     }
-    
-    def "Time Tiger JSON out strict false"() {
+
+    def "Time Tiger JSON out strict false"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
         def j = new JSONParser().parse(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 5000; i++)
+        {
             j.writeJSONString(w, false)
         }
         println t.toString() + " Time Tiger JSON out"
@@ -430,14 +399,16 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         expect:
         "dean" == "dean"
     }
-    
-    def "Time Tiny JSON out strict true"() {
+
+    def "Time Tiny JSON out strict true"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
         def j = new JSONParser().parse(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             j.writeJSONString(w, true)
         }
         println t.toString() + " Time Tiny JSON out true"
@@ -445,14 +416,16 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         expect:
         "dean" == "dean"
     }
-    
-    def "Time Tiny JSON out strict false"() {
+
+    def "Time Tiny JSON out strict false"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
         def j = new JSONParser().parse(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             j.writeJSONString(w, false)
         }
         println t.toString() + " Time Tiny JSON out false"
@@ -460,14 +433,16 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         expect:
         "dean" == "dean"
     }
-    
-    def "Time Tiny JSON string strict true"() {
+
+    def "Time Tiny JSON string strict true"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
         def j = new JSONParser().parse(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             j.toJSONString(true)
         }
         println t.toString() + " Time Tiny JSON string true"
@@ -475,14 +450,16 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         expect:
         "dean" == "dean"
     }
-    
-    def "Time Tiny JSON string strict false"() {
+
+    def "Time Tiny JSON string strict false"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
         def j = new JSONParser().parse(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             def s = j.toJSONString(false)
         }
         println t.toString() + " Time Tiny JSON string false"
@@ -490,14 +467,16 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         expect:
         "dean" == "dean"
     }
-    
-    def "Time Tiger JSON string strict true"() {
+
+    def "Time Tiger JSON string strict true"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
         def j = new JSONParser().parse(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             j.toJSONString(true)
         }
         println t.toString() + " Time Tiger JSON string true"
@@ -505,14 +484,16 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         expect:
         "dean" == "dean"
     }
-    
-    def "Time Tiger JSON string strict false"() {
+
+    def "Time Tiger JSON string strict false"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
         def j = new JSONParser().parse(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             def s = j.toJSONString(false)
         }
         println t.toString() + " Time Tiger JSON string false"
@@ -521,12 +502,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse Tiger JSON"() {
+    def "Parse Tiger JSON"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
         def p = new JSONParser()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 5000; i++)
+        {
             p.parse(r)
         }
         println t.toString() + " Tiger JSON parsed"
@@ -535,12 +518,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse Tiger Binder"() {
+    def "Parse Tiger Binder"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
         def b = binder()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 5000; i++)
+        {
             b.bindJSON(r)
         }
         println t.toString() + " Tiger BINDER parsed"
@@ -549,12 +534,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse Lion JSON"() {
+    def "Parse Lion JSON"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
         def p = new JSONParser()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 5000; i++)
+        {
             p.parse(r)
         }
         println t.toString() + " Lion JSON parsed"
@@ -563,12 +550,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse Lion Binder"() {
+    def "Parse Lion Binder"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
         def b = binder()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 5000; i++)
+        {
             b.bindJSON(r)
         }
         println t.toString() + " Lion BINDER parsed"
@@ -577,12 +566,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse Tiny JSON"() {
+    def "Parse Tiny JSON"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
         def p = new JSONParser()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 5000; i++)
+        {
             p.parse(r)
         }
         println t.toString() + " Tiny JSON parsed"
@@ -591,12 +582,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse Tiny Binder"() {
+    def "Parse Tiny Binder"()
+    {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
         def b = binder()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < 5000; i++)
+        {
             b.bindJSON(r)
         }
         println t.toString() + " Tiny BINDER parsed"
@@ -605,12 +598,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse String JSON"() {
+    def "Parse String JSON"()
+    {
         setup:
         def r = '{"dean": 53}'
         def p = new JSONParser()
         def t = new NanoTimer()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             p.parse(r)
         }
         println t.toString() + " Tiny JSON parsed string"
@@ -619,12 +614,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse String Binder"() {
+    def "Parse String Binder"()
+    {
         setup:
         def r = '{"dean": 53}'
         def b = binder()
         def t = new NanoTimer()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             b.bindJSON(r)
         }
         println t.toString() + " Tiny BINDER parsed string"
@@ -633,12 +630,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse String Binder 2"() {
+    def "Parse String Binder 2"()
+    {
         setup:
         def r = '{"dean": 53}'
         def b = binder()
         def t = new NanoTimer()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             b.bindJSON(r)
         }
         println t.toString() + " Tiny BINDER parsed string 2"
@@ -647,12 +646,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse String JSON 2"() {
+    def "Parse String JSON 2"()
+    {
         setup:
         def r = '{"dean": 53}'
         def p = new JSONParser()
         def t = new NanoTimer()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             p.parse(r)
         }
         println t.toString() + " Tiny JSON parsed string 2"
@@ -661,12 +662,14 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Parse String JSON 3"() {
+    def "Parse String JSON 3"()
+    {
         setup:
         def r = '{"dean": 53}'
         def p = new JSONParser()
         def t = new NanoTimer()
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 10000; i++)
+        {
             p.parse(r)
         }
         println t.toString() + " Tiny JSON parsed string 3"
@@ -675,7 +678,8 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
         "dean" == "dean"
     }
 
-    def "Nano Timer Last"() {
+    def "Nano Timer Last"()
+    {
         setup:
         def t = new NanoTimer()
         println t
