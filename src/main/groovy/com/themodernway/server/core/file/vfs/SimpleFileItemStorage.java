@@ -783,16 +783,8 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content");
 
-            stor.getRoot().items(ItemsOptions.RECURSIVE).forEach(item -> {
-                try
-                {
-                    System.out.println(String.format("file (%s) type (%s).", item.getName(), item.getMetaData()));
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            });
+            stor.getRoot().wrap().items(ItemsOptions.RECURSIVE).forEach(item -> System.out.println(String.format("file (%s) type (%s).", item.getName(), item.getMetaData())));
+
             stor.close();
         }
         catch (IOException e)
