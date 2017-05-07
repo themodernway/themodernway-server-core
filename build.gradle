@@ -53,13 +53,7 @@ checkstyle {
     ignoreFailures = true
 }
 
-tasks.withType(Checkstyle) {
-    reports {
-        xml.enabled true
-        html.enabled true
-        source 'src/main'
-    }
-}
+tasks.withType(Checkstyle) { source 'src/main' }
 
 task deleteConfigs(type: Delete) {
     FileTree tree = fileTree(dir: "${buildDir}/resources/main")
