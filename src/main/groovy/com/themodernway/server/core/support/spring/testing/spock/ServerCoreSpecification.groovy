@@ -18,7 +18,7 @@ package com.themodernway.server.core.support.spring.testing.spock
 
 import org.apache.log4j.Logger
 
-import com.themodernway.server.core.json.JSONObject
+import com.themodernway.common.api.json.JSONStringify
 import com.themodernway.server.core.support.spring.testing.IServerCoreTesting
 
 import groovy.transform.CompileStatic
@@ -50,7 +50,7 @@ public abstract class ServerCoreSpecification extends Specification implements I
         m_logging = on
     }
     
-    public void echo(JSONObject o)
+    public void echo(JSONStringify o)
     {
         if (m_logging)
         {

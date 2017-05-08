@@ -16,21 +16,25 @@
 
 package com.themodernway.server.core.servlet.filter;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-public interface IHeaderInjectorFilter extends IHTTPFilter
+public class NeverCacheHeaderInjector extends HeaderInjectorBase
 {
-    public void addHeaderInjector(IHeaderInjector injector);
+    public NeverCacheHeaderInjector()
+    {
+    }
 
-    public void setHeaderInjectors(List<IHeaderInjector> injectors);
+    public NeverCacheHeaderInjector(final IHeaderInjectorFilter filter)
+    {
+        setHeaderInjectorFilter(filter);
+    }
 
-    public void addHeaderInjectors(List<IHeaderInjector> injectors);
-
-    public void setHeaderInjectors(IHeaderInjector... injectors);
-
-    public void addHeaderInjectors(IHeaderInjector... injectors);
-    
-    public void configure(IHeaderInjector injector);
-
-    public List<IHeaderInjector> getHeaderInjectors();
+    @Override
+    public int inject(final HttpServletRequest request, final HttpServletResponse response)
+    {
+        doNeverCache(request, response);
+        
+        return HttpServletResponse.SC_OK;
+    }
 }

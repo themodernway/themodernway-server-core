@@ -45,7 +45,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
     {
         addHeaderInjectors(injectors);
     }
-    
+
     @Override
     public void destroy()
     {
@@ -70,11 +70,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
             }
             m_injectors.add(injector);
 
-            if (null == injector.getHeaderInjectorFilter())
-            {
-                injector.setHeaderInjectorFilter(this);
-            }
-            injector.config(new JSONObject(getConfigurationParameters()));
+            configure(injector);
 
             logger().info("HeaderInjectorFilter.addHeaderInjector(" + injector.getName() + ")");
         }
@@ -124,6 +120,31 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
     public final List<IHeaderInjector> getHeaderInjectors()
     {
         return Collections.unmodifiableList(m_injectors);
+    }
+
+    @Override
+    public void initialize() throws ServletException
+    {
+        for (IHeaderInjector injector : getHeaderInjectors())
+        {
+            if (null != injector)
+            {
+                configure(injector);
+            }
+        }
+    }
+
+    @Override
+    public void configure(final IHeaderInjector injector)
+    {
+        if (null == injector.getHeaderInjectorFilter())
+        {
+            injector.setHeaderInjectorFilter(this);
+        }
+        if (null != getFilterConfig())
+        {
+            injector.config(new JSONObject(getConfigurationParameters()));
+        }
     }
 
     @Override
