@@ -29,7 +29,7 @@ http://docs.themodernway.com/documents/javadoc/themodernway-server-core/
 
 Tests URL:
 
-http://docs.themodernway.com/documents/reports/themodernway-server-core/tests/
+http://docs.themodernway.com/documents/reports/themodernway-server-core/tests/test/
 
 Code Coverage URL:
 
