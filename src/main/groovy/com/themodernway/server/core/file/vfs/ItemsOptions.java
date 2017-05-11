@@ -16,8 +16,11 @@
 
 package com.themodernway.server.core.file.vfs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumSet;
+import java.util.List;
 
 import com.themodernway.common.api.types.IStringValued;
 
@@ -44,12 +47,54 @@ public enum ItemsOptions implements IStringValued
         return m_value;
     }
 
-    public static final EnumSet<ItemsOptions> make(ItemsOptions... options)
+    public static final EnumSet<ItemsOptions> make(final ItemsOptions... options)
     {
         if ((null == options) || (options.length < 1))
         {
             return EnumSet.noneOf(ItemsOptions.class);
         }
         return EnumSet.copyOf(Arrays.asList(options));
+    }
+
+    public static final EnumSet<ItemsOptions> make(final List<ItemsOptions> options)
+    {
+        if ((null == options) || (options.isEmpty()))
+        {
+            return EnumSet.noneOf(ItemsOptions.class);
+        }
+        return EnumSet.copyOf(options);
+    }
+
+    public static final EnumSet<ItemsOptions> make(final String... options)
+    {
+        if ((null == options) || (options.length < 1))
+        {
+            return EnumSet.noneOf(ItemsOptions.class);
+        }
+        return make(Arrays.asList(options));
+    }
+
+    public static final EnumSet<ItemsOptions> make(final Collection<String> options)
+    {
+        if ((null == options) || (options.isEmpty()))
+        {
+            return EnumSet.noneOf(ItemsOptions.class);
+        }
+        final ArrayList<ItemsOptions> list = new ArrayList<ItemsOptions>();
+
+        for (String option : options)
+        {
+            if (null != option)
+            {
+                for (ItemsOptions item : ItemsOptions.values())
+                {
+                    if((false == list.contains(item)) && (item.getValue().equals(option.trim().toUpperCase())))
+                    {
+                        list.add(item);
+                    }
+                }
+            }
+        }
+        return make(list);
     }
 }

@@ -29,11 +29,13 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.net.InetAddress
 import org.ajoberstar.grgit.Grgit
 
+apply plugin: 'pmd'
 apply plugin: 'maven'
 apply plugin: 'groovy'
 apply plugin: 'jacoco'
 apply plugin: 'signing'
 apply plugin: 'eclipse'
+apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 
 sourceCompatibility = 1.8
@@ -133,9 +135,25 @@ test {
     }
 }
 
+pmd {
+    ignoreFailures = true
+}
+    
+findbugs {
+    ignoreFailures = true
+    effort = "max"
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
 task checkCodeQuality << { println ":checkCodeQuality-done" }
 
-checkCodeQuality.dependsOn codeCoverage,checkstyleMain
+checkCodeQuality.dependsOn codeCoverage,checkstyleMain,pmdMain,findbugsMain
 
 tasks.withType(GroovyCompile) {
     groovyOptions.optimizationOptions.indy = true
@@ -207,7 +225,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.0.11-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.0.12-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '5.1')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')
@@ -236,6 +254,7 @@ dependencies {
     compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.8.8')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.8.8')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.8.8')
+    compile(group: 'com.fasterxml.jackson.module', name: 'jackson-module-jsonSchema', version: '2.8.8')
     compile(group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }

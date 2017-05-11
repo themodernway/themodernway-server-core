@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.Path;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.core.io.Resource;
@@ -31,6 +33,10 @@ public interface IFolderItem extends IFileItem
     public IFolderItemWrapper wrap();
 
     public Stream<? extends IFileItem> items(ItemsOptions... options) throws IOException;
+    
+    public Stream<? extends IFileItem> items(List<ItemsOptions> options) throws IOException;
+    
+    public Stream<? extends IFileItem> items(EnumSet<ItemsOptions> options) throws IOException;
 
     public IFileItem find(String name) throws IOException;
 

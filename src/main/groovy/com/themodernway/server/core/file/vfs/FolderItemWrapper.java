@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.Path;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.core.io.Resource;
@@ -40,6 +42,32 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
 
     @Override
     public Stream<IFileItemWrapper> items(final ItemsOptions... options) throws FileStorageException
+    {
+        try
+        {
+            return getWrappedItem().items(options).map(item -> item.wrap());
+        }
+        catch (IOException e)
+        {
+            throw new FileStorageException(e);
+        }
+    }
+    
+    @Override
+    public Stream<IFileItemWrapper> items(final List<ItemsOptions> options) throws FileStorageException
+    {
+        try
+        {
+            return getWrappedItem().items(options).map(item -> item.wrap());
+        }
+        catch (IOException e)
+        {
+            throw new FileStorageException(e);
+        }
+    }
+    
+    @Override
+    public Stream<IFileItemWrapper> items(final EnumSet<ItemsOptions> options) throws FileStorageException
     {
         try
         {

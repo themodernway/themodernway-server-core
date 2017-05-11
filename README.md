@@ -39,6 +39,14 @@ Check Style URL:
 
 http://docs.themodernway.com/documents/reports/themodernway-server-core/checkstyle/main.html
 
+PMD URL:
+
+http://docs.themodernway.com/documents/reports/themodernway-server-core/pmd/main.html
+
+FindBugs URL:
+
+http://docs.themodernway.com/documents/reports/themodernway-server-core/findbugs/main.html
+
 License:
 
 Copyright (c) 2017, The Modern Way. All rights reserved.

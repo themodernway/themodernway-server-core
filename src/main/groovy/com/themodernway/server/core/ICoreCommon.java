@@ -17,7 +17,6 @@
 package com.themodernway.server.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -34,8 +33,6 @@ import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 public interface ICoreCommon
 {
-    public static String TOKEN_STRING = ",";
-
     public static String EMPTY_STRING = StringOps.EMPTY_STRING;
 
     default public String format(String format, Object... args)
@@ -162,18 +159,9 @@ public interface ICoreCommon
         return toUniqueStringList(strings.get());
     }
 
-    default public List<String> toUniqueStringList(String strings)
+    default public List<String> toUniqueStringList(final String strings)
     {
-        strings = requireTrimOrNull(strings);
-
-        if (strings.contains(TOKEN_STRING))
-        {
-            return Arrays.asList(StringOps.toUniqueArray(StringOps.tokenizeToStringCollection(strings, TOKEN_STRING, true, true)));
-        }
-        else
-        {
-            return Arrays.asList(StringOps.toUniqueArray(strings));
-        }
+        return StringOps.toUniqueStringList(strings);
     }
 
     default public <T> List<T> emptyList()
@@ -251,12 +239,12 @@ public interface ICoreCommon
 
     default public List<String> toUniqueStringList(final String[] strings)
     {
-        return Arrays.asList(StringOps.toUniqueArray(requireNonNull(strings)));
+        return StringOps.toUniqueStringList(strings);
     }
 
     default public List<String> toUniqueStringList(final Collection<String> strings)
     {
-        return Arrays.asList(StringOps.toUniqueArray(requireNonNull(strings)));
+        return StringOps.toUniqueStringList(strings);
     }
 
     default public IServerContext getServerContext()

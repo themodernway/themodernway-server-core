@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -508,7 +509,19 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
-        public Stream<IFileItem> items(ItemsOptions... options) throws IOException
+        public Stream<IFileItem> items(final ItemsOptions... options) throws IOException
+        {
+            return items(ItemsOptions.make(options));
+        }
+
+        @Override
+        public Stream<IFileItem> items(final List<ItemsOptions> options) throws IOException
+        {
+            return items(ItemsOptions.make(options));
+        }
+
+        @Override
+        public Stream<IFileItem> items(EnumSet<ItemsOptions> options) throws IOException
         {
             validate();
 
@@ -516,21 +529,19 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             if (isFolder())
             {
-                EnumSet<ItemsOptions> look = ItemsOptions.make(options);
-
-                if (look.isEmpty())
+                if (options.isEmpty())
                 {
                     return normal(file -> true);
                 }
-                else if (look.contains(ItemsOptions.RECURSIVE))
+                else if (options.contains(ItemsOptions.RECURSIVE))
                 {
-                    if (look.size() == 1)
+                    if (options.size() == 1)
                     {
-                        look = EnumSet.of(ItemsOptions.FILE, ItemsOptions.FOLDER);
+                        options = EnumSet.of(ItemsOptions.FILE, ItemsOptions.FOLDER);
                     }
-                    final boolean node = look.contains(ItemsOptions.FILE);
+                    final boolean node = options.contains(ItemsOptions.FILE);
 
-                    final boolean fold = look.contains(ItemsOptions.FOLDER);
+                    final boolean fold = options.contains(ItemsOptions.FOLDER);
 
                     final ArrayList<File> list = new ArrayList<File>();
 
@@ -576,9 +587,9 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                 }
                 else
                 {
-                    final boolean node = look.contains(ItemsOptions.FILE);
+                    final boolean node = options.contains(ItemsOptions.FILE);
 
-                    final boolean fold = look.contains(ItemsOptions.FOLDER);
+                    final boolean fold = options.contains(ItemsOptions.FOLDER);
 
                     if ((node) && (fold))
                     {
