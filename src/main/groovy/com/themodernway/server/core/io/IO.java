@@ -67,12 +67,12 @@ public final class IO
 
     public static final long copy(final InputStream input, final Writer output) throws IOException
     {
-        return IOUtils.copyLarge(new InputStreamReader(input), output);
+        return IOUtils.copyLarge(new InputStreamReader(input, UTF_8_CHARSET), output);
     }
 
     public static final long copy(final Reader input, final OutputStream output) throws IOException
     {
-        final OutputStreamWriter writer = new OutputStreamWriter(output);
+        final OutputStreamWriter writer = new OutputStreamWriter(output, UTF_8_CHARSET);
 
         final long size = IOUtils.copyLarge(input, writer);
 

@@ -23,7 +23,7 @@ import javax.servlet.ServletContext;
 
 import org.springframework.web.context.WebApplicationContext;
 
-import com.themodernway.server.core.servlet.CoreSpringDispatcherServler;
+import com.themodernway.server.core.servlet.CoreSpringDispatcherServlet;
 
 public class SpringDispatcherServletContextCustomizer extends AbstractServletContextCustomizer
 {
@@ -40,7 +40,7 @@ public class SpringDispatcherServletContextCustomizer extends AbstractServletCon
     @Override
     protected Servlet doMakeServlet(final ServletContext sc, final WebApplicationContext context)
     {
-        final CoreSpringDispatcherServler inst = new CoreSpringDispatcherServler(context);
+        final CoreSpringDispatcherServlet inst = new CoreSpringDispatcherServlet(context);
         
         inst.setRateLimit(getRateLimit());
         

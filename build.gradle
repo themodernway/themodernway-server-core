@@ -143,6 +143,7 @@ findbugs {
     ignoreFailures = true
     toolVersion = "3.0.1"
     effort = "max"
+    excludeFilter = file("$rootProject.projectDir/config/findbugs/filter.xml")
 }
 
 tasks.withType(FindBugs) {

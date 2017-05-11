@@ -741,7 +741,7 @@ public final class JSONUtils
         }
         if (object instanceof Number)
         {
-            final long lval = new Long(((Number) object).longValue());
+            final long lval = ((Number) object).longValue();
 
             if ((lval > Integer.MAX_VALUE) || (lval < Integer.MIN_VALUE))
             {
@@ -802,13 +802,7 @@ public final class JSONUtils
         }
         if (object instanceof Number)
         {
-            final long lval = new Long(((Number) object).longValue());
-
-            if ((lval > Integer.MAX_VALUE) || (lval < Integer.MIN_VALUE))
-            {
-                return null;
-            }
-            return lval;
+            return ((Number) object).longValue();
         }
         return null;
     }

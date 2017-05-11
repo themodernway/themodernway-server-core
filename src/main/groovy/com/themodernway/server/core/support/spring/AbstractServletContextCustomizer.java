@@ -46,22 +46,16 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
 
     protected AbstractServletContextCustomizer(final String name, final String maps)
     {
-        final String path = requireTrimOrNull(maps);
-
-        if (path.contains(","))
-        {
-            m_maps = StringOps.toUniqueArray(StringOps.tokenizeToStringCollection(path, ",", true, true));
-        }
-        else
-        {
-            m_maps = StringOps.toUniqueArray(path);
-        }
         m_name = requireTrimOrNull(name);
+
+        m_maps = StringOps.toUniqueStringList(maps).toArray(StringOps.EMPTY_STRING_ARRAY);
     }
 
     protected AbstractServletContextCustomizer(final String name, final Collection<String> maps)
     {
-        this(name, StringOps.toCommaSeparated(maps));
+        m_name = requireTrimOrNull(name);
+
+        m_maps = StringOps.toUniqueStringList(maps).toArray(StringOps.EMPTY_STRING_ARRAY);
     }
 
     public void setRateLinit(final double rate)
@@ -96,7 +90,7 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
 
     public String[] getMappings()
     {
-        return m_maps;
+        return StringOps.toArray(m_maps);
     }
 
     public List<String> getRequiredRoles()
@@ -137,23 +131,32 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
 
             if ((null != maps) && (maps.length > 0))
             {
-                final Dynamic dispatcher = sc.addServlet(name, doMakeServlet(sc, context));
+                final Servlet servlet = doMakeServlet(sc, context);
 
-                if (null != dispatcher)
+                if (null != servlet)
                 {
-                    final Collection<String> done = dispatcher.addMapping(maps);
+                    final Dynamic dispatcher = sc.addServlet(name, servlet);
 
-                    if (false == done.isEmpty())
+                    if (null != dispatcher)
                     {
-                        logger().warn(format("customize (%s) already mapped (%s).", name, StringOps.toCommaSeparated(done)));
-                    }
-                    dispatcher.setLoadOnStartup(getLoadOnStartup());
+                        final Collection<String> done = dispatcher.addMapping(maps);
 
-                    logger().info(format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                        if (false == done.isEmpty())
+                        {
+                            logger().warn(format("customize (%s) already mapped (%s).", name, StringOps.toCommaSeparated(done)));
+                        }
+                        dispatcher.setLoadOnStartup(getLoadOnStartup());
+
+                        logger().info(format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                    }
+                    else
+                    {
+                        logger().error(format("customize (%s) already registered.", name));
+                    }
                 }
                 else
                 {
-                    logger().error(format("customize (%s) already registered.", name));
+                    logger().error(format("customize (%s) null servlet.", name));
                 }
             }
             else

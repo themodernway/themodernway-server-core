@@ -32,20 +32,21 @@ import com.google.common.util.concurrent.RateLimiter;
 import com.themodernway.server.core.limiting.IRateLimited;
 import com.themodernway.server.core.security.session.IServerSession;
 
-@SuppressWarnings("serial")
-public class CoreSpringDispatcherServler extends DispatcherServlet implements IRateLimited, IServletCommonOperations
+public class CoreSpringDispatcherServlet extends DispatcherServlet implements IRateLimited, IServletCommonOperations
 {
-    private final Logger m_logger    = Logger.getLogger(getClass());
+    private static final long     serialVersionUID = 1L;
 
-    private RateLimiter  m_ratelimit = null;
+    private transient Logger      m_logger         = Logger.getLogger(getClass());
 
-    private boolean      m_iscontent = false;
+    private transient RateLimiter m_ratelimit      = null;
 
-    private int          m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private boolean               m_iscontent      = false;
 
-    private List<String> m_roleslist = arrayList();
+    private int                   m_contentmx      = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    public CoreSpringDispatcherServler(final WebApplicationContext context)
+    private List<String>          m_roleslist      = arrayList();
+
+    public CoreSpringDispatcherServlet(final WebApplicationContext context)
     {
         super(context);
     }

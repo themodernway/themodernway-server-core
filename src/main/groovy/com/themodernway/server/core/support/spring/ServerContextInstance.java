@@ -40,6 +40,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
+import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.CoreJSONOperations;
@@ -467,7 +468,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
 
         if (null != resource)
         {
-            return new InputStreamReader(resource.getInputStream());
+            return new InputStreamReader(resource.getInputStream(), IO.UTF_8_CHARSET);
         }
         return null;
     }

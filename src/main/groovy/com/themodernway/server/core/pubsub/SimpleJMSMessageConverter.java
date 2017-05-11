@@ -62,12 +62,7 @@ public class SimpleJMSMessageConverter extends SimpleMessageConverter
         {
             try
             {
-                final Object result = new JSONParser().parse(((TextMessage) message).getText());
-
-                if (result instanceof JSONObject)
-                {
-                    return result;
-                }
+                return new JSONParser().parse(((TextMessage) message).getText());
             }
             catch (ParserException e)
             {

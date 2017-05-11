@@ -17,7 +17,6 @@
 package com.themodernway.server.core.json.binder;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -56,13 +55,18 @@ public class JSONBinder extends AbstractDataBinder
         {
             if ((isStrict()) && (object instanceof JSONObject))
             {
-                final Writer writer = new FileWriter(file);
+                Writer writer = new OutputStreamWriter(IO.toOutputStream(file), IO.UTF_8_CHARSET);
 
-                ((JSONObject) object).writeJSONString(writer, isStrict());
+                try
+                {
+                    ((JSONObject) object).writeJSONString(writer, isStrict());
 
-                writer.flush();
-                
-                IO.close(writer);
+                    writer.flush();
+                }
+                finally
+                {
+                    IO.close(writer);
+                }
             }
             else
             {
@@ -84,10 +88,10 @@ public class JSONBinder extends AbstractDataBinder
         {
             if ((isStrict()) && (object instanceof JSONObject))
             {
-                final Writer writer = new OutputStreamWriter(stream);
-                
+                final Writer writer = new OutputStreamWriter(stream, IO.UTF_8_CHARSET);
+
                 ((JSONObject) object).writeJSONString(writer, isStrict());
-                
+
                 writer.flush();
             }
             else
