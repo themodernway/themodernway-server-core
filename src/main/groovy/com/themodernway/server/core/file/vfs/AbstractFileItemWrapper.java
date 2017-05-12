@@ -19,7 +19,6 @@ package com.themodernway.server.core.file.vfs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -162,7 +161,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
     }
 
     @Override
-    public Date getLastModified() throws FileStorageException
+    public long getLastModified() throws FileStorageException
     {
         try
         {

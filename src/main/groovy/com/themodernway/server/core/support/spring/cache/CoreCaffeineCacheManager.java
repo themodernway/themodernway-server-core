@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.support.spring.cache;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -25,18 +27,26 @@ import org.springframework.cache.caffeine.CaffeineCacheManager;
 
 import com.themodernway.server.core.ICoreCommon;
 
-public class CoreCaffeineCacheManager extends CaffeineCacheManager implements CacheManager, ICoreCommon
+public class CoreCaffeineCacheManager extends CaffeineCacheManager implements CacheManager, ICoreCommon, Closeable
 {
+    private static final String USE_DYNAMIC_CACHES = "__DYNAMIC__";
+
     public CoreCaffeineCacheManager()
     {
         setCacheNames(null);
     }
-    
+
     public CoreCaffeineCacheManager(final String caches)
     {
-        setCacheNames(toUniqueStringList(caches));
+        if (false == USE_DYNAMIC_CACHES.equals(caches))
+        {
+            setCacheNames(toUniqueStringList(caches));
+        }
+        else
+        {
+            setCacheNames(null);
+        }
     }
-
 
     public CoreCaffeineCacheManager(final Collection<String> caches)
     {
@@ -52,21 +62,18 @@ public class CoreCaffeineCacheManager extends CaffeineCacheManager implements Ca
         {
             names = toUniqueStringList(caches);
         }
-        if (names.isEmpty())
+        if (false == names.isEmpty())
         {
-            names = getDefautCacheNames();
+            super.setCacheNames(names);
         }
-        super.setCacheNames(names);
+        else
+        {
+            super.setCacheNames(null);
+        }
     }
 
-    public List<String> getDefautCacheNames()
-    {
-        final String names = toTrimOrNull(getServerContext().getPropertyByName("core.caffiene.cache.manager.names"));
-
-        if (null == names)
-        {
-            return null;
-        }
-        return toUniqueStringList(names);
+    @Override
+    public void close() throws IOException
+    {        
     }
 }

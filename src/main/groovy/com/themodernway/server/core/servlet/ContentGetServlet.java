@@ -26,12 +26,13 @@ import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 
-@SuppressWarnings("serial")
 public class ContentGetServlet extends AbstractContentServlet
 {
-    private boolean m_nocache = false;
+    private static final long serialVersionUID = 3234352594365724118L;
 
-    private long    m_deltams = DEFAULT_CACHE_DELTA_IN_MILLISECONDS;
+    private boolean           m_nocache        = false;
+
+    private long              m_deltams        = DEFAULT_CACHE_DELTA_IN_MILLISECONDS;
 
     public ContentGetServlet()
     {
@@ -97,7 +98,7 @@ public class ContentGetServlet extends AbstractContentServlet
                 }
                 if (path.endsWith(FileAndPathUtils.SINGLE_SLASH))
                 {
-                    response.sendRedirect(getHomePage());
+                    response.sendRedirect(FileAndPathUtils.POINT_SLASHY + getHomePage());
 
                     return;
                 }
@@ -118,7 +119,7 @@ public class ContentGetServlet extends AbstractContentServlet
             {
                 logger().error("Can't find storage root.");
 
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
                 return;
             }
@@ -126,7 +127,7 @@ public class ContentGetServlet extends AbstractContentServlet
             {
                 logger().error("Can't read storage root.");
 
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
                 return;
             }
@@ -167,33 +168,27 @@ public class ContentGetServlet extends AbstractContentServlet
         }
         else
         {
-            long delt = Math.max(0, getCacheDelta());
+            final long last = file.getLastModified();
 
-            long last = file.getLastModified().getTime();
+            final long delt = Math.max(0, getCacheDelta());
 
             try
             {
                 long date = request.getDateHeader(IF_UNMODIFIED_SINCE_HEADER);
 
-                if (date >= 0)
+                if ((date != IS_NOT_FOUND) && (last >= (date + delt)))
                 {
-                    if (last >= (date + delt))
-                    {
-                        response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+                    response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
 
-                        return false;
-                    }
+                    return false;
                 }
                 date = request.getDateHeader(IF_MODIFIED_SINCE_HEADER);
 
-                if (date >= 0)
+                if ((date != IS_NOT_FOUND) && ((last < (date + delt)) && (null == request.getHeader(IF_NONE_MATCH_HEADER))))
                 {
-                    if ((last < (date + delt)) && (null == request.getHeader(IF_NONE_MATCH_HEADER)))
-                    {
-                        response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 
-                        return false;
-                    }
+                    return false;
                 }
             }
             catch (IllegalArgumentException e)
@@ -218,9 +213,9 @@ public class ContentGetServlet extends AbstractContentServlet
             {
                 response.setContentLengthLong(size);
             }
-            final String type = file.getContentType();
+            final String type = toTrimOrNull(file.getContentType());
 
-            if ((null == type) || (false == CONTENT_TYPE_APPLCATION_OCTET_STREAM.equals(type)))
+            if ((null != type) && (false == CONTENT_TYPE_APPLCATION_OCTET_STREAM.equals(type)))
             {
                 response.setContentType(type);
             }

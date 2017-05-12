@@ -33,7 +33,9 @@ import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 public interface ICoreCommon
 {
-    public static String EMPTY_STRING = StringOps.EMPTY_STRING;
+    public static final int IS_NOT_FOUND = (0 - 1);
+
+    public static String    EMPTY_STRING = StringOps.EMPTY_STRING;
 
     default public String format(String format, Object... args)
     {

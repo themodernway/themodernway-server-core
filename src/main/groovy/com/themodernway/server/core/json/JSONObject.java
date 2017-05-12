@@ -18,7 +18,6 @@ package com.themodernway.server.core.json;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.json.JSONObjectDefinition;
 import com.themodernway.common.api.json.JSONType;
 import com.themodernway.server.core.json.binder.JSONBinder;
@@ -39,8 +39,6 @@ import com.themodernway.server.core.json.binder.JSONBinder;
 public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {
     private static final long   serialVersionUID = -6811236788038367702L;
-
-    private static final String NULL_FOR_OUTPUT  = "null".intern();
 
     private static final char[] FLUSH_KEY_ARRAY  = { '"', ':' };
 
@@ -73,11 +71,6 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         dumpClassNames(System.out);
     }
 
-    public void dumpClassNames(final PrintWriter out)
-    {
-        JSONUtils.dumpClassNames(this, out);
-    }
-
     public void dumpClassNames(final PrintStream out)
     {
         JSONUtils.dumpClassNames(this, out);
@@ -91,7 +84,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         {
             final Object object = get(name);
 
-            json.put(name, (null == object) ? "null" : object.getClass().getName());
+            json.put(name, (null == object) ? StringOps.NULL_AS_STRING : object.getClass().getName());
         }
         return json;
     }
@@ -100,7 +93,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         if (null == map)
         {
-            out.write(NULL_FOR_OUTPUT);
+            out.write(StringOps.NULL_AS_STRING);
 
             return;
         }
@@ -139,7 +132,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
                 if (null == valu)
                 {
-                    out.write(NULL_FOR_OUTPUT);
+                    out.write(StringOps.NULL_AS_STRING);
 
                     continue;
                 }
@@ -216,12 +209,9 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public boolean isNull(final String key)
     {
-        if (containsKey(Objects.requireNonNull(key)))
+        if ((containsKey(Objects.requireNonNull(key))) && (null == get(key)))
         {
-            if (null == get(key))
-            {
-                return true;
-            }
+            return true;
         }
         return false;
     }
@@ -249,7 +239,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         return (get(Objects.requireNonNull(key)) instanceof Boolean);
     }
-    
+
     @Override
     public boolean isDate(final String key)
     {
@@ -303,7 +293,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         }
         return null;
     }
-    
+
     @Override
     public Date getAsDate(final String key)
     {

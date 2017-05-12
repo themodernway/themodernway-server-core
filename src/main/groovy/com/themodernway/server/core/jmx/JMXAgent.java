@@ -36,11 +36,11 @@ import com.themodernway.common.api.java.util.StringOps;
 
 public class JMXAgent implements Closeable
 {
-    private static final int         DEFAULT_JMX_PORT = 3000;
+    private static final int    DEFAULT_JMX_PORT = 3000;
 
-    private static final Logger      logger           = Logger.getLogger(JMXAgent.class);
+    private static final Logger logger           = Logger.getLogger(JMXAgent.class);
 
-    private final JMXConnectorServer m_cs;
+    private JMXConnectorServer  m_cs             = null;
 
     public JMXAgent(final String portstring)
     {
@@ -58,9 +58,18 @@ public class JMXAgent implements Closeable
 
         if (is_running)
         {
-            m_cs = make(portstring, hostname, passfile, rolefile);
+            try
+            {
+                m_cs = make(portstring, hostname, passfile, rolefile);
 
-            start();
+                start();
+            }
+            catch (Exception e)
+            {
+                logger.error("JMXAgent start() error", e);
+
+                m_cs = null;
+            }
         }
         else
         {
@@ -87,113 +96,99 @@ public class JMXAgent implements Closeable
         }
     }
 
-    protected JMXConnectorServer make(String portstring, String hostname, String passfile, String rolefile)
+    protected JMXConnectorServer make(String portstring, String hostname, String passfile, String rolefile) throws Exception
     {
         logger.info("JMXAgent make()");
 
-        try
+        System.setProperty("java.rmi.server.randomIDs", "true");
+
+        int port = DEFAULT_JMX_PORT;
+
+        portstring = StringOps.toTrimOrNull(portstring);
+
+        if (null != portstring)
         {
-            System.setProperty("java.rmi.server.randomIDs", "true");
-
-            int port = DEFAULT_JMX_PORT;
-
-            portstring = StringOps.toTrimOrNull(portstring);
-
-            if (null != portstring)
+            try
             {
-                try
-                {
-                    port = Integer.parseInt(portstring);
+                port = Integer.parseInt(portstring);
 
-                    if (port < 1024)
-                    {
-                        logger.error("port constructor arg [" + portstring + "] is less than 1024, defaulting to " + DEFAULT_JMX_PORT);
-
-                        port = DEFAULT_JMX_PORT;
-                    }
-                }
-                catch (Exception e)
+                if (port < 1024)
                 {
-                    logger.error("port constructor arg [" + portstring + "] invalid, defaulting to " + DEFAULT_JMX_PORT, e);
+                    logger.error("port constructor arg [" + portstring + "] is less than 1024, defaulting to " + DEFAULT_JMX_PORT);
 
                     port = DEFAULT_JMX_PORT;
                 }
             }
-            final String incr = System.getProperty("JMX_PORT_INCREMENT", "0");
-
-            try
-            {
-                port += Integer.parseInt(incr);
-
-                logger.info("JMX port increment was " + incr);
-            }
             catch (Exception e)
             {
-                logger.error("JMX port increment was " + incr, e);
+                logger.error("port constructor arg [" + portstring + "] invalid, defaulting to " + DEFAULT_JMX_PORT, e);
+
+                port = DEFAULT_JMX_PORT;
             }
-            LocateRegistry.createRegistry(port);
+        }
+        final String incr = System.getProperty("JMX_PORT_INCREMENT", "0");
 
-            final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        try
+        {
+            port += Integer.parseInt(incr);
 
-            final HashMap<String, Object> env = new HashMap<String, Object>();
-
-            rolefile = StringOps.toTrimOrNull(rolefile);
-
-            passfile = StringOps.toTrimOrNull(passfile);
-
-            if ((null != rolefile) && (null != passfile))
-            {
-                final File role = new File(rolefile);
-
-                if ((role.exists()) && (false == role.isDirectory()) && (role.isFile()) && (role.canRead()))
-                {
-                    final File pass = new File(passfile);
-
-                    if ((pass.exists()) && (false == pass.isDirectory()) && (pass.isFile()) && (pass.canRead()))
-                    {
-                        env.put("jmx.remote.x.access.file", rolefile);
-
-                        env.put("jmx.remote.x.password.file", passfile);
-                    }
-                }
-            }
-            hostname = StringOps.toTrimOrNull(hostname);
-
-            if (null == hostname)
-            {
-                hostname = "localhost";
-
-                logger.error("host constructor arg invalid, defaulting to " + hostname);
-            }
-            final String jmxurl = "service:jmx:rmi://" + hostname + ":" + port + "/jndi/rmi://" + hostname + ":" + port + "/jmxrmi";
-
-            logger.info("Created JMX server URL [ " + jmxurl + " ]");
-
-            final JMXConnectorServer cs = JMXConnectorServerFactory.newJMXConnectorServer(new JMXServiceURL(jmxurl), env, mbs);
-
-            return cs;
+            logger.info("JMX port increment was " + incr);
         }
         catch (Exception e)
         {
-            logger.error("JMXAgent make() error", e);
-
-            return null;
+            logger.error("JMX port increment was " + incr, e);
         }
+        LocateRegistry.createRegistry(port);
+
+        final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+
+        final HashMap<String, Object> env = new HashMap<String, Object>();
+
+        rolefile = StringOps.toTrimOrNull(rolefile);
+
+        passfile = StringOps.toTrimOrNull(passfile);
+
+        if ((null != rolefile) && (null != passfile))
+        {
+            final File role = new File(rolefile);
+
+            if ((role.exists()) && (false == role.isDirectory()) && (role.isFile()) && (role.canRead()))
+            {
+                final File pass = new File(passfile);
+
+                if ((pass.exists()) && (false == pass.isDirectory()) && (pass.isFile()) && (pass.canRead()))
+                {
+                    env.put("jmx.remote.x.access.file", rolefile);
+
+                    env.put("jmx.remote.x.password.file", passfile);
+                }
+            }
+        }
+        hostname = StringOps.toTrimOrNull(hostname);
+
+        if (null == hostname)
+        {
+            hostname = "localhost";
+
+            logger.error("host constructor arg invalid, defaulting to " + hostname);
+        }
+        final String jmxurl = "service:jmx:rmi://" + hostname + ":" + port + "/jndi/rmi://" + hostname + ":" + port + "/jmxrmi";
+
+        logger.info("Created JMX server URL [ " + jmxurl + " ]");
+
+        return JMXConnectorServerFactory.newJMXConnectorServer(new JMXServiceURL(jmxurl), env, mbs);
     }
 
     @Override
-    public void close()
+    public void close() throws IOException
     {
         logger.info("JMXAgent close()");
 
         try
         {
-            if (null != m_cs)
+            if ((null != m_cs) && (m_cs.isActive()))
             {
-                if (m_cs.isActive())
-                {
-                    m_cs.stop();
-                }
+                m_cs.stop();
             }
         }
         catch (Exception e)

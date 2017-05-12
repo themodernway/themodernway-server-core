@@ -271,18 +271,15 @@ public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, I
 
     public default boolean isMaxHeaderLengthValid(final HttpServletRequest request, final HttpServletResponse response, String head, int leng)
     {
-        if (null != (head = toTrimOrNull(head)))
+        if ((null != (head = toTrimOrNull(head))) && ((leng = Math.max(0, leng)) > 0))
         {
-            if ((leng = Math.max(0, leng)) > 0)
+            final String valu = toTrimOrNull(request.getHeader(head));
+
+            if ((null != valu) && (valu.length() > leng))
             {
-                final String valu = toTrimOrNull(request.getHeader(head));
+                logger().error(format("possible header attack on (%s), max is (%d), found (%d), value (%s).", head, leng, valu.length(), valu));
 
-                if ((null != valu) && (valu.length() > leng))
-                {
-                    logger().error(format("possible header attack on (%s), max is (%d), found (%d), value (%s).", head, leng, valu.length(), valu));
-
-                    return false;
-                }
+                return false;
             }
         }
         return true;

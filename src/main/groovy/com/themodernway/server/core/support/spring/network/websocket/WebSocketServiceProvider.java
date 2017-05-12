@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -50,20 +51,17 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
 
     protected void addWebSocketServiceFactory(final String name, final IWebSocketServiceFactory service)
     {
-        if (null != service)
+        if ((null != name) && (null != service))
         {
-            if (null != name)
+            if (null == m_services.get(name))
             {
-                if (null == m_services.get(name))
-                {
-                    m_services.put(name, service);
+                m_services.put(name, service);
 
-                    logger.info("WebSocketServiceProvider.addWebSocketServiceFactory(" + name + ") Registered");
-                }
-                else
-                {
-                    logger.error("WebSocketServiceProvider.addWebSocketServiceFactory(" + name + ") Duplicate ignored");
-                }
+                logger.info("WebSocketServiceProvider.addWebSocketServiceFactory(" + name + ") Registered");
+            }
+            else
+            {
+                logger.error("WebSocketServiceProvider.addWebSocketServiceFactory(" + name + ") Duplicate ignored");
             }
         }
     }
@@ -259,13 +257,13 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
 
             boolean find = false;
 
-            for (String ikey : m_want.keySet())
+            for (Entry<String, String> each : m_want.entrySet())
             {
-                final String look = have.get(ikey);
+                final String look = have.get(each.getKey());
 
                 if (look != null)
                 {
-                    if (look.equals(m_want.get(ikey)))
+                    if (look.equals(each.getValue()))
                     {
                         if (m_some)
                         {

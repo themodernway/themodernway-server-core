@@ -22,30 +22,11 @@ import java.util.Objects;
 
 public class NoSyncStringBuilderWriter extends Writer implements CharSequence
 {
-    private final static int    MINIMUM_CAPACITY = 16;
-
-    private final static int    DEFAULT_CAPACITY = 1024;
-
-    private final static int    BOUNDRY_CAPACITY = Integer.MAX_VALUE - MINIMUM_CAPACITY;
-
     private final StringBuilder m_builder;
-
-    private static final int toMinimumCapacity(int capacity)
-    {
-        if (capacity <= MINIMUM_CAPACITY)
-        {
-            return MINIMUM_CAPACITY;
-        }
-        if (capacity >= BOUNDRY_CAPACITY)
-        {
-            capacity = capacity - DEFAULT_CAPACITY;
-        }
-        return capacity + (capacity % MINIMUM_CAPACITY);
-    }
 
     public NoSyncStringBuilderWriter()
     {
-        this(new StringBuilder(DEFAULT_CAPACITY));
+        this(new StringBuilder(IO.DEFAULT_BUFFER_CAPACITY));
     }
 
     public NoSyncStringBuilderWriter(final StringBuilder builder)
@@ -57,7 +38,7 @@ public class NoSyncStringBuilderWriter extends Writer implements CharSequence
 
     public NoSyncStringBuilderWriter(final int capacity)
     {
-        this(new StringBuilder(toMinimumCapacity(capacity)));
+        this(new StringBuilder(IO.toValidBufferCapacity(capacity)));
     }
 
     public StringBuilder getStringBuilder()

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 -->
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:cache="http://www.springframework.org/schema/cache"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/context
@@ -24,12 +24,8 @@
 						http://www.springframework.org/schema/cache
 						http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-	<bean id="CoreCaffeineCacheManager" class="org.springframework.cache.caffeine.CaffeineCacheManager">
-	    <property name="cacheNames">
-	        <set>
-	            <value>core</value>
-	        </set>
-	    </property>
+	<bean id="CoreCaffeineCacheManager" class="com.themodernway.server.core.support.spring.cache.CoreCaffeineCacheManager"  destroy-method="close">
+	    <constructor-arg value="${core.caffiene.cache.manager.names:__DYNAMIC__}"/>
 	</bean>
 	
 </beans>

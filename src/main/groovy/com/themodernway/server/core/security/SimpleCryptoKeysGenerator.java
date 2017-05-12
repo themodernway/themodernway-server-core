@@ -23,6 +23,8 @@ import java.util.zip.CRC32;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.RandomStringUtils;
 
+import com.themodernway.server.core.io.IO;
+
 public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 {
     private static final SimpleCryptoKeysGenerator INSTANCE = new SimpleCryptoKeysGenerator();
@@ -108,7 +110,7 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 
         static final String checksumOfChars(final CharSequence valu)
         {
-            return Hex.encodeHexString(Tools.checksumToBytes(Tools.checksumOfBytes(valu.toString().getBytes())));
+            return Hex.encodeHexString(Tools.checksumToBytes(Tools.checksumOfBytes(valu.toString().getBytes(IO.UTF_8_CHARSET))));
         }
     }
 }

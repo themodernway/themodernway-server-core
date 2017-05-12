@@ -154,12 +154,9 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
                     {
                         final Object look = ctxt.getBean(name);
 
-                        if (null != look)
+                        if ((null != look) && (type.isAssignableFrom(look.getClass())))
                         {
-                            if (type.isAssignableFrom(look.getClass()))
-                            {
-                                bean = type.cast(look);
-                            }
+                            bean = type.cast(look);
                         }
                     }
                     catch (Exception e)

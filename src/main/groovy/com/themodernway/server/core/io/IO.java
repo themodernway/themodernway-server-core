@@ -38,13 +38,20 @@ import org.springframework.core.io.Resource;
 
 import com.google.common.collect.Streams;
 import com.themodernway.common.api.java.util.IHTTPConstants;
+import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.file.vfs.IFileItem;
 
 public final class IO
 {
-    public static final int     EOF           = (0 - 1);
+    public static final int     EOF                     = ICoreCommon.IS_NOT_FOUND;
 
-    public static final Charset UTF_8_CHARSET = Charset.forName(IHTTPConstants.CHARSET_UTF_8);
+    public static final int     MINIMUM_BUFFER_CAPACITY = 16;
+
+    public static final int     DEFAULT_BUFFER_CAPACITY = 4096;
+
+    public static final int     MAXIMUM_BUFFER_CAPACITY = DEFAULT_BUFFER_CAPACITY * 4;
+
+    public static final Charset UTF_8_CHARSET           = Charset.forName(IHTTPConstants.CHARSET_UTF_8);
 
     private IO()
     {
@@ -60,6 +67,28 @@ public final class IO
         IOUtils.close(c);
     }
 
+    public static final int toValidBufferCapacity(final int capacity)
+    {
+        if (capacity <= MINIMUM_BUFFER_CAPACITY)
+        {
+            return MINIMUM_BUFFER_CAPACITY;
+        }
+        if (capacity >= MAXIMUM_BUFFER_CAPACITY)
+        {
+            return MAXIMUM_BUFFER_CAPACITY;
+        }
+        return capacity + (capacity % MINIMUM_BUFFER_CAPACITY);
+    }
+
+    public static final long copy(final InputStream input, final OutputStream output, long length) throws IOException
+    {
+        if ((length = Math.max(0, length)) > 0)
+        {
+            return IOUtils.copyLarge(input, output, 0, length);
+        }
+        return length;
+    }
+
     public static final long copy(final InputStream input, final OutputStream output) throws IOException
     {
         return IOUtils.copyLarge(input, output);
@@ -68,6 +97,15 @@ public final class IO
     public static final long copy(final InputStream input, final Writer output) throws IOException
     {
         return IOUtils.copyLarge(new InputStreamReader(input, UTF_8_CHARSET), output);
+    }
+
+    public static final long copy(final InputStream input, final Writer output, long length) throws IOException
+    {
+        if ((length = Math.max(0, length)) > 0)
+        {
+            return IOUtils.copyLarge(new InputStreamReader(input, UTF_8_CHARSET), output, 0, length);
+        }
+        return length;
     }
 
     public static final long copy(final Reader input, final OutputStream output) throws IOException
@@ -136,9 +174,15 @@ public final class IO
 
         try
         {
-            stream = toInputStream(file);
+            final long leng = Math.max(0, file.length());
 
-            return copy(stream, output);
+            if (leng > 0)
+            {
+                stream = toInputStream(file);
+
+                return copy(stream, output, leng);
+            }
+            return leng;
         }
         finally
         {
@@ -164,9 +208,15 @@ public final class IO
 
         try
         {
-            stream = toInputStream(file);
+            final long leng = Math.max(0, file.length());
 
-            return copy(stream, output);
+            if (leng > 0)
+            {
+                stream = toInputStream(file);
+
+                return copy(stream, output, leng);
+            }
+            return leng;
         }
         finally
         {
@@ -180,9 +230,15 @@ public final class IO
 
         try
         {
-            stream = file.getInputStream();
+            final long leng = Math.max(0, file.getSize());
 
-            return copy(stream, output);
+            if (leng > 0)
+            {
+                stream = file.getInputStream();
+
+                return copy(stream, output, leng);
+            }
+            return leng;
         }
         finally
         {
@@ -196,9 +252,15 @@ public final class IO
 
         try
         {
-            stream = file.getInputStream();
+            final long leng = Math.max(0, file.getSize());
 
-            return copy(stream, output);
+            if (leng > 0)
+            {
+                stream = file.getInputStream();
+
+                return copy(stream, output, leng);
+            }
+            return leng;
         }
         finally
         {
@@ -251,17 +313,17 @@ public final class IO
     {
         return toInputStream(file.toPath(), options);
     }
-    
+
     public static final InputStream toInputStream(final Path path, final OpenOption... options) throws IOException
     {
         return Files.newInputStream(Objects.requireNonNull(path), options);
     }
-    
+
     public static final OutputStream toOutputStream(final File file, final OpenOption... options) throws IOException
     {
         return toOutputStream(file.toPath(), options);
     }
-    
+
     public static final OutputStream toOutputStream(final Path path, final OpenOption... options) throws IOException
     {
         return Files.newOutputStream(Objects.requireNonNull(path), options);

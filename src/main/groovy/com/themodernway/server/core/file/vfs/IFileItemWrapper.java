@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.file.vfs;
 
-import java.util.Date;
 import java.util.stream.Stream;
 
 import com.themodernway.server.core.json.JSONObject;
@@ -51,7 +50,7 @@ public interface IFileItemWrapper extends IFileItem
     public boolean delete() throws FileStorageException;
 
     @Override
-    public Date getLastModified() throws FileStorageException;
+    public long getLastModified() throws FileStorageException;
 
     @Override
     public long getFileSizeLimit() throws FileStorageException;

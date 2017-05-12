@@ -186,9 +186,9 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
             final LinkedHashMap<String, String> saved = new LinkedHashMap<String, String>();
 
-            for (Object o : props.keySet())
-            {
-                final String k = o.toString();
+            props.forEach((e, o) -> {
+
+                final String k = e.toString();
 
                 final String v = props.getProperty(k);
 
@@ -214,11 +214,8 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
                         }
                     }
                 }
-            }
-            for (String k : saved.keySet())
-            {
-                props.setProperty(k, saved.get(k));
-            }
+            });
+            saved.forEach((k, v) -> props.setProperty(k, v));
         }
 
         private final void encrypt(final Properties props)
@@ -244,10 +241,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
                     saved.put(k, e);
                 }
             }
-            for (String k : saved.keySet())
-            {
-                props.setProperty(k, saved.get(k));
-            }
+            saved.forEach((k, v) -> props.setProperty(k, v));
         }
     }
 }

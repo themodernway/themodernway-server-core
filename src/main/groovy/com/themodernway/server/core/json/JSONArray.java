@@ -18,7 +18,6 @@ package com.themodernway.server.core.json;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,14 +28,13 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.json.JSONArrayDefinition;
 import com.themodernway.common.api.json.JSONType;
 
 @JacksonXmlRootElement(localName = "results")
 public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {
-    private static final String NULL_FOR_OUTPUT  = "null".intern();
-
     private static final long   serialVersionUID = 928145403133304801L;
 
     public JSONArray()
@@ -77,11 +75,6 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         dumpClassNames(System.out);
     }
 
-    public final void dumpClassNames(final PrintWriter out)
-    {
-        JSONUtils.dumpClassNames(this, out);
-    }
-
     public final void dumpClassNames(final PrintStream out)
     {
         JSONUtils.dumpClassNames(this, out);
@@ -97,7 +90,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         {
             final Object object = get(i);
 
-            jarr.add((null == object) ? "null" : object.getClass().getName());
+            jarr.add((null == object) ?  StringOps.NULL_AS_STRING : object.getClass().getName());
         }
         return jarr;
     }
@@ -106,7 +99,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     {
         if (null == list)
         {
-            out.write(NULL_FOR_OUTPUT);
+            out.write( StringOps.NULL_AS_STRING);
 
             return;
         }
@@ -132,7 +125,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
                 }
                 if (null == valu)
                 {
-                    out.write(NULL_FOR_OUTPUT);
+                    out.write(StringOps.NULL_AS_STRING);
 
                     continue;
                 }
@@ -146,7 +139,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     {
         if (null == list)
         {
-            out.write(NULL_FOR_OUTPUT);
+            out.write(StringOps.NULL_AS_STRING);
 
             return;
         }
@@ -172,7 +165,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
                 }
                 if (null == valu)
                 {
-                    out.write(NULL_FOR_OUTPUT);
+                    out.write(StringOps.NULL_AS_STRING);
 
                     continue;
                 }
@@ -274,7 +267,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     {
         return (get(index) instanceof String);
     }
-    
+
     @Override
     public boolean isDate(final int index)
     {
@@ -340,7 +333,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         }
         return null;
     }
-    
+
     @Override
     public Date getAsDate(final int index)
     {

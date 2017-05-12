@@ -23,30 +23,6 @@ import java.util.Objects;
 
 public class NoSyncBufferedWriter extends BufferedWriter
 {
-    private final static int MINIMUM_CAPACITY = 16;
-
-    private final static int DEFAULT_CAPACITY = 4096;
-
-    private final static int BOUNDRY_CAPACITY = Integer.MAX_VALUE - MINIMUM_CAPACITY;
-
-    private static final int toMinimumCapacity(int capacity)
-    {
-        if (capacity <= MINIMUM_CAPACITY)
-        {
-            return MINIMUM_CAPACITY;
-        }
-        if (capacity >= BOUNDRY_CAPACITY)
-        {
-            capacity = capacity - DEFAULT_CAPACITY;
-        }
-        return capacity + (capacity % MINIMUM_CAPACITY);
-    }
-
-    private final static int less(final int a, final int b)
-    {
-        return ((a < b) ? (a) : (b));
-    }
-
     private Writer m_writer;
 
     private int    m_sizeof;
@@ -57,16 +33,16 @@ public class NoSyncBufferedWriter extends BufferedWriter
 
     public NoSyncBufferedWriter(final Writer writer)
     {
-        this(Objects.requireNonNull(writer), DEFAULT_CAPACITY);
+        this(Objects.requireNonNull(writer), IO.DEFAULT_BUFFER_CAPACITY);
     }
 
     public NoSyncBufferedWriter(final Writer writer, final int capacity)
     {
-        super(Objects.requireNonNull(writer), MINIMUM_CAPACITY);
+        super(Objects.requireNonNull(writer), IO.toValidBufferCapacity(capacity));
 
         m_writer = writer;
 
-        m_sizeof = toMinimumCapacity(capacity);
+        m_sizeof = IO.toValidBufferCapacity(capacity);
 
         m_charbf = new char[m_sizeof];
     }
@@ -131,7 +107,7 @@ public class NoSyncBufferedWriter extends BufferedWriter
 
         while (off_sets < total_sz)
         {
-            int put_size = less(m_sizeof - m_nextch, total_sz - off_sets);
+            int put_size = Math.min(m_sizeof - m_nextch, total_sz - off_sets);
 
             System.arraycopy(buf, off_sets, m_charbf, m_nextch, put_size);
 
@@ -157,7 +133,7 @@ public class NoSyncBufferedWriter extends BufferedWriter
 
         while (off_sets < total_sz)
         {
-            int put_size = less(m_sizeof - m_nextch, total_sz - off_sets);
+            int put_size = Math.min(m_sizeof - m_nextch, total_sz - off_sets);
 
             s.getChars(off_sets, off_sets + put_size, m_charbf, m_nextch);
 

@@ -22,6 +22,8 @@
 						http://www.springframework.org/schema/context
 						http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<import resource="classpath:/com/themodernway/common/server/config/CommonServerApplicationContext.xml"/>
+		
 	<bean id="CoreBuildDescriptor" class="com.themodernway.server.core.support.spring.BuildDescriptor">
 		<constructor-arg value="@GRADLE_BUILD_PROJECT_TITLE@"/>
 		<property name="buildUser">
@@ -71,7 +73,7 @@
 	<bean id="ServerSessionRepositoryProvider" class="com.themodernway.server.core.security.session.ServerSessionRepositoryProvider" destroy-method="close"/>
 		
 	<bean id="ServletContextCustomizerProvider" class="com.themodernway.server.core.support.spring.ServletContextCustomizerProvider" destroy-method="close"/>
-		
+	
 	<context:component-scan base-package="com.themodernway.server.core.jmx"/>
 
 	<context:mbean-export default-domain="${jmx.default.domain}" registration="replaceExisting"/>

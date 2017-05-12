@@ -39,6 +39,8 @@ public final class FileAndPathUtils
 
     public static final String                TILDE_SLASHY         = SINGLE_TILDE + SINGLE_SLASH;
 
+    public static final String                POINT_SLASHY         = FilenameUtils.EXTENSION_SEPARATOR_STR + SINGLE_SLASH;
+
     public static final CoreContentTypeMapper MIME_TYPE_OF         = new CoreContentTypeMapper();
 
     public static final Pattern               NOWHITESPACE_PATTERN = Pattern.compile("\\s");
@@ -57,6 +59,15 @@ public final class FileAndPathUtils
     public static final String getContentType(final String path)
     {
         return MIME_TYPE_OF.getContentType(normalize(path));
+    }
+
+    public final static String extn(String path)
+    {
+        if (null != (path = normalize(path)))
+        {
+            return StringOps.toTrimOrNull(FilenameUtils.getExtension(path));
+        }
+        return path;
     }
 
     public static final String name(String path)
@@ -159,20 +170,17 @@ public final class FileAndPathUtils
 
     public static final String fixPathBinding(String path)
     {
-        if (null != (path = StringOps.toTrimOrNull(path)))
+        if ((null != (path = StringOps.toTrimOrNull(path))) && (null != (path = StringOps.toTrimOrNull(normalize(NOWHITESPACE_PATTERN.matcher(path).replaceAll(EMPTY_STRING))))))
         {
-            if (null != (path = StringOps.toTrimOrNull(normalize(NOWHITESPACE_PATTERN.matcher(path).replaceAll(EMPTY_STRING)))))
+            if (false == path.startsWith(SINGLE_SLASH))
             {
-                if (false == path.startsWith(SINGLE_SLASH))
-                {
-                    path = SINGLE_SLASH + path;
-                }
-                while ((path.length() > 1) && (path.endsWith(SINGLE_SLASH)))
-                {
-                    path = path.substring(0, path.length() - 1);
-                }
-                path = StringOps.toTrimOrNull(path);
+                path = SINGLE_SLASH + path;
             }
+            while ((path.length() > 1) && (path.endsWith(SINGLE_SLASH)))
+            {
+                path = path.substring(0, path.length() - 1);
+            }
+            path = StringOps.toTrimOrNull(path);
         }
         return path;
     }

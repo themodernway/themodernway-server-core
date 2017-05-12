@@ -169,12 +169,9 @@ public class SimpleJSONServerSession implements IServerSession
         {
             final Object prev = m_attr.put(name, valu);
 
-            if (null != prev)
+            if ((null != prev) && (false == prev.equals(valu)))
             {
-                if (false == prev.equals(valu))
-                {
-                    save();
-                }
+                save();
             }
         }
         else

@@ -34,6 +34,7 @@
 		<property name="locations">
 			<list>
 				<value>file:/opt/development/properties/themodernway-server-core/webapp.properties</value>
+				<value>classpath:/com/themodernway/server/core/test/cache.properties</value>
 			</list>
 		</property>
 	</bean>

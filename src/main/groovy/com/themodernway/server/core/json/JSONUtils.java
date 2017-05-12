@@ -18,7 +18,6 @@ package com.themodernway.server.core.json;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -28,21 +27,23 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.themodernway.common.api.java.util.IHTTPConstants;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ThreadLocalDateFormat;
 import com.themodernway.server.core.io.NoCloseProxyWriter;
 import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
+import com.themodernway.server.core.io.StringBuilderOutputStream;
 import com.themodernway.server.core.json.binder.JSONBinder;
 
 public final class JSONUtils
 {
     private static final Logger                         logger          = Logger.getLogger(JSONUtils.class);
-
-    private static final String                         NULL_FOR_OUTPUT = "null".intern();
 
     private final static BigDecimal                     BIG_DECIMAL_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
 
@@ -92,7 +93,7 @@ public final class JSONUtils
     {
         if (null == value)
         {
-            return NULL_FOR_OUTPUT;
+            return StringOps.NULL_AS_STRING;
         }
         if ((false == strict) && (null == context))
         {
@@ -145,11 +146,17 @@ public final class JSONUtils
 
     public static final String dumpClassNamesToString(final Object o)
     {
-        final NoSyncStringBuilderWriter w = new NoSyncStringBuilderWriter();
+        final StringBuilderOutputStream stream = new StringBuilderOutputStream();
 
-        dumpClassNames(o, new PrintWriter(w));
-
-        return w.toString();
+        try
+        {
+            dumpClassNames(o, new PrintStream(stream, true, IHTTPConstants.CHARSET_UTF_8));
+        }
+        catch (Exception e)
+        {
+            logger.error("dumpClassNamesToString()", e);
+        }
+        return stream.toString();
     }
 
     public static final void dumpClassNames(final Object o)
@@ -159,43 +166,38 @@ public final class JSONUtils
 
     public static final void dumpClassNames(final Object o, final PrintStream stream)
     {
-        dumpClassNames(o, new PrintWriter(stream), 0, 0);
-    }
-
-    public static final void dumpClassNames(final Object o, final PrintWriter writer)
-    {
-        dumpClassNames(o, writer, 0, 0);
+        dumpClassNames(o, stream, 0, 0);
     }
 
     @SuppressWarnings("unchecked")
-    public static final int dumpClassNames(final Object o, final PrintWriter writer, final int indent, int lineno)
+    public static final int dumpClassNames(final Object o, final PrintStream stream, final int indent, int lineno)
     {
         if (null != o)
         {
             if (o instanceof List)
             {
-                lineno = dumpClassNames((List<?>) o, writer, indent + INDENT_ADDED, lineno);
+                lineno = dumpClassNames((List<?>) o, stream, indent + INDENT_ADDED, lineno);
             }
             else if (o instanceof Map)
             {
-                lineno = dumpClassNames((Map<String, ?>) o, writer, indent + INDENT_ADDED, lineno);
+                lineno = dumpClassNames((Map<String, ?>) o, stream, indent + INDENT_ADDED, lineno);
             }
             else if (o instanceof Collection)
             {
-                lineno = dumpClassNames((Collection<?>) o, writer, indent + INDENT_ADDED, lineno);
+                lineno = dumpClassNames((Collection<?>) o, stream, indent + INDENT_ADDED, lineno);
             }
             else
             {
                 lineno++;
 
-                writer.println(getLineNumber(lineno) + getIndent(indent) + "Unnown=" + o.getClass().getName());
+                stream.println(getLineNumber(lineno) + getIndent(indent) + "Unnown=" + o.getClass().getName());
             }
         }
         return lineno;
     }
 
     @SuppressWarnings("unchecked")
-    public static final int dumpClassNames(final List<?> list, final PrintWriter writer, final int indent, int lineno)
+    public static final int dumpClassNames(final List<?> list, final PrintStream stream, final int indent, int lineno)
     {
         if (null != list)
         {
@@ -213,23 +215,23 @@ public final class JSONUtils
 
                 if (null == o)
                 {
-                    writer.println(getLineNumber(lineno) + p + t + "[" + i + "]=null");
+                    stream.println(getLineNumber(lineno) + p + t + "[" + i + "]=null");
                 }
                 else
                 {
-                    writer.println(getLineNumber(lineno) + p + t + "[" + i + "]=" + o.getClass().getName());
+                    stream.println(getLineNumber(lineno) + p + t + "[" + i + "]=" + o.getClass().getName());
 
                     if (o instanceof List)
                     {
-                        lineno = dumpClassNames((List<?>) o, writer, indent + INDENT_ADDED, lineno);
+                        lineno = dumpClassNames((List<?>) o, stream, indent + INDENT_ADDED, lineno);
                     }
                     else if (o instanceof Map)
                     {
-                        lineno = dumpClassNames((Map<String, ?>) o, writer, indent + INDENT_ADDED, lineno);
+                        lineno = dumpClassNames((Map<String, ?>) o, stream, indent + INDENT_ADDED, lineno);
                     }
                     else if (o instanceof Collection)
                     {
-                        lineno = dumpClassNames((Collection<?>) o, writer, indent + INDENT_ADDED, lineno);
+                        lineno = dumpClassNames((Collection<?>) o, stream, indent + INDENT_ADDED, lineno);
                     }
                 }
             }
@@ -238,7 +240,7 @@ public final class JSONUtils
     }
 
     @SuppressWarnings("unchecked")
-    public static final int dumpClassNames(final Collection<?> collection, final PrintWriter writer, final int indent, int lineno)
+    public static final int dumpClassNames(final Collection<?> collection, final PrintStream stream, final int indent, int lineno)
     {
         if (null != collection)
         {
@@ -258,23 +260,23 @@ public final class JSONUtils
 
                 if (null == o)
                 {
-                    writer.println(getLineNumber(lineno) + p + t + "[" + i + "]=null");
+                    stream.println(getLineNumber(lineno) + p + t + "[" + i + "]=null");
                 }
                 else
                 {
-                    writer.println(getLineNumber(lineno) + p + t + "[" + i + "]=" + o.getClass().getName());
+                    stream.println(getLineNumber(lineno) + p + t + "[" + i + "]=" + o.getClass().getName());
 
                     if (o instanceof List)
                     {
-                        lineno = dumpClassNames((List<?>) o, writer, indent + INDENT_ADDED, lineno);
+                        lineno = dumpClassNames((List<?>) o, stream, indent + INDENT_ADDED, lineno);
                     }
                     else if (o instanceof Map)
                     {
-                        lineno = dumpClassNames((Map<String, ?>) o, writer, indent + INDENT_ADDED, lineno);
+                        lineno = dumpClassNames((Map<String, ?>) o, stream, indent + INDENT_ADDED, lineno);
                     }
                     else if (o instanceof Collection)
                     {
-                        lineno = dumpClassNames((Collection<?>) o, writer, indent + INDENT_ADDED, lineno);
+                        lineno = dumpClassNames((Collection<?>) o, stream, indent + INDENT_ADDED, lineno);
                     }
                 }
             }
@@ -283,7 +285,7 @@ public final class JSONUtils
     }
 
     @SuppressWarnings("unchecked")
-    public static final int dumpClassNames(final Map<String, ?> map, final PrintWriter writer, final int indent, int lineno)
+    public static final int dumpClassNames(final Map<String, ?> map, final PrintStream stream, final int indent, int lineno)
     {
         if (null != map)
         {
@@ -291,31 +293,33 @@ public final class JSONUtils
 
             final String t = map.getClass().getName();
 
-            for (String k : map.keySet())
+            for (Entry<String, ?> e : map.entrySet())
             {
                 lineno++;
 
-                final Object o = map.get(k);
+                final String k = e.getKey();
+                
+                final Object o = e.getValue();
 
                 if (null == o)
                 {
-                    writer.println(getLineNumber(lineno) + p + t + "[" + k + "]=null");
+                    stream.println(getLineNumber(lineno) + p + t + "[" + k + "]=null");
                 }
                 else
                 {
-                    writer.println(getLineNumber(lineno) + p + t + "[" + k + "]=" + o.getClass().getName());
+                    stream.println(getLineNumber(lineno) + p + t + "[" + k + "]=" + o.getClass().getName());
 
                     if (o instanceof List)
                     {
-                        lineno = dumpClassNames((List<?>) o, writer, indent + INDENT_ADDED, lineno);
+                        lineno = dumpClassNames((List<?>) o, stream, indent + INDENT_ADDED, lineno);
                     }
                     else if (o instanceof Map)
                     {
-                        lineno = dumpClassNames((Map<String, ?>) o, writer, indent + INDENT_ADDED, lineno);
+                        lineno = dumpClassNames((Map<String, ?>) o, stream, indent + INDENT_ADDED, lineno);
                     }
                     else if (o instanceof Collection)
                     {
-                        lineno = dumpClassNames((Collection<?>) o, writer, indent + INDENT_ADDED, lineno);
+                        lineno = dumpClassNames((Collection<?>) o, stream, indent + INDENT_ADDED, lineno);
                     }
                 }
             }
@@ -348,7 +352,7 @@ public final class JSONUtils
     {
         if (null == value)
         {
-            out.write(NULL_FOR_OUTPUT);
+            out.write(StringOps.NULL_AS_STRING);
 
             return;
         }
@@ -370,7 +374,7 @@ public final class JSONUtils
 
                 if (isDoubleInfiniteOrNan(dval))
                 {
-                    out.write(NULL_FOR_OUTPUT);
+                    out.write(StringOps.NULL_AS_STRING);
                 }
                 else
                 {
@@ -396,7 +400,7 @@ public final class JSONUtils
                     }
                     else
                     {
-                        out.write(NULL_FOR_OUTPUT);
+                        out.write(StringOps.NULL_AS_STRING);
                     }
                 }
                 else
@@ -411,7 +415,7 @@ public final class JSONUtils
 
                 if (isFloatInfiniteOrNan(fval))
                 {
-                    out.write(NULL_FOR_OUTPUT);
+                    out.write(StringOps.NULL_AS_STRING);
                 }
                 else
                 {
@@ -427,7 +431,7 @@ public final class JSONUtils
             }
             else
             {
-                out.write(NULL_FOR_OUTPUT);
+                out.write(StringOps.NULL_AS_STRING);
             }
             return;
         }
@@ -502,7 +506,7 @@ public final class JSONUtils
     {
         if (null == date)
         {
-            return NULL_FOR_OUTPUT;
+            return StringOps.NULL_AS_STRING;
         }
         if (null != context)
         {

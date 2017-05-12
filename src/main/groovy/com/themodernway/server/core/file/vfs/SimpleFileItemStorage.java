@@ -33,7 +33,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
@@ -418,7 +417,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
-        public Date getLastModified() throws IOException
+        public long getLastModified() throws IOException
         {
             validate();
 
@@ -430,7 +429,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             {
                 throw new IOException(format("Can't date hidden (%s).", getPath()));
             }
-            return new Date(getFile().lastModified());
+            return getFile().lastModified();
         }
 
         @Override
@@ -737,10 +736,14 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                 }
                 final File file = new File(item.getAbsolutePath());
 
-                file.getParentFile().mkdirs();
-
-                file.createNewFile();
-
+                if ((false == file.getParentFile().exists()) && (false == file.getParentFile().mkdirs()))
+                {
+                    throw new IOException(format("Can't create folder (%s).", item.getPath()));
+                }
+                if (false == file.createNewFile())
+                {
+                    throw new IOException(format("Can't create file (%s).", item.getPath()));
+                }
                 final OutputStream fios = IO.toOutputStream(file);
 
                 try

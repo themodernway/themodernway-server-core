@@ -201,12 +201,9 @@ public class HTTPHeaders extends HttpHeaders
                 {
                     item = StringOps.toTrimOrNull(item);
 
-                    if (null != item)
+                    if ((null != item) && (ua.equalsIgnoreCase(item)))
                     {
-                        if (ua.equalsIgnoreCase(item))
-                        {
-                            return this;
-                        }
+                        return this;
                     }
                 }
                 add(USER_AGENT, ua);

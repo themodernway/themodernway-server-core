@@ -35,6 +35,7 @@ import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.io.IO;
 
 public class ScriptingProvider implements IScriptingProvider
 {
@@ -98,7 +99,7 @@ public class ScriptingProvider implements IScriptingProvider
     @Override
     public ScriptEngine engine(final ScriptType type, final InputStream stream) throws Exception
     {
-        return engine(type, new InputStreamReader(stream));
+        return engine(type, new InputStreamReader(stream, IO.UTF_8_CHARSET));
     }
 
     @Override

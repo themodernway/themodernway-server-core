@@ -48,20 +48,17 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
         {
             final String name = StringOps.toTrimOrNull(descriptor.getNameSpace());
 
-            if (null != name)
+            if ((null != name) && (false == name.startsWith("@GRADLE")))
             {
-                if (false == name.startsWith("@GRADLE"))
+                if (null == m_descriptors.get(name))
                 {
-                    if (null == m_descriptors.get(name))
-                    {
-                        m_descriptors.put(name, descriptor);
+                    m_descriptors.put(name, descriptor);
 
-                        logger.info("BuildDescriptorProvider.addDescriptor(" + name + ") Registered");
-                    }
-                    else
-                    {
-                        logger.error("BuildDescriptorProvider.addDescriptor(" + name + ") Duplicate ignored");
-                    }
+                    logger.info("BuildDescriptorProvider.addDescriptor(" + name + ") Registered");
+                }
+                else
+                {
+                    logger.error("BuildDescriptorProvider.addDescriptor(" + name + ") Duplicate ignored");
                 }
             }
         }

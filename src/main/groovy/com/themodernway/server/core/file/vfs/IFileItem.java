@@ -19,7 +19,6 @@ package com.themodernway.server.core.file.vfs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.stream.Stream;
 
 import com.themodernway.server.core.json.JSONObject;
@@ -46,7 +45,7 @@ public interface IFileItem
 
     public boolean delete() throws IOException;
 
-    public Date getLastModified() throws IOException;
+    public long getLastModified() throws IOException;
 
     public long getFileSizeLimit() throws IOException;
 
