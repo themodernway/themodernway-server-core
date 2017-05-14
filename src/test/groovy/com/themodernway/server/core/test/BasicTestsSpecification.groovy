@@ -27,34 +27,22 @@ import com.themodernway.server.core.json.support.JSONMapToTreeSolver
 import com.themodernway.server.core.logging.MDC
 import com.themodernway.server.core.scripting.ScriptType
 import com.themodernway.server.core.support.CoreGroovyTrait
-import com.themodernway.server.core.support.spring.testing.IServerCoreTesting.TestingOps
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 import com.themodernway.server.core.test.util.BinderPOJO
 
-class BasicTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
+public class BasicTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
     def setupSpec()
     {
-        TestingOps.setupServerCoreDefault([
+        setupServerCoreDefault(
             "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
             "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
-        ])
+        )
     }
 
     def cleanupSpec()
     {
-        TestingOps.closeServerCoreDefault()
-    }
-
-    def "test server context crypto provider"()
-    {
-        setup:
-        def text = getCryptoProvider().encrypt("ok")
-
-        expect:
-        getCryptoProvider().decrypt(text) != null
-        getCryptoProvider().decrypt(text) == "ok"
-        getCryptoProvider().decrypt(text) != text
+        closeServerCoreDefault()
     }
 
     def "test JSONObject"()
@@ -87,18 +75,6 @@ class BasicTestsSpecification extends ServerCoreSpecification implements CoreGro
 
         expect:
         valu['count'] == 1L
-    }
-
-    def "test Keys"()
-    {
-        setup:
-        String pass = getCryptoProvider().getRandomPass()
-        String salt = getCryptoProvider().getRandomSalt()
-        println pass
-        println salt
-
-        expect:
-        getCryptoProvider().isPassValid(pass) == true
     }
 
     def "test script types"()

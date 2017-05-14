@@ -270,7 +270,7 @@ public final class IO
 
     public static final Stream<String> lines(final Path path) throws IOException
     {
-        return Files.lines(Objects.requireNonNull(path));
+        return Files.lines(Objects.requireNonNull(path), UTF_8_CHARSET);
     }
 
     public static final Stream<String> lines(final Resource resource) throws IOException

@@ -16,34 +16,31 @@
 
 package com.themodernway.server.core.test
 
-import com.themodernway.server.core.json.JSONObject
-import com.themodernway.server.core.json.binder.BinderType
 import com.themodernway.server.core.support.CoreGroovyTrait
-import com.themodernway.server.core.support.spring.testing.IServerCoreTesting.TestingOps
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
-class CacheTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
+public class CacheTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
     def setupSpec()
     {
-        TestingOps.setupServerCoreDefault([
+        setupServerCoreDefault(
             "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
             "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml",
             "classpath:/com/themodernway/server/core/config/CoreCaffieneCacheApplicationContext.xml"
-        ])
+        )
     }
 
     def cleanupSpec()
     {
-        TestingOps.closeServerCoreDefault()
+        closeServerCoreDefault()
     }
 
-    def "test server context crypto provider"()
+    def "Test CoreCaffeineCacheManager"()
     {
         setup:
         def uniq = uuid()
-        def core = getCacheManager("CoreCaffeineCacheManager")
-        def test = core.getCache("test")
+        def core = getCacheManager('CoreCaffeineCacheManager')
+        def test = core.getCache('test')
         test.put('uniq', uniq)
 
         expect:

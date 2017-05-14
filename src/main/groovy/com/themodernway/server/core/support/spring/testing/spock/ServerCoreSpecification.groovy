@@ -16,9 +16,13 @@
 
 package com.themodernway.server.core.support.spring.testing.spock
 
+import static java.lang.System.err
+
 import org.apache.log4j.Logger
 
 import com.themodernway.common.api.json.JSONStringify
+import com.themodernway.server.core.logging.MDC
+import com.themodernway.server.core.servlet.IServletCommonOperations
 import com.themodernway.server.core.support.spring.testing.IServerCoreTesting
 
 import groovy.transform.CompileStatic
@@ -30,6 +34,18 @@ public abstract class ServerCoreSpecification extends Specification implements I
     private Logger      m_logger
 
     private boolean     m_logging = true
+    
+    public static final void setupServerCoreDefault(final String... locations) throws Exception
+    {
+        MDC.put('session', IServletCommonOperations.UNKNOWN_USER)
+        
+        IServerCoreTesting.TestingOps.setupServerCoreDefault(locations)
+    }
+    
+    public static final void closeServerCoreDefault()
+    {
+        IServerCoreTesting.TestingOps.closeServerCoreDefault()
+    }
     
     def setup()
     {
@@ -71,6 +87,30 @@ public abstract class ServerCoreSpecification extends Specification implements I
         else
         {
             println "" + o?.toString()
+        }
+    }
+    
+    public void oops(JSONStringify o)
+    {
+        if (m_logging)
+        {
+            logger().error("" + o?.toJSONString())
+        }
+        else
+        {
+            err.println "" + o?.toJSONString()
+        }
+    }
+
+    public void oops(def o)
+    {
+        if (m_logging)
+        {
+            logger().error("" + o?.toString())
+        }
+        else
+        {
+            err.println "" + o?.toString()
         }
     }
 }

@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.support.spring.testing.cucumber;
+package com.themodernway.server.core.test.util;
 
-import com.themodernway.server.core.support.CoreGroovySupport;
+import com.themodernway.common.api.types.IIdentified;
+import com.themodernway.server.core.security.Authorized;
 
-public abstract class ServerCoreCucumberFeature extends CoreGroovySupport
+@Authorized({"ADMIN", "USER"})
+public class AdminUserPOJO implements IIdentified
 {
+    private String m_id;
+
+    public AdminUserPOJO(final String id)
+    {
+        m_id = id;
+    }
+    
+    @Override
+    public String getId()
+    {
+        return m_id;
+    }
 }

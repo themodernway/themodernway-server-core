@@ -18,27 +18,26 @@ package com.themodernway.server.core.test
 
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.network.PathParameters
-import com.themodernway.server.core.support.spring.testing.IServerCoreTesting.TestingOps
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
 import spock.lang.Unroll
 
-class RESTTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
+public class RESTTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
     def setupSpec()
     {
-        TestingOps.setupServerCoreDefault([
+        setupServerCoreDefault(
             "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
             "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
-        ])
+        )
     }
 
     def cleanupSpec()
     {
-        TestingOps.closeServerCoreDefault()
+        closeServerCoreDefault()
     }
 
-    def "Mothers Day 2017"()
+    def "SOAP Mothers Day 2017"()
     {
         setup:
         def soap = network().soap('http://www.holidaywebservice.com/Holidays/US/Dates/USHolidayDates.asmx')
@@ -75,7 +74,7 @@ class RESTTestsSpecification extends ServerCoreSpecification implements CoreGroo
         echo answ
     }
 
-    def "REST GET posts 50 PathPaeameters"()
+    def "REST GET posts PathPaeameters(id:50)"()
     {
         setup:
         def resp = network().get('http://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: 50))
