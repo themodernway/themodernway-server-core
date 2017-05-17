@@ -33,7 +33,6 @@ import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.json.binder.JSONBinder;
 import com.themodernway.server.core.json.binder.XMLBinder;
 import com.themodernway.server.core.json.binder.YAMLBinder;
-import com.themodernway.server.core.json.schema.JSONSchema;
 
 public class CoreJSONOperations implements ICoreJSONOperations
 {
@@ -300,11 +299,5 @@ public class CoreJSONOperations implements ICoreJSONOperations
     public final JSONObject json(final String name, final Object value)
     {
         return new JSONObject(Objects.requireNonNull(name), value);
-    }
-
-    @Override
-    public final JSONSchema jsonSchema(final Map<String, ?> schema)
-    {
-        return JSONSchema.cast(json(Objects.requireNonNull(schema)));
     }
 }

@@ -27,7 +27,6 @@ import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
-import com.themodernway.server.core.json.schema.JSONSchema;
 
 public interface ICoreJSONOperations
 {
@@ -70,6 +69,4 @@ public interface ICoreJSONOperations
     public JSONObject json(Optional<?> optional);
 
     public JSONObject json(String name, Object value);
-
-    public JSONSchema jsonSchema(Map<String, ?> schema);
 }

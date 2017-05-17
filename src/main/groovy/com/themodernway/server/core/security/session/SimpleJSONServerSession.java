@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.security.session;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -256,6 +257,7 @@ public class SimpleJSONServerSession implements IServerSession
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public IServerSession getProxyForSession()
     {
         if (m_attr.isString(getHelper().getProxySessionIdKey()))
@@ -307,5 +309,11 @@ public class SimpleJSONServerSession implements IServerSession
     public void touch()
     {
         setLastAccessedTime(System.currentTimeMillis());
+    }
+
+    @Override
+    public List<String> getAttributes()
+    {
+        return new ArrayList<String>(getAttributeNames());
     }
 }

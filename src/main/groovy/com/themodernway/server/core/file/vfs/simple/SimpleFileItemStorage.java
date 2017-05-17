@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.vfs;
+package com.themodernway.server.core.file.vfs.simple;
 
 import static com.themodernway.server.core.file.FileAndPathUtils.SINGLE_SLASH;
 import static com.themodernway.server.core.file.FileAndPathUtils.concat;
@@ -45,6 +45,15 @@ import org.springframework.core.io.Resource;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.ICoreContentTypeMapper;
+import com.themodernway.server.core.file.vfs.FileItemWrapper;
+import com.themodernway.server.core.file.vfs.FolderItemWrapper;
+import com.themodernway.server.core.file.vfs.IFileItem;
+import com.themodernway.server.core.file.vfs.IFileItemMetaDataFactory;
+import com.themodernway.server.core.file.vfs.IFileItemStorage;
+import com.themodernway.server.core.file.vfs.IFileItemWrapper;
+import com.themodernway.server.core.file.vfs.IFolderItem;
+import com.themodernway.server.core.file.vfs.IFolderItemWrapper;
+import com.themodernway.server.core.file.vfs.ItemsOptions;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 

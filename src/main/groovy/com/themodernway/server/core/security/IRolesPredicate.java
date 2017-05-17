@@ -17,12 +17,9 @@
 package com.themodernway.server.core.security;
 
 import java.util.List;
+import java.util.function.Predicate;
 
-public interface IPrincipal
+@FunctionalInterface
+public interface IRolesPredicate extends Predicate<List<String>>
 {
-    public String getId();
-    
-    public List<IPrincipal> getRootsFor();
-    
-    public List<IPrincipal> getChildren();
 }

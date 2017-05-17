@@ -23,7 +23,6 @@ import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.binder.BinderType
 import com.themodernway.server.core.json.binder.IBinder
-import com.themodernway.server.core.json.schema.JSONSchema
 
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
@@ -135,10 +134,5 @@ public trait JSONTrait
     public JSONObject json(String name, Object value)
     {
         new JSONObject(Objects.requireNonNull(name), value)
-    }
-
-    public JSONSchema jsonSchema(Map<String, ?> schema)
-    {
-        getCoreJSONOperationse().jsonSchema(schema)
     }
 }
