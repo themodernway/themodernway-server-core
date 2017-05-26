@@ -27,13 +27,14 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.themodernway.common.api.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 public interface ICoreCommon
 {
-    public static final int IS_NOT_FOUND = (0 - 1);
+    public static final int IS_NOT_FOUND = CommonOps.IS_NOT_FOUND;
 
     public static String    EMPTY_STRING = StringOps.EMPTY_STRING;
 

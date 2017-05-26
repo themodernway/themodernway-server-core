@@ -196,7 +196,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
                 {
                     if (v.startsWith(m_prefix))
                     {
-                        final String r = v.replace(m_prefix, "").trim();
+                        final String r = v.replace(m_prefix, "");
 
                         final String d = (r.isEmpty() ? r : m_crypto.decrypt(r));
 

@@ -16,15 +16,16 @@
 
 package com.themodernway.server.core.security.session;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.ITimeSupplier;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.JSONUtils;
+import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 public class SimpleJSONServerSession implements IServerSession
@@ -43,9 +44,9 @@ public class SimpleJSONServerSession implements IServerSession
 
         m_repo = Objects.requireNonNull(repo);
 
-        m_attr.put(getHelper().getSessionIdKey(), ServerContextInstance.getServerContextInstance().uuid());
+        m_attr.put(getHelper().getSessionIdKey(), getServerContext().uuid());
 
-        final long time = System.currentTimeMillis();
+        final long time = ITimeSupplier.mills().getTime();
 
         m_attr.put(m_repo.getHelper().getCreationTimeKey(), time);
 
@@ -60,9 +61,9 @@ public class SimpleJSONServerSession implements IServerSession
 
         if (null == getId())
         {
-            m_attr.put(getHelper().getSessionIdKey(), ServerContextInstance.getServerContextInstance().uuid());
+            m_attr.put(getHelper().getSessionIdKey(), getServerContext().uuid());
         }
-        final long time = System.currentTimeMillis();
+        final long time = ITimeSupplier.mills().getTime();
 
         if (0 == getCreationTime())
         {
@@ -133,7 +134,7 @@ public class SimpleJSONServerSession implements IServerSession
         {
             return m_attr.getAsBoolean(getHelper().getExpiredKey());
         }
-        if ((getLastAccessedTime() + (getMaxInactiveIntervalInSeconds() * 1000L)) < System.currentTimeMillis())
+        if ((getLastAccessedTime() + (getMaxInactiveIntervalInSeconds() * 1000L)) < ITimeSupplier.mills().getTime())
         {
             return true;
         }
@@ -257,7 +258,6 @@ public class SimpleJSONServerSession implements IServerSession
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public IServerSession getProxyForSession()
     {
         if (m_attr.isString(getHelper().getProxySessionIdKey()))
@@ -275,7 +275,7 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public JSONObject toJSONObject()
     {
-        return new JSONObject(m_attr);
+        return getServerContext().json(m_attr);
     }
 
     @Override
@@ -308,12 +308,11 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public void touch()
     {
-        setLastAccessedTime(System.currentTimeMillis());
+        setLastAccessedTime(ITimeSupplier.mills().getTime());
     }
 
-    @Override
-    public List<String> getAttributes()
+    protected IServerContext getServerContext()
     {
-        return new ArrayList<String>(getAttributeNames());
+        return ServerContextInstance.getServerContextInstance();
     }
 }

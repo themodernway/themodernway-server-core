@@ -28,6 +28,8 @@ import javax.swing.border.LineBorder
 import javax.swing.border.MatteBorder
 import javax.swing.filechooser.FileFilter
 
+import com.themodernway.server.core.io.NoSyncStringBuilderWriter
+import com.themodernway.server.core.security.AESStringCryptoProvider
 import com.themodernway.server.core.security.SimpleCryptoKeysGenerator
 
 import groovy.swing.SwingBuilder as Swing
@@ -36,13 +38,17 @@ public class PropertiesUI {
 
     static SimpleCryptoKeysGenerator GENERATOR = new SimpleCryptoKeysGenerator()
 
-    static Color BG_VALIDOK = rgb(0, 0, 0)
+    static Color BG_VALIDOK = rgb(255, 255, 255)
 
     static Color BG_INVALID = rgb(255, 9, 0)
+    
+    String m_prefix = "0xCAFEBABE;"
 
     JMenuItem m_mast_save
 
     JFileChooser m_mast_file = new JFileChooser()
+    
+    AESStringCryptoProvider m_crypto
 
     public static void main(String...args) {
         new PropertiesUI(args)
@@ -56,7 +62,7 @@ public class PropertiesUI {
                 borderLayout()
                 def mbar = menuBar(constraints: BL.NORTH) {
                     menu('Application') {
-                        menuItem('Open Master Keys file...', actionPerformed: {loadMasterKeys(fileChooser(), keys)})
+                        menuItem('Open Master Keys file...', actionPerformed: {setupFileChooser(fileChooser(), {loadProperties(it, keys)}).showOpenDialog(keys)})
                         m_mast_save = disableMenu(menuItem('Save Master Keys file...', actionPerformed: {ifMasterKeysValid(keys, {setupFileChooser(fileChooser(), {saveMasterKeys(it, keys)})})}))
                         menuItem('Set Prefix...', actionPerformed: {setupFileChooser(fileChooser(), {loadMasterKeys(it, keys)}).showOpenDialog(text)})
                         menuItem('Generate Keys', actionPerformed: {generateNewKeys(keys)})
@@ -70,8 +76,8 @@ public class PropertiesUI {
                         menuItem('Revert')
                     }
                     menu('Encrypton') {
-                        menuItem('Encrypt')
-                        menuItem('Decrypt')
+                        menuItem('Encrypt', actionPerformed: {encrypt(text)})
+                        menuItem('Decrypt', actionPerformed: {decrypt(text)})
                     }
                 }
                 text = setupTextArea(textArea(text: '', rows: 800, columns: 120, constraints: BL.CENTER), new Insets(0, 0, 0, 0))
@@ -97,14 +103,54 @@ public class PropertiesUI {
         menu.setEnabled(false)
         menu
     }
+    
+    public void encrypt(JTextArea t) {
+        if(m_crypto) {
+            def p = loadPropertiesFromString(t.text)
+            p.keys().each { k ->
+                def v = p.getProperty(k)
+                if (false == v.isEmpty())
+                {
+                    if (false == v.startsWith(m_prefix))
+                    {
+                        p.setProperty(k, m_prefix + m_crypto.encrypt(v))
+                    }
+                }
+            }
+            NoSyncStringBuilderWriter w = new NoSyncStringBuilderWriter()
+            p.store(w, "PropertiesUI command")
+            t.text = w.toString()
+        }
+    }
+    
+    public void decrypt(JTextArea t) {
+        if(m_crypto) {
+            def p = loadPropertiesFromString(t.text)
+            p.keys().each { k ->
+                def v = p.getProperty(k)
+                if (false == v.isEmpty())
+                {
+                    if (v.startsWith(m_prefix))
+                    {                        
+                        p.setProperty(k, m_crypto.decrypt(v.replace(m_prefix, "")))
+                    }
+                }
+            }
+            NoSyncStringBuilderWriter w = new NoSyncStringBuilderWriter()
+            p.store(w, "PropertiesUI command")
+            t.text = w.toString()
+        }
+    }
 
     public void generateNewKeys(JTextArea t) {
         t.text = new StringBuilder().append("bootstrap.crypto.pass=").append(GENERATOR.getRandomPass()).append("\nbootstrap.crypto.salt=").append(GENERATOR.getRandomSalt()).toString()
         t.setForeground(BG_INVALID)
         m_mast_save.setEnabled(false)
-        if (isPassValid(loadPropertiesFromString(t.text).getProperty('bootstrap.crypto.pass') as String)) {
+        def p = loadPropertiesFromString(t.text)
+        if (isPassValid(p.getProperty('bootstrap.crypto.pass') as String)) {
             t.setForeground(BG_VALIDOK)
             m_mast_save.setEnabled(true)
+            m_crypto = new AESStringCryptoProvider(p.getProperty('bootstrap.crypto.pass') as String, p.getProperty('bootstrap.crypto.salt') as String)
         }
     }
 
@@ -142,10 +188,10 @@ public class PropertiesUI {
     }
 
     public JTextArea setupTextArea(JTextArea t, Insets i) {
-        t.setBorder(new CompoundBorder(new CompoundBorder(new MatteBorder(i, Color.DARK_GRAY), new LineBorder(Color.LIGHT_GRAY, 1)), new LineBorder(Color.WHITE, 4)))
+        t.setBorder(new CompoundBorder(new CompoundBorder(new MatteBorder(i, Color.DARK_GRAY), new LineBorder(Color.LIGHT_GRAY, 1)), new LineBorder(Color.DARK_GRAY, 4)))
         t.setLineWrap(false)
         t.setEditable(false)
-        t.setBackground(rgb(224,255,255))
+        t.setBackground(rgb(32,36,37))
         t.setForeground(BG_INVALID)
         t
     }
@@ -167,10 +213,9 @@ public class PropertiesUI {
         }
     }
 
-    private Properties loadPropertiesFromString(String s) {
+    public Properties loadPropertiesFromString(String s) {
         def properties = new Properties()
         if (s) {
-            s = s.trim()
             if (false == s.isEmpty()) {
                 properties.load(new StringReader(s))
             }
