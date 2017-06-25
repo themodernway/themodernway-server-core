@@ -47,7 +47,7 @@ public final class JSONUtils
 
     private final static BigDecimal                     BIG_DECIMAL_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
 
-    private final static BigDecimal                     BIG_DECIMAL_MIN = BigDecimal.valueOf(Double.MIN_VALUE);
+    private final static BigDecimal                     BIG_DECIMAL_MIN = BigDecimal.valueOf(-Double.MAX_VALUE);
 
     private final static BigInteger                     BIG_INTEGER_MAX = BigInteger.valueOf(Integer.MAX_VALUE);
 
@@ -298,7 +298,7 @@ public final class JSONUtils
                 lineno++;
 
                 final String k = e.getKey();
-                
+
                 final Object o = e.getValue();
 
                 if (null == o)

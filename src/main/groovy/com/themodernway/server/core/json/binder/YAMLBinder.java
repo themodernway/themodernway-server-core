@@ -19,24 +19,23 @@ package com.themodernway.server.core.json.binder;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 public class YAMLBinder extends AbstractDataBinder
 {
     public YAMLBinder()
     {
-        super(new ObjectMapper(new YAMLFactory()));
+        super(new YAMLMapper());
     }
 
     public YAMLBinder(final MapperFeature... features)
     {
-        super(new ObjectMapper(new YAMLFactory()), features);
+        super(new YAMLMapper(), features);
     }
 
     public YAMLBinder(final List<MapperFeature> features)
     {
-        super(new ObjectMapper(new YAMLFactory()), features);
+        super(new YAMLMapper(), features);
     }
 
     @Override

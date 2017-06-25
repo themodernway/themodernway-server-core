@@ -16,6 +16,9 @@
 
 package com.themodernway.server.core.test
 
+import java.security.Provider
+import java.security.Security
+
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 import com.themodernway.server.core.test.util.AdminPOJO
@@ -36,6 +39,33 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def cleanupSpec()
     {
         closeServerCoreDefault()
+    }
+    
+    def "Test Providers"()
+    {
+        setup:
+        def prov = Security.getProviders()
+        
+        expect:
+        prov != null
+        
+        cleanup:
+        for (Provider p: prov)
+        {
+            echo p.toString()
+            
+            for (Provider.Service s: p.getServices())
+                {
+                    try
+                    {
+                    echo s.toString()
+                    }
+                    catch(Throwable e)
+                    {
+                        
+                    }
+                }
+        }
     }
 
     def "Test Random Password"()
