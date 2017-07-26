@@ -137,7 +137,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         }
         else
         {
-            setRequiredRoles(toUniqueStringList(roles));
+            setRequiredRoles(toUniqueTokenStringList(roles));
         }
     }
 

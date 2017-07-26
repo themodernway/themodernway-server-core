@@ -96,7 +96,7 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
         }
         else
         {
-            setRequiredRoles(toUniqueStringList(roles));
+            setRequiredRoles(toUniqueTokenStringList(roles));
         }
     }
 

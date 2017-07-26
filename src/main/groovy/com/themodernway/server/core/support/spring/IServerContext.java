@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.apache.log4j.Logger;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -39,6 +38,7 @@ import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.ICoreJSONOperations;
+import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.scripting.IScriptingProvider;
 import com.themodernway.server.core.security.IAuthorizationProvider;
 import com.themodernway.server.core.security.IAuthorizer;
@@ -50,12 +50,12 @@ import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider;
 import com.themodernway.server.core.support.spring.network.websocket.IWebSocketService;
 import com.themodernway.server.core.support.spring.network.websocket.IWebSocketServiceProvider;
 
-public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPropertiesResolver
+public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPropertiesResolver, IHasLogging
 {
     public boolean isApplicationContextInitialized();
 
     public ApplicationContext getApplicationContext();
-    
+
     public WebApplicationContext getWebApplicationContext();
 
     public boolean containsBean(String name);
@@ -71,9 +71,9 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public List<String> getPrincipalsKeys();
 
     public IServerSessionRepositoryProvider getServerSessionRepositoryProvider();
-    
+
     public IFileItemStorageProvider getFileItemStorageProvider();
-    
+
     public IFileItemStorage getFileItemStorage(String name);
 
     public IServerSessionRepository getServerSessionRepository(String domain);
@@ -116,14 +116,12 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
 
     public <T> boolean publish(String name, Message<T> message, long timeout);
 
-    public Logger logger();
-
     public String uuid();
 
     public String toTrimOrNull(String string);
 
     public String toTrimOrElse(String string, String otherwise);
-    
+
     public String toTrimOrElse(String string, Supplier<String> otherwise);
 
     public <T> T requireNonNull(T object);
@@ -135,6 +133,6 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public Resource resource(String location);
 
     public Reader reader(String location) throws IOException;
-    
+
     public CacheManager getCacheManager(String name);
 }

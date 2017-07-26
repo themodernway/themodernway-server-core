@@ -258,21 +258,6 @@ public class SimpleJSONServerSession implements IServerSession
     }
 
     @Override
-    public IServerSession getProxyForSession()
-    {
-        if (m_attr.isString(getHelper().getProxySessionIdKey()))
-        {
-            final String proxy = StringOps.toTrimOrNull(m_attr.getAsString(getHelper().getProxySessionIdKey()));
-
-            if (null != proxy)
-            {
-                return m_repo.getSession(proxy);
-            }
-        }
-        return null;
-    }
-
-    @Override
     public JSONObject toJSONObject()
     {
         return getServerContext().json(m_attr);

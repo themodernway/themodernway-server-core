@@ -73,7 +73,7 @@ public trait CoreGroovyTrait implements JSONTrait
     {
         getServerContext().getApplicationContext()
     }
-    
+
     @Memoized
     public WebApplicationContext getWebApplicationContext()
     {
@@ -103,25 +103,25 @@ public trait CoreGroovyTrait implements JSONTrait
     {
         getServerContext().getBuildDescriptorProvider()
     }
-    
+
     @Memoized
     public IFileItemStorageProvider getFileItemStorageProvider()
     {
         getServerContext().getFileItemStorageProvider()
     }
-    
+
     @Memoized
     public IFileItemStorage getFileItemStorage(String name)
     {
         getFileItemStorageProvider().getFileItemStorage(Objects.requireNonNull(name))
     }
-    
+
     @Memoized
     public IServletContextCustomizerProvider getServletContextCustomizerProvider()
     {
         getServerContext().getServletContextCustomizerProvider()
     }
-   
+
     @Memoized
     public IPropertiesResolver getPropertiesResolver()
     {
@@ -139,7 +139,7 @@ public trait CoreGroovyTrait implements JSONTrait
     {
         getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
     }
-    
+
     public String getPropertyByName(String name, Supplier<String> otherwise)
     {
         getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
@@ -269,7 +269,7 @@ public trait CoreGroovyTrait implements JSONTrait
     {
         getServerContext().toTrimOrElse(string, otherwise)
     }
-    
+
     public String toTrimOrElse(String string, Supplier<String> otherwise)
     {
         getServerContext().toTrimOrElse(string, otherwise)
@@ -312,10 +312,16 @@ public trait CoreGroovyTrait implements JSONTrait
     {
         getWebSocketServiceProvider().getWebSocketService(name)
     }
-    
+
     @Memoized
     public CacheManager getCacheManager(String name)
     {
         getServerContext().getCacheManager(name)
+    }
+
+    @Memoized
+    public CoreGroovyParallel parallel()
+    {
+        CoreGroovyParallel.getCoreGroovyParallel()
     }
 }

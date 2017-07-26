@@ -381,6 +381,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
         getServerContext().getCacheManager(name)
     }
 
+    @Memoized
+    public CoreGroovyParallel parallel()
+    {
+        CoreGroovyParallel.getCoreGroovyParallel()
+    }
+
     @Override
     public IBinder binder()
     {

@@ -37,8 +37,6 @@ public interface IServerSessionHelper extends Serializable
 
     public final static String               SP_SESSION_ID_KEY                       = "session_id";
 
-    public final static String               SP_PROXY_SESSION_ID_KEY                 = "proxy_session_id";
-
     public final static String               SP_EXPIRED_KEY                          = "expired";
 
     public final static String               SP_CREATION_TIME_KEY                    = "creation_time";
@@ -81,11 +79,6 @@ public interface IServerSessionHelper extends Serializable
     default public String getSessionIdKey()
     {
         return SP_SESSION_ID_KEY;
-    }
-
-    default public String getProxySessionIdKey()
-    {
-        return SP_PROXY_SESSION_ID_KEY;
     }
 
     default public String getExpiredKey()

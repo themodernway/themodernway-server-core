@@ -34,8 +34,6 @@ public interface IServerSession extends ExpiringSession, JSONStringify, Serializ
 
     public List<String> getRoles();
 
-    public IServerSession getProxyForSession();
-
     public JSONObject toJSONObject();
 
     public boolean isPersisted();

@@ -42,7 +42,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.0.20-RELEASE'
+version = '1.1.0-RELEASE'
 
 group = 'com.themodernway'
 
@@ -232,7 +232,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.0.20-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.1.0-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '5.1')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')
@@ -270,20 +270,21 @@ dependencies {
     compile(group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.4.0')
     compile(group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.4.0')
     springCorePackages().each { String name ->
-        compile(group: 'org.springframework', name: name, version: '4.3.9.RELEASE')
+        compile(group: 'org.springframework', name: name, version: '4.3.10.RELEASE')
     }
     springSecurityPackages().each { String name ->
         compile(group: 'org.springframework.security', name: name, version: '4.2.3.RELEASE')
     }
     springIntegrationPackages().each { String name ->
-        compile(group: 'org.springframework.integration', name: name, version: '4.3.10.RELEASE')
+        compile(group: 'org.springframework.integration', name: name, version: '4.3.11.RELEASE')
     }
-    compile(group: 'org.springframework.integration', name: 'spring-integration-groovy', version: '4.3.10.RELEASE') {
+    compile(group: 'org.springframework.integration', name: 'spring-integration-groovy', version: '4.3.11.RELEASE') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
     compile(group: 'com.github.groovy-wslite', name: 'groovy-wslite', version: '1.1.3') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
+    compile group: 'io.projectreactor', name: 'reactor-core', version: '3.0.7.RELEASE'
     compile(group: 'org.springframework.integration', name: 'spring-integration-java-dsl', version: '1.2.2.RELEASE')
     compile(group: 'org.springframework.session', name: 'spring-session', version: '1.3.1.RELEASE')
     compile(group: 'org.springframework.amqp', name: 'spring-rabbit', version: '1.7.3.RELEASE')

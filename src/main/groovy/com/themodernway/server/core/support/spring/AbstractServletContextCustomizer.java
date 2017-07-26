@@ -46,16 +46,14 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
 
     protected AbstractServletContextCustomizer(final String name, final String maps)
     {
-        m_name = requireTrimOrNull(name);
-
-        m_maps = StringOps.toUniqueStringList(maps).toArray(StringOps.EMPTY_STRING_ARRAY);
+        this(name, StringOps.toUniqueTokenStringList(maps));
     }
 
     protected AbstractServletContextCustomizer(final String name, final Collection<String> maps)
     {
         m_name = requireTrimOrNull(name);
 
-        m_maps = StringOps.toUniqueStringList(maps).toArray(StringOps.EMPTY_STRING_ARRAY);
+        m_maps = StringOps.toUniqueArray(maps);
     }
 
     public void setRateLinit(final double rate)
@@ -90,7 +88,7 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
 
     public String[] getMappings()
     {
-        return StringOps.toArray(m_maps);
+        return m_maps;
     }
 
     public List<String> getRequiredRoles()
@@ -106,7 +104,7 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
         }
         else
         {
-            setRequiredRoles(toUniqueStringList(roles));
+            setRequiredRoles(toUniqueTokenStringList(roles));
         }
     }
 

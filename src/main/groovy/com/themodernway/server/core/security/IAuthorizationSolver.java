@@ -132,7 +132,7 @@ public interface IAuthorizationSolver extends IRolesPredicate
 
             protected AbstractRolesOp(final List<String> roles)
             {
-                m_roles = StringOps.toUniqueStringList(roles);
+                m_roles = StringOps.toUnique(roles);
             }
 
             protected final List<String> getRoles()

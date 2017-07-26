@@ -40,7 +40,7 @@ public class CoreCaffeineCacheManager extends CaffeineCacheManager implements Ca
     {
         if (false == USE_DYNAMIC_CACHES.equals(caches))
         {
-            setCacheNames(toUniqueStringList(caches));
+            setCacheNames(toUniqueTokenStringList(caches));
         }
         else
         {

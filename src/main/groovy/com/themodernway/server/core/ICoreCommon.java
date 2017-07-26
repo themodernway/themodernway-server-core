@@ -22,17 +22,19 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.log4j.Logger;
+
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
-public interface ICoreCommon
+public interface ICoreCommon extends IHasLogging
 {
     public static final int IS_NOT_FOUND = CommonOps.IS_NOT_FOUND;
 
@@ -45,7 +47,7 @@ public interface ICoreCommon
 
     default public String uuid()
     {
-        return UUID.randomUUID().toString().toUpperCase();
+        return getServerContext().uuid();
     }
 
     default public String toTrimOrNull(String string)
@@ -152,19 +154,29 @@ public interface ICoreCommon
         return StringOps.toPrintableString(collection);
     }
 
+    default public List<String> toUniqueStringList(final Collection<String> strings)
+    {
+        return StringOps.toUnique(strings);
+    }
+
     default public List<String> toUniqueStringList(final Stream<String> strings)
     {
-        return toUniqueStringList(strings.collect(Collectors.toList()));
+        return StringOps.toUnique(strings.collect(Collectors.toList()));
     }
 
     default public List<String> toUniqueStringList(final Supplier<String> strings)
     {
-        return toUniqueStringList(strings.get());
+        return StringOps.toUnique(strings.get());
     }
 
-    default public List<String> toUniqueStringList(final String strings)
+    default public List<String> toUniqueStringList(final String[] strings)
     {
-        return StringOps.toUniqueStringList(strings);
+        return StringOps.toUnique(strings);
+    }
+
+    default public List<String> toUniqueTokenStringList(final String strings)
+    {
+        return StringOps.toUniqueTokenStringList(strings);
     }
 
     default public <T> List<T> emptyList()
@@ -174,7 +186,7 @@ public interface ICoreCommon
 
     default public <T> List<T> arrayList()
     {
-        return new ArrayList<T>();
+        return new ArrayList<>();
     }
 
     default public <T> List<T> toList(final Enumeration<T> source)
@@ -239,15 +251,11 @@ public interface ICoreCommon
         }
         return list;
     }
-
-    default public List<String> toUniqueStringList(final String[] strings)
+    
+    @Override
+    default public Logger logger()
     {
-        return StringOps.toUniqueStringList(strings);
-    }
-
-    default public List<String> toUniqueStringList(final Collection<String> strings)
-    {
-        return StringOps.toUniqueStringList(strings);
+        return getServerContext().logger();
     }
 
     default public IServerContext getServerContext()

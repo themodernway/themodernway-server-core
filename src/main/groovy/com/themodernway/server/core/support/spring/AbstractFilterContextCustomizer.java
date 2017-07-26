@@ -29,8 +29,9 @@ import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.ICoreCommon;
 
-public abstract class AbstractFilterContextCustomizer implements IServletContextCustomizer
+public abstract class AbstractFilterContextCustomizer implements IServletContextCustomizer, ICoreCommon
 {
     private final Logger   m_logs = Logger.getLogger(getClass());
 
@@ -42,16 +43,14 @@ public abstract class AbstractFilterContextCustomizer implements IServletContext
 
     protected AbstractFilterContextCustomizer(final String name, final String maps)
     {
-        m_name = StringOps.requireTrimOrNull(name);
-
-        m_maps = StringOps.toUniqueStringList(maps).toArray(StringOps.EMPTY_STRING_ARRAY);
+        this(name, StringOps.toUniqueTokenStringList(maps));
     }
 
     protected AbstractFilterContextCustomizer(final String name, final Collection<String> maps)
     {
-        m_name = StringOps.requireTrimOrNull(name);
+        m_name = requireTrimOrNull(name);
 
-        m_maps = StringOps.toUniqueStringList(maps).toArray(StringOps.EMPTY_STRING_ARRAY);
+        m_maps = StringOps.toUniqueArray(maps);
     }
 
     public Logger logger()
@@ -76,7 +75,7 @@ public abstract class AbstractFilterContextCustomizer implements IServletContext
 
     public String[] getMappings()
     {
-        return StringOps.toArray(m_maps);
+        return m_maps;
     }
 
     @Override
