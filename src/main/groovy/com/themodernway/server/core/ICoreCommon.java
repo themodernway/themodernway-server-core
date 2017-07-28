@@ -17,6 +17,7 @@
 package com.themodernway.server.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -40,7 +41,7 @@ public interface ICoreCommon extends IHasLogging
 
     public static String    EMPTY_STRING = StringOps.EMPTY_STRING;
 
-    default public String format(String format, Object... args)
+    default public String format(final String format, final Object... args)
     {
         return String.format(format, args);
     }
@@ -50,47 +51,47 @@ public interface ICoreCommon extends IHasLogging
         return getServerContext().uuid();
     }
 
-    default public String toTrimOrNull(String string)
+    default public String toTrimOrNull(final String string)
     {
         return StringOps.toTrimOrNull(string);
     }
 
-    default public String toTrimOrElse(String string, String otherwise)
+    default public String toTrimOrElse(final String string, final String otherwise)
     {
         return StringOps.toTrimOrElse(string, otherwise);
     }
 
-    default public String toTrimOrElse(String string, Supplier<String> otherwise)
+    default public String toTrimOrElse(final String string, final Supplier<String> otherwise)
     {
         return StringOps.toTrimOrElse(string, otherwise);
     }
 
-    default public String requireTrimOrNull(String string)
+    default public String requireTrimOrNull(final String string)
     {
         return StringOps.requireTrimOrNull(string);
     }
 
-    default public String requireTrimOrNull(String string, String reason)
+    default public String requireTrimOrNull(final String string, final String reason)
     {
         return StringOps.requireTrimOrNull(string, reason);
     }
 
-    default public String requireTrimOrNull(String string, Supplier<String> reason)
+    default public String requireTrimOrNull(final String string, final Supplier<String> reason)
     {
         return requireNonNull(toTrimOrNull(string), reason);
     }
 
-    default public <T> T requireNonNull(T object)
+    default public <T> T requireNonNull(final T object)
     {
         return Objects.requireNonNull(object);
     }
 
-    default public <T> T requireNonNull(T object, String reason)
+    default public <T> T requireNonNull(final T object, final String reason)
     {
         return Objects.requireNonNull(object, reason);
     }
 
-    default public <T> T requireNonNull(T object, Supplier<String> reason)
+    default public <T> T requireNonNull(final T object, final Supplier<String> reason)
     {
         return Objects.requireNonNull(object, reason);
     }
@@ -161,7 +162,7 @@ public interface ICoreCommon extends IHasLogging
 
     default public List<String> toUniqueStringList(final Stream<String> strings)
     {
-        return StringOps.toUnique(strings.collect(Collectors.toList()));
+        return StringOps.toList(StringOps.toUnique(strings));
     }
 
     default public List<String> toUniqueStringList(final Supplier<String> strings)
@@ -186,7 +187,22 @@ public interface ICoreCommon extends IHasLogging
 
     default public <T> List<T> arrayList()
     {
-        return new ArrayList<>();
+        return new ArrayList<T>();
+    }
+
+    default public <T> List<T> arrayList(final int size)
+    {
+        return new ArrayList<T>(size);
+    }
+
+    default public <T> List<T> toList(final T source[])
+    {
+        return Arrays.asList(source);
+    }
+
+    default public <T> List<T> toList(final Stream<T> source)
+    {
+        return source.collect(Collectors.toList());
     }
 
     default public <T> List<T> toList(final Enumeration<T> source)
@@ -194,17 +210,42 @@ public interface ICoreCommon extends IHasLogging
         return Collections.list(source);
     }
 
+    default public <T> List<T> toList(final Collection<T> source)
+    {
+        return new ArrayList<T>(source);
+    }
+
     default public <T> List<T> toUnmodifiableList(final List<T> list)
     {
         return Collections.unmodifiableList(list);
     }
 
+    default public <T> List<T> toUnmodifiableList(final T source[])
+    {
+        return toUnmodifiableList(toList(source));
+    }
+
+    default public <T> List<T> toUnmodifiableList(final Stream<T> source)
+    {
+        return toUnmodifiableList(toList(source));
+    }
+
+    default public <T> List<T> toUnmodifiableList(final Collection<T> source)
+    {
+        return toUnmodifiableList(toList(source));
+    }
+
+    default public <T> List<T> toUnmodifiableList(final Enumeration<T> source)
+    {
+        return toUnmodifiableList(toList(source));
+    }
+
     @SuppressWarnings("unchecked")
-    default public <T> List<T> arrayListOfListSuppliers(Supplier<List<T>>... lists)
+    default public <T> List<T> arrayListOfListSuppliers(final Supplier<List<T>>... lists)
     {
         final List<T> list = arrayList();
 
-        for (Supplier<List<T>> supp : lists)
+        for (final Supplier<List<T>> supp : lists)
         {
             final List<T> adds = supp.get();
 
@@ -217,11 +258,11 @@ public interface ICoreCommon extends IHasLogging
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> List<T> arrayListOfLists(List<T>... lists)
+    default public <T> List<T> arrayListOfLists(final List<T>... lists)
     {
         final List<T> list = arrayList();
 
-        for (List<T> adds : lists)
+        for (final List<T> adds : lists)
         {
             if ((null != adds) && (false == adds.isEmpty()))
             {
@@ -232,15 +273,15 @@ public interface ICoreCommon extends IHasLogging
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> List<T> arrayListOfListsUnique(List<T>... lists)
+    default public <T> List<T> arrayListOfListsUnique(final List<T>... lists)
     {
         final List<T> list = arrayList();
 
-        for (List<T> adds : lists)
+        for (final List<T> adds : lists)
         {
             if ((null != adds) && (false == adds.isEmpty()))
             {
-                for (T item : adds)
+                for (final T item : adds)
                 {
                     if (false == list.contains(item))
                     {
@@ -251,7 +292,7 @@ public interface ICoreCommon extends IHasLogging
         }
         return list;
     }
-    
+
     @Override
     default public Logger logger()
     {

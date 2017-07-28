@@ -345,6 +345,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
         Objects.requireNonNull(object, message)
     }
 
+    @Override
+    public <T> T requireNonNull(T object, Supplier<String> message)
+    {
+        Objects.requireNonNull(object, message)
+    }
+
     @Memoized
     public IScriptingProvider scripting()
     {

@@ -24,7 +24,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 
 import com.themodernway.server.core.io.IO;
 
-public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, Closeable, Iterable<T>, ICoreCommon
+public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, Closeable, ICoreCommon
 {
     @Override
     default public void close() throws IOException

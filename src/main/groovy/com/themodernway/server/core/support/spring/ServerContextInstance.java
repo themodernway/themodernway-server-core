@@ -92,7 +92,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final ApplicationContext getApplicationContext()
     {
-        return Objects.requireNonNull(APPCONTEXT, "ApplicationContext is null, initialization error.");
+        return requireNonNull(APPCONTEXT, "ApplicationContext is null, initialization error.");
     }
 
     @Override
@@ -110,27 +110,27 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final Environment getEnvironment()
     {
-        return Objects.requireNonNull(getApplicationContext().getEnvironment(), "Environment is null, initialization error.");
+        return requireNonNull(getApplicationContext().getEnvironment(), "Environment is null, initialization error.");
     }
 
     @Override
     public final boolean containsBean(final String name)
     {
-        return getApplicationContext().containsBean(Objects.requireNonNull(name));
+        return getApplicationContext().containsBean(requireNonNull(name));
     }
 
     @Override
     public final <B> B getBean(final String name, final Class<B> type) throws Exception
     {
-        return getApplicationContext().getBean(Objects.requireNonNull(name), Objects.requireNonNull(type));
+        return getApplicationContext().getBean(requireNonNull(name), requireNonNull(type));
     }
 
     @Override
     public final <B> B getBeanSafely(final String name, final Class<B> type)
     {
-        Objects.requireNonNull(name);
+        requireNonNull(name);
 
-        Objects.requireNonNull(type);
+        requireNonNull(type);
 
         B bean = null;
 
@@ -144,7 +144,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
                 {
                     bean = ctxt.getBean(name, type);
                 }
-                catch (Exception e)
+                catch (final Exception e)
                 {
                     logger().error("getBeanSafely(" + name + "," + type.getName() + ") error.", e);
                 }
@@ -159,14 +159,14 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
                             bean = type.cast(look);
                         }
                     }
-                    catch (Exception e)
+                    catch (final Exception e)
                     {
                         logger().error("getBeanSafely(" + name + "," + type.getName() + ") error.", e);
                     }
                 }
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger().error("getBeanSafely(" + name + "," + type.getName() + ") error.", e);
         }
@@ -182,7 +182,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final String getPropertyByName(final String name)
     {
-        final String valu = getEnvironment().getProperty(Objects.requireNonNull(name));
+        final String valu = getEnvironment().getProperty(requireNonNull(name));
 
         if (null != valu)
         {
@@ -194,7 +194,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final String getPropertyByName(final String name, final String otherwise)
     {
-        final String valu = getEnvironment().getProperty(Objects.requireNonNull(name));
+        final String valu = getEnvironment().getProperty(requireNonNull(name));
 
         if (null != valu)
         {
@@ -206,7 +206,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public String getPropertyByName(final String name, final Supplier<String> otherwise)
     {
-        final String valu = getEnvironment().getProperty(Objects.requireNonNull(name));
+        final String valu = getEnvironment().getProperty(requireNonNull(name));
 
         if (null != valu)
         {
@@ -246,66 +246,66 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final IFileItemStorageProvider getFileItemStorageProvider()
     {
-        return Objects.requireNonNull(getBeanSafely("FileItemStorageProvider", IFileItemStorageProvider.class), "FileItemStorageProvider is null, initialization error.");
+        return requireNonNull(getBeanSafely("FileItemStorageProvider", IFileItemStorageProvider.class), "FileItemStorageProvider is null, initialization error.");
     }
 
     @Override
     public IFileItemStorage getFileItemStorage(final String name)
     {
-        return getFileItemStorageProvider().getFileItemStorage(Objects.requireNonNull(name));
+        return getFileItemStorageProvider().getFileItemStorage(requireNonNull(name));
     }
 
     @Override
     public final IServerSessionRepositoryProvider getServerSessionRepositoryProvider()
     {
-        return Objects.requireNonNull(getBeanSafely("ServerSessionRepositoryProvider", IServerSessionRepositoryProvider.class), "ServerSessionRepositoryProvider is null, initialization error.");
+        return requireNonNull(getBeanSafely("ServerSessionRepositoryProvider", IServerSessionRepositoryProvider.class), "ServerSessionRepositoryProvider is null, initialization error.");
     }
 
     @Override
     public final IServerSessionRepository getServerSessionRepository(final String domain)
     {
-        return getServerSessionRepositoryProvider().getServerSessionRepository(Objects.requireNonNull(domain));
+        return getServerSessionRepositoryProvider().getServerSessionRepository(requireNonNull(domain));
     }
 
     @Override
     public final ICoreServerManager getCoreServerManager()
     {
-        return Objects.requireNonNull(getBeanSafely("CoreServerManager", ICoreServerManager.class), "CoreServerManager is null, initialization error.");
+        return requireNonNull(getBeanSafely("CoreServerManager", ICoreServerManager.class), "CoreServerManager is null, initialization error.");
     }
 
     @Override
     public final IBuildDescriptorProvider getBuildDescriptorProvider()
     {
-        return Objects.requireNonNull(getBeanSafely("BuildDescriptorProvider", IBuildDescriptorProvider.class), "BuildDescriptorProvider is null, initialization error.");
+        return requireNonNull(getBeanSafely("BuildDescriptorProvider", IBuildDescriptorProvider.class), "BuildDescriptorProvider is null, initialization error.");
     }
 
     @Override
     public IServletContextCustomizerProvider getServletContextCustomizerProvider()
     {
-        return Objects.requireNonNull(getBeanSafely("ServletContextCustomizerProvider", IServletContextCustomizerProvider.class), "ServletContextCustomizerProvider is null, initialization error.");
+        return requireNonNull(getBeanSafely("ServletContextCustomizerProvider", IServletContextCustomizerProvider.class), "ServletContextCustomizerProvider is null, initialization error.");
     }
 
     @Override
     public final ICryptoProvider getCryptoProvider()
     {
-        return Objects.requireNonNull(getBeanSafely("CryptoProvider", ICryptoProvider.class), "CryptoProvider is null, initialization error.");
+        return requireNonNull(getBeanSafely("CryptoProvider", ICryptoProvider.class), "CryptoProvider is null, initialization error.");
     }
 
     @Override
     public final ISignatoryProvider getSignatoryProvider()
     {
-        return Objects.requireNonNull(getBeanSafely("SignatoryProvider", ISignatoryProvider.class), "SignatoryProvider is null, initialization error.");
+        return requireNonNull(getBeanSafely("SignatoryProvider", ISignatoryProvider.class), "SignatoryProvider is null, initialization error.");
     }
 
     @Override
     public final ICoreNetworkProvider network()
     {
-        return Objects.requireNonNull(getBeanSafely("NetworkProvider", ICoreNetworkProvider.class), "NetworkProvider is null, initialization error.");
+        return requireNonNull(getBeanSafely("NetworkProvider", ICoreNetworkProvider.class), "NetworkProvider is null, initialization error.");
     }
 
     private final CorePropertiesResolver getCorePropertiesResolver()
     {
-        return Objects.requireNonNull(getBeanSafely("CorePropertiesResolver", CorePropertiesResolver.class), "CorePropertiesResolver is null, initialization error.");
+        return requireNonNull(getBeanSafely("CorePropertiesResolver", CorePropertiesResolver.class), "CorePropertiesResolver is null, initialization error.");
     }
 
     @Override
@@ -317,7 +317,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final MessageChannel getMessageChannel(final String name)
     {
-        MessageChannel channel = getBeanSafely(Objects.requireNonNull(name), MessageChannel.class);
+        MessageChannel channel = getBeanSafely(requireNonNull(name), MessageChannel.class);
 
         if (null != channel)
         {
@@ -335,13 +335,13 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final PublishSubscribeChannel getPublishSubscribeChannel(final String name)
     {
-        return getBeanSafely(Objects.requireNonNull(name), PublishSubscribeChannel.class);
+        return getBeanSafely(requireNonNull(name), PublishSubscribeChannel.class);
     }
 
     @Override
     public final SubscribableChannel getSubscribableChannel(final String name)
     {
-        final SubscribableChannel channel = getBeanSafely(Objects.requireNonNull(name), SubscribableChannel.class);
+        final SubscribableChannel channel = getBeanSafely(requireNonNull(name), SubscribableChannel.class);
 
         if (null != channel)
         {
@@ -353,41 +353,41 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final PollableChannel getPollableChannel(final String name)
     {
-        return getBeanSafely(Objects.requireNonNull(name), PollableChannel.class);
+        return getBeanSafely(requireNonNull(name), PollableChannel.class);
     }
 
     @Override
     public final boolean publish(final String name, final JSONObject message)
     {
-        return publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message)));
+        return publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)));
     }
 
     @Override
     public final boolean publish(final String name, final JSONObject message, final long timeout)
     {
-        return publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message)), timeout);
+        return publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)), timeout);
     }
 
     @Override
     public final boolean publish(final String name, final JSONObject message, final Map<String, ?> headers)
     {
-        return publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message), Objects.requireNonNull(headers)));
+        return publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)));
     }
 
     @Override
     public final boolean publish(final String name, final JSONObject message, final Map<String, ?> headers, final long timeout)
     {
-        return publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message), Objects.requireNonNull(headers)), timeout);
+        return publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)), timeout);
     }
 
     @Override
     public final <T> boolean publish(final String name, final Message<T> message)
     {
-        final MessageChannel channel = getMessageChannel(Objects.requireNonNull(name));
+        final MessageChannel channel = getMessageChannel(requireNonNull(name));
 
         if (null != channel)
         {
-            return channel.send(Objects.requireNonNull(message));
+            return channel.send(requireNonNull(message));
         }
         throw new IllegalArgumentException("MessageChannel " + name + " does not exist.");
     }
@@ -395,11 +395,11 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final <T> boolean publish(final String name, final Message<T> message, final long timeout)
     {
-        final MessageChannel channel = getMessageChannel(Objects.requireNonNull(name));
+        final MessageChannel channel = getMessageChannel(requireNonNull(name));
 
         if (null != channel)
         {
-            return channel.send(Objects.requireNonNull(message), timeout);
+            return channel.send(requireNonNull(message), timeout);
         }
         throw new IllegalArgumentException("MessageChannel " + name + " does not exist.");
     }
@@ -447,21 +447,27 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
+    public final <T> T requireNonNull(final T object, final Supplier<String> message)
+    {
+        return Objects.requireNonNull(object, message);
+    }
+
+    @Override
     public final IScriptingProvider scripting()
     {
-        return Objects.requireNonNull(getBeanSafely("ScriptingProvider", IScriptingProvider.class), "ScriptingProvider is null, initialization error.");
+        return requireNonNull(getBeanSafely("ScriptingProvider", IScriptingProvider.class), "ScriptingProvider is null, initialization error.");
     }
 
     @Override
     public final Resource resource(final String location)
     {
-        return getApplicationContext().getResource(Objects.requireNonNull(location));
+        return getApplicationContext().getResource(requireNonNull(location));
     }
 
     @Override
     public final Reader reader(final String location) throws IOException
     {
-        final Resource resource = resource(Objects.requireNonNull(location));
+        final Resource resource = resource(requireNonNull(location));
 
         if (null != resource)
         {
@@ -473,7 +479,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final IWebSocketServiceProvider getWebSocketServiceProvider()
     {
-        return Objects.requireNonNull(getBeanSafely("WebSocketServiceProvider", IWebSocketServiceProvider.class), "WebSocketServiceProvider is null, initialization error.");
+        return requireNonNull(getBeanSafely("WebSocketServiceProvider", IWebSocketServiceProvider.class), "WebSocketServiceProvider is null, initialization error.");
     }
 
     @Override
@@ -485,6 +491,6 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public CacheManager getCacheManager(final String name)
     {
-        return getBeanSafely(Objects.requireNonNull(name), CacheManager.class);
+        return getBeanSafely(requireNonNull(name), CacheManager.class);
     }
 }

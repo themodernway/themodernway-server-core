@@ -285,6 +285,11 @@ public trait CoreGroovyTrait implements JSONTrait
         Objects.requireNonNull(object, message)
     }
 
+    public <T> T requireNonNull(T object, Supplier<String> message)
+    {
+        Objects.requireNonNull(object, message)
+    }
+
     @Memoized
     public IScriptingProvider scripting()
     {

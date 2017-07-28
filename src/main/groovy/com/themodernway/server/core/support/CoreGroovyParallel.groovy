@@ -37,14 +37,14 @@ public class CoreGroovyParallel
     }
 
     @CompileStatic
-    public Collection<?> enhance(final Collection<?> collection)
+    public <T> Collection<T> enhance(final Collection<T> collection)
     {
         ParallelEnhancer.enhanceInstance(collection)
 
         collection
     }
 
-    public <T> Collection<T> collects(final Collection<?> collection, final Closure<? extends T> closure)
+    public <T> Collection<T> collect(final Collection<?> collection, final Closure<? extends T> closure)
     {
         enhance(collection).collectParallel(closure)
     }
@@ -52,7 +52,14 @@ public class CoreGroovyParallel
     @CompileStatic
     public void delay(final long timeout)
     {
-        delay(timeout, TimeUnit.MILLISECONDS)
+        try
+        {
+            sleep(timeout)
+        }
+        catch (InterruptedException e)
+        {
+            logger.error("delay(${timeout}, ${TimeUnit.MILLISECONDS.name()}).", e)
+        }
     }
 
     @CompileStatic
@@ -60,7 +67,7 @@ public class CoreGroovyParallel
     {
         try
         {
-            unit.sleep(timeout)
+            sleep(unit.toMillis(timeout))
         }
         catch (InterruptedException e)
         {

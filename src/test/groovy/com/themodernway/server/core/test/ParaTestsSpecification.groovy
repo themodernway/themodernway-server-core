@@ -37,12 +37,12 @@ public class ParaTestsSpecification extends ServerCoreSpecification implements C
     def "test parallel 1"()
     {
         setup:
-        echo "beg"
-        def list = parallel().collects([1,2,3,4]) { int i ->
-            parallel().delay(5000)
+        echo "beg 1"
+        def list = parallel().collect([1,2,3,4]) { int i ->
+            sleep(5000)
             "val ${i}"
         }
-        echo "end"
+        echo "end 1"
 
         expect:
         list.size() == 4
@@ -54,18 +54,35 @@ public class ParaTestsSpecification extends ServerCoreSpecification implements C
     def "test parallel 2"()
     {
         setup:
-        echo "beg"
-        def list = parallel().collects([1,2,3,4]) { int i ->
-            parallel().delay(5000)
-            parallel().collects(['A','B','C','D']) { String s ->
-                parallel().delay(5000)
+        echo "beg 2"
+        def list = parallel().collect([1,2,3,4]) { int i ->
+            sleep(5000)
+            parallel().collect(['A','B','C','D']) { String s ->
+                sleep(5000)
                 s + i
             }
         }
-        echo "end"
+        echo "end 2"
 
         expect:
         list.size() == 4
+
+        cleanup:
+        echo list
+    }
+
+    def "test parallel 3"()
+    {
+        setup:
+        echo "beg 3"
+        def list = parallel().collect(0..9) { int i ->
+            sleep(5000)
+            "val ${i}"
+        }
+        echo "end 3"
+
+        expect:
+        list.size() == 10
 
         cleanup:
         echo list

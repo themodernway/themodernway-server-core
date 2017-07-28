@@ -1,0 +1,123 @@
+/*
+ * Copyright (c) 2017, The Modern Way. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. ThreadLocal.withInitial(supplier);
+ */
+
+package com.themodernway.server.core;
+
+import java.io.Closeable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+
+public abstract class AbstractBeanFactoryProvider<T extends Closeable> implements IBeanFactoryProvider<T>
+{
+    private final Class<T>                 m_classof;
+
+    private final Logger                   m_logging = Logger.getLogger(getClass());
+
+    private final LinkedHashMap<String, T> m_storage = new LinkedHashMap<String, T>();
+
+    protected AbstractBeanFactoryProvider(final Class<T> classof)
+    {
+        m_classof = classof;
+    }
+
+    protected Class<T> getClassOf()
+    {
+        return m_classof;
+    }
+
+    protected String name(final String name, final T valu)
+    {
+        return toTrimOrNull(name);
+    }
+
+    protected boolean store(String name, final T valu)
+    {
+        if (null == valu)
+        {
+            logger().error("null valu.");
+
+            return false;
+        }
+        if (null == (name = name(name, valu)))
+        {
+            logger().error("null name.");
+
+            return false;
+        }
+        if (null != m_storage.putIfAbsent(name, valu))
+        {
+            logger().error(format("duplicate name(%s).", name));
+
+            return false;
+        }
+        logger().info(format("stored name(%s).", name));
+
+        return true;
+    }
+
+    @Override
+    public Logger logger()
+    {
+        return m_logging;
+    }
+
+    @Override
+    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException
+    {
+        getBeansOfTypeMap(beanFactory).forEach((name, valu) -> store(name, valu));
+    }
+
+    @Override
+    public List<T> items()
+    {
+        return toUnmodifiableList(m_storage.values());
+    }
+
+    @Override
+    public List<String> names()
+    {
+        return toUnmodifiableList(m_storage.keySet());
+    }
+
+    @Override
+    public T getItem(final String name)
+    {
+        return m_storage.get(name);
+    }
+
+    @Override
+    public boolean isDefined(final String name)
+    {
+        return m_storage.keySet().contains(name);
+    }
+
+    protected Map<String, T> getBeansOfTypeMap(final BeanFactory factory) throws BeansException
+    {
+        if (factory instanceof DefaultListableBeanFactory)
+        {
+            return Collections.unmodifiableMap(((DefaultListableBeanFactory) factory).getBeansOfType(getClassOf()));
+        }
+        return Collections.unmodifiableMap(new HashMap<String, T>());
+    }
+}
