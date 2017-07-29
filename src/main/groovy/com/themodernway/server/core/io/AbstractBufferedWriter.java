@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.vfs;
+package com.themodernway.server.core.io;
 
-import com.themodernway.server.core.AbstractBeanFactoryProviderNamed;
+import java.io.BufferedWriter;
+import java.io.Writer;
+import java.util.Objects;
 
-public class FileItemStorageProvider extends AbstractBeanFactoryProviderNamed<IFileItemStorage> implements IFileItemStorageProvider
+public abstract class AbstractBufferedWriter<T extends AbstractBufferedWriter<T>> extends BufferedWriter implements IFormatted<T>
 {
-    public FileItemStorageProvider()
+    public AbstractBufferedWriter(final Writer writer)
     {
-        super(IFileItemStorage.class);
+        super(Objects.requireNonNull(writer), IO.DEFAULT_BUFFER_CAPACITY);
+    }
+
+    public AbstractBufferedWriter(final Writer writer, final int capacity)
+    {
+        super(Objects.requireNonNull(writer), IO.toValidBufferCapacity(capacity));
     }
 }

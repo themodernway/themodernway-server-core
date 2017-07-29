@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.vfs;
+package com.themodernway.server.core.io;
 
-import com.themodernway.server.core.AbstractBeanFactoryProviderNamed;
+import java.io.FilterOutputStream;
+import java.io.OutputStream;
+import java.util.Objects;
 
-public class FileItemStorageProvider extends AbstractBeanFactoryProviderNamed<IFileItemStorage> implements IFileItemStorageProvider
+public abstract class AbstractProxyOutputStream<T extends AbstractProxyOutputStream<T>> extends FilterOutputStream implements IFormatted<T>
 {
-    public FileItemStorageProvider()
+    public AbstractProxyOutputStream(final OutputStream stream)
     {
-        super(IFileItemStorage.class);
+        super(Objects.requireNonNull(stream));
     }
 }

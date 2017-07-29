@@ -22,8 +22,8 @@ import java.nio.file.Path;
 public interface ICoreContentTypeMapper
 {
     public String getContentType(String file);
-    
+
     public String getContentType(Path path);
-    
+
     public String getContentType(File file);
 }

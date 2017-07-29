@@ -16,16 +16,14 @@
 
 package com.themodernway.server.core.io;
 
-import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Objects;
 
-public class NoCloseProxyWriter extends FilterWriter
+public class NoCloseProxyWriter extends AbstractProxyWriter<NoCloseProxyWriter>
 {
     public NoCloseProxyWriter(final Writer writer)
     {
-        super(Objects.requireNonNull(writer));
+        super(writer);
     }
 
     @Override

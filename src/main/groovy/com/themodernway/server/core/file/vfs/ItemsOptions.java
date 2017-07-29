@@ -82,11 +82,11 @@ public enum ItemsOptions implements IStringValued
         }
         final ArrayList<ItemsOptions> list = new ArrayList<ItemsOptions>();
 
-        for (String option : options)
+        for (final String option : options)
         {
             if (null != option)
             {
-                for (ItemsOptions item : ItemsOptions.values())
+                for (final ItemsOptions item : ItemsOptions.values())
                 {
                     if((false == list.contains(item)) && (item.getValue().equals(option.trim().toUpperCase())))
                     {

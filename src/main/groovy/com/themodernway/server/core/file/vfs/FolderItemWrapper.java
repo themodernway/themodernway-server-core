@@ -47,12 +47,12 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
         {
             return getWrappedItem().items(options).map(item -> item.wrap());
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
     }
-    
+
     @Override
     public Stream<IFileItemWrapper> items(final List<ItemsOptions> options) throws FileStorageException
     {
@@ -60,12 +60,12 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
         {
             return getWrappedItem().items(options).map(item -> item.wrap());
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
     }
-    
+
     @Override
     public Stream<IFileItemWrapper> items(final EnumSet<ItemsOptions> options) throws FileStorageException
     {
@@ -73,7 +73,7 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
         {
             return getWrappedItem().items(options).map(item -> item.wrap());
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -86,7 +86,7 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
         {
             return cast(getWrappedItem().find(name));
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -99,7 +99,7 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
         {
             return cast(getWrappedItem().file(name));
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -112,7 +112,7 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
         {
             return cast(getWrappedItem().create(name, file));
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -125,7 +125,7 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
         {
             return cast(getWrappedItem().create(name, path));
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -138,7 +138,7 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
         {
             return cast(getWrappedItem().create(name, reader));
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -151,7 +151,7 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
         {
             return cast(getWrappedItem().create(name, resource));
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -164,7 +164,7 @@ public class FolderItemWrapper extends AbstractFileItemWrapper<IFolderItem> impl
         {
             return cast(getWrappedItem().create(name, input));
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }

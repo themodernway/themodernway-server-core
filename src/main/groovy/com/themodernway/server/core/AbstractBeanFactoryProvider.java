@@ -67,7 +67,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         }
         if (null != m_storage.putIfAbsent(name, valu))
         {
-            logger().error(format("duplicate name(%s).", name));
+            logger().error(format("duplicate name(%s) ignored.", name));
 
             return false;
         }

@@ -20,17 +20,17 @@ public class FileStorageException extends RuntimeException
 {
     private static final long serialVersionUID = 1L;
 
-    public FileStorageException(Throwable e)
+    public FileStorageException(final Throwable e)
     {
         super(e);
     }
 
-    public FileStorageException(String message)
+    public FileStorageException(final String message)
     {
         super(message);
     }
-    
-    public FileStorageException(String message, Throwable e)
+
+    public FileStorageException(final String message, final Throwable e)
     {
         super(message, e);
     }

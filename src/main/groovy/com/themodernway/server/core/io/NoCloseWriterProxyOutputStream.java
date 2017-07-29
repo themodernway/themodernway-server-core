@@ -18,17 +18,16 @@ package com.themodernway.server.core.io;
 
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.Objects;
 
-public class NoCloseWriterProxyOutputStream extends WriterProxyOutputStream
+public class NoCloseWriterProxyOutputStream extends AbstractWriterProxyOutputStream<NoCloseWriterProxyOutputStream>
 {
     public NoCloseWriterProxyOutputStream(final Writer writer)
     {
-        super(new NoCloseProxyWriter(Objects.requireNonNull(writer)), IO.UTF_8_CHARSET);
+        super(new NoCloseProxyWriter(writer));
     }
 
     public NoCloseWriterProxyOutputStream(final Writer writer, final Charset charset)
     {
-        super(new NoCloseProxyWriter(Objects.requireNonNull(writer)), Objects.requireNonNull(charset));
+        super(new NoCloseProxyWriter(writer), charset);
     }
 }

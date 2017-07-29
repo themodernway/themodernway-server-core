@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * code example from http://blogs.oracle.com/jmxetc/entry/connecting_through_firewall_using_jmx modified for configuration, startup, cleanup from Spring
  */
 
@@ -64,7 +64,7 @@ public class JMXAgent implements Closeable
 
                 start();
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 logger.error("JMXAgent start() error", e);
 
@@ -85,7 +85,7 @@ public class JMXAgent implements Closeable
             {
                 m_cs.start();
             }
-            catch (IOException e)
+            catch (final IOException e)
             {
                 logger.error("JMXAgent start() error", e);
             }
@@ -119,7 +119,7 @@ public class JMXAgent implements Closeable
                     port = DEFAULT_JMX_PORT;
                 }
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 logger.error("port constructor arg [" + portstring + "] invalid, defaulting to " + DEFAULT_JMX_PORT, e);
 
@@ -134,7 +134,7 @@ public class JMXAgent implements Closeable
 
             logger.info("JMX port increment was " + incr);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("JMX port increment was " + incr, e);
         }
@@ -191,7 +191,7 @@ public class JMXAgent implements Closeable
                 m_cs.stop();
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("JMXAgent close() error", e);
         }

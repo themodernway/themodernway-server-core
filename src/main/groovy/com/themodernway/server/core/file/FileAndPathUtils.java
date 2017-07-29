@@ -90,7 +90,7 @@ public final class FileAndPathUtils
         return path;
     }
 
-    public static final String path(String path)
+    public static final String path(final String path)
     {
         Path look = Paths.get(path);
 
@@ -126,7 +126,7 @@ public final class FileAndPathUtils
         {
             path = path.substring(1).trim();
         }
-        int prfx = FilenameUtils.getPrefixLength(path);
+        final int prfx = FilenameUtils.getPrefixLength(path);
 
         if (prfx > 0)
         {
@@ -163,7 +163,7 @@ public final class FileAndPathUtils
         return path;
     }
 
-    public static final String concat(String path, String last)
+    public static final String concat(final String path, final String last)
     {
         return normalize(FilenameUtils.concat(normalize(path), normalize(trunk(last))));
     }

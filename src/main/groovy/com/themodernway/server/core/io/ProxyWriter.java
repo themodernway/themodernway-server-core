@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.vfs;
+package com.themodernway.server.core.io;
 
-import com.themodernway.server.core.AbstractBeanFactoryProviderNamed;
+import java.io.Writer;
 
-public class FileItemStorageProvider extends AbstractBeanFactoryProviderNamed<IFileItemStorage> implements IFileItemStorageProvider
+public class ProxyWriter extends AbstractProxyWriter<ProxyWriter>
 {
-    public FileItemStorageProvider()
+    public ProxyWriter(final Writer writer)
     {
-        super(IFileItemStorage.class);
+        super(writer);
     }
 }

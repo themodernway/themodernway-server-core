@@ -19,51 +19,51 @@ package com.themodernway.server.core.io;
 import java.io.IOException;
 import java.io.Writer;
 
-public class NoOpWriter extends Writer
+public class NoOpWriter extends Writer implements IFormatted<NoOpWriter>
 {
     public NoOpWriter()
     {
     }
 
     @Override
-    public void write(int c) throws IOException
+    public void write(final int c) throws IOException
     {
     }
 
     @Override
-    public void write(char cbuf[]) throws IOException
+    public void write(final char cbuf[]) throws IOException
     {
     }
 
     @Override
-    public void write(char cbuf[], int off, int len) throws IOException
+    public void write(final char cbuf[], final int off, final int len) throws IOException
     {
     }
 
     @Override
-    public void write(String str) throws IOException
+    public void write(final String str) throws IOException
     {
     }
 
     @Override
-    public void write(String str, int off, int len) throws IOException
+    public void write(final String str, final int off, final int len) throws IOException
     {
     }
 
     @Override
-    public Writer append(CharSequence csq) throws IOException
-    {
-        return this;
-    }
-
-    @Override
-    public Writer append(CharSequence csq, int start, int end) throws IOException
+    public NoOpWriter append(final CharSequence csq) throws IOException
     {
         return this;
     }
 
     @Override
-    public Writer append(char c) throws IOException
+    public NoOpWriter append(final CharSequence csq, final int start, final int end) throws IOException
+    {
+        return this;
+    }
+
+    @Override
+    public NoOpWriter append(final char c) throws IOException
     {
         return this;
     }

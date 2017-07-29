@@ -16,12 +16,8 @@
 
 package com.themodernway.server.core.file.vfs;
 
-import java.io.Closeable;
-import java.util.List;
+import com.themodernway.server.core.IBeanFactoryProviderNamed;
 
-public interface IFileItemStorageProvider extends Closeable
+public interface IFileItemStorageProvider extends IBeanFactoryProviderNamed<IFileItemStorage>
 {
-    public List<String> getFileItemStorageNames();
-
-    public IFileItemStorage getFileItemStorage(String name);
 }

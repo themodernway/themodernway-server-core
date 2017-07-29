@@ -130,6 +130,10 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
 
     public <T> T requireNonNull(T object, Supplier<String> message);
 
+    public <T> T requireNonNullOrElse(T object, T otherwise);
+
+    public <T> T requireNonNullOrElse(T object, Supplier<T> otherwise);
+
     public IScriptingProvider scripting();
 
     public Resource resource(String location);

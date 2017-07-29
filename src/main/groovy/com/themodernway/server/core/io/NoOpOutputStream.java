@@ -14,14 +14,39 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.vfs;
+package com.themodernway.server.core.io;
 
-import com.themodernway.server.core.AbstractBeanFactoryProviderNamed;
+import java.io.IOException;
+import java.io.OutputStream;
 
-public class FileItemStorageProvider extends AbstractBeanFactoryProviderNamed<IFileItemStorage> implements IFileItemStorageProvider
+public class NoOpOutputStream extends OutputStream implements IFormatted<NoOpOutputStream>
 {
-    public FileItemStorageProvider()
+    public NoOpOutputStream()
     {
-        super(IFileItemStorage.class);
+    }
+
+    @Override
+    public void write(final int b) throws IOException
+    {
+    }
+
+    @Override
+    public void write(final byte b[]) throws IOException
+    {
+    }
+
+    @Override
+    public void write(final byte b[], final int off, final int len) throws IOException
+    {
+    }
+
+    @Override
+    public void flush() throws IOException
+    {
+    }
+
+    @Override
+    public void close() throws IOException
+    {
     }
 }

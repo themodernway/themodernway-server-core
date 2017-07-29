@@ -34,7 +34,7 @@ import com.themodernway.server.core.io.IO;
 
 public class CoreContentTypeMapper implements ICoreContentTypeMapper, InitializingBean
 {
-    private Logger               m_logs = Logger.getLogger(getClass());
+    private final Logger         m_logs = Logger.getLogger(getClass());
 
     private String[]             m_type = null;
 
@@ -69,7 +69,7 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
 
             if (null != m_type)
             {
-                for (String type : m_type)
+                for (final String type : m_type)
                 {
                     m_logs.info(String.format("adding to (%s) mime type (%s).", m_rsrc, type));
 
@@ -92,7 +92,7 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
             {
                 m_maps = iniFileTypeMap();
             }
-            catch (IOException e)
+            catch (final IOException e)
             {
                 throw new IllegalStateException("Could not load specified MIME type mapping file: " + m_rsrc, e);
             }

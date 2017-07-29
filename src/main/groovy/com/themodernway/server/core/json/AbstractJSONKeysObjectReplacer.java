@@ -67,7 +67,7 @@ public abstract class AbstractJSONKeysObjectReplacer implements IJSONObjectKeysR
     @Override
     public final void add(final String... keys)
     {
-        for (String pkey : keys)
+        for (final String pkey : keys)
         {
             m_keys.add(pkey);
         }

@@ -80,7 +80,7 @@ public class CoreServerManager implements ICoreServerManager
         {
             setLoggingLevel(Level.toLevel(StringOps.toTrimOrNull(level), Level.INFO));
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("Error setting log level string to " + level, e);
         }

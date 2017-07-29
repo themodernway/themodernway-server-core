@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.Path;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.core.io.Resource;
@@ -28,6 +30,12 @@ public interface IFolderItemWrapper extends IFolderItem, IFileItemWrapper
 {
     @Override
     public Stream<IFileItemWrapper> items(ItemsOptions... options) throws FileStorageException;
+
+    @Override
+    public Stream<IFileItemWrapper> items(List<ItemsOptions> options) throws FileStorageException;
+
+    @Override
+    public Stream<IFileItemWrapper> items(EnumSet<ItemsOptions> options) throws FileStorageException;
 
     @Override
     public IFileItemWrapper find(String name) throws FileStorageException;

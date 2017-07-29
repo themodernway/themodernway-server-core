@@ -26,6 +26,8 @@ public interface IFileItemStorage extends INamed, Closeable
 {
     public boolean isOpen();
 
+    public boolean isWritable();
+
     public void validate() throws IOException;
 
     public String getBasePath();
@@ -35,8 +37,8 @@ public interface IFileItemStorage extends INamed, Closeable
     public IFileItemMetaDataFactory getFileItemMetaDataFactory();
 
     public void setFileItemMetaDataFactory(IFileItemMetaDataFactory meta);
-    
+
     public ICoreContentTypeMapper getContentTypeMapper();
-    
+
     public void setContentTypeMapper(ICoreContentTypeMapper maps);
 }

@@ -113,7 +113,7 @@ public trait CoreGroovyTrait implements JSONTrait
     @Memoized
     public IFileItemStorage getFileItemStorage(String name)
     {
-        getFileItemStorageProvider().getFileItemStorage(Objects.requireNonNull(name))
+        getFileItemStorageProvider().getItem(Objects.requireNonNull(name))
     }
 
     @Memoized
@@ -288,6 +288,16 @@ public trait CoreGroovyTrait implements JSONTrait
     public <T> T requireNonNull(T object, Supplier<String> message)
     {
         Objects.requireNonNull(object, message)
+    }
+
+    public <T> T requireNonNullOrElse(T object, T otherwise)
+    {
+        Objects.nonNull(object) ? object : otherwise
+    }
+
+    public <T> T requireNonNullOrElse(T object, Supplier<T> otherwise)
+    {
+        Objects.nonNull(object) ? object : otherwise.get()
     }
 
     @Memoized

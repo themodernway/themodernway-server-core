@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.output.WriterOutputStream;
 
-public class StringBuilderOutputStream extends WriterOutputStream implements CharSequence
+public class StringBuilderOutputStream extends WriterOutputStream implements CharSequence, IFormatted<StringBuilderOutputStream>
 {
     private final NoSyncStringBuilderWriter m_writer;
 

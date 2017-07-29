@@ -18,18 +18,17 @@ package com.themodernway.server.core.io;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Objects;
 
-public class NoSyncOrCloseBufferedWriter extends NoSyncBufferedWriter
+public class NoSyncOrCloseBufferedWriter extends AbstractNoSyncBufferedWriter<NoSyncOrCloseBufferedWriter>
 {
     public NoSyncOrCloseBufferedWriter(final Writer writer)
     {
-        super(Objects.requireNonNull(writer));
+        super(writer);
     }
 
     public NoSyncOrCloseBufferedWriter(final Writer writer, final int capacity)
     {
-        super(Objects.requireNonNull(writer), capacity);
+        super(writer, capacity);
     }
 
     @Override

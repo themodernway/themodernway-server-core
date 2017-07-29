@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 public abstract class ThreadLocalFormat<T, F extends Format>
 {
-    private ThreadLocal<F> m_local;
+    private final ThreadLocal<F> m_local;
 
     protected ThreadLocalFormat(final Supplier<F> supplier)
     {

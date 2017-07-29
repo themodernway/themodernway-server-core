@@ -16,16 +16,14 @@
 
 package com.themodernway.server.core.io;
 
-import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Objects;
 
-public class NoCloseProxyOutputStream extends FilterOutputStream
+public class NoCloseProxyOutputStream extends AbstractProxyOutputStream<NoCloseProxyOutputStream>
 {
     public NoCloseProxyOutputStream(final OutputStream stream)
     {
-        super(Objects.requireNonNull(stream));
+        super(stream);
     }
 
     @Override

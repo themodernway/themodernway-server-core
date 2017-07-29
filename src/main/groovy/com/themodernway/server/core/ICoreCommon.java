@@ -96,6 +96,16 @@ public interface ICoreCommon extends IHasLogging
         return Objects.requireNonNull(object, reason);
     }
 
+    default public <T> T requireNonNullOrElse(final T object, final T otherwise)
+    {
+        return (Objects.nonNull(object) ? object : otherwise);
+    }
+
+    default public <T> T requireNonNullOrElse(final T object, final Supplier<T> otherwise)
+    {
+        return (Objects.nonNull(object) ? object : otherwise.get());
+    }
+
     default public String getEnvironmentProperty(final String name)
     {
         return System.getenv(requireNonNull(name));

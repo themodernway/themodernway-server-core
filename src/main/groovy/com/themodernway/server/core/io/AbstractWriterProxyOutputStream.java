@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.vfs;
+package com.themodernway.server.core.io;
 
-import com.themodernway.server.core.AbstractBeanFactoryProviderNamed;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.Objects;
 
-public class FileItemStorageProvider extends AbstractBeanFactoryProviderNamed<IFileItemStorage> implements IFileItemStorageProvider
+import org.apache.commons.io.output.WriterOutputStream;
+
+public abstract class AbstractWriterProxyOutputStream<T extends AbstractWriterProxyOutputStream<T>> extends WriterOutputStream implements IFormatted<T>
 {
-    public FileItemStorageProvider()
+    public AbstractWriterProxyOutputStream(final Writer writer)
     {
-        super(IFileItemStorage.class);
+        super(Objects.requireNonNull(writer), IO.UTF_8_CHARSET);
+    }
+
+    public AbstractWriterProxyOutputStream(final Writer writer, final Charset charset)
+    {
+        super(Objects.requireNonNull(writer), Objects.requireNonNull(charset));
     }
 }

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Objects;
 
-public class NoSyncStringBuilderWriter extends Writer implements CharSequence
+public class NoSyncStringBuilderWriter extends Writer implements CharSequence, IFormatted<NoSyncStringBuilderWriter>
 {
     private final StringBuilder m_builder;
 
@@ -137,13 +137,13 @@ public class NoSyncStringBuilderWriter extends Writer implements CharSequence
     }
 
     @Override
-    public char charAt(int index)
+    public char charAt(final int index)
     {
         return m_builder.charAt(index);
     }
 
     @Override
-    public CharSequence subSequence(int start, int end)
+    public CharSequence subSequence(final int start, final int end)
     {
         return m_builder.subSequence(start, end);
     }

@@ -18,19 +18,16 @@ package com.themodernway.server.core.io;
 
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.Objects;
 
-import org.apache.commons.io.output.WriterOutputStream;
-
-public class WriterProxyOutputStream extends WriterOutputStream
+public class WriterProxyOutputStream extends AbstractWriterProxyOutputStream<WriterProxyOutputStream>
 {
     public WriterProxyOutputStream(final Writer writer)
     {
-        super(Objects.requireNonNull(writer), IO.UTF_8_CHARSET);
+        super(writer);
     }
 
     public WriterProxyOutputStream(final Writer writer, final Charset charset)
     {
-        super(Objects.requireNonNull(writer), Objects.requireNonNull(charset));
+        super(writer, charset);
     }
 }

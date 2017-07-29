@@ -252,7 +252,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public IFileItemStorage getFileItemStorage(final String name)
     {
-        return getFileItemStorageProvider().getFileItemStorage(requireNonNull(name));
+        return getFileItemStorageProvider().getItem(requireNonNull(name));
     }
 
     @Override
@@ -450,6 +450,18 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     public final <T> T requireNonNull(final T object, final Supplier<String> message)
     {
         return Objects.requireNonNull(object, message);
+    }
+
+    @Override
+    public <T> T requireNonNullOrElse(final T object, final T otherwise)
+    {
+        return (Objects.nonNull(object) ? object : otherwise);
+    }
+
+    @Override
+    public <T> T requireNonNullOrElse(final T object, final Supplier<T> otherwise)
+    {
+        return (Objects.nonNull(object) ? object : otherwise.get());
     }
 
     @Override

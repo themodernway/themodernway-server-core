@@ -22,13 +22,13 @@ import java.util.Objects;
 
 public class NoSyncStringReader extends Reader
 {
-    private String m_buff;
+    private String    m_buff;
 
-    private int    m_size;
+    private int       m_next;
 
-    private int    m_next;
+    private int       m_mark;
 
-    private int    m_mark;
+    private final int m_size;
 
     public NoSyncStringReader(final String buff)
     {
@@ -74,7 +74,7 @@ public class NoSyncStringReader extends Reader
         {
             return -1;
         }
-        int siz = Math.min(m_size - m_next, len);
+        final int siz = Math.min(m_size - m_next, len);
 
         m_buff.getChars(m_next, m_next + siz, chr, off);
 

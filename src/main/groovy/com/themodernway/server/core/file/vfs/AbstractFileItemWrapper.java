@@ -50,7 +50,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().getName();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -63,7 +63,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().getSize();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -76,7 +76,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().exists();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -89,7 +89,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().isHidden();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -102,7 +102,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().isReadable();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -115,7 +115,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().isWritable();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -128,7 +128,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().isFile();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -141,7 +141,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().isFolder();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -154,7 +154,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().delete();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -167,7 +167,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().getLastModified();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -180,7 +180,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().getFileSizeLimit();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -193,7 +193,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().getPath();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -206,7 +206,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().getAbsolutePath();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -219,7 +219,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().getContentType();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -232,7 +232,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().getMetaData();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -245,7 +245,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return cast(getWrappedItem().getRoot());
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -258,7 +258,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return cast(getWrappedItem().getParent());
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -271,7 +271,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return cast(getWrappedItem().getAsFolderItem());
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }
@@ -290,7 +290,7 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         {
             return getWrappedItem().lines();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new FileStorageException(e);
         }

@@ -81,6 +81,8 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
     private final IFolderItem        m_root;
 
+    private boolean                  m_mods = true;
+
     private boolean                  m_open = false;
 
     private ICoreContentTypeMapper   m_maps = null;
@@ -107,6 +109,17 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             logger.error(format("SimpleFileItemStorage(%s,%s) can't access.", m_name, m_base));
         }
+    }
+
+    @Override
+    public boolean isWritable()
+    {
+        return m_mods;
+    }
+
+    public void setWritable(final boolean mods)
+    {
+        m_mods = mods;
     }
 
     @Override
@@ -338,7 +351,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            return getFile().canWrite();
+            return getFile().canWrite() && getFileItemStorage().isWritable();
         }
 
         @Override
@@ -454,6 +467,10 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
+            if (false == getFileItemStorage().isWritable())
+            {
+                throw new IOException(format("Can't delete nowrite (%s).", getPath()));
+            }
             if (false == exists())
             {
                 throw new IOException(format("Can't delete missing (%s).", getPath()));
@@ -558,7 +575,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                     final SimpleFileVisitor<Path> visitor = new SimpleFileVisitor<Path>()
                     {
                         @Override
-                        public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes attr) throws IOException
+                        public FileVisitResult preVisitDirectory(final Path path, final BasicFileAttributes attr) throws IOException
                         {
                             if (root.equals(path))
                             {
@@ -578,7 +595,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                         }
 
                         @Override
-                        public FileVisitResult visitFile(Path path, BasicFileAttributes attr) throws IOException
+                        public FileVisitResult visitFile(final Path path, final BasicFileAttributes attr) throws IOException
                         {
                             final File file = path.toFile();
 
@@ -658,6 +675,10 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public IFileItem create(final String name, final File file) throws IOException
         {
+            if (false == getFileItemStorage().isWritable())
+            {
+                throw new IOException(format("Can't create nowrite (%s).", name));
+            }
             return create(name, file.toPath());
         }
 
@@ -666,6 +687,10 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
+            if (false == getFileItemStorage().isWritable())
+            {
+                throw new IOException(format("Can't create nowrite (%s).", name));
+            }
             InputStream stream = null;
 
             try
@@ -685,6 +710,10 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
+            if (false == getFileItemStorage().isWritable())
+            {
+                throw new IOException(format("Can't create nowrite (%s).", name));
+            }
             InputStream stream = null;
 
             try
@@ -704,6 +733,10 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
+            if (false == getFileItemStorage().isWritable())
+            {
+                throw new IOException(format("Can't create nowrite (%s).", name));
+            }
             InputStream stream = null;
 
             try
@@ -721,7 +754,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public IFileItem create(final String name, final InputStream input) throws IOException
         {
-            IFileItem item = file(name);
+            if (false == getFileItemStorage().isWritable())
+            {
+                throw new IOException(format("Can't create nowrite (%s).", name));
+            }
+            final IFileItem item = file(name);
 
             if (null != item)
             {
@@ -800,17 +837,17 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
     }
 
-    public static void main(String... strings)
+    public static void main(final String... strings)
     {
         try
         {
-            SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content");
+            final SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content");
 
             stor.getRoot().wrap().items(ItemsOptions.RECURSIVE).forEach(item -> System.out.println(String.format("file (%s) type (%s).", item.getName(), item.getMetaData())));
 
             stor.close();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             e.printStackTrace();
         }
