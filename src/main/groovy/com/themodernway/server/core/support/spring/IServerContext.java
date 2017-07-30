@@ -39,6 +39,7 @@ import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.ICoreJSONOperations;
 import com.themodernway.server.core.logging.IHasLogging;
+import com.themodernway.server.core.mail.IMailSender;
 import com.themodernway.server.core.scripting.IScriptingProvider;
 import com.themodernway.server.core.security.IAuthorizationProvider;
 import com.themodernway.server.core.security.IAuthorizer;
@@ -60,9 +61,13 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
 
     public boolean containsBean(String name);
 
+    public String getOriginalBeanName(String name);
+
     public <B> B getBean(String name, Class<B> type) throws Exception;
 
     public <B> B getBeanSafely(String name, Class<B> type);
+
+    public <B> Map<String, B> getBeansOfType(Class<B> type) throws Exception;
 
     public Environment getEnvironment();
 
@@ -141,4 +146,6 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public Reader reader(String location) throws IOException;
 
     public CacheManager getCacheManager(String name);
+
+    public IMailSender getMailSender();
 }

@@ -53,6 +53,7 @@ public abstract class AbstractFilterContextCustomizer implements IServletContext
         m_maps = StringOps.toUniqueArray(maps);
     }
 
+    @Override
     public Logger logger()
     {
         return m_logs;
@@ -75,7 +76,7 @@ public abstract class AbstractFilterContextCustomizer implements IServletContext
 
     public String[] getMappings()
     {
-        return m_maps;
+        return StringOps.toUniqueArray(m_maps);
     }
 
     @Override

@@ -22,12 +22,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.BeanFactoryUtils;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
@@ -195,6 +197,21 @@ public interface ICoreCommon extends IHasLogging
         return Collections.emptyList();
     }
 
+    default public <K,V> Map<K,V> emptyMap()
+    {
+        return Collections.emptyMap();
+    }
+
+    default public <K,V> Map<K,V> toUnmodifiableMap(final Map<K,V> maps)
+    {
+        return Collections.unmodifiableMap(maps);
+    }
+
+    default public <K,V> Map<K,V> asUnmodifiableMap()
+    {
+        return toUnmodifiableMap(emptyMap());
+    }
+
     default public <T> List<T> arrayList()
     {
         return new ArrayList<T>();
@@ -307,6 +324,11 @@ public interface ICoreCommon extends IHasLogging
     default public Logger logger()
     {
         return getServerContext().logger();
+    }
+
+    default public String getOriginalBeanName(final String name)
+    {
+        return toTrimOrNull(BeanFactoryUtils.originalBeanName(requireNonNull(name)));
     }
 
     default public IServerContext getServerContext()

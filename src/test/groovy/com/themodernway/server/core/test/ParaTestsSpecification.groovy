@@ -38,7 +38,7 @@ public class ParaTestsSpecification extends ServerCoreSpecification implements C
     {
         setup:
         echo "beg 1"
-        def list = parallel().collect([1,2,3,4]) { int i ->
+        def list = parallel([1,2,3,4]).collect { int i ->
             sleep(5000)
             "val ${i}"
         }
@@ -55,9 +55,9 @@ public class ParaTestsSpecification extends ServerCoreSpecification implements C
     {
         setup:
         echo "beg 2"
-        def list = parallel().collect([1,2,3,4]) { int i ->
+        def list = parallel([1,2,3,4]).collect { int i ->
             sleep(5000)
-            parallel().collect(['A','B','C','D']) { String s ->
+            parallel(['A','B','C','D']).collect { String s ->
                 sleep(5000)
                 s + i
             }
@@ -75,9 +75,10 @@ public class ParaTestsSpecification extends ServerCoreSpecification implements C
     {
         setup:
         echo "beg 3"
-        def list = parallel().collect(0..9) { int i ->
+        def list = parallel(0..9).collect { int i ->
+            echo "run ${i}"
             sleep(5000)
-            "val ${i}"
+            "range ${i}"
         }
         echo "end 3"
 

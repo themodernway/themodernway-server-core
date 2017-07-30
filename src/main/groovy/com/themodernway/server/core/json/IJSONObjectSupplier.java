@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.support
+package com.themodernway.server.core.json;
 
-import groovyx.gpars.ParallelEnhancer
-
-public final class CoreGroovyParallel
+@FunctionalInterface
+public interface IJSONObjectSupplier
 {
-    protected CoreGroovyParallel()
-    {
-    }
-
-    public static final <T> T parallel(final T collection)
-    {
-        ParallelEnhancer.enhanceInstance(Objects.requireNonNull(collection))
-
-        collection.makeConcurrent()
-
-        collection
-    }
+    public JSONObject toJSONObject();
 }

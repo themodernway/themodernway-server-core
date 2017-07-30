@@ -66,6 +66,7 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
         return m_rate;
     }
 
+    @Override
     public Logger logger()
     {
         return m_logs;
@@ -88,7 +89,7 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
 
     public String[] getMappings()
     {
-        return m_maps;
+        return StringOps.toUniqueArray(m_maps);
     }
 
     public List<String> getRequiredRoles()

@@ -255,6 +255,16 @@ public trait CoreGroovyTrait implements JSONTrait
         getServerContext().getBeanSafely(Objects.requireNonNull(name), Objects.requireNonNull(type))
     }
 
+    public <B> Map<String, B> getBeansOfType(Class<B> type) throws Exception
+    {
+        getServerContext().getBeansOfType(type)
+    }
+
+    public String getOriginalBeanName(String name)
+    {
+        getServerContext().getOriginalBeanName(name)
+    }
+
     public String uuid()
     {
         getServerContext().uuid()
@@ -334,9 +344,8 @@ public trait CoreGroovyTrait implements JSONTrait
         getServerContext().getCacheManager(name)
     }
 
-    @Memoized
-    public CoreGroovyParallel parallel()
+    public <T> T parallel(T collection)
     {
-        CoreGroovyParallel.getCoreGroovyParallel()
+        CoreGroovyParallel.parallel(collection)
     }
 }

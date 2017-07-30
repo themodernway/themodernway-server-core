@@ -21,10 +21,14 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.BeanNameAware;
 
+import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.json.IJSONObjectSupplier;
+import com.themodernway.server.core.json.JSONObject;
 
-public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, Closeable, ICoreCommon
+public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, BeanNameAware, Closeable, ICoreCommon, IJSONObjectSupplier, INamed
 {
     @Override
     default public void close() throws IOException
@@ -46,6 +50,12 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
         }
     }
 
+    @Override
+    default public JSONObject toJSONObject()
+    {
+        return new JSONObject();
+    }
+
     public List<T> items();
 
     public List<String> names();
@@ -53,4 +63,6 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
     public T getItem(String name);
 
     public boolean isDefined(String name);
+
+    public Class<T> getClassOf();
 }

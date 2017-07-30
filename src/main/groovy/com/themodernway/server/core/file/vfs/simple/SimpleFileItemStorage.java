@@ -391,7 +391,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            if (getPath().equals(SINGLE_SLASH))
+            if (normalize(getAbsolutePath()).equals(normalize(getFileItemStorage().getBasePath())))
             {
                 return null;
             }

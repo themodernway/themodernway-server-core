@@ -39,6 +39,7 @@ import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.binder.BinderType
 import com.themodernway.server.core.json.binder.IBinder
+import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.pubsub.JSONMessageBuilder
 import com.themodernway.server.core.scripting.IScriptingProvider
 import com.themodernway.server.core.security.AuthorizationResult
@@ -116,6 +117,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public List<String> getPrincipalsKeys()
     {
         getServerContext().getPrincipalsKeys()
+    }
+
+    @Memoized
+    public IMailSender getMailSender()
+    {
+        getServerContext().getMailSender()
     }
 
     @Memoized
@@ -305,6 +312,18 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Override
+    public <B> Map<String, B> getBeansOfType(Class<B> type) throws Exception
+    {
+        getServerContext().getBeansOfType(type)
+    }
+
+    @Override
+    public String getOriginalBeanName(String name)
+    {
+        getServerContext().getOriginalBeanName(name)
+    }
+
+    @Override
     public void close() throws IOException
     {
     }
@@ -399,10 +418,9 @@ public class CoreGroovySupport implements IServerContext, Closeable
         getServerContext().getCacheManager(name)
     }
 
-    @Memoized
-    public CoreGroovyParallel parallel()
+    public <T> T parallel(T collection)
     {
-        CoreGroovyParallel.getCoreGroovyParallel()
+        CoreGroovyParallel.parallel(collection)
     }
 
     @Override
