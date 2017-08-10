@@ -41,11 +41,11 @@ public class SpringDispatcherServletContextCustomizer extends AbstractServletCon
     protected Servlet doMakeServlet(final ServletContext sc, final WebApplicationContext context)
     {
         final CoreSpringDispatcherServlet inst = new CoreSpringDispatcherServlet(context);
-        
+
         inst.setRateLimit(getRateLimit());
-        
+
         inst.setRequiredRoles(getRequiredRoles());
-        
+
         return inst;
     }
 }

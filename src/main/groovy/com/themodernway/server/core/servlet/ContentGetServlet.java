@@ -88,7 +88,7 @@ public class ContentGetServlet extends AbstractContentServlet
 
             if (isRedirectOn())
             {
-                String redi = toTrimOrNull(getRedirect(request, response, path));
+                final String redi = toTrimOrNull(getRedirect(request, response, path));
 
                 if (null != redi)
                 {
@@ -145,7 +145,7 @@ public class ContentGetServlet extends AbstractContentServlet
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger().error("Captured overall exception for security.", e);
 
@@ -191,7 +191,7 @@ public class ContentGetServlet extends AbstractContentServlet
                     return false;
                 }
             }
-            catch (IllegalArgumentException e)
+            catch (final IllegalArgumentException e)
             {
                 logger().error("Captured header exception.", e);
             }

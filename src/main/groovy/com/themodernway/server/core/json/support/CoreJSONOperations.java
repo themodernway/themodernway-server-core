@@ -98,11 +98,13 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONArray jarr(final Future<?> future)
     {
+        Objects.requireNonNull(future);
+
         try
         {
             return jarr(future.get());
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -129,7 +131,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONArray jarr(final Map<String, ?> map)
     {
-        return jarr(json(map));
+        return jarr(json(Objects.requireNonNull(map)));
     }
 
     @SuppressWarnings("unchecked")
@@ -162,9 +164,9 @@ public class CoreJSONOperations implements ICoreJSONOperations
         {
             try
             {
-                return jarr(BinderType.JSON.getBinder().toJSONObject(object));
+                return jarr(binder().toJSONObject(object));
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 throw new RuntimeException(e);
             }
@@ -190,7 +192,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONArray jarr(final String name, final Object value)
     {
-        return jarr(json(name, value));
+        return jarr(json(Objects.requireNonNull(name), value));
     }
 
     @Override
@@ -222,11 +224,13 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONObject json(final Future<?> future)
     {
+        Objects.requireNonNull(future);
+
         try
         {
             return json(future.get());
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -276,9 +280,9 @@ public class CoreJSONOperations implements ICoreJSONOperations
         {
             try
             {
-                return BinderType.JSON.getBinder().toJSONObject(object);
+                return binder().toJSONObject(object);
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 throw new RuntimeException(e);
             }

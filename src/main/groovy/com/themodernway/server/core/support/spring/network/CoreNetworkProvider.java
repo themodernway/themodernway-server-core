@@ -35,7 +35,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
 {
     private String                                m_user_agent = HTTPHeaders.DEFAULT_USER_AGENT;
 
-    private List<Integer>                         m_good_codes = new ArrayList<Integer>();
+    private final List<Integer>                         m_good_codes = new ArrayList<Integer>();
 
     private static final PathParameters           EMPTY_PARAMS = new PathParameters();
 
@@ -44,13 +44,13 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
     private static final class CoreResponseErrorHandler implements ResponseErrorHandler
     {
         @Override
-        public boolean hasError(ClientHttpResponse response) throws IOException
+        public boolean hasError(final ClientHttpResponse response) throws IOException
         {
             return false;
         }
 
         @Override
-        public void handleError(ClientHttpResponse response) throws IOException
+        public void handleError(final ClientHttpResponse response) throws IOException
         {
         }
     }
@@ -212,7 +212,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
         {
             return new CoreRESTResponse(this, rest.exchange(curl, method, entity, String.class, params));
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             return new CoreRESTResponse(this, UNKNOWN_ERROR, e.getMessage(), headers);
         }
@@ -243,7 +243,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
     }
 
     @Override
-    public void setGoodCodes(List<Integer> list)
+    public void setGoodCodes(final List<Integer> list)
     {
         m_good_codes.clear();
 

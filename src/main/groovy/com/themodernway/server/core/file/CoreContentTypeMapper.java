@@ -36,6 +36,8 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
 {
     private final Logger         m_logs = Logger.getLogger(getClass());
 
+    private final Object         m_lock = new Object();
+
     private String[]             m_type = null;
 
     private MimetypesFileTypeMap m_maps = null;
@@ -51,7 +53,7 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
         m_rsrc = Objects.requireNonNull(resource);
     }
 
-    private final MimetypesFileTypeMap iniFileTypeMap() throws IOException
+    private synchronized final MimetypesFileTypeMap iniFileTypeMap() throws IOException
     {
         if (null != m_maps)
         {
@@ -84,17 +86,21 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
         }
     }
 
-    protected final FileTypeMap getFileTypeMap()
+    @Override
+    public FileTypeMap getFileTypeMap()
     {
         if (null == m_maps)
         {
-            try
+            synchronized (m_lock)
             {
-                m_maps = iniFileTypeMap();
-            }
-            catch (final IOException e)
-            {
-                throw new IllegalStateException("Could not load specified MIME type mapping file: " + m_rsrc, e);
+                try
+                {
+                    iniFileTypeMap();
+                }
+                catch (final IOException e)
+                {
+                    throw new IllegalStateException("Could not load specified MIME type mapping file: " + m_rsrc, e);
+                }
             }
         }
         return m_maps;

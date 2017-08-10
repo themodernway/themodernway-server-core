@@ -16,16 +16,13 @@
 
 package com.themodernway.server.core.support
 
-import groovyx.gpars.ParallelEnhancer
+import groovy.transform.CompileStatic
 
-public final class CoreGroovyParallel
+@CompileStatic
+public trait CoreGroovyParallelTrait
 {
-    protected CoreGroovyParallel()
+    public <T> T parallel(T collection)
     {
-    }
-
-    public static final <T> T parallel(final T collection)
-    {
-        ParallelEnhancer.enhanceInstance(Objects.requireNonNull(collection)).makeConcurrent()
+        CoreGroovyParallel.parallel(collection)
     }
 }

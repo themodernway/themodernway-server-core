@@ -47,6 +47,7 @@ import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.CoreJSONOperations;
 import com.themodernway.server.core.mail.IMailSender;
+import com.themodernway.server.core.mail.IMailSenderProvider;
 import com.themodernway.server.core.pubsub.JSONMessageBuilder;
 import com.themodernway.server.core.scripting.IScriptingProvider;
 import com.themodernway.server.core.security.AuthorizationResult;
@@ -259,9 +260,15 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public final IMailSender getMailSender()
+    public final IMailSenderProvider getMailSenderProvider()
     {
-        return requireNonNull(getBeanSafely("CoreMailSender", IMailSender.class), "CoreMailSender is null, initialization error.");
+        return requireNonNull(getBeanSafely("MailSenderProvider", IMailSenderProvider.class), "MailSenderProvider is null, initialization error.");
+    }
+
+    @Override
+    public final IMailSender getMailSender(final String name)
+    {
+        return getMailSenderProvider().getItem(requireNonNull(name));
     }
 
     @Override

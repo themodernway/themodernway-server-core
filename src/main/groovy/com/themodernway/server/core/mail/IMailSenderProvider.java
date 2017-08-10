@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.support
+package com.themodernway.server.core.mail;
 
-import groovyx.gpars.ParallelEnhancer
+import com.themodernway.server.core.IBeanFactoryProvider;
 
-public final class CoreGroovyParallel
+public interface IMailSenderProvider extends IBeanFactoryProvider<IMailSender>
 {
-    protected CoreGroovyParallel()
-    {
-    }
-
-    public static final <T> T parallel(final T collection)
-    {
-        ParallelEnhancer.enhanceInstance(Objects.requireNonNull(collection)).makeConcurrent()
-    }
 }

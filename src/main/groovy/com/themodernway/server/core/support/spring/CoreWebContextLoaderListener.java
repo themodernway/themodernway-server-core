@@ -43,7 +43,7 @@ public class CoreWebContextLoaderListener extends ContextLoaderListener
             {
                 final ServletContext sc = event.getServletContext();
 
-                for (IServletContextCustomizer customizer : getServerContext().getServletContextCustomizerProvider().getServletContextCustomizers())
+                for (final IServletContextCustomizer customizer : getServerContext().getServletContextCustomizerProvider().getServletContextCustomizers())
                 {
                     customizer.customize(sc, context);
                 }

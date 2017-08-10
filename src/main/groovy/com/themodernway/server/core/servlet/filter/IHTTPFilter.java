@@ -34,11 +34,11 @@ import com.themodernway.server.core.servlet.IServletCommonOperations;
 public interface IHTTPFilter extends Filter, IServletCommonOperations
 {
     public void filter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
-    
+
     public FilterConfig getFilterConfig();
-    
+
     public void setFilterConfig(FilterConfig fc);
-    
+
     public default void initialize() throws ServletException
     {
     }
@@ -71,14 +71,14 @@ public interface IHTTPFilter extends Filter, IServletCommonOperations
     {
         filter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
-    
+
     @Override
     public default void init(final FilterConfig fc) throws ServletException
     {
         setFilterConfig(fc);
-        
+
         initialize();
-        
+
         doInitializeMaxContentTypeLength();
     }
 }

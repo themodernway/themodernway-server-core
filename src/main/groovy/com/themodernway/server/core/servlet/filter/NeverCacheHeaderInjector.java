@@ -34,7 +34,7 @@ public class NeverCacheHeaderInjector extends HeaderInjectorBase
     public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
         doNeverCache(request, response);
-        
+
         return HttpServletResponse.SC_OK;
     }
 }

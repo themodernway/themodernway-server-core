@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.security.session;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,7 +24,7 @@ import java.util.List;
 
 import com.themodernway.common.api.java.util.StringOps;
 
-public interface IServerSessionHelper extends Serializable
+public interface IServerSessionHelper
 {
     public final static String               SP_STATUS_KEY                           = "status";
 
@@ -52,9 +51,8 @@ public interface IServerSessionHelper extends Serializable
     public final static List<String>         SP_DEFAULT_ROLES_LIST                   = Collections.unmodifiableList(Arrays.asList("ANONYMOUS"));
 
     public final static IServerSessionHelper SP_DEFAULT_HELPER_INSTANCE              = new IServerSessionHelper()
-                                                                                     {
-                                                                                         private static final long serialVersionUID = -3837786398300397591L;
-                                                                                     };
+    {
+    };
 
     default public String getStatusKey()
     {
@@ -127,7 +125,7 @@ public interface IServerSessionHelper extends Serializable
         {
             final HashSet<String> send = new HashSet<String>(list.size());
 
-            for (Object elem : list)
+            for (final Object elem : list)
             {
                 if (elem instanceof String)
                 {

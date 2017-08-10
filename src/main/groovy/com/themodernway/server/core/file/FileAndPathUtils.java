@@ -41,7 +41,7 @@ public final class FileAndPathUtils
 
     public static final String                POINT_SLASHY         = FilenameUtils.EXTENSION_SEPARATOR_STR + SINGLE_SLASH;
 
-    public static final CoreContentTypeMapper MIME_TYPE_OF         = new CoreContentTypeMapper();
+    public static final CoreContentTypeMapper CORE_MIMETYPE_MAPPER = new CoreContentTypeMapper();
 
     public static final Pattern               NOWHITESPACE_PATTERN = Pattern.compile("\\s");
 
@@ -53,12 +53,12 @@ public final class FileAndPathUtils
 
     public static final String getContentType(final File file)
     {
-        return MIME_TYPE_OF.getContentType(file);
+        return CORE_MIMETYPE_MAPPER.getContentType(file);
     }
 
     public static final String getContentType(final String path)
     {
-        return MIME_TYPE_OF.getContentType(normalize(path));
+        return CORE_MIMETYPE_MAPPER.getContentType(normalize(path));
     }
 
     public final static String extn(String path)

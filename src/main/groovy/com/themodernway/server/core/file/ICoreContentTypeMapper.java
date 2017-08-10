@@ -19,8 +19,12 @@ package com.themodernway.server.core.file;
 import java.io.File;
 import java.nio.file.Path;
 
+import javax.activation.FileTypeMap;
+
 public interface ICoreContentTypeMapper
 {
+    public FileTypeMap getFileTypeMap();
+
     public String getContentType(String file);
 
     public String getContentType(Path path);

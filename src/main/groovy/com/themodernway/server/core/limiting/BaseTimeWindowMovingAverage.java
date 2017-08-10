@@ -92,7 +92,7 @@ public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
 
         final double wcoeff = Math.exp(-1.0 * ((double) elapse / m_window));
 
-        m_moving = (1.0 - wcoeff) * sample + wcoeff * m_moving;
+        m_moving = ((1.0 - wcoeff) * sample) + (wcoeff * m_moving);
 
         m_moment = moment;
     }
@@ -204,7 +204,7 @@ public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
                             {
                                 m_base.getUnit().sleep(wait);
                             }
-                            catch (InterruptedException e)
+                            catch (final InterruptedException e)
                             {
                             }
                         }

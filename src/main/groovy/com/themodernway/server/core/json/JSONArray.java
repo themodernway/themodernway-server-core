@@ -113,7 +113,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
 
             for (int i = 0; i < size; i++)
             {
-                Object valu = list.get(i);
+                final Object valu = list.get(i);
 
                 if (first)
                 {
@@ -275,7 +275,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     }
 
     @Override
-    public boolean isNativeFunction(int index)
+    public boolean isNativeFunction(final int index)
     {
         return false;
     }
@@ -295,7 +295,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         {
             return ((Boolean) value);
         }
-        return JSONUtils.NULL();
+        return null;
     }
 
     @Override

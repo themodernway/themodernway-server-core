@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.support
+package com.themodernway.server.core.mail;
 
-import groovyx.gpars.ParallelEnhancer
+import org.springframework.mail.MailException;
 
-public final class CoreGroovyParallel
+public interface ISmartMailMessage
 {
-    protected CoreGroovyParallel()
-    {
-    }
-
-    public static final <T> T parallel(final T collection)
-    {
-        ParallelEnhancer.enhanceInstance(Objects.requireNonNull(collection)).makeConcurrent()
-    }
+    public void send() throws MailException;
 }

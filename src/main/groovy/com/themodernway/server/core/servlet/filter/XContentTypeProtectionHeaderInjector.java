@@ -24,7 +24,7 @@ public class XContentTypeProtectionHeaderInjector extends HeaderInjectorBase
     public XContentTypeProtectionHeaderInjector()
     {
     }
-    
+
     public XContentTypeProtectionHeaderInjector(final IHeaderInjectorFilter filter)
     {
         setHeaderInjectorFilter(filter);

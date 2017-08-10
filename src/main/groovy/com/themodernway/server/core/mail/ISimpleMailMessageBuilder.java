@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.support
+package com.themodernway.server.core.mail;
 
-import groovyx.gpars.ParallelEnhancer
+import java.util.Collection;
+import java.util.Date;
 
-public final class CoreGroovyParallel
+public interface ISimpleMailMessageBuilder
 {
-    protected CoreGroovyParallel()
-    {
-    }
+    public ISimpleMailMessageBuilder to(Collection<String> list);
 
-    public static final <T> T parallel(final T collection)
-    {
-        ParallelEnhancer.enhanceInstance(Objects.requireNonNull(collection)).makeConcurrent()
-    }
+    public ISimpleMailMessageBuilder cc(Collection<String> list);
+
+    public ISimpleMailMessageBuilder bcc(Collection<String> list);
+
+    public ISimpleMailMessageBuilder date(Date valu);
+
+    public ISimpleMailMessageBuilder from(String valu);
+
+    public ISimpleMailMessageBuilder text(String valu);
+
+    public ISimpleMailMessageBuilder reply(String valu);
+
+    public CoreSimpleMailMessage make();
 }

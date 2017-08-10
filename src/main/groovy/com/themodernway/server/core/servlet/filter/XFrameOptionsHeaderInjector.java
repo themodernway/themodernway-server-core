@@ -57,7 +57,7 @@ public class XFrameOptionsHeaderInjector extends HeaderInjectorBase
 
         if (null != options)
         {
-            for (String prefix : PREFIXES)
+            for (final String prefix : PREFIXES)
             {
                 if (options.startsWith(prefix))
                 {

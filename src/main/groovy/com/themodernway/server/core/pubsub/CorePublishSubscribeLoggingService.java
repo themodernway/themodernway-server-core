@@ -92,7 +92,7 @@ public class CorePublishSubscribeLoggingService implements ICoreLoggingOperation
     @Override
     public Level getLoggingLevel()
     {
-        Level level = m_logger.getLevel();
+        final Level level = m_logger.getLevel();
 
         if (null != level)
         {

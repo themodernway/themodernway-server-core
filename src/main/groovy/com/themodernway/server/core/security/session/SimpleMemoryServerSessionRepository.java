@@ -54,14 +54,14 @@ public class SimpleMemoryServerSessionRepository extends AbstractServerSessionRe
     {
         final HashSet<String> dead = new HashSet<String>();
 
-        for (IServerSession session : m_sessions.values())
+        for (final IServerSession session : m_sessions.values())
         {
             if (session.isExpired())
             {
                 dead.add(session.getId());
             }
         }
-        for (String id : dead)
+        for (final String id : dead)
         {
             delete(id);
         }

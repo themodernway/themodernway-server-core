@@ -297,7 +297,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
             }
             super.service(request, response);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger().error("captured overall exception for security.", e);
 

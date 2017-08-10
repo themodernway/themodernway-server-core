@@ -77,7 +77,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
     {
         setActive(false);
 
-        for (IServerSessionRepository repository : m_repositories.values())
+        for (final IServerSessionRepository repository : m_repositories.values())
         {
             if (null != repository)
             {
@@ -85,7 +85,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
                 {
                     repository.close();
                 }
-                catch (Exception e)
+                catch (final Exception e)
                 {
                     logger.error("ServerSessionRepositoryProvider.close() error.", e);
                 }
@@ -122,7 +122,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
     {
         if (factory instanceof DefaultListableBeanFactory)
         {
-            for (IServerSessionRepository repository : ((DefaultListableBeanFactory) factory).getBeansOfType(IServerSessionRepository.class).values())
+            for (final IServerSessionRepository repository : ((DefaultListableBeanFactory) factory).getBeansOfType(IServerSessionRepository.class).values())
             {
                 addSessionRepository(repository);
             }
@@ -132,7 +132,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
     @Override
     public void cleanExpiredSessions()
     {
-        for (IServerSessionRepository repository : m_repositories.values())
+        for (final IServerSessionRepository repository : m_repositories.values())
         {
             if (null != repository)
             {
@@ -140,7 +140,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
                 {
                     repository.cleanExpiredSessions();
                 }
-                catch (Exception e)
+                catch (final Exception e)
                 {
                     logger.error("ServerSessionRepositoryProvider.cleanExpiredSessions() error.", e);
                 }

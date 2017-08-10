@@ -26,7 +26,7 @@ public abstract class HeaderInjectorBase implements IHeaderInjector
 
     private int                   m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    private Logger                m_logger    = Logger.getLogger(getClass());
+    private final Logger          m_logger    = Logger.getLogger(getClass());
 
     protected HeaderInjectorBase()
     {
@@ -63,7 +63,7 @@ public abstract class HeaderInjectorBase implements IHeaderInjector
     {
         return m_filter;
     }
-    
+
     @Override
     public void setHeaderInjectorFilter(final IHeaderInjectorFilter filter)
     {

@@ -39,7 +39,7 @@ public class ServletContextCustomizerProvider implements IServletContextCustomiz
     @Override
     public void close() throws IOException
     {
-        for (IServletContextCustomizer customizer : getServletContextCustomizers())
+        for (final IServletContextCustomizer customizer : getServletContextCustomizers())
         {
             customizer.close();
         }
@@ -50,7 +50,7 @@ public class ServletContextCustomizerProvider implements IServletContextCustomiz
     {
         if (factory instanceof DefaultListableBeanFactory)
         {
-            for (IServletContextCustomizer customizer : ((DefaultListableBeanFactory) factory).getBeansOfType(IServletContextCustomizer.class).values())
+            for (final IServletContextCustomizer customizer : ((DefaultListableBeanFactory) factory).getBeansOfType(IServletContextCustomizer.class).values())
             {
                 m_customizers.add(customizer);
             }

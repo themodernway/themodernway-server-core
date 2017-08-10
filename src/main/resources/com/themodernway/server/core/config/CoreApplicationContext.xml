@@ -62,6 +62,8 @@
 		<constructor-arg value="${crypto.provider.bcrypt.iters}"/>
 	</bean>
 	
+	<bean id="MailSenderProvider" class="com.themodernway.server.core.mail.MailSenderProvider" destroy-method="close"/>
+	
 	<bean id="NetworkProvider" class="com.themodernway.server.core.support.spring.network.CoreNetworkProvider" destroy-method="close"/>
 	
 	<bean id="WebSocketServiceProvider" class="com.themodernway.server.core.support.spring.network.websocket.WebSocketServiceProvider" destroy-method="close"/>

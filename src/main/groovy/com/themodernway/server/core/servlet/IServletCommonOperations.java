@@ -105,7 +105,7 @@ public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, I
     {
         final JSONObject principals = new JSONObject();
 
-        for (String k : keys)
+        for (final String k : keys)
         {
             final String name = toTrimOrNull(k);
 
@@ -247,6 +247,7 @@ public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, I
         response.setDateHeader(EXPIRES_HEADER, ITimeSupplier.now() + WEEK_IN_MILLISECONDS);
     }
 
+    @Override
     public default Logger logger()
     {
         return getServerContext().logger();
@@ -299,7 +300,7 @@ public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, I
         return emptyList();
     }
 
-    public default String getConfigurationParameter(String name)
+    public default String getConfigurationParameter(final String name)
     {
         return null;
     }
@@ -316,7 +317,7 @@ public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, I
                 {
                     setMaxContentTypeLength(Math.min(Math.max(0, Integer.parseInt(size)), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH));
                 }
-                catch (Exception e)
+                catch (final Exception e)
                 {
                     logger().error(format("error parsing parameter (%s), value (%s).", CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM, size), e);
                 }
@@ -328,7 +329,7 @@ public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, I
     {
         final LinkedHashMap<String, String> conf = new LinkedHashMap<String, String>();
 
-        for (String name : getConfigurationParameterNames())
+        for (final String name : getConfigurationParameterNames())
         {
             final String valu = getConfigurationParameter(name);
 

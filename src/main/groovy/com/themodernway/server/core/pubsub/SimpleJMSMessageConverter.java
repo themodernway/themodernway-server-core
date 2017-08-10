@@ -64,7 +64,7 @@ public class SimpleJMSMessageConverter extends SimpleMessageConverter
             {
                 return new JSONParser().parse(((TextMessage) message).getText());
             }
-            catch (ParserException e)
+            catch (final ParserException e)
             {
                 throw new MessageConversionException("Error parsing JSON", e);
             }

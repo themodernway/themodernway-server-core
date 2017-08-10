@@ -21,21 +21,18 @@ import java.util.concurrent.TimeUnit;
 public interface ITimeWindowMovingAverage extends IAverageWindow
 {
     public void reset();
-    
+
     public long getWindow();
-    
+
     public long getWindow(TimeUnit unit);
-    
+
     public TimeUnit getUnit();
-    
-    @Override
-    public double getAverage();
-    
+
     public void tick(long duration, TimeUnit unit);
-    
+
     public String toPlaces(int places);
-    
+
     public ITimerHandle getTimerHandle();
-    
+
     public ITimerHandle getTimerHandle(boolean wait);
 }

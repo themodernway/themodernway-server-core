@@ -66,7 +66,7 @@ public class ContentUploadServlet extends AbstractContentServlet
 
             final List<FileItem> items = upload.parseRequest(request);
 
-            for (FileItem item : items)
+            for (final FileItem item : items)
             {
                 if (false == item.isFormField())
                 {
@@ -78,7 +78,7 @@ public class ContentUploadServlet extends AbstractContentServlet
 
                         return;
                     }
-                    IFileItem file = fold.file(item.getName());
+                    final IFileItem file = fold.file(item.getName());
 
                     if (null != file)
                     {
@@ -115,7 +115,7 @@ public class ContentUploadServlet extends AbstractContentServlet
                 }
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger().error("Captured overall exception for security.", e);
 

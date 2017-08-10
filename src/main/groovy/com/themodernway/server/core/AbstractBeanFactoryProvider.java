@@ -139,6 +139,6 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             return toUnmodifiableMap(((DefaultListableBeanFactory) factory).getBeansOfType(getClassOf()));
         }
-        return asUnmodifiableMap();
+        return toUnmodifiableMap(emptyMap());
     }
 }

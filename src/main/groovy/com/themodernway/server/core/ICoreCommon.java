@@ -39,9 +39,9 @@ import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 public interface ICoreCommon extends IHasLogging
 {
-    public static final int IS_NOT_FOUND = CommonOps.IS_NOT_FOUND;
+    public static final int    IS_NOT_FOUND = CommonOps.IS_NOT_FOUND;
 
-    public static String    EMPTY_STRING = StringOps.EMPTY_STRING;
+    public static final String EMPTY_STRING = StringOps.EMPTY_STRING;
 
     default public String format(final String format, final Object... args)
     {
@@ -197,19 +197,14 @@ public interface ICoreCommon extends IHasLogging
         return Collections.emptyList();
     }
 
-    default public <K,V> Map<K,V> emptyMap()
+    default public <K, V> Map<K, V> emptyMap()
     {
         return Collections.emptyMap();
     }
 
-    default public <K,V> Map<K,V> toUnmodifiableMap(final Map<K,V> maps)
+    default public <K, V> Map<K, V> toUnmodifiableMap(final Map<K, V> maps)
     {
         return Collections.unmodifiableMap(maps);
-    }
-
-    default public <K,V> Map<K,V> asUnmodifiableMap()
-    {
-        return toUnmodifiableMap(emptyMap());
     }
 
     default public <T> List<T> arrayList()

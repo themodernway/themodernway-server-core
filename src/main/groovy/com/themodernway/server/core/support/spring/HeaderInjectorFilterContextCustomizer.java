@@ -37,7 +37,7 @@ public class HeaderInjectorFilterContextCustomizer extends AbstractFilterContext
     {
         super(name, maps);
 
-        for (IHeaderInjector injector : injectors)
+        for (final IHeaderInjector injector : injectors)
         {
             if (null != injector)
             {
@@ -50,7 +50,7 @@ public class HeaderInjectorFilterContextCustomizer extends AbstractFilterContext
     {
         super(name, maps);
 
-        for (IHeaderInjector injector : injectors)
+        for (final IHeaderInjector injector : injectors)
         {
             if (null != injector)
             {

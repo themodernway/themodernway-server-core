@@ -39,12 +39,12 @@ public class CoreRESTResponse implements IRESTResponse
 
     private JSONObject                 m_json;
 
-    public CoreRESTResponse(ICoreNetworkProvider prov, final ResponseEntity<String> resp)
+    public CoreRESTResponse(final ICoreNetworkProvider prov, final ResponseEntity<String> resp)
     {
         this(prov, resp.getStatusCode().value(), (resp.hasBody() ? resp.getBody() : null), new HTTPHeaders(Collections.unmodifiableMap(resp.getHeaders())));
     }
 
-    public CoreRESTResponse(ICoreNetworkProvider prov, final int code, final String body, final HTTPHeaders head)
+    public CoreRESTResponse(final ICoreNetworkProvider prov, final int code, final String body, final HTTPHeaders head)
     {
         m_code = code;
 
@@ -84,7 +84,7 @@ public class CoreRESTResponse implements IRESTResponse
             }
             return (m_json = (new JSONParser().parse(body)));
         }
-        catch (ParserException e)
+        catch (final ParserException e)
         {
             logger.error("Error parsing JSON", e);
         }

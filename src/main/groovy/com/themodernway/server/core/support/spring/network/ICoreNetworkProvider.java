@@ -24,11 +24,11 @@ import com.themodernway.server.core.json.JSONObject;
 public interface ICoreNetworkProvider extends Closeable
 {
     public static final int UNKNOWN_ERROR = 520;
-    
+
     public String getDefaultUserAgent();
-    
+
     public void setDefaultUserAgent(String agent);
-    
+
     public IRESTResponse get(String path);
 
     public IRESTResponse get(String path, HTTPHeaders headers);
@@ -68,9 +68,9 @@ public interface ICoreNetworkProvider extends Closeable
     public IRESTResponse delete(String path, PathParameters params);
 
     public IRESTResponse delete(String path, PathParameters params, HTTPHeaders headers);
-    
+
     public boolean isGoodCode(int code);
-    
+
     public void setGoodCodes(List<Integer> list);
 
     public ISOAPClient soap(String path);

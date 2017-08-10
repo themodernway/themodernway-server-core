@@ -131,7 +131,6 @@ test {
     jacoco {
         append = false
         destinationFile = file("${buildDir}/jacoco/testing.exec")
-        //classDumpFile = file("${buildDir}/jacoco/classpathdumps")
     }
 }
 
@@ -148,7 +147,7 @@ findbugs {
     ignoreFailures = true
     toolVersion = "3.0.1"
     effort = "max"
-    excludeFilter = file("$rootProject.projectDir/config/findbugs/filter.xml")
+    excludeFilter = project.file('config/findbugs/filter.xml')
 }
 
 tasks.withType(FindBugs) {

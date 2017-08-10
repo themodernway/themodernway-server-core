@@ -40,6 +40,7 @@ import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.ICoreJSONOperations;
 import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.mail.IMailSender;
+import com.themodernway.server.core.mail.IMailSenderProvider;
 import com.themodernway.server.core.scripting.IScriptingProvider;
 import com.themodernway.server.core.security.IAuthorizationProvider;
 import com.themodernway.server.core.security.IAuthorizer;
@@ -147,5 +148,7 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
 
     public CacheManager getCacheManager(String name);
 
-    public IMailSender getMailSender();
+    public IMailSenderProvider getMailSenderProvider();
+
+    public IMailSender getMailSender(String name);
 }

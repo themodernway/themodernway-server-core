@@ -109,9 +109,9 @@ public class HTTPHeaders extends HttpHeaders
 
     public HTTPHeaders setHttpServletResponse(final HttpServletResponse response)
     {
-        for (String name : keySet())
+        for (final String name : keySet())
         {
-            for (String valu : get(name))
+            for (final String valu : get(name))
             {
                 response.addHeader(name, valu);
             }
@@ -121,11 +121,11 @@ public class HTTPHeaders extends HttpHeaders
 
     public HTTPHeaders setHttpServletResponse(final HttpServletResponse response, final Predicate<String> good)
     {
-        for (String name : keySet())
+        for (final String name : keySet())
         {
             if (good.test(name))
             {
-                for (String valu : get(name))
+                for (final String valu : get(name))
                 {
                     response.addHeader(name, valu);
                 }
@@ -136,7 +136,7 @@ public class HTTPHeaders extends HttpHeaders
 
     public HTTPHeaders setHttpServletResponse(final HttpServletResponse response, final Collection<String> send, final Collection<String> dont)
     {
-        for (String name : keySet())
+        for (final String name : keySet())
         {
             if ((null != dont) && (dont.contains(name)))
             {
@@ -144,7 +144,7 @@ public class HTTPHeaders extends HttpHeaders
             }
             if ((null == send) || (send.contains(name)))
             {
-                for (String valu : get(name))
+                for (final String valu : get(name))
                 {
                     response.addHeader(name, valu);
                 }
@@ -216,7 +216,7 @@ public class HTTPHeaders extends HttpHeaders
     {
         final Map<String, List<String>> make = new LinkedHashMap<String, List<String>>();
 
-        for (String k : keySet())
+        for (final String k : keySet())
         {
             make.put(k, get(k));
         }

@@ -42,10 +42,10 @@ public class ForwardResponseAction extends AbstractResponseAction
     public void call(final HttpServletRequest request, final HttpServletResponse response) throws Exception
     {
         setHeaders(response);
-        
+
         request.getRequestDispatcher(StringOps.requireTrimOrNull(getPath())).forward(request, response);
     }
-    
+
     @Override
     public IResponseAction withHeaders(final Supplier<Map<String, ?>> headers)
     {

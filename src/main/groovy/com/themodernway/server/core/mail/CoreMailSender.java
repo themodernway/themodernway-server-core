@@ -16,11 +16,167 @@
 
 package com.themodernway.server.core.mail;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Properties;
+
+import javax.activation.FileTypeMap;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
+import com.themodernway.server.core.file.FileAndPathUtils;
+import com.themodernway.server.core.file.ICoreContentTypeMapper;
+
+public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, InitializingBean
 {
+    private ICoreContentTypeMapper m_ctmapper;
+
+    private CoreSimpleMailMessage  m_template;
+
     public CoreMailSender()
     {
+    }
+
+    public CoreMailSender(final Properties properties)
+    {
+        setJavaMailProperties(properties);
+    }
+
+    @Override
+    public CoreSimpleMailMessage getTemplateMailMessage()
+    {
+        return m_template;
+    }
+
+    @Override
+    public void setTemplateMailMessage(final CoreSimpleMailMessage template)
+    {
+        m_template = template;
+    }
+
+    @Override
+    public void setContentTypeMapper(final ICoreContentTypeMapper ctmapper)
+    {
+        if (null != ctmapper)
+        {
+            final FileTypeMap fmap = ctmapper.getFileTypeMap();
+
+            if (null != fmap)
+            {
+                m_ctmapper = ctmapper;
+
+                setDefaultFileTypeMap(fmap);
+            }
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        if (null == m_ctmapper)
+        {
+            setContentTypeMapper(FileAndPathUtils.CORE_MIMETYPE_MAPPER);
+        }
+    }
+
+    @Override
+    public ISimpleMailMessageBuilder builder()
+    {
+        return new SimpleMailMessageBuilderDefault(this);
+    }
+
+    @Override
+    public ISimpleMailMessageBuilder builder(final SimpleMailMessage original)
+    {
+        if (null == original)
+        {
+            return new SimpleMailMessageBuilderDefault(this);
+        }
+        return new SimpleMailMessageBuilderDefault(original, this);
+    }
+
+    @Override
+    public void close() throws IOException
+    {
+    }
+
+    protected static class SimpleMailMessageBuilderDefault implements ISimpleMailMessageBuilder
+    {
+        private final CoreSimpleMailMessage m_mess;
+
+        public SimpleMailMessageBuilderDefault(final IMailSender sender)
+        {
+            m_mess = new CoreSimpleMailMessage(sender);
+        }
+
+        public SimpleMailMessageBuilderDefault(final SimpleMailMessage original, final IMailSender sender)
+        {
+            m_mess = new CoreSimpleMailMessage(original, sender);
+        }
+
+        @Override
+        public ISimpleMailMessageBuilder to(final Collection<String> list)
+        {
+            m_mess.setMailToList(list);
+
+            return this;
+        }
+
+        @Override
+        public ISimpleMailMessageBuilder cc(final Collection<String> list)
+        {
+            m_mess.setMailCcList(list);
+
+            return this;
+        }
+
+        @Override
+        public ISimpleMailMessageBuilder bcc(final Collection<String> list)
+        {
+            m_mess.setMailBccList(list);
+
+            return this;
+        }
+
+        @Override
+        public ISimpleMailMessageBuilder date(final Date valu)
+        {
+            m_mess.setSentDate(valu);
+
+            return this;
+        }
+
+        @Override
+        public ISimpleMailMessageBuilder from(final String valu)
+        {
+            m_mess.setFrom(valu);
+
+            return this;
+        }
+
+        @Override
+        public ISimpleMailMessageBuilder text(final String valu)
+        {
+            m_mess.setText(valu);
+
+            return this;
+        }
+
+        @Override
+        public ISimpleMailMessageBuilder reply(final String valu)
+        {
+            m_mess.setReplyTo(valu);
+
+            return this;
+        }
+
+        @Override
+        public CoreSimpleMailMessage make()
+        {
+            return m_mess;
+        }
     }
 }

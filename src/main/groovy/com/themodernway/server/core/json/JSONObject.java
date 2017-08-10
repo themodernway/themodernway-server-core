@@ -80,7 +80,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         final JSONObject json = new JSONObject();
 
-        for (String name : keys())
+        for (final String name : keys())
         {
             final Object object = get(name);
 
@@ -315,7 +315,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         {
             return ((Boolean) object);
         }
-        return JSONUtils.NULL();
+        return null;
     }
 
     @Override
@@ -346,7 +346,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         Objects.requireNonNull(keys);
 
-        for (String key : keys)
+        for (final String key : keys)
         {
             remove(key);
         }
@@ -357,7 +357,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         Objects.requireNonNull(keys);
 
-        for (String key : keys)
+        for (final String key : keys)
         {
             remove(key);
         }
@@ -393,14 +393,14 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         }
         try
         {
-            T valu = new JSONBinder().bind(this, type);
+            final T valu = new JSONBinder().bind(this, type);
 
             if (null != valu)
             {
                 return valu;
             }
         }
-        catch (ParserException e)
+        catch (final ParserException e)
         {
             throw new ClassCastException(getClass().getName() + " cannot be parsed into " + type.getName());
         }

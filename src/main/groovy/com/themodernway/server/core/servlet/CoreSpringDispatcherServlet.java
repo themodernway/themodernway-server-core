@@ -194,7 +194,7 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
             }
             super.service(request, response);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger().error("captured overall exception for security.", e);
 

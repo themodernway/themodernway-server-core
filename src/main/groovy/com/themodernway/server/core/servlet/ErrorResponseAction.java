@@ -39,7 +39,7 @@ public class ErrorResponseAction extends StatusCodeResponseAction
     {
         this(code, null);
     }
-    
+
     public ErrorResponseAction(final String mess)
     {
         this(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, mess);

@@ -34,6 +34,8 @@ import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
 import com.themodernway.server.core.jmx.management.ICoreServerManager
 import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.support.JSONTrait
+import com.themodernway.server.core.mail.IMailSender
+import com.themodernway.server.core.mail.IMailSenderProvider
 import com.themodernway.server.core.pubsub.JSONMessageBuilder
 import com.themodernway.server.core.scripting.IScriptingProvider
 import com.themodernway.server.core.security.AuthorizationResult
@@ -54,7 +56,7 @@ import groovy.transform.CompileStatic
 import groovy.transform.Memoized
 
 @CompileStatic
-public trait CoreGroovyTrait implements JSONTrait
+public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
 {
     @Memoized
     public IServerContext getServerContext()
@@ -113,7 +115,7 @@ public trait CoreGroovyTrait implements JSONTrait
     @Memoized
     public IFileItemStorage getFileItemStorage(String name)
     {
-        getFileItemStorageProvider().getItem(Objects.requireNonNull(name))
+        getFileItemStorageProvider().getItem(requireNonNull(name))
     }
 
     @Memoized
@@ -131,18 +133,18 @@ public trait CoreGroovyTrait implements JSONTrait
     @Memoized
     public String getPropertyByName(String name)
     {
-        getServerContext().getPropertyByName(Objects.requireNonNull(name))
+        getServerContext().getPropertyByName(requireNonNull(name))
     }
 
     @Memoized
     public String getPropertyByName(String name, String otherwise)
     {
-        getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
+        getServerContext().getPropertyByName(requireNonNull(name), otherwise)
     }
 
     public String getPropertyByName(String name, Supplier<String> otherwise)
     {
-        getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
+        getServerContext().getPropertyByName(requireNonNull(name), otherwise)
     }
 
     @Memoized
@@ -160,12 +162,12 @@ public trait CoreGroovyTrait implements JSONTrait
     @Memoized
     public IServerSessionRepository getServerSessionRepository(String domain)
     {
-        getServerSessionRepositoryProvider().getServerSessionRepository(Objects.requireNonNull(domain))
+        getServerSessionRepositoryProvider().getServerSessionRepository(requireNonNull(domain))
     }
 
     public AuthorizationResult isAuthorized(Object target, List<String> roles)
     {
-        getServerContext().isAuthorized(Objects.requireNonNull(target), Objects.requireNonNull(roles))
+        getServerContext().isAuthorized(requireNonNull(target), requireNonNull(roles))
     }
 
     @Memoized
@@ -189,70 +191,70 @@ public trait CoreGroovyTrait implements JSONTrait
     @Memoized
     public MessageChannel getMessageChannel(String name)
     {
-        getServerContext().getMessageChannel(Objects.requireNonNull(name))
+        getServerContext().getMessageChannel(requireNonNull(name))
     }
 
     @Memoized
     public PublishSubscribeChannel getPublishSubscribeChannel(String name)
     {
-        getServerContext().getPublishSubscribeChannel(Objects.requireNonNull(name))
+        getServerContext().getPublishSubscribeChannel(requireNonNull(name))
     }
 
     @Memoized
     public SubscribableChannel getSubscribableChannel(String name)
     {
-        getServerContext().getSubscribableChannel(Objects.requireNonNull(name))
+        getServerContext().getSubscribableChannel(requireNonNull(name))
     }
 
     @Memoized
     public PollableChannel getPollableChannel(String name)
     {
-        getServerContext().getPollableChannel(Objects.requireNonNull(name))
+        getServerContext().getPollableChannel(requireNonNull(name))
     }
 
     public boolean publish(String name, JSONObject message)
     {
-        publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message)))
+        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)))
     }
 
     public boolean publish(String name, JSONObject message, long timeout)
     {
-        publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message)), timeout)
+        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)), timeout)
     }
 
     public boolean publish(String name, JSONObject message, Map<String, ?> headers)
     {
-        publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message), Objects.requireNonNull(headers)))
+        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)))
     }
 
     public boolean publish(String name, JSONObject message, Map<String, ?> headers, long timeout)
     {
-        publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message), Objects.requireNonNull(headers)), timeout)
+        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)), timeout)
     }
 
     public <T> boolean publish(String name, Message<T> message)
     {
-        getServerContext().publish(Objects.requireNonNull(name), Objects.requireNonNull(message))
+        getServerContext().publish(requireNonNull(name), requireNonNull(message))
     }
 
     public <T> boolean publish(String name, Message<T> message, long timeout)
     {
-        getServerContext().publish(Objects.requireNonNull(name), Objects.requireNonNull(message), timeout)
+        getServerContext().publish(requireNonNull(name), requireNonNull(message), timeout)
     }
 
     public boolean containsBean(String name)
     {
-        getServerContext().containsBean(Objects.requireNonNull(name))
+        getServerContext().containsBean(requireNonNull(name))
     }
 
     public <B> B getBean(String name, Class<B> type) throws Exception
     {
-        getServerContext().getBean(Objects.requireNonNull(name), Objects.requireNonNull(type))
+        getServerContext().getBean(requireNonNull(name), requireNonNull(type))
     }
 
     public <B> B getBeanSafely(String name, Class<B> type)
     {
-        getServerContext().getBeanSafely(Objects.requireNonNull(name), Objects.requireNonNull(type))
+        getServerContext().getBeanSafely(requireNonNull(name), requireNonNull(type))
     }
 
     public <B> Map<String, B> getBeansOfType(Class<B> type) throws Exception
@@ -318,12 +320,12 @@ public trait CoreGroovyTrait implements JSONTrait
 
     public Resource resource(String location)
     {
-        getServerContext().resource(Objects.requireNonNull(location))
+        getServerContext().resource(requireNonNull(location))
     }
 
     public Reader reader(String location) throws IOException
     {
-        getServerContext().reader(Objects.requireNonNull(location))
+        getServerContext().reader(requireNonNull(location))
     }
 
     @Memoized
@@ -344,8 +346,15 @@ public trait CoreGroovyTrait implements JSONTrait
         getServerContext().getCacheManager(name)
     }
 
-    public <T> T parallel(T collection)
+    @Memoized
+    public IMailSenderProvider getMailSenderProvider()
     {
-        CoreGroovyParallel.parallel(collection)
+        getServerContext().getMailSenderProvider()
+    }
+
+    @Memoized
+    public IMailSender getMailSender(String name)
+    {
+        getMailSenderProvider().getItem(requireNonNull(name))
     }
 }

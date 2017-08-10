@@ -28,7 +28,7 @@ public abstract class HTTPFilterBase implements IHTTPFilter
 
     private FilterConfig m_config    = null;
 
-    private Logger       m_logger    = Logger.getLogger(getClass());
+    private final Logger m_logger    = Logger.getLogger(getClass());
 
     protected HTTPFilterBase()
     {
@@ -39,7 +39,7 @@ public abstract class HTTPFilterBase implements IHTTPFilter
     {
         return m_logger;
     }
-    
+
     @Override
     public boolean isMaxContentTypeLengthInitialized()
     {
@@ -65,7 +65,7 @@ public abstract class HTTPFilterBase implements IHTTPFilter
     {
         return m_config;
     }
-    
+
     @Override
     public void setFilterConfig(final FilterConfig fc)
     {

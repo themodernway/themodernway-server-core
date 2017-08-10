@@ -50,7 +50,7 @@ public interface IServerCoreTesting
         {
             final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(locations, false);
 
-            ServerContextInstance instance = ServerContextInstance.getServerContextInstance();
+            final ServerContextInstance instance = ServerContextInstance.getServerContextInstance();
 
             ServerContextInstance.setApplicationContext(context);
 

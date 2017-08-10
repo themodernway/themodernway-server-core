@@ -40,6 +40,7 @@ import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.binder.BinderType
 import com.themodernway.server.core.json.binder.IBinder
 import com.themodernway.server.core.mail.IMailSender
+import com.themodernway.server.core.mail.IMailSenderProvider
 import com.themodernway.server.core.pubsub.JSONMessageBuilder
 import com.themodernway.server.core.scripting.IScriptingProvider
 import com.themodernway.server.core.security.AuthorizationResult
@@ -120,9 +121,15 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Memoized
-    public IMailSender getMailSender()
+    public IMailSenderProvider getMailSenderProvider()
     {
-        getServerContext().getMailSender()
+        getServerContext().getMailSenderProvider()
+    }
+
+    @Memoized
+    public IMailSender getMailSender(String name)
+    {
+        getMailSenderProvider().getItem(requireNonNull(name))
     }
 
     @Memoized
@@ -146,7 +153,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Memoized
     public IFileItemStorage getFileItemStorage(String name)
     {
-        getFileItemStorageProvider().getItem(Objects.requireNonNull(name))
+        getFileItemStorageProvider().getItem(requireNonNull(name))
     }
 
     @Memoized
@@ -164,19 +171,19 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Memoized
     public String getPropertyByName(String name)
     {
-        getServerContext().getPropertyByName(Objects.requireNonNull(name))
+        getServerContext().getPropertyByName(requireNonNull(name))
     }
 
     @Memoized
     public String getPropertyByName(String name, String otherwise)
     {
-        getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
+        getServerContext().getPropertyByName(requireNonNull(name), otherwise)
     }
 
     @Override
     public String getPropertyByName(String name, Supplier<String> otherwise)
     {
-        getServerContext().getPropertyByName(Objects.requireNonNull(name), otherwise)
+        getServerContext().getPropertyByName(requireNonNull(name), otherwise)
     }
 
     @Memoized
@@ -194,13 +201,13 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Memoized
     public IServerSessionRepository getServerSessionRepository(String domain)
     {
-        getServerSessionRepositoryProvider().getServerSessionRepository(Objects.requireNonNull(domain))
+        getServerSessionRepositoryProvider().getServerSessionRepository(requireNonNull(domain))
     }
 
     @Override
     public AuthorizationResult isAuthorized(Object target, List<String> roles)
     {
-        getServerContext().isAuthorized(Objects.requireNonNull(target), Objects.requireNonNull(roles))
+        getServerContext().isAuthorized(requireNonNull(target), requireNonNull(roles))
     }
 
     @Memoized
@@ -224,59 +231,59 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Memoized
     public MessageChannel getMessageChannel(String name)
     {
-        getServerContext().getMessageChannel(Objects.requireNonNull(name))
+        getServerContext().getMessageChannel(requireNonNull(name))
     }
 
     @Memoized
     public PublishSubscribeChannel getPublishSubscribeChannel(String name)
     {
-        getServerContext().getPublishSubscribeChannel(Objects.requireNonNull(name))
+        getServerContext().getPublishSubscribeChannel(requireNonNull(name))
     }
 
     @Memoized
     public SubscribableChannel getSubscribableChannel(String name)
     {
-        getServerContext().getSubscribableChannel(Objects.requireNonNull(name))
+        getServerContext().getSubscribableChannel(requireNonNull(name))
     }
 
     @Memoized
     public PollableChannel getPollableChannel(String name)
     {
-        getServerContext().getPollableChannel(Objects.requireNonNull(name))
+        getServerContext().getPollableChannel(requireNonNull(name))
     }
 
     @Override
     public boolean publish(String name, JSONObject message)
     {
-        publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message)))
+        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)))
     }
 
     @Override
     public boolean publish(String name, JSONObject message, long timeout)
     {
-        publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message)), timeout)
+        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)), timeout)
     }
 
     @Override
     public boolean publish(String name, JSONObject message, Map<String, ?> headers)
     {
-        publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message), Objects.requireNonNull(headers)))
+        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)))
     }
 
     @Override
     public boolean publish(String name, JSONObject message, Map<String, ?> headers, long timeout)
     {
-        publish(Objects.requireNonNull(name), JSONMessageBuilder.createMessage(Objects.requireNonNull(message), Objects.requireNonNull(headers)), timeout)
+        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)), timeout)
     }
 
     @Override
     public <T> boolean publish(String name, Message<T> message)
     {
-        def channel = getMessageChannel(Objects.requireNonNull(name))
+        def channel = getMessageChannel(requireNonNull(name))
 
         if (channel)
         {
-            return channel.send(Objects.requireNonNull(message))
+            return channel.send(requireNonNull(message))
         }
         throw new IllegalArgumentException("MessageChannel ${name} does not exist.")
     }
@@ -284,11 +291,11 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public <T> boolean publish(String name, Message<T> message, long timeout)
     {
-        def channel = getMessageChannel(Objects.requireNonNull(name))
+        def channel = getMessageChannel(requireNonNull(name))
 
         if (channel)
         {
-            return channel.send(Objects.requireNonNull(message), timeout)
+            return channel.send(requireNonNull(message), timeout)
         }
         throw new IllegalArgumentException("MessageChannel ${name} does not exist.")
     }
@@ -296,31 +303,31 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public boolean containsBean(String name)
     {
-        getServerContext().containsBean(Objects.requireNonNull(name))
+        getServerContext().containsBean(requireNonNull(name))
     }
 
     @Override
     public <B> B getBean(String name, Class<B> type) throws Exception
     {
-        getServerContext().getBean(Objects.requireNonNull(name), Objects.requireNonNull(type))
+        getServerContext().getBean(requireNonNull(name), requireNonNull(type))
     }
 
     @Override
     public <B> B getBeanSafely(String name, Class<B> type)
     {
-        getServerContext().getBeanSafely(Objects.requireNonNull(name), Objects.requireNonNull(type))
+        getServerContext().getBeanSafely(requireNonNull(name), requireNonNull(type))
     }
 
     @Override
     public <B> Map<String, B> getBeansOfType(Class<B> type) throws Exception
     {
-        getServerContext().getBeansOfType(type)
+        getServerContext().getBeansOfType(requireNonNull(type))
     }
 
     @Override
     public String getOriginalBeanName(String name)
     {
-        getServerContext().getOriginalBeanName(name)
+        getServerContext().getOriginalBeanName(requireNonNull(name))
     }
 
     @Override
@@ -391,13 +398,13 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public Resource resource(String location)
     {
-        getServerContext().resource(Objects.requireNonNull(location))
+        getServerContext().resource(requireNonNull(location))
     }
 
     @Override
     public Reader reader(String location) throws IOException
     {
-        getServerContext().reader(Objects.requireNonNull(location))
+        getServerContext().reader(requireNonNull(location))
     }
 
     @Memoized
@@ -409,18 +416,18 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Memoized
     public IWebSocketService getWebSocketService(String name)
     {
-        getWebSocketServiceProvider().getWebSocketService(name)
+        getWebSocketServiceProvider().getWebSocketService(requireNonNull(name))
     }
 
     @Memoized
     public CacheManager getCacheManager(String name)
     {
-        getServerContext().getCacheManager(name)
+        getServerContext().getCacheManager(requireNonNull(name))
     }
 
     public <T> T parallel(T collection)
     {
-        CoreGroovyParallel.parallel(collection)
+        CoreGroovyParallel.parallel(requireNonNull(collection))
     }
 
     @Override
@@ -432,7 +439,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public IBinder binder(BinderType type)
     {
-        getServerContext().binder(type)
+        getServerContext().binder(requireNonNull(type))
     }
 
     @Override
@@ -522,7 +529,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public JSONObject json(Map<String, ?> map)
     {
-        new JSONObject(Objects.requireNonNull(map))
+        new JSONObject(requireNonNull(map))
     }
 
     @Override
@@ -540,6 +547,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public JSONObject json(String name, Object value)
     {
-        new JSONObject(Objects.requireNonNull(name), value)
+        new JSONObject(requireNonNull(name), value)
     }
 }

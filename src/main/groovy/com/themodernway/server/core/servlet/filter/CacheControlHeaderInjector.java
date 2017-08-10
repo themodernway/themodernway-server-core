@@ -31,7 +31,7 @@ public class CacheControlHeaderInjector extends HeaderInjectorBase
     private String              m_near_cache_regex = null;
 
     private String              m_skip_cache_regex = null;
-    
+
     public CacheControlHeaderInjector()
     {
     }

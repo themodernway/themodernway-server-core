@@ -91,7 +91,7 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
         {
             final DefaultListableBeanFactory listable = ((DefaultListableBeanFactory) factory);
 
-            for (String name : listable.getBeanNamesForType(IWebSocketService.class))
+            for (final String name : listable.getBeanNamesForType(IWebSocketService.class))
             {
                 final BeanDefinition defn = listable.getBeanDefinition(name);
 
@@ -151,7 +151,7 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
     @Override
     public void close() throws IOException
     {
-        for (IWebSocketServiceSession sock : m_sessions.values())
+        for (final IWebSocketServiceSession sock : m_sessions.values())
         {
             if (null != sock)
             {
@@ -159,7 +159,7 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
                 {
                     sock.close();
                 }
-                catch (Exception e)
+                catch (final Exception e)
                 {
                     logger.error(sock.getId(), e);
                 }
@@ -257,7 +257,7 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
 
             boolean find = false;
 
-            for (Entry<String, String> each : m_want.entrySet())
+            for (final Entry<String, String> each : m_want.entrySet())
             {
                 final String look = have.get(each.getKey());
 

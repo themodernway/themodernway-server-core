@@ -20,24 +20,36 @@ public class BinderPOJO
 {
     private String m_name = "";
 
+    private String m_scrp = "<script type=\"text/javascript\" src=\"ext/ext-all.js\"></script>";
+
     private double m_cost = 0d;
-    
-    private long m_time = System.currentTimeMillis();
+
+    private long   m_time = System.currentTimeMillis();
 
     public BinderPOJO()
     {
     }
-    
-    public BinderPOJO(String name)
+
+    public BinderPOJO(final String name)
     {
         m_name = name;
     }
-    
-    public BinderPOJO(String name, double cost)
+
+    public BinderPOJO(final String name, final double cost)
     {
         m_name = name;
-        
+
         m_cost = cost;
+    }
+
+    public String getScript()
+    {
+        return m_scrp;
+    }
+
+    public void setScript(final String scrp)
+    {
+        m_scrp = scrp;
     }
 
     public String getName()
@@ -45,26 +57,26 @@ public class BinderPOJO
         return m_name;
     }
 
-    public void setName(String name)
+    public void setName(final String name)
     {
         m_name = name;
     }
-    
+
     public double getCost()
     {
         return m_cost;
     }
 
-    public void setCost(double cost)
+    public void setCost(final double cost)
     {
         m_cost = cost;
     }
-    
-    public void setTime(long time)
+
+    public void setTime(final long time)
     {
         m_time = time;
     }
-    
+
     public long getTime()
     {
         return m_time;

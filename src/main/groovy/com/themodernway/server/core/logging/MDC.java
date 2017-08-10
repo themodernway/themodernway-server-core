@@ -23,7 +23,7 @@ import com.themodernway.common.api.java.util.StringOps;
 public final class MDC
 {
     private static final Logger logger = Logger.getLogger(MDC.class);
-    
+
     private MDC()
     {
     }
@@ -34,7 +34,7 @@ public final class MDC
         {
             org.apache.log4j.MDC.clear();
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             e.printStackTrace();
         }
@@ -48,7 +48,7 @@ public final class MDC
         {
             org.apache.log4j.MDC.put(key, val);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("put()", e);
         }
@@ -62,7 +62,7 @@ public final class MDC
         {
             org.apache.log4j.MDC.remove(key);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             e.printStackTrace();
         }
@@ -76,7 +76,7 @@ public final class MDC
         {
             return org.apache.log4j.MDC.get(key);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             e.printStackTrace();
         }

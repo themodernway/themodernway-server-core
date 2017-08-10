@@ -49,7 +49,7 @@ public class RedirectResponseAction extends StatusCodeResponseAction
     public void call(final HttpServletRequest request, final HttpServletResponse response) throws Exception
     {
         setHeaders(response);
-        
+
         response.sendRedirect(StringOps.requireTrimOrNull(getPath()));
     }
 

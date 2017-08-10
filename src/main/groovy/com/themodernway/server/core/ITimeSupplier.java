@@ -45,11 +45,6 @@ public interface ITimeSupplier
         return () -> time;
     }
 
-    public static ITimeSupplier ofLong(final Date date)
-    {
-        return ofLong(date.getTime());
-    }
-
     public static ITimeSupplier ofLong(final Supplier<Long> time)
     {
         return () -> time.get();

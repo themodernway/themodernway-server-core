@@ -49,7 +49,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
     @Override
     public void destroy()
     {
-        for (IHeaderInjector injector : getHeaderInjectors())
+        for (final IHeaderInjector injector : getHeaderInjectors())
         {
             if (null != injector)
             {
@@ -89,7 +89,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
     {
         if (null != injectors)
         {
-            for (IHeaderInjector injector : injectors)
+            for (final IHeaderInjector injector : injectors)
             {
                 addHeaderInjector(injector);
             }
@@ -109,7 +109,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
     {
         if (null != injectors)
         {
-            for (IHeaderInjector injector : injectors)
+            for (final IHeaderInjector injector : injectors)
             {
                 addHeaderInjector(injector);
             }
@@ -125,7 +125,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
     @Override
     public void initialize() throws ServletException
     {
-        for (IHeaderInjector injector : getHeaderInjectors())
+        for (final IHeaderInjector injector : getHeaderInjectors())
         {
             if (null != injector)
             {
@@ -150,7 +150,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
     @Override
     public void filter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain) throws IOException, ServletException
     {
-        for (IHeaderInjector injector : getHeaderInjectors())
+        for (final IHeaderInjector injector : getHeaderInjectors())
         {
             if (null != injector)
             {
@@ -165,7 +165,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
                         return;
                     }
                 }
-                catch (Throwable t)
+                catch (final Throwable t)
                 {
                     logger().error("Could not inject headers " + injector.getName(), t);
 

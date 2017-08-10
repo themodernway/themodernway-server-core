@@ -60,7 +60,7 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
         }
         return otherwise;
     }
-    
+
     @Override
     public String getPropertyByName(final String name, final Supplier<String> otherwise)
     {
@@ -97,10 +97,10 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
             try
             {
                 logger.info("${" + name + "}");
-                
+
                 return m_factory.resolveEmbeddedValue("${" + name + "}");
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 return null;
             }

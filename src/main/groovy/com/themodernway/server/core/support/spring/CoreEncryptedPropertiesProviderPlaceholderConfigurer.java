@@ -79,7 +79,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
         {
             setLoggingLevel(Level.toLevel(StringOps.toTrimOrNull(level), Level.DEBUG));
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("Error setting log level string to " + level, e);
         }
@@ -159,7 +159,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
         }
 
         @Override
-        public void storeToXml(final Properties props, final OutputStream os, String header) throws IOException
+        public void storeToXml(final Properties props, final OutputStream os, final String header) throws IOException
         {
             if (m_parent.isEncryptOnSave())
             {
@@ -224,7 +224,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
             final LinkedHashMap<String, String> saved = new LinkedHashMap<String, String>(props.size());
 
-            for (Object o : props.keySet())
+            for (final Object o : props.keySet())
             {
                 final String k = o.toString();
 

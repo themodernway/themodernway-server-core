@@ -79,11 +79,6 @@ public final class JSONUtils
     {
     }
 
-    public static final <T> T NULL()
-    {
-        return null;
-    }
-
     public static final String toJSONString(final Object value, final boolean strict)
     {
         return toJSONString(value, null, strict);
@@ -105,7 +100,7 @@ public final class JSONUtils
         {
             writeJSONString(value, out, context, strict);
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             // We should never get an IOException on a JSONStringWriter!!! ( I hope )
 
@@ -152,7 +147,7 @@ public final class JSONUtils
         {
             dumpClassNames(o, new PrintStream(stream, true, IHTTPConstants.CHARSET_UTF_8));
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("dumpClassNamesToString()", e);
         }
@@ -293,7 +288,7 @@ public final class JSONUtils
 
             final String t = map.getClass().getName();
 
-            for (Entry<String, ?> e : map.entrySet())
+            for (final Entry<String, ?> e : map.entrySet())
             {
                 lineno++;
 
@@ -338,11 +333,11 @@ public final class JSONUtils
         {
             return MAPPER.writeValueAsString(Objects.requireNonNull(object));
         }
-        catch (NullPointerException n)
+        catch (final NullPointerException n)
         {
             throw n;
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -490,7 +485,7 @@ public final class JSONUtils
                 logger.warn("Can't serialize type " + value.getClass().getName() + ", trying toString()");
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("Can't serialize type " + value.getClass().getName() + ", trying toString()", e);
 
