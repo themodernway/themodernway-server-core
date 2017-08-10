@@ -35,7 +35,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
 {
     private String                                m_user_agent = HTTPHeaders.DEFAULT_USER_AGENT;
 
-    private final List<Integer>                         m_good_codes = new ArrayList<Integer>();
+    private final List<Integer>                   m_good_codes = new ArrayList<Integer>();
 
     private static final PathParameters           EMPTY_PARAMS = new PathParameters();
 
