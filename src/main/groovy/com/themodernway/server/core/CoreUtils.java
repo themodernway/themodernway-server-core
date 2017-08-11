@@ -19,6 +19,7 @@ package com.themodernway.server.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -37,6 +38,8 @@ public final class CoreUtils
 
     public static final void setConsumerUniqueStringArray(final String list, final Consumer<String[]> prop)
     {
+        Objects.requireNonNull(prop);
+
         final String toks = StringOps.toTrimOrNull(list);
 
         if (null != toks)
@@ -55,6 +58,8 @@ public final class CoreUtils
 
     public static final void setConsumerUniqueStringArray(final Collection<String> list, final Consumer<String[]> prop)
     {
+        Objects.requireNonNull(prop);
+
         if ((null != list) && (false == list.isEmpty()))
         {
             final String[] uniq = StringOps.toUniqueArray(list);
@@ -71,7 +76,7 @@ public final class CoreUtils
 
     public static final List<String> getSupplierUniqueStringArray(final Supplier<String[]> prop)
     {
-        final String[] uniq = prop.get();
+        final String[] uniq = Objects.requireNonNull(prop).get();
 
         if ((null != uniq) && (uniq.length > 0))
         {
@@ -87,6 +92,6 @@ public final class CoreUtils
 
     public static final <T> List<T> arrayList(final int size)
     {
-        return new ArrayList<T>(size);
+        return new ArrayList<T>(Math.max(0, size));
     }
 }

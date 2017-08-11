@@ -42,12 +42,12 @@ public class BinderPOJO
         m_cost = cost;
     }
 
-    public String getScript()
+    public String getValue()
     {
         return m_scrp;
     }
 
-    public void setScript(final String scrp)
+    public void setValue(final String scrp)
     {
         m_scrp = scrp;
     }
