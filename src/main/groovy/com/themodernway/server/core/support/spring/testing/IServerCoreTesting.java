@@ -96,7 +96,7 @@ public interface IServerCoreTesting
 
             if (null != context)
             {
-                context.close();
+                context.destroy();
             }
             ServerContextInstance.setApplicationContext(null);
         }

@@ -509,6 +509,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Override
+    public JSONObject json(JSONObject object)
+    {
+        getServerContext().json(object)
+    }
+
+    @Override
     public JSONObject json(Collection<?> collection)
     {
         getServerContext().json(collection)
@@ -536,6 +542,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public JSONObject json(Object object)
     {
         getServerContext().json(object)
+    }
+
+    @Override
+    public JSONObject json(Stream<?> stream)
+    {
+        getServerContext().json(stream)
     }
 
     @Override

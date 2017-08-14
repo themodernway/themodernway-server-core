@@ -85,14 +85,11 @@ public class CoreJSONOperations implements ICoreJSONOperations
         {
             return jarr((List<?>) collection);
         }
-        else if (collection instanceof Map)
+        if (collection instanceof Map)
         {
             return jarr((Map<String, ?>) collection);
         }
-        else
-        {
-            return jarr(new ArrayList<Object>(collection));
-        }
+        return jarr(new ArrayList<Object>(collection));
     }
 
     @Override
@@ -113,13 +110,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONArray jarr(final JSONObject object)
     {
-        Objects.requireNonNull(object);
-
-        final JSONArray list = jarr();
-
-        jarr().add(object);
-
-        return list;
+        return jarr().push(Objects.requireNonNull(object));
     }
 
     @Override
@@ -160,16 +151,17 @@ public class CoreJSONOperations implements ICoreJSONOperations
         {
             return jarr(((Future<?>) object));
         }
-        else
+        if (object instanceof Stream)
         {
-            try
-            {
-                return jarr(binder().toJSONObject(object));
-            }
-            catch (final Exception e)
-            {
-                throw new RuntimeException(e);
-            }
+            return jarr(((Stream<?>) object));
+        }
+        try
+        {
+            return jarr(binder().toJSONObject(object));
+        }
+        catch (final Exception e)
+        {
+            throw new RuntimeException(e);
         }
     }
 
@@ -202,23 +194,26 @@ public class CoreJSONOperations implements ICoreJSONOperations
     }
 
     @Override
+    public final JSONObject json(final JSONObject object)
+    {
+        return new JSONObject(Objects.requireNonNull(object));
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public final JSONObject json(final Collection<?> collection)
     {
         Objects.requireNonNull(collection);
 
+        if (collection instanceof Map)
+        {
+            return json((Map<String, ?>) collection);
+        }
         if (collection instanceof List)
         {
             return json((List<?>) collection);
         }
-        else if (collection instanceof Map)
-        {
-            return json((Map<String, ?>) collection);
-        }
-        else
-        {
-            return json(new ArrayList<Object>(collection));
-        }
+        return json(new ArrayList<Object>(collection));
     }
 
     @Override
@@ -237,6 +232,12 @@ public class CoreJSONOperations implements ICoreJSONOperations
     }
 
     @Override
+    public JSONObject json(final Stream<?> stream)
+    {
+        return json(stream.collect(Collectors.toList()));
+    }
+
+    @Override
     public final JSONObject json(final List<?> list)
     {
         return new JSONObject(Objects.requireNonNull(list));
@@ -248,22 +249,11 @@ public class CoreJSONOperations implements ICoreJSONOperations
         return new JSONObject(Objects.requireNonNull(map));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public final JSONObject json(final Object object)
     {
-        if (null == object)
-        {
-            return null;
-        }
-        if (object instanceof JSONObject)
-        {
-            return ((JSONObject) object);
-        }
-        if (object instanceof Map)
-        {
-            return json((Map<String, ?>) object);
-        }
+        Objects.requireNonNull(object);
+
         if (object instanceof Collection<?>)
         {
             return json((Collection<?>) object);
@@ -276,16 +266,17 @@ public class CoreJSONOperations implements ICoreJSONOperations
         {
             return json(((Future<?>) object));
         }
-        else
+        if (object instanceof Stream)
         {
-            try
-            {
-                return binder().toJSONObject(object);
-            }
-            catch (final Exception e)
-            {
-                throw new RuntimeException(e);
-            }
+            return json(((Stream<?>) object));
+        }
+        try
+        {
+            return binder().toJSONObject(object);
+        }
+        catch (final Exception e)
+        {
+            throw new RuntimeException(e);
         }
     }
 

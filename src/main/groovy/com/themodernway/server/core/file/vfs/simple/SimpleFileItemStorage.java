@@ -55,7 +55,9 @@ import com.themodernway.server.core.file.vfs.IFolderItem;
 import com.themodernway.server.core.file.vfs.IFolderItemWrapper;
 import com.themodernway.server.core.file.vfs.ItemsOptions;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.json.parser.JSONParser;
 
 public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 {
@@ -839,15 +841,31 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
     public static void main(final String... strings)
     {
-        try
+        try (SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content"))
         {
-            final SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content");
+            stor.getRoot().wrap().items(ItemsOptions.RECURSIVE).forEach(item -> System.out.format("file (%s) type (%s).\n", item.getPath(), item.getContentType()));
 
-            stor.getRoot().wrap().items(ItemsOptions.RECURSIVE).forEach(item -> System.out.println(String.format("file (%s) type (%s).", item.getName(), item.getMetaData())));
+            stor.getRoot().wrap().items(ItemsOptions.FILE).filter(item -> item.getPath().endsWith(".json")).map(item -> item.lines()).flatMap(lines -> lines).forEach(line -> System.out.println(line));
 
-            stor.close();
+            final JSONArray list = new JSONArray();
+
+            stor.getRoot().wrap().items(ItemsOptions.FILE).filter(item -> item.getPath().endsWith(".json")).forEach(item -> cat(item, list));
+
+            System.out.println(list.toJSONString());
         }
         catch (final IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void cat(final IFileItem item, final JSONArray list)
+    {
+        try (InputStream is = item.getInputStream())
+        {
+            list.add(new JSONParser().bindJSON(is));
+        }
+        catch (final Exception e)
         {
             e.printStackTrace();
         }

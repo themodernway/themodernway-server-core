@@ -82,16 +82,6 @@ public final class CoreUtils
         {
             return StringOps.toUnique(uniq);
         }
-        return arrayList(0);
-    }
-
-    public static final <T> List<T> arrayList()
-    {
-        return new ArrayList<T>();
-    }
-
-    public static final <T> List<T> arrayList(final int size)
-    {
-        return new ArrayList<T>(Math.max(0, size));
+        return new ArrayList<String>(0);
     }
 }

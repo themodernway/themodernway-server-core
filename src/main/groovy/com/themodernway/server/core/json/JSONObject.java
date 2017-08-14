@@ -61,12 +61,12 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         put(Objects.requireNonNull(name), value);
     }
 
-    public final String dumpClassNamesToString()
+    public String dumpClassNamesToString()
     {
         return JSONUtils.dumpClassNamesToString(this);
     }
 
-    public final void dumpClassNames()
+    public void dumpClassNames()
     {
         dumpClassNames(System.out);
     }
@@ -209,41 +209,37 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public boolean isNull(final String key)
     {
-        if ((containsKey(Objects.requireNonNull(key))) && (null == get(key)))
-        {
-            return true;
-        }
-        return false;
+        return ((isDefined(key)) && (null == get(key)));
     }
 
     @Override
     public boolean isArray(final String key)
     {
-        return (get(Objects.requireNonNull(key)) instanceof List);
+        return JSONUtils.isArray(get(Objects.requireNonNull(key)));
     }
 
     @Override
     public boolean isObject(final String key)
     {
-        return (get(Objects.requireNonNull(key)) instanceof Map);
+        return JSONUtils.isObject(get(Objects.requireNonNull(key)));
     }
 
     @Override
     public boolean isString(final String key)
     {
-        return (get(Objects.requireNonNull(key)) instanceof String);
+        return JSONUtils.isString(get(Objects.requireNonNull(key)));
     }
 
     @Override
     public boolean isBoolean(final String key)
     {
-        return (get(Objects.requireNonNull(key)) instanceof Boolean);
+        return JSONUtils.isBoolean(get(Objects.requireNonNull(key)));
     }
 
     @Override
     public boolean isDate(final String key)
     {
-        return (get(Objects.requireNonNull(key)) instanceof Date);
+        return JSONUtils.isDate(get(Objects.requireNonNull(key)));
     }
 
     @Override
@@ -285,37 +281,19 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public String getAsString(final String key)
     {
-        final Object object = get(Objects.requireNonNull(key));
-
-        if (object instanceof String)
-        {
-            return ((String) object);
-        }
-        return null;
+        return JSONUtils.asString(get(Objects.requireNonNull(key)));
     }
 
     @Override
     public Date getAsDate(final String key)
     {
-        final Object object = get(Objects.requireNonNull(key));
-
-        if (object instanceof Date)
-        {
-            return ((Date) object);
-        }
-        return null;
+        return JSONUtils.asDate(get(Objects.requireNonNull(key)));
     }
 
     @Override
     public Boolean getAsBoolean(final String key)
     {
-        final Object object = get(Objects.requireNonNull(key));
-
-        if (object instanceof Boolean)
-        {
-            return ((Boolean) object);
-        }
-        return null;
+        return JSONUtils.asBoolean(get(Objects.requireNonNull(key)));
     }
 
     @Override
@@ -457,46 +435,12 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public JSONType getJSONType(final String key)
     {
-        final Object object = get(Objects.requireNonNull(key));
-
-        if (null == object)
-        {
-            return JSONType.NULL;
-        }
-        if (object instanceof String)
-        {
-            return JSONType.STRING;
-        }
-        if (object instanceof Number)
-        {
-            if (null != JSONUtils.asNumber(object))
-            {
-                return JSONType.NUMBER;
-            }
-            return JSONType.UNDEFINED;
-        }
-        if (object instanceof Boolean)
-        {
-            return JSONType.BOOLEAN;
-        }
-        if (object instanceof Map)
-        {
-            return JSONType.OBJECT;
-        }
-        if (object instanceof List)
-        {
-            return JSONType.ARRAY;
-        }
-        if (object instanceof Date)
-        {
-            return JSONType.DATE;
-        }
-        return JSONType.UNDEFINED;
+        return JSONUtils.getJSONType(get(Objects.requireNonNull(key)));
     }
 
     @Override
     public boolean isJSONType(final String key, final JSONType type)
     {
-        return (Objects.requireNonNull(type) == getJSONType(Objects.requireNonNull(key)));
+        return (type == getJSONType(key));
     }
 }

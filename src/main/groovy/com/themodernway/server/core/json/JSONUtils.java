@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.json;
 
+import static com.themodernway.server.core.CoreUtils.NULL;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Writer;
@@ -35,6 +37,7 @@ import org.apache.log4j.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.common.api.json.JSONType;
 import com.themodernway.server.core.ThreadLocalDateFormat;
 import com.themodernway.server.core.io.NoCloseProxyWriter;
 import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
@@ -45,29 +48,29 @@ public final class JSONUtils
 {
     private static final Logger                         logger          = Logger.getLogger(JSONUtils.class);
 
-    private final static BigDecimal                     BIG_DECIMAL_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
+    public final static BigDecimal                      BIG_DECIMAL_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
 
-    private final static BigDecimal                     BIG_DECIMAL_MIN = BigDecimal.valueOf(-Double.MAX_VALUE);
+    public final static BigDecimal                      BIG_DECIMAL_MIN = BigDecimal.valueOf(-Double.MAX_VALUE);
 
-    private final static BigInteger                     BIG_INTEGER_MAX = BigInteger.valueOf(Integer.MAX_VALUE);
+    public final static BigInteger                      BIG_INTEGER_MAX = BigInteger.valueOf(Integer.MAX_VALUE);
 
-    private final static BigInteger                     BIG_INTEGER_MIN = BigInteger.valueOf(Integer.MIN_VALUE);
+    public final static BigInteger                      BIG_INTEGER_MIN = BigInteger.valueOf(Integer.MIN_VALUE);
 
-    private final static BigInteger                     BIG_INTLONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);
+    public final static BigInteger                      BIG_INTLONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);
 
-    private final static BigInteger                     BIG_INTLONG_MIN = BigInteger.valueOf(Long.MIN_VALUE);
+    public final static BigInteger                      BIG_INTLONG_MIN = BigInteger.valueOf(Long.MIN_VALUE);
 
-    private final static BigDecimal                     BIG_DEC_INT_MAX = BigDecimal.valueOf(Integer.MAX_VALUE);
+    public final static BigDecimal                      BIG_DEC_INT_MAX = BigDecimal.valueOf(Integer.MAX_VALUE);
 
-    private final static BigDecimal                     BIG_DEC_INT_MIN = BigDecimal.valueOf(Integer.MIN_VALUE);
+    public final static BigDecimal                      BIG_DEC_INT_MIN = BigDecimal.valueOf(Integer.MIN_VALUE);
 
-    private final static BigDecimal                     BIG_DEC_LONGMAX = BigDecimal.valueOf(Long.MAX_VALUE);
+    public final static BigDecimal                      BIG_DEC_LONGMAX = BigDecimal.valueOf(Long.MAX_VALUE);
 
-    private final static BigDecimal                     BIG_DEC_LONGMIN = BigDecimal.valueOf(Long.MIN_VALUE);
+    public final static BigDecimal                      BIG_DEC_LONGMIN = BigDecimal.valueOf(Long.MIN_VALUE);
 
-    private final static BigInteger                     BIG_INT_DEC_MAX = BIG_DECIMAL_MAX.toBigInteger();
+    public final static BigInteger                      BIG_INT_DEC_MAX = BIG_DECIMAL_MAX.toBigInteger();
 
-    private final static BigInteger                     BIG_INT_DEC_MIN = BIG_DECIMAL_MIN.toBigInteger();
+    public final static BigInteger                      BIG_INT_DEC_MIN = BIG_DECIMAL_MIN.toBigInteger();
 
     private final static int                            INDENT_ADDED    = 4;
 
@@ -81,7 +84,7 @@ public final class JSONUtils
 
     public static final String toJSONString(final Object value, final boolean strict)
     {
-        return toJSONString(value, null, strict);
+        return toJSONString(value, NULL(), strict);
     }
 
     public static final String toJSONString(final Object value, final IJSONContext context, final boolean strict)
@@ -113,7 +116,7 @@ public final class JSONUtils
     {
         if ((null == indent) || (indent < 1))
         {
-            return "";
+            return StringOps.EMPTY_STRING;
         }
         String find = INDENT_CACHE.get(indent);
 
@@ -351,7 +354,7 @@ public final class JSONUtils
 
             return;
         }
-        if (value instanceof String)
+        if (value instanceof CharSequence)
         {
             out.write('\"');
 
@@ -686,7 +689,7 @@ public final class JSONUtils
 
     public static final boolean isString(final Object object)
     {
-        return (object instanceof String);
+        return (object instanceof CharSequence);
     }
 
     public static final boolean isBoolean(final Object object)
@@ -694,11 +697,16 @@ public final class JSONUtils
         return (object instanceof Boolean);
     }
 
+    public static final boolean isDate(final Object object)
+    {
+        return (object instanceof Date);
+    }
+
     public static final Integer asInteger(final Object object)
     {
         if (null == object)
         {
-            return null;
+            return NULL();
         }
         if (object instanceof Integer)
         {
@@ -710,7 +718,7 @@ public final class JSONUtils
 
             if ((value > Integer.MAX_VALUE) || (value < Integer.MIN_VALUE))
             {
-                return null;
+                return NULL();
             }
             return value.intValue();
         }
@@ -724,7 +732,7 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_INTEGER_MAX) > 0) || (value.compareTo(BIG_INTEGER_MIN) < 0))
             {
-                return null;
+                return NULL();
             }
             return value.intValue();
         }
@@ -734,7 +742,7 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_DEC_INT_MAX) > 0) || (value.compareTo(BIG_DEC_INT_MIN) < 0))
             {
-                return null;
+                return NULL();
             }
             return value.intValue();
         }
@@ -744,18 +752,18 @@ public final class JSONUtils
 
             if ((lval > Integer.MAX_VALUE) || (lval < Integer.MIN_VALUE))
             {
-                return null;
+                return NULL();
             }
             return ((int) lval);
         }
-        return null;
+        return NULL();
     }
 
     public static final Long asLong(final Object object)
     {
         if (null == object)
         {
-            return null;
+            return NULL();
         }
         if (object instanceof Long)
         {
@@ -771,11 +779,11 @@ public final class JSONUtils
 
             if (isDoubleInfiniteOrNan(dval))
             {
-                return null;
+                return NULL();
             }
             if ((dval.doubleValue() > Long.MAX_VALUE) || (dval.doubleValue() < Long.MIN_VALUE))
             {
-                return null;
+                return NULL();
             }
             return dval.longValue();
         }
@@ -785,7 +793,7 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_INTLONG_MAX) > 0) || (value.compareTo(BIG_INTLONG_MIN) < 0))
             {
-                return null;
+                return NULL();
             }
             return value.longValue();
         }
@@ -795,7 +803,7 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_DEC_LONGMAX) > 0) || (value.compareTo(BIG_DEC_LONGMIN) < 0))
             {
-                return null;
+                return NULL();
             }
             return value.longValue();
         }
@@ -803,14 +811,14 @@ public final class JSONUtils
         {
             return ((Number) object).longValue();
         }
-        return null;
+        return NULL();
     }
 
     public static final Double asDouble(final Object object)
     {
         if (null == object)
         {
-            return null;
+            return NULL();
         }
         if (object instanceof Double)
         {
@@ -818,7 +826,7 @@ public final class JSONUtils
 
             if (isDoubleInfiniteOrNan(dval))
             {
-                return null;
+                return NULL();
             }
             return dval;
         }
@@ -828,7 +836,7 @@ public final class JSONUtils
 
             if (isDoubleInfiniteOrNan(dval))
             {
-                return null;
+                return NULL();
             }
             return dval;
         }
@@ -838,11 +846,11 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_DECIMAL_MAX) > 0) || (value.compareTo(BIG_DECIMAL_MIN) < 0))
             {
-                return null;
+                return NULL();
             }
             if (isDoubleInfiniteOrNan(value.doubleValue()))
             {
-                return null;
+                return NULL();
             }
             return value.doubleValue();
         }
@@ -852,7 +860,7 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_INT_DEC_MAX) > 0) || (value.compareTo(BIG_INT_DEC_MIN) < 0))
             {
-                return null;
+                return NULL();
             }
             return value.doubleValue();
         }
@@ -862,11 +870,11 @@ public final class JSONUtils
 
             if (isDoubleInfiniteOrNan(dval))
             {
-                return null;
+                return NULL();
             }
             return dval;
         }
-        return null;
+        return NULL();
     }
 
     public static final Number asNumber(final Object object)
@@ -883,14 +891,14 @@ public final class JSONUtils
             }
             return asLong(object);
         }
-        return null;
+        return NULL();
     }
 
     public static final JSONArray asArray(final Object object)
     {
         if (null == object)
         {
-            return null;
+            return NULL();
         }
         if (object instanceof JSONArray)
         {
@@ -900,7 +908,7 @@ public final class JSONUtils
         {
             return new JSONArray((List<?>) object);
         }
-        return null;
+        return NULL();
     }
 
     @SuppressWarnings("unchecked")
@@ -908,7 +916,7 @@ public final class JSONUtils
     {
         if (null == object)
         {
-            return null;
+            return NULL();
         }
         if (object instanceof JSONObject)
         {
@@ -918,6 +926,87 @@ public final class JSONUtils
         {
             return new JSONObject((Map<String, ?>) object);
         }
-        return null;
+        return NULL();
+    }
+
+    public static final String asString(final Object object)
+    {
+        if (null == object)
+        {
+            return NULL();
+        }
+        if (object instanceof CharSequence)
+        {
+            return ((CharSequence) object).toString();
+        }
+        return NULL();
+    }
+
+    public static final Boolean asBoolean(final Object object)
+    {
+        if (null == object)
+        {
+            return NULL();
+        }
+        if (object instanceof Boolean)
+        {
+            return ((Boolean) object);
+        }
+        return NULL();
+    }
+
+    public static final Date asDate(final Object object)
+    {
+        if (null == object)
+        {
+            return NULL();
+        }
+        if (object instanceof Date)
+        {
+            return new Date(((Date) object).getTime());
+        }
+        return NULL();
+    }
+
+    public static final JSONType getJSONType(final Object object)
+    {
+        if (null == object)
+        {
+            return JSONType.NULL;
+        }
+        if (object instanceof CharSequence)
+        {
+            return JSONType.STRING;
+        }
+        if (object instanceof Number)
+        {
+            if (null != asNumber(object))
+            {
+                return JSONType.NUMBER;
+            }
+            return JSONType.UNDEFINED;
+        }
+        if (object instanceof Boolean)
+        {
+            return JSONType.BOOLEAN;
+        }
+        if (object instanceof Map)
+        {
+            return JSONType.OBJECT;
+        }
+        if (object instanceof List)
+        {
+            return JSONType.ARRAY;
+        }
+        if (object instanceof Date)
+        {
+            return JSONType.DATE;
+        }
+        return JSONType.UNDEFINED;
+    }
+
+    public static final boolean isJSONType(final Object object, final JSONType type)
+    {
+        return (type == getJSONType(object));
     }
 }

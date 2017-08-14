@@ -36,8 +36,6 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
 {
     private final Logger         m_logs = Logger.getLogger(getClass());
 
-    private final Object         m_lock = new Object();
-
     private String[]             m_type = null;
 
     private MimetypesFileTypeMap m_maps = null;
@@ -87,20 +85,17 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
     }
 
     @Override
-    public FileTypeMap getFileTypeMap()
+    public synchronized FileTypeMap getFileTypeMap()
     {
         if (null == m_maps)
         {
-            synchronized (m_lock)
+            try
             {
-                try
-                {
-                    iniFileTypeMap();
-                }
-                catch (final IOException e)
-                {
-                    throw new IllegalStateException("Could not load specified MIME type mapping file: " + m_rsrc, e);
-                }
+                iniFileTypeMap();
+            }
+            catch (final IOException e)
+            {
+                throw new IllegalStateException("Could not load specified MIME type mapping file: " + m_rsrc, e);
             }
         }
         return m_maps;

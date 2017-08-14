@@ -109,12 +109,14 @@ public interface IAuthorizationSolver extends IRolesPredicate
         @Override
         public IAuthorizationSolver build()
         {
+            final List<IRolesPredicate> list = m_list;
+
             return new IAuthorizationSolver()
             {
                 @Override
                 public final boolean test(final List<String> roles)
                 {
-                    for (IRolesPredicate pred : m_list)
+                    for (final IRolesPredicate pred : list)
                     {
                         if (false == pred.test(roles))
                         {
@@ -151,7 +153,7 @@ public interface IAuthorizationSolver extends IRolesPredicate
             @Override
             public boolean test(final List<String> list)
             {
-                for (String role : getRoles())
+                for (final String role : getRoles())
                 {
                     if (false == list.contains(role))
                     {
@@ -172,7 +174,7 @@ public interface IAuthorizationSolver extends IRolesPredicate
             @Override
             public boolean test(final List<String> list)
             {
-                for (String role : getRoles())
+                for (final String role : getRoles())
                 {
                     if (list.contains(role))
                     {
@@ -193,7 +195,7 @@ public interface IAuthorizationSolver extends IRolesPredicate
             @Override
             public boolean test(final List<String> list)
             {
-                for (String role : getRoles())
+                for (final String role : getRoles())
                 {
                     if (list.contains(role))
                     {
@@ -229,7 +231,7 @@ public interface IAuthorizationSolver extends IRolesPredicate
             @Override
             public boolean test(final List<String> roles)
             {
-                for (IRolesPredicate predicate : getPredicates())
+                for (final IRolesPredicate predicate : getPredicates())
                 {
                     if (false == predicate.test(roles))
                     {
@@ -250,7 +252,7 @@ public interface IAuthorizationSolver extends IRolesPredicate
             @Override
             public boolean test(final List<String> roles)
             {
-                for (IRolesPredicate predicate : getPredicates())
+                for (final IRolesPredicate predicate : getPredicates())
                 {
                     if (predicate.test(roles))
                     {

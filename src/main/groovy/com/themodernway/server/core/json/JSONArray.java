@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -35,7 +34,7 @@ import com.themodernway.common.api.json.JSONType;
 @JacksonXmlRootElement(localName = "results")
 public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {
-    private static final long   serialVersionUID = 928145403133304801L;
+    private static final long serialVersionUID = 928145403133304801L;
 
     public JSONArray()
     {
@@ -51,31 +50,31 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         addAll(Objects.requireNonNull(value));
     }
 
-    public final JSONArray append(final List<?> value)
+    public JSONArray append(final List<?> value)
     {
         addAll(Objects.requireNonNull(value));
 
         return this;
     }
 
-    public final JSONArray push(final Object value)
+    public JSONArray push(final Object value)
     {
         add(value);
 
         return this;
     }
 
-    public final String dumpClassNamesToString()
+    public String dumpClassNamesToString()
     {
         return JSONUtils.dumpClassNamesToString(this);
     }
 
-    public final void dumpClassNames()
+    public void dumpClassNames()
     {
         dumpClassNames(System.out);
     }
 
-    public final void dumpClassNames(final PrintStream out)
+    public void dumpClassNames(final PrintStream out)
     {
         JSONUtils.dumpClassNames(this, out);
     }
@@ -90,7 +89,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         {
             final Object object = get(i);
 
-            jarr.add((null == object) ?  StringOps.NULL_AS_STRING : object.getClass().getName());
+            jarr.add((null == object) ? StringOps.NULL_AS_STRING : object.getClass().getName());
         }
         return jarr;
     }
@@ -99,7 +98,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     {
         if (null == list)
         {
-            out.write( StringOps.NULL_AS_STRING);
+            out.write(StringOps.NULL_AS_STRING);
 
             return;
         }
@@ -223,13 +222,13 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public boolean isArray(final int index)
     {
-        return (get(index) instanceof List);
+        return JSONUtils.isArray(get(index));
     }
 
     @Override
     public boolean isBoolean(final int index)
     {
-        return (get(index) instanceof Boolean);
+        return JSONUtils.isBoolean(get(index));
     }
 
     @Override
@@ -259,19 +258,19 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public boolean isObject(final int index)
     {
-        return (get(index) instanceof Map);
+        return JSONUtils.isObject(get(index));
     }
 
     @Override
     public boolean isString(final int index)
     {
-        return (get(index) instanceof String);
+        return JSONUtils.isString(get(index));
     }
 
     @Override
     public boolean isDate(final int index)
     {
-        return (get(index) instanceof Date);
+        return JSONUtils.isDate(get(index));
     }
 
     @Override
@@ -289,13 +288,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public Boolean getAsBoolean(final int index)
     {
-        final Object value = get(index);
-
-        if (value instanceof Boolean)
-        {
-            return ((Boolean) value);
-        }
-        return null;
+        return JSONUtils.asBoolean(get(index));
     }
 
     @Override
@@ -325,25 +318,13 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public String getAsString(final int index)
     {
-        final Object value = get(index);
-
-        if (value instanceof String)
-        {
-            return ((String) value);
-        }
-        return null;
+        return JSONUtils.asString(get(index));
     }
 
     @Override
     public Date getAsDate(final int index)
     {
-        final Object value = get(index);
-
-        if (value instanceof Date)
-        {
-            return ((Date) value);
-        }
-        return null;
+        return JSONUtils.asDate(get(index));
     }
 
     @SuppressWarnings("unchecked")
@@ -411,46 +392,12 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public JSONType getJSONType(final int index)
     {
-        final Object object = get(index);
-
-        if (null == object)
-        {
-            return JSONType.NULL;
-        }
-        if (object instanceof String)
-        {
-            return JSONType.STRING;
-        }
-        if (object instanceof Number)
-        {
-            if (null != JSONUtils.asNumber(object))
-            {
-                return JSONType.NUMBER;
-            }
-            return JSONType.UNDEFINED;
-        }
-        if (object instanceof Boolean)
-        {
-            return JSONType.BOOLEAN;
-        }
-        if (object instanceof Map)
-        {
-            return JSONType.OBJECT;
-        }
-        if (object instanceof List)
-        {
-            return JSONType.ARRAY;
-        }
-        if (object instanceof Date)
-        {
-            return JSONType.DATE;
-        }
-        return JSONType.UNDEFINED;
+        return JSONUtils.getJSONType(get(index));
     }
 
     @Override
     public boolean isJSONType(final int index, final JSONType type)
     {
-        return (Objects.requireNonNull(type) == getJSONType(index));
+        return (type == getJSONType(index));
     }
 }

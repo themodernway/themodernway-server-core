@@ -51,22 +51,26 @@ public interface ICoreJSONOperations
     public JSONArray jarr(Optional<?> optional);
 
     public JSONArray jarr(Stream<?> stream);
-    
+
     public JSONArray jarr(String name, Object value);
 
     public JSONObject json();
 
-    public JSONObject json(Collection<?> collection);
-
-    public JSONObject json(Future<?> future);
+    public JSONObject json(JSONObject object);
 
     public JSONObject json(List<?> list);
 
     public JSONObject json(Map<String, ?> map);
 
+    public JSONObject json(Collection<?> collection);
+
+    public JSONObject json(Future<?> future);
+
     public JSONObject json(Object object);
 
     public JSONObject json(Optional<?> optional);
+
+    public JSONObject json(Stream<?> stream);
 
     public JSONObject json(String name, Object value);
 }
