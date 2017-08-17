@@ -147,6 +147,18 @@ public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSim
     }
 
     @Override
+    public boolean equals(final Object other)
+    {
+        return super.equals(other);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
+    }
+
+    @Override
     public void send() throws MailException
     {
         if (null == m_send)

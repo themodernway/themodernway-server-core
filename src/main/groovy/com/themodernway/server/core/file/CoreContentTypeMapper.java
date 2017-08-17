@@ -51,7 +51,7 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
         m_rsrc = Objects.requireNonNull(resource);
     }
 
-    private synchronized final MimetypesFileTypeMap iniFileTypeMap() throws IOException
+    private final MimetypesFileTypeMap iniFileTypeMap() throws IOException
     {
         if (null != m_maps)
         {
@@ -85,7 +85,7 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
     }
 
     @Override
-    public synchronized FileTypeMap getFileTypeMap()
+    public FileTypeMap getFileTypeMap()
     {
         if (null == m_maps)
         {
