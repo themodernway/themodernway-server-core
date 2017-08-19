@@ -19,6 +19,7 @@ package com.themodernway.server.core.file.vfs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.util.stream.Stream;
 
 import com.themodernway.server.core.json.JSONObject;
@@ -28,6 +29,8 @@ public interface IFileItem
     public IFileItemWrapper wrap();
 
     public String getName() throws IOException;
+
+    public String getExtension() throws IOException;
 
     public long getSize() throws IOException;
 
@@ -70,6 +73,9 @@ public interface IFileItem
     public InputStream getInputStream() throws IOException;
 
     public long writeTo(OutputStream output) throws IOException;
+
+    public long writeTo(Writer output) throws IOException;
+
 
     public IFileItemStorage getFileItemStorage();
 }

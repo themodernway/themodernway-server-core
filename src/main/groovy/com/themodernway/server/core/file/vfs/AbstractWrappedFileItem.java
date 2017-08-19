@@ -16,7 +16,20 @@
 
 package com.themodernway.server.core.file.vfs;
 
-public interface IWrappedItem<T extends IFileItem>
+import java.util.Objects;
+
+public abstract class AbstractWrappedFileItem<T extends IFileItem> implements IWrappedFileItem<T>
 {
-    public T getWrappedItem();
+    private final T m_item;
+
+    protected AbstractWrappedFileItem(final T item)
+    {
+        m_item = Objects.requireNonNull(item);
+    }
+
+    @Override
+    public T getWrappedFileItem()
+    {
+        return m_item;
+    }
 }

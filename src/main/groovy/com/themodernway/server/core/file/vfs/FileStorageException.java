@@ -18,7 +18,7 @@ package com.themodernway.server.core.file.vfs;
 
 public class FileStorageException extends RuntimeException
 {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2020414959954647036L;
 
     public FileStorageException(final Throwable e)
     {

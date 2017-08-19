@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.Writer;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -307,6 +308,14 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
+        public String getExtension() throws IOException
+        {
+            validate();
+
+            return toTrimOrElse(FileAndPathUtils.extn(getPath()), EMPTY_STRING);
+        }
+
+        @Override
         public long getSize() throws IOException
         {
             validate();
@@ -486,6 +495,16 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         @Override
         public long writeTo(final OutputStream output) throws IOException
+        {
+            validate();
+
+            readtest();
+
+            return IO.copy(this, requireNonNull(output));
+        }
+
+        @Override
+        public long writeTo(final Writer output) throws IOException
         {
             validate();
 
@@ -830,6 +849,16 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         @Override
         public long writeTo(final OutputStream output) throws IOException
+        {
+            validate();
+
+            readtest();
+
+            throw new IOException(format("Can't stream folder (%s).", getPath()));
+        }
+
+        @Override
+        public long writeTo(final Writer output) throws IOException
         {
             validate();
 
