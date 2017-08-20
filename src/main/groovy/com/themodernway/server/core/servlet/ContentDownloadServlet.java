@@ -32,7 +32,7 @@ public class ContentDownloadServlet extends ContentGetServlet
     {
         super(rate);
     }
-    
+
     @Override
     public boolean isRedirectOn()
     {
@@ -51,5 +51,25 @@ public class ContentDownloadServlet extends ContentGetServlet
             response.setContentType(toTrimOrElse(file.getContentType(), CONTENT_TYPE_APPLCATION_OCTET_STREAM));
         }
         return true;
+    }
+
+    @Override
+    protected void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
+    {
+        if (send)
+        {
+            final long size = file.getSize();
+
+            if (size >= 0)
+            {
+                response.setContentLengthLong(size);
+            }
+            file.writeTo(response.getOutputStream());
+        }
+        else
+        {
+            response.setContentLengthLong(0);
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

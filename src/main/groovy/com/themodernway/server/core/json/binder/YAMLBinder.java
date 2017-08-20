@@ -16,31 +16,41 @@
 
 package com.themodernway.server.core.json.binder;
 
-import java.util.List;
-
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.themodernway.server.core.json.binder.YAMLBinder.CoreYAMLMapper;
 
-public class YAMLBinder extends AbstractDataBinder
+public class YAMLBinder extends AbstractDataBinder<CoreYAMLMapper>
 {
     public YAMLBinder()
     {
-        super(new YAMLMapper());
-    }
-
-    public YAMLBinder(final MapperFeature... features)
-    {
-        super(new YAMLMapper(), features);
-    }
-
-    public YAMLBinder(final List<MapperFeature> features)
-    {
-        super(new YAMLMapper(), features);
+        super(new CoreYAMLMapper());
     }
 
     @Override
     public BinderType getType()
     {
         return BinderType.YAML;
+    }
+
+    public static class CoreYAMLMapper extends YAMLMapper
+    {
+        private static final long serialVersionUID = 1L;
+
+        public CoreYAMLMapper()
+        {
+        }
+
+        public CoreYAMLMapper(final CoreYAMLMapper parent)
+        {
+            super(parent);
+        }
+
+        @Override
+        public CoreYAMLMapper copy()
+        {
+            _checkInvalidCopy(CoreYAMLMapper.class);
+
+            return new CoreYAMLMapper(this);
+        }
     }
 }

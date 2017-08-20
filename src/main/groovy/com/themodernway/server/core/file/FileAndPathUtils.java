@@ -56,6 +56,11 @@ public final class FileAndPathUtils
         return CORE_MIMETYPE_MAPPER.getContentType(file);
     }
 
+    public static final String getContentType(final Path path)
+    {
+        return CORE_MIMETYPE_MAPPER.getContentType(path);
+    }
+
     public static final String getContentType(final String path)
     {
         return CORE_MIMETYPE_MAPPER.getContentType(normalize(path));

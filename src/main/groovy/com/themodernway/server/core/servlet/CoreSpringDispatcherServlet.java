@@ -124,6 +124,8 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
 
                 return;
             }
+            response.setCharacterEncoding(CHARSET_UTF_8);
+
             acquire();
 
             IServerSession session = null;

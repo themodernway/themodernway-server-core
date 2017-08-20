@@ -20,30 +20,19 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
+import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
 
-public class JSONBinder extends AbstractDataBinder
+public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 {
     public JSONBinder()
     {
-        super(new ObjectMapper());
-    }
-
-    public JSONBinder(final MapperFeature... features)
-    {
-        super(new ObjectMapper(), features);
-    }
-
-    public JSONBinder(final List<MapperFeature> features)
-    {
-        super(new ObjectMapper(), features);
+        super(new CoreObjectMapper());
     }
 
     @Override
@@ -55,7 +44,7 @@ public class JSONBinder extends AbstractDataBinder
         {
             if ((isStrict()) && (object instanceof JSONObject))
             {
-                Writer writer = new OutputStreamWriter(IO.toOutputStream(file), IO.UTF_8_CHARSET);
+                final Writer writer = new OutputStreamWriter(IO.toOutputStream(file), IO.UTF_8_CHARSET);
 
                 try
                 {
@@ -73,7 +62,7 @@ public class JSONBinder extends AbstractDataBinder
                 super.send(file, object);
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -99,7 +88,7 @@ public class JSONBinder extends AbstractDataBinder
                 super.send(stream, object);
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -121,7 +110,7 @@ public class JSONBinder extends AbstractDataBinder
                 super.send(writer, object);
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -131,5 +120,27 @@ public class JSONBinder extends AbstractDataBinder
     public BinderType getType()
     {
         return BinderType.JSON;
+    }
+
+    public static class CoreObjectMapper extends ObjectMapper
+    {
+        private static final long serialVersionUID = 1L;
+
+        public CoreObjectMapper()
+        {
+        }
+
+        public CoreObjectMapper(final CoreObjectMapper parent)
+        {
+            super(parent);
+        }
+
+        @Override
+        public CoreObjectMapper copy()
+        {
+            _checkInvalidCopy(CoreObjectMapper.class);
+
+            return new CoreObjectMapper(this);
+        }
     }
 }

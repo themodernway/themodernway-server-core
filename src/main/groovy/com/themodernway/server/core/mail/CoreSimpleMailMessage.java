@@ -24,7 +24,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 
-import com.themodernway.server.core.CoreUtils;
+import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.json.JSONObject;
 
 @SuppressWarnings("serial")
@@ -59,55 +59,55 @@ public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSim
     @Override
     public void setMailToList(final String list)
     {
-        CoreUtils.setConsumerUniqueStringArray(list, this::setTo);
+        ICoreCommon.setConsumerUniqueStringArray(list, this::setTo);
     }
 
     @Override
     public void setMailToList(final Collection<String> list)
     {
-        CoreUtils.setConsumerUniqueStringArray(list, this::setTo);
+        ICoreCommon.setConsumerUniqueStringArray(list, this::setTo);
     }
 
     @Override
     public List<String> getMailToList()
     {
-        return CoreUtils.getSupplierUniqueStringArray(this::getTo);
+        return ICoreCommon.getSupplierUniqueStringArray(this::getTo);
     }
 
     @Override
     public void setMailCcList(final String list)
     {
-        CoreUtils.setConsumerUniqueStringArray(list, this::setCc);
+        ICoreCommon.setConsumerUniqueStringArray(list, this::setCc);
     }
 
     @Override
     public void setMailCcList(final Collection<String> list)
     {
-        CoreUtils.setConsumerUniqueStringArray(list, this::setCc);
+        ICoreCommon.setConsumerUniqueStringArray(list, this::setCc);
     }
 
     @Override
     public List<String> getMailCcList()
     {
-        return CoreUtils.getSupplierUniqueStringArray(this::getCc);
+        return ICoreCommon.getSupplierUniqueStringArray(this::getCc);
     }
 
     @Override
     public void setMailBccList(final String list)
     {
-        CoreUtils.setConsumerUniqueStringArray(list, this::setBcc);
+        ICoreCommon.setConsumerUniqueStringArray(list, this::setBcc);
     }
 
     @Override
     public void setMailBccList(final Collection<String> list)
     {
-        CoreUtils.setConsumerUniqueStringArray(list, this::setBcc);
+        ICoreCommon.setConsumerUniqueStringArray(list, this::setBcc);
     }
 
     @Override
     public List<String> getMailBccList()
     {
-        return CoreUtils.getSupplierUniqueStringArray(this::getBcc);
+        return ICoreCommon.getSupplierUniqueStringArray(this::getBcc);
     }
 
     @Override

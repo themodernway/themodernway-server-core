@@ -16,7 +16,7 @@
 
 package com.themodernway.server.core.json;
 
-import static com.themodernway.server.core.CoreUtils.NULL;
+import static com.themodernway.server.core.ICoreCommon.NULL;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -34,7 +34,6 @@ import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.json.JSONType;
@@ -43,6 +42,7 @@ import com.themodernway.server.core.io.NoCloseProxyWriter;
 import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
 import com.themodernway.server.core.io.StringBuilderOutputStream;
 import com.themodernway.server.core.json.binder.JSONBinder;
+import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
 
 public final class JSONUtils
 {
@@ -74,7 +74,7 @@ public final class JSONUtils
 
     private final static int                            INDENT_ADDED    = 4;
 
-    private static final ObjectMapper                   MAPPER          = new ObjectMapper();
+    private static final CoreObjectMapper               MAPPER          = new CoreObjectMapper();
 
     private static final LinkedHashMap<Integer, String> INDENT_CACHE    = new LinkedHashMap<Integer, String>();
 

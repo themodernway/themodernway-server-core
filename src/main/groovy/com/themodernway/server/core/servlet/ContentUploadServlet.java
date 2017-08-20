@@ -28,6 +28,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 import com.themodernway.server.core.io.IO;
@@ -35,7 +36,7 @@ import com.themodernway.server.core.io.IO;
 @SuppressWarnings("serial")
 public class ContentUploadServlet extends AbstractContentServlet
 {
-    private static final long FILE_SIZE_LIMIT = 16 * 1024 * 1024;
+    private long m_limit = CommonOps.IS_NOT_FOUND;
 
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
@@ -130,8 +131,13 @@ public class ContentUploadServlet extends AbstractContentServlet
         return new DiskFileItemFactory();
     }
 
+    public void setFileSizeLimit(final long limit)
+    {
+        m_limit = Math.max(CommonOps.IS_NOT_FOUND, limit);
+    }
+
     public long getFileSizeLimit()
     {
-        return FILE_SIZE_LIMIT;
+        return m_limit;
     }
 }

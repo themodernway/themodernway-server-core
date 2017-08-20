@@ -23,7 +23,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -36,7 +35,6 @@ import com.themodernway.server.core.ITimeSupplier;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.security.AuthorizationResult;
 import com.themodernway.server.core.security.session.IServerSession;
-import com.themodernway.server.core.security.session.IServerSessionRepository;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
@@ -131,51 +129,24 @@ public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, I
         return principals;
     }
 
-    public default String getSessionID(final HttpServletRequest request)
+    public default String getSessionID(final HttpServletRequest request, final String lookup)
     {
-        String sessid = toTrimOrNull(request.getHeader(X_SESSION_ID_HEADER));
-
-        if (null != sessid)
-        {
-            return sessid;
-        }
-        final HttpSession httpsession = request.getSession(false);
-
-        if (null != httpsession)
-        {
-            final Object attribute = httpsession.getAttribute(X_SESSION_ID_HEADER);
-
-            if (attribute instanceof String)
-            {
-                sessid = toTrimOrNull(attribute.toString());
-
-                if (null != sessid)
-                {
-                    return sessid;
-                }
-            }
-        }
-        return null;
+        return HTTPUtils.getSessionID(request, lookup);
     }
 
-    public default IServerSession getSession(String sessid)
+    public default String getSessionID(final HttpServletRequest request)
     {
-        if (null == (sessid = toTrimOrNull(sessid)))
-        {
-            return null;
-        }
-        final IServerSessionRepository repository = getServerContext().getServerSessionRepository(getSessionProviderDomainName());
+        return HTTPUtils.getSessionID(request);
+    }
 
-        if (null != repository)
-        {
-            final IServerSession session = repository.getSession(sessid);
+    public default IServerSession getSession(final String sessid, final String domain)
+    {
+        return HTTPUtils.getSession(sessid, domain);
+    }
 
-            if (null != session)
-            {
-                return session;
-            }
-        }
-        return null;
+    public default IServerSession getSession(final String sessid)
+    {
+        return getSession(sessid, getSessionProviderDomainName());
     }
 
     public default IServerSession getSession(final HttpServletRequest request)

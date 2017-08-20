@@ -22,11 +22,12 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
-import java.util.List;
 
 import org.springframework.core.io.Resource;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
 
@@ -58,17 +59,35 @@ public interface IBinder
 
     public JSONObject bindJSON(URL url) throws ParserException;
 
+    public IBinder pretty();
+
+    public IBinder pretty(boolean enabled);
+
+    public boolean isPretty();
+
     public IBinder configure(MapperFeature feature, boolean state);
 
-    public IBinder disable(List<MapperFeature> features);
+    public IBinder configure(SerializationFeature feature, boolean state);
+
+    public IBinder configure(DeserializationFeature feature, boolean state);
 
     public IBinder disable(MapperFeature... features);
 
-    public IBinder enable(List<MapperFeature> features);
+    public IBinder disable(SerializationFeature... features);
+
+    public IBinder disable(DeserializationFeature... features);
 
     public IBinder enable(MapperFeature... features);
 
+    public IBinder enable(SerializationFeature... features);
+
+    public IBinder enable(DeserializationFeature... features);
+
     public boolean isEnabled(MapperFeature feature);
+
+    public boolean isEnabled(SerializationFeature feature);
+
+    public boolean isEnabled(DeserializationFeature feature);
 
     public boolean isStrict();
 

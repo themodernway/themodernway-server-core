@@ -230,15 +230,9 @@ public final class IO
 
         try
         {
-            final long leng = Math.max(0, file.getSize());
+            stream = file.getInputStream();
 
-            if (leng > 0)
-            {
-                stream = file.getInputStream();
-
-                return copy(stream, output, leng);
-            }
-            return leng;
+            return copy(stream, output);
         }
         finally
         {
@@ -252,15 +246,10 @@ public final class IO
 
         try
         {
-            final long leng = Math.max(0, file.getSize());
+            stream = file.getInputStream();
 
-            if (leng > 0)
-            {
-                stream = file.getInputStream();
+            return copy(stream, output);
 
-                return copy(stream, output, leng);
-            }
-            return leng;
         }
         finally
         {

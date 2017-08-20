@@ -24,6 +24,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,6 +43,60 @@ public interface ICoreCommon extends IHasLogging
     public static final int    IS_NOT_FOUND = CommonOps.IS_NOT_FOUND;
 
     public static final String EMPTY_STRING = StringOps.EMPTY_STRING;
+
+    public static <T> T NULL()
+    {
+        return null;
+    }
+
+    public static void setConsumerUniqueStringArray(final String list, final Consumer<String[]> prop)
+    {
+        Objects.requireNonNull(prop);
+
+        final String toks = StringOps.toTrimOrNull(list);
+
+        if (null != toks)
+        {
+            final String[] uniq = StringOps.toArray(StringOps.toUniqueTokenStringList(toks));
+
+            if ((null != uniq) && (uniq.length > 0))
+            {
+                prop.accept(uniq);
+
+                return;
+            }
+        }
+        prop.accept(NULL());
+    }
+
+    public static void setConsumerUniqueStringArray(final Collection<String> list, final Consumer<String[]> prop)
+    {
+        Objects.requireNonNull(prop);
+
+        if ((null != list) && (false == list.isEmpty()))
+        {
+            final String[] uniq = StringOps.toUniqueArray(list);
+
+            if ((null != uniq) && (uniq.length > 0))
+            {
+                prop.accept(uniq);
+
+                return;
+            }
+        }
+        prop.accept(NULL());
+    }
+
+    public static List<String> getSupplierUniqueStringArray(final Supplier<String[]> prop)
+    {
+        final String[] uniq = Objects.requireNonNull(prop).get();
+
+        if ((null != uniq) && (uniq.length > 0))
+        {
+            return StringOps.toUnique(uniq);
+        }
+        return new ArrayList<String>(0);
+    }
 
     default public String format(final String format, final Object... args)
     {

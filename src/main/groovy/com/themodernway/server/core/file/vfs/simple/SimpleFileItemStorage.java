@@ -44,6 +44,7 @@ import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.server.core.NanoTimer;
 import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.ICoreContentTypeMapper;
 import com.themodernway.server.core.file.vfs.FileItemWrapper;
@@ -56,6 +57,7 @@ import com.themodernway.server.core.file.vfs.IFolderItem;
 import com.themodernway.server.core.file.vfs.IFolderItemWrapper;
 import com.themodernway.server.core.file.vfs.ItemsOptions;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.io.NoOpOutputStream;
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.parser.JSONParser;
@@ -72,6 +74,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             return new SimpleFileItem(file, stor);
         }
+    }
+
+    protected static final IFileItem MAKE(final Path path, final IFileItemStorage stor)
+    {
+        return MAKE(path.toFile(), stor);
     }
 
     private static final Logger      logger = Logger.getLogger(SimpleFileItemStorage.class);
@@ -312,7 +319,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            return toTrimOrElse(FileAndPathUtils.extn(getPath()), EMPTY_STRING);
+            return toTrimOrElse(FileAndPathUtils.extn(getAbsolutePath()), EMPTY_STRING);
         }
 
         @Override
@@ -496,20 +503,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public long writeTo(final OutputStream output) throws IOException
         {
-            validate();
-
-            readtest();
-
             return IO.copy(this, requireNonNull(output));
         }
 
         @Override
         public long writeTo(final Writer output) throws IOException
         {
-            validate();
-
-            readtest();
-
             return IO.copy(this, requireNonNull(output));
         }
 
@@ -589,7 +588,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
                     final boolean fold = options.contains(ItemsOptions.FOLDER);
 
-                    final ArrayList<File> list = new ArrayList<File>();
+                    final ArrayList<Path> list = new ArrayList<Path>();
 
                     final Path root = getFile().toPath();
 
@@ -602,15 +601,13 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                             {
                                 return FileVisitResult.CONTINUE;
                             }
-                            final File file = path.toFile();
-
-                            if (file.isHidden())
+                            if (Files.isHidden(path))
                             {
                                 return FileVisitResult.SKIP_SUBTREE;
                             }
                             if (fold)
                             {
-                                list.add(file);
+                                list.add(path);
                             }
                             return FileVisitResult.CONTINUE;
                         }
@@ -618,11 +615,9 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                         @Override
                         public FileVisitResult visitFile(final Path path, final BasicFileAttributes attr) throws IOException
                         {
-                            final File file = path.toFile();
-
-                            if ((node) && (false == file.isHidden()))
+                            if ((node) && (false == Files.isHidden(path)))
                             {
-                                list.add(file);
+                                list.add(path);
                             }
                             return FileVisitResult.CONTINUE;
                         }
@@ -656,7 +651,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         private final Stream<IFileItem> normal(final Predicate<File> test)
         {
-            return Arrays.stream(getFile().listFiles()).filter(file -> false == file.isHidden()).filter(test).map(file -> MAKE(file, getFileItemStorage()));
+            return Arrays.stream(getFile().listFiles()).filter(test.and(file -> false == file.isHidden())).map(file -> MAKE(file, getFileItemStorage()));
         }
 
         @Override
@@ -870,7 +865,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
     public static void main(final String... strings)
     {
-        try (SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content"))
+        try (final SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content"))
         {
             stor.getRoot().wrap().items(ItemsOptions.RECURSIVE).forEach(item -> System.out.format("file (%s) type (%s).\n", item.getPath(), item.getContentType()));
 
@@ -878,11 +873,35 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             final JSONArray list = new JSONArray();
 
-            stor.getRoot().wrap().items(ItemsOptions.FILE).filter(item -> item.getPath().endsWith(".json")).forEach(item -> cat(item, list));
+            stor.getRoot().wrap().items(ItemsOptions.FILE).filter(item -> item.getExtension().equals("json")).forEach(item -> cat(item, list));
 
             System.out.println(list.toJSONString());
+
+            final IFileItem item = stor.getRoot().file("b.json");
+
+            final OutputStream puts = new NoOpOutputStream();
+
+            final NanoTimer t = new NanoTimer();
+
+            for (int i = 0; i < 1000; i++)
+            {
+                cat(item, puts);
+            }
+            System.out.println(t.toString());
         }
         catch (final IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void cat(final IFileItem item, final OutputStream ou)
+    {
+        try
+        {
+            item.writeTo(ou);
+        }
+        catch (final Exception e)
         {
             e.printStackTrace();
         }

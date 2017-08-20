@@ -16,31 +16,41 @@
 
 package com.themodernway.server.core.json.binder;
 
-import java.util.List;
-
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.themodernway.server.core.json.binder.XMLBinder.CoreXMLMapper;
 
-public class XMLBinder extends AbstractDataBinder
+public class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
 {
     public XMLBinder()
     {
-        super(new XmlMapper());
-    }
-
-    public XMLBinder(final MapperFeature... features)
-    {
-        super(new XmlMapper(), features);
-    }
-
-    public XMLBinder(final List<MapperFeature> features)
-    {
-        super(new XmlMapper(), features);
+        super(new CoreXMLMapper());
     }
 
     @Override
     public BinderType getType()
     {
         return BinderType.XML;
+    }
+
+    public static class CoreXMLMapper extends XmlMapper
+    {
+        private static final long serialVersionUID = 1L;
+
+        public CoreXMLMapper()
+        {
+        }
+
+        public CoreXMLMapper(final CoreXMLMapper parent)
+        {
+            super(parent);
+        }
+
+        @Override
+        public CoreXMLMapper copy()
+        {
+            _checkInvalidCopy(CoreXMLMapper.class);
+
+            return new CoreXMLMapper(this);
+        }
     }
 }

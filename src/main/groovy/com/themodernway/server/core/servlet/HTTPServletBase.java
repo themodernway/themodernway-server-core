@@ -148,13 +148,13 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
     protected void doPatch(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        if (request.getProtocol().endsWith("1.1"))
+        if (request.getProtocol().endsWith(HTTPUtils.PROTO_1_1_SUFFIX_DEFAULT))
         {
-            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "PATCH");
+            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, HTTP_METHOD_PATCH);
         }
         else
         {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "PATCH");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, HTTP_METHOD_PATCH);
         }
     }
 
@@ -177,6 +177,8 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
                 return;
             }
+            response.setCharacterEncoding(CHARSET_UTF_8);
+
             acquire();
 
             IServerSession session = null;

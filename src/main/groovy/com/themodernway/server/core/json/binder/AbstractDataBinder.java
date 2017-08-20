@@ -23,14 +23,15 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.core.io.Resource;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.io.NoCloseProxyInputStream;
 import com.themodernway.server.core.io.NoCloseProxyOutputStream;
@@ -39,12 +40,13 @@ import com.themodernway.server.core.io.NoCloseProxyWriter;
 import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
+import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
 
-public abstract class AbstractDataBinder implements IBinder
+public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBinder
 {
-    private ObjectMapper m_mapper;
+    private final M m_mapper;
 
-    private boolean      m_strict = false;
+    private boolean m_strict = false;
 
     @SuppressWarnings("unchecked")
     protected final static JSONObject MAKE(final Object make)
@@ -52,23 +54,9 @@ public abstract class AbstractDataBinder implements IBinder
         return new JSONObject((Map<String, Object>) make);
     }
 
-    protected AbstractDataBinder(final ObjectMapper mapper)
+    protected AbstractDataBinder(final M mapper)
     {
         m_mapper = mapper;
-    }
-
-    protected AbstractDataBinder(final ObjectMapper mapper, final MapperFeature... features)
-    {
-        this(mapper);
-
-        enable(features);
-    }
-
-    protected AbstractDataBinder(final ObjectMapper mapper, final List<MapperFeature> features)
-    {
-        this(mapper);
-
-        enable(features);
     }
 
     @Override
@@ -88,7 +76,23 @@ public abstract class AbstractDataBinder implements IBinder
     @Override
     public IBinder configure(final MapperFeature feature, final boolean state)
     {
-        m_mapper = m_mapper.configure(feature, state);
+        m_mapper.configure(feature, state);
+
+        return this;
+    }
+
+    @Override
+    public IBinder configure(final SerializationFeature feature, final boolean state)
+    {
+        m_mapper.configure(feature, state);
+
+        return this;
+    }
+
+    @Override
+    public IBinder configure(final DeserializationFeature feature, final boolean state)
+    {
+        m_mapper.configure(feature, state);
 
         return this;
     }
@@ -96,17 +100,27 @@ public abstract class AbstractDataBinder implements IBinder
     @Override
     public IBinder enable(final MapperFeature... features)
     {
-        m_mapper = m_mapper.enable(features);
+        m_mapper.enable(features);
 
         return this;
     }
 
     @Override
-    public IBinder enable(final List<MapperFeature> features)
+    public IBinder enable(final SerializationFeature... features)
     {
-        for (MapperFeature feature : features)
+        for (final SerializationFeature feature : features)
         {
-            m_mapper = m_mapper.enable(feature);
+            configure(feature, true);
+        }
+        return this;
+    }
+
+    @Override
+    public IBinder enable(final DeserializationFeature... features)
+    {
+        for (final DeserializationFeature feature : features)
+        {
+            configure(feature, true);
         }
         return this;
     }
@@ -114,23 +128,63 @@ public abstract class AbstractDataBinder implements IBinder
     @Override
     public IBinder disable(final MapperFeature... features)
     {
-        m_mapper = m_mapper.disable(features);
+        m_mapper.disable(features);
 
         return this;
     }
 
     @Override
-    public IBinder disable(final List<MapperFeature> features)
+    public IBinder disable(final SerializationFeature... features)
     {
-        for (MapperFeature feature : features)
+        for (final SerializationFeature feature : features)
         {
-            m_mapper = m_mapper.disable(feature);
+            configure(feature, false);
         }
         return this;
     }
 
     @Override
+    public IBinder disable(final DeserializationFeature... features)
+    {
+        for (final DeserializationFeature feature : features)
+        {
+            configure(feature, false);
+        }
+        return this;
+    }
+
+    @Override
+    public IBinder pretty()
+    {
+        return pretty(true);
+    }
+
+    @Override
+    public IBinder pretty(final boolean enabled)
+    {
+        return configure(SerializationFeature.INDENT_OUTPUT, enabled);
+    }
+
+    @Override
+    public boolean isPretty()
+    {
+        return isEnabled(SerializationFeature.INDENT_OUTPUT);
+    }
+
+    @Override
     public boolean isEnabled(final MapperFeature feature)
+    {
+        return m_mapper.isEnabled(feature);
+    }
+
+    @Override
+    public boolean isEnabled(final SerializationFeature feature)
+    {
+        return m_mapper.isEnabled(feature);
+    }
+
+    @Override
+    public boolean isEnabled(final DeserializationFeature feature)
     {
         return m_mapper.isEnabled(feature);
     }
@@ -142,7 +196,7 @@ public abstract class AbstractDataBinder implements IBinder
         {
             return m_mapper.readValue(file, claz);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -155,7 +209,7 @@ public abstract class AbstractDataBinder implements IBinder
         {
             return m_mapper.readValue(new NoCloseProxyInputStream(stream), claz);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -168,7 +222,7 @@ public abstract class AbstractDataBinder implements IBinder
         {
             return m_mapper.readValue(new NoCloseProxyReader(reader), claz);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -185,7 +239,7 @@ public abstract class AbstractDataBinder implements IBinder
 
             return m_mapper.readValue(stream, claz);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -202,7 +256,7 @@ public abstract class AbstractDataBinder implements IBinder
         {
             return m_mapper.readValue(url, claz);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -215,7 +269,7 @@ public abstract class AbstractDataBinder implements IBinder
         {
             return m_mapper.readValue(text, claz);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -272,7 +326,7 @@ public abstract class AbstractDataBinder implements IBinder
         {
             m_mapper.writeValue(file, object);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -287,7 +341,7 @@ public abstract class AbstractDataBinder implements IBinder
         {
             m_mapper.writeValue(new NoCloseProxyOutputStream(stream), object);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -302,7 +356,7 @@ public abstract class AbstractDataBinder implements IBinder
         {
             m_mapper.writeValue(new NoCloseProxyWriter(writer), object);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -317,7 +371,7 @@ public abstract class AbstractDataBinder implements IBinder
         {
             return m_mapper.writeValueAsString(object);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -351,7 +405,7 @@ public abstract class AbstractDataBinder implements IBinder
                 return bindJSON(writer.toString());
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -379,8 +433,8 @@ public abstract class AbstractDataBinder implements IBinder
         return false;
     }
 
-    protected ObjectMapper getMapperForJSON()
+    protected CoreObjectMapper getMapperForJSON()
     {
-        return new ObjectMapper();
+        return new CoreObjectMapper();
     }
 }
