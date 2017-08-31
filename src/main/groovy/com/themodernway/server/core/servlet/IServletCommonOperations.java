@@ -28,7 +28,6 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.ITimeSupplier;
@@ -38,22 +37,8 @@ import com.themodernway.server.core.security.session.IServerSession;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
-public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, INamed
+public interface IServletCommonOperations extends ICoreCommon, ICoreServletConstants, INamed
 {
-    public static final int    DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH = 64;
-
-    public static final int    MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH = 128;
-
-    public static final long   DEFAULT_CACHE_DELTA_IN_MILLISECONDS    = 1000L;
-
-    public static final String SESSION_PROVIDER_DOMAIN_NAME_PARAM     = "core.server.session.provider.domain.name";
-
-    public static final String CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM   = "core.server.content.type.max.header.length";
-
-    public static final String UNKNOWN_USER                           = "%-UNKNOWN-USER-%";
-
-    public static final String NULL_SESSION                           = "%-NULL-SESSION-%";
-
     public static IServerContext getServerContextInstance()
     {
         return ServerContextInstance.getServerContextInstance();
@@ -263,7 +248,7 @@ public interface IServletCommonOperations extends ICoreCommon, IHTTPConstants, I
 
     public default String getSessionProviderDomainName()
     {
-        return toTrimOrElse(getConfigurationParameter(SESSION_PROVIDER_DOMAIN_NAME_PARAM), "default");
+        return toTrimOrElse(getConfigurationParameter(SESSION_PROVIDER_DOMAIN_NAME_PARAM), SESSION_PROVIDER_DEFAULT);
     }
 
     public default List<String> getConfigurationParameterNames()

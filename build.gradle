@@ -252,22 +252,23 @@ dependencies {
     compile(group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3')
     compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3')
     compile(group: 'com.google.guava', name: 'guava', version: '23.0')
-    compile(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.4')
-    compile(group: 'com.github.ben-manes.caffeine', name: 'jcache', version: '2.5.4')
+    compile(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.5')
+    compile(group: 'com.github.ben-manes.caffeine', name: 'jcache', version: '2.5.5')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0')
     compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.9.0')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.0')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0')
+    compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.9.0')
     compile(group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
     compile(group: 'org.gebish', name: 'geb-core', version: '1.1.1') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
-    compile(group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.4.0')
-    compile(group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.4.0')
+    compile(group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.5.2')
+    compile(group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.5.2')
     springCorePackages().each { String name ->
         compile(group: 'org.springframework', name: name, version: '4.3.10.RELEASE')
     }

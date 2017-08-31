@@ -19,13 +19,13 @@ package com.themodernway.server.core.json.binder;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.IStringValued;
+import com.themodernway.server.core.servlet.ICoreServletConstants;
 
 public enum BinderType implements IBinderFactory, IStringValued
 {
-    JSON("JSON", JSONBinder::new), YAML("YAML", YAMLBinder::new), XML("XML", XMLBinder::new);
+    JSON(IBINDER_FACTORY_TYPE_JSON, JSONBinder::new), YAML(IBINDER_FACTORY_TYPE_YAML, YAMLBinder::new), XML(IBINDER_FACTORY_TYPE_XML, XMLBinder::new), PROPERTIES(IBINDER_FACTORY_TYPE_PROPERTIES, PropertiesBinder::new);
 
     private final String         m_value;
 
@@ -65,7 +65,7 @@ public enum BinderType implements IBinderFactory, IStringValued
     {
         return BinderTypeOp.forContentType(type.get());
     }
-    
+
     public static final BinderType forName(final String name)
     {
         return BinderTypeOp.forName(name);
@@ -76,7 +76,7 @@ public enum BinderType implements IBinderFactory, IStringValued
         return BinderTypeOp.forName(name.get());
     }
 
-    static final class BinderTypeOp implements IHTTPConstants
+    static final class BinderTypeOp implements ICoreServletConstants
     {
         private BinderTypeOp()
         {
@@ -98,12 +98,16 @@ public enum BinderType implements IBinderFactory, IStringValued
             {
                 return BinderType.YAML;
             }
+            else if (cont.contains(CONTENT_TYPE_TEXT_PROPERTIES))
+            {
+                return BinderType.PROPERTIES;
+            }
             else
             {
                 return BinderType.JSON;
             }
         }
-        
+
         static final BinderType forName(final String name)
         {
             final String cont = StringOps.toTrimOrElse(name, BinderType.JSON.getValue()).toUpperCase();
@@ -119,6 +123,10 @@ public enum BinderType implements IBinderFactory, IStringValued
             else if (cont.equals(BinderType.YAML.getValue()))
             {
                 return BinderType.YAML;
+            }
+            else if (cont.equals(BinderType.PROPERTIES.getValue()))
+            {
+                return BinderType.PROPERTIES;
             }
             else
             {

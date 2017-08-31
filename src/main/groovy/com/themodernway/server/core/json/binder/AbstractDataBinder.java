@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 
 import org.springframework.core.io.Resource;
 
@@ -41,6 +42,7 @@ import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
+import com.themodernway.server.core.json.binder.PropertiesBinder.CorePropertiesMapper;
 
 public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBinder
 {
@@ -282,6 +284,19 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     }
 
     @Override
+    public <T> T bind(final Properties properties, final Class<T> claz) throws ParserException
+    {
+        try
+        {
+            return getMapperForProperties().readPropertiesAs(properties, claz);
+        }
+        catch (final Exception e)
+        {
+            throw new ParserException(e);
+        }
+    }
+
+    @Override
     public JSONObject bindJSON(final File file) throws ParserException
     {
         return MAKE(bind(file, LinkedHashMap.class));
@@ -315,6 +330,12 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     public JSONObject bindJSON(final String text) throws ParserException
     {
         return MAKE(bind(text, LinkedHashMap.class));
+    }
+
+    @Override
+    public JSONObject bindJSON(final Properties properties) throws ParserException
+    {
+        return MAKE(bind(properties, LinkedHashMap.class));
     }
 
     @Override
@@ -433,8 +454,18 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         return false;
     }
 
+    protected M getMapper()
+    {
+        return m_mapper;
+    }
+
     protected CoreObjectMapper getMapperForJSON()
     {
         return new CoreObjectMapper();
+    }
+
+    protected CorePropertiesMapper getMapperForProperties()
+    {
+        return new CorePropertiesMapper();
     }
 }

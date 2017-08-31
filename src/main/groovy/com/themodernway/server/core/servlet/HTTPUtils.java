@@ -16,41 +16,36 @@
 
 package com.themodernway.server.core.servlet;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.security.session.IServerSession;
 import com.themodernway.server.core.security.session.IServerSessionRepository;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
-public final class HTTPUtils implements IHTTPConstants
+public final class HTTPUtils implements ICoreServletConstants
 {
-    public static final String PROTO_1_1_SUFFIX_DEFAULT = "1.1";
-
-    public static final String HTTPS_URL_PREFIX_DEFAULT = "https";
-
-    public static final String SESSION_PROVIDER_DEFAULT = "default";
-
     private HTTPUtils()
     {
     }
 
     public static Cookie setCookie(final HttpServletRequest request, final HttpServletResponse response, final String name, final String value, final String path)
     {
-        return setCookie(request, response, name, value, path, YEAR_IN_SECONDS);
+        return setCookie(request, response, name, value, path, TimeUnit.SECONDS, YEAR_IN_SECONDS);
     }
 
-    public static Cookie setCookie(final HttpServletRequest request, final HttpServletResponse response, final String name, final String value, final long seconds)
+    public static Cookie setCookie(final HttpServletRequest request, final HttpServletResponse response, final String name, final String value, final TimeUnit unit, final long duration)
     {
-        return setCookie(request, response, name, value, null, seconds);
+        return setCookie(request, response, name, value, null, unit, duration);
     }
 
-    public static Cookie setCookie(final HttpServletRequest request, final HttpServletResponse response, String name, final String value, String path, final long seconds)
+    public static Cookie setCookie(final HttpServletRequest request, final HttpServletResponse response, String name, final String value, String path, final TimeUnit unit, final long duration)
     {
         if ((null != request) && (null != response) && (null != (name = StringOps.toTrimOrNull(name))))
         {
@@ -60,14 +55,11 @@ public final class HTTPUtils implements IHTTPConstants
 
                 cookie.setMaxAge(0);
 
-                final String ruri = request.getHeader(REFERER_HEADER);
+                final String ruri = StringOps.toTrimOrNull(request.getHeader(REFERER_HEADER));
 
-                if (null != ruri)
+                if ((null != ruri) && (ruri.startsWith(HTTPS_URL_PREFIX_DEFAULT)))
                 {
-                    if (ruri.startsWith(HTTPS_URL_PREFIX_DEFAULT))
-                    {
-                        cookie.setSecure(true);
-                    }
+                    cookie.setSecure(true);
                 }
                 if (null != (path = StringOps.toTrimOrNull(path)))
                 {
@@ -81,16 +73,17 @@ public final class HTTPUtils implements IHTTPConstants
             {
                 final Cookie cookie = new Cookie(name, value);
 
-                cookie.setMaxAge((int) seconds);
+                final long seconds = unit.toSeconds(duration);
 
-                final String ruri = request.getHeader(REFERER_HEADER);
+                final long rounded = Math.max(0, Math.min(seconds, YEAR_IN_SECONDS));
 
-                if (null != ruri)
+                cookie.setMaxAge(Math.toIntExact(rounded));
+
+                final String ruri = StringOps.toTrimOrNull(request.getHeader(REFERER_HEADER));
+
+                if ((null != ruri) && (ruri.startsWith(HTTPS_URL_PREFIX_DEFAULT)))
                 {
-                    if (ruri.startsWith(HTTPS_URL_PREFIX_DEFAULT))
-                    {
-                        cookie.setSecure(true);
-                    }
+                    cookie.setSecure(true);
                 }
                 if (null != (path = StringOps.toTrimOrNull(path)))
                 {

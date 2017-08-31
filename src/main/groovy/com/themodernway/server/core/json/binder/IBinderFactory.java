@@ -19,5 +19,13 @@ package com.themodernway.server.core.json.binder;
 @FunctionalInterface
 public interface IBinderFactory
 {
+    public static final String IBINDER_FACTORY_TYPE_JSON       = "JSON";
+
+    public static final String IBINDER_FACTORY_TYPE_YAML       = "YAML";
+
+    public static final String IBINDER_FACTORY_TYPE_XML        = "XML";
+
+    public static final String IBINDER_FACTORY_TYPE_PROPERTIES = "PROPERTIES";
+
     public IBinder getBinder();
 }

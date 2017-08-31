@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.Properties;
 
 import org.springframework.core.io.Resource;
 
@@ -47,6 +48,8 @@ public interface IBinder
 
     public <T> T bind(JSONObject json, Class<T> claz) throws ParserException;
 
+    public <T> T bind(Properties properties, Class<T> claz) throws ParserException;
+
     public JSONObject bindJSON(File file) throws ParserException;
 
     public JSONObject bindJSON(InputStream stream) throws ParserException;
@@ -58,6 +61,8 @@ public interface IBinder
     public JSONObject bindJSON(String text) throws ParserException;
 
     public JSONObject bindJSON(URL url) throws ParserException;
+
+    public JSONObject bindJSON(Properties properties) throws ParserException;
 
     public IBinder pretty();
 

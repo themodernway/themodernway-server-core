@@ -29,15 +29,11 @@ import com.themodernway.server.core.file.vfs.IFolderItem;
 @SuppressWarnings("serial")
 public abstract class AbstractContentServlet extends HTTPServletBase
 {
-    public static final String                                CONTENT_SERVLET_STORAGE_NAME_DEFAULT = "content";
+    private String                                            m_storage_name = null;
 
-    public static final String                                CONTENT_SERVLET_STORAGE_NAME_PARAM   = "core.server.content.servlet.storage.name";
+    private final Object                                      m_storage_lock = new Object();
 
-    private String                                            m_storage_name                       = null;
-
-    private final Object                                      m_storage_lock                       = new Object();
-
-    private final ConcurrentHashMap<String, IFileItemStorage> m_storage_save                       = new ConcurrentHashMap<String, IFileItemStorage>();
+    private final ConcurrentHashMap<String, IFileItemStorage> m_storage_save = new ConcurrentHashMap<String, IFileItemStorage>();
 
     protected AbstractContentServlet()
     {
