@@ -19,6 +19,7 @@ package com.themodernway.server.core.support.spring;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.Objects;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
@@ -31,7 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
 
-public abstract class AbstractFilterContextCustomizer implements IServletContextCustomizer, ICoreCommon
+public class FilterFaxtoryContextCustomizer implements IServletContextCustomizer, ICoreCommon
 {
     private final Logger   m_logs = Logger.getLogger(getClass());
 
@@ -41,16 +42,23 @@ public abstract class AbstractFilterContextCustomizer implements IServletContext
 
     private boolean        m_when = true;
 
-    protected AbstractFilterContextCustomizer(final String name, final String maps)
+    private IFilterFactory m_fact;
+
+    public FilterFaxtoryContextCustomizer(final String name, final String maps)
     {
         this(name, StringOps.toUniqueTokenStringList(maps));
     }
 
-    protected AbstractFilterContextCustomizer(final String name, final Collection<String> maps)
+    public FilterFaxtoryContextCustomizer(final String name, final Collection<String> maps)
     {
-        m_name = requireTrimOrNull(name);
-
         m_maps = StringOps.toUniqueArray(maps);
+
+        m_name = StringOps.requireTrimOrNull(name);
+    }
+
+    public void setFilterFactory(final IFilterFactory fact)
+    {
+        m_fact = Objects.requireNonNull(fact);
     }
 
     @Override
@@ -87,46 +95,51 @@ public abstract class AbstractFilterContextCustomizer implements IServletContext
     @Override
     public void customize(final ServletContext sc, final WebApplicationContext context)
     {
-        final String name = StringOps.toTrimOrNull(getFilterName());
-
-        if (null != name)
+        if (null != m_fact)
         {
-            final String[] maps = getMappings();
+            final String name = StringOps.toTrimOrNull(getFilterName());
 
-            if ((null != maps) && (maps.length > 0))
+            if (null != name)
             {
-                final Filter filter = doMakeFilter(sc, context);
+                final String[] maps = getMappings();
 
-                if (null != filter)
+                if ((null != maps) && (maps.length > 0))
                 {
-                    final Dynamic dispatcher = sc.addFilter(name, filter);
+                    final Filter filter = m_fact.make(sc, context);
 
-                    if (null != dispatcher)
+                    if (null != filter)
                     {
-                        dispatcher.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), isMatchAfter(), maps);
+                        final Dynamic dispatcher = sc.addFilter(name, filter);
 
-                        logger().info(String.format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                        if (null != dispatcher)
+                        {
+                            dispatcher.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), isMatchAfter(), maps);
+
+                            logger().info(String.format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                        }
+                        else
+                        {
+                            logger().error(String.format("customize (%s) already registered.", name));
+                        }
                     }
                     else
                     {
-                        logger().error(String.format("customize (%s) already registered.", name));
+                        logger().error(String.format("customize (%s) null filter.", name));
                     }
                 }
                 else
                 {
-                    logger().error(String.format("customize (%s) null filter.", name));
+                    logger().error(String.format("customize (%s) empty mappings.", name));
                 }
             }
             else
             {
-                logger().error(String.format("customize (%s) empty mappings.", name));
+                logger().error("customize() no filter name.");
             }
         }
         else
         {
-            logger().error("customize() no filter name.");
+            logger().error("customize() no filter factory.");
         }
     }
-
-    protected abstract Filter doMakeFilter(ServletContext sc, WebApplicationContext context);
 }

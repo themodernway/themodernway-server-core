@@ -19,6 +19,7 @@ package com.themodernway.server.core.support.spring;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -30,7 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
 
-public abstract class AbstractServletContextCustomizer implements IServletContextCustomizer, ICoreCommon
+public class ServletFactoryContextCustomizer implements IServletContextCustomizer, ICoreCommon
 {
     private final Logger   m_logs = Logger.getLogger(getClass());
 
@@ -44,16 +45,23 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
 
     private List<String>   m_role = arrayList();
 
-    protected AbstractServletContextCustomizer(final String name, final String maps)
+    private IServletFactory m_fact;
+
+    public ServletFactoryContextCustomizer(final String name, final String maps)
     {
         this(name, StringOps.toUniqueTokenStringList(maps));
     }
 
-    protected AbstractServletContextCustomizer(final String name, final Collection<String> maps)
+    public ServletFactoryContextCustomizer(final String name, final Collection<String> maps)
     {
         m_name = requireTrimOrNull(name);
 
         m_maps = StringOps.toUniqueArray(maps);
+    }
+
+    public void setServletFactory(final IServletFactory fact)
+    {
+        m_fact = Objects.requireNonNull(fact);
     }
 
     public void setRateLinit(final double rate)
@@ -130,7 +138,7 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
 
             if ((null != maps) && (maps.length > 0))
             {
-                final Servlet servlet = doMakeServlet(sc, context);
+                final Servlet servlet = m_fact.make(sc, context);
 
                 if (null != servlet)
                 {
@@ -168,6 +176,4 @@ public abstract class AbstractServletContextCustomizer implements IServletContex
             logger().error("customize() no servlet name.");
         }
     }
-
-    protected abstract Servlet doMakeServlet(ServletContext sc, WebApplicationContext context);
 }

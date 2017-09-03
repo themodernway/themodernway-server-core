@@ -26,7 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.themodernway.server.core.servlet.ContentGetServlet;
 import com.themodernway.server.core.servlet.IServletCommonOperations;
 
-public class ContentGetServletContextCustomizer extends AbstractServletContextCustomizer
+public class ContentGetServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
 {
     private String  m_stor = null;
 
@@ -37,11 +37,15 @@ public class ContentGetServletContextCustomizer extends AbstractServletContextCu
     public ContentGetServletContextCustomizer(final String name, final String maps)
     {
         super(name, maps);
+
+        setServletFactory(this);
     }
 
     public ContentGetServletContextCustomizer(final String name, final Collection<String> maps)
     {
         super(name, maps);
+
+        setServletFactory(this);
     }
 
     public String getFileItemStorageName()
@@ -75,7 +79,7 @@ public class ContentGetServletContextCustomizer extends AbstractServletContextCu
     }
 
     @Override
-    protected Servlet doMakeServlet(final ServletContext sc, final WebApplicationContext context)
+    public Servlet make(final ServletContext sc, final WebApplicationContext context)
     {
         final ContentGetServlet inst = new ContentGetServlet();
 

@@ -33,6 +33,8 @@ import com.themodernway.server.core.servlet.IServletCommonOperations;
 
 public interface IHTTPFilter extends Filter, IServletCommonOperations
 {
+    public static final String ALREADY_FILTERED_SUFFIX = ".FILTERED";
+
     public void filter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
 
     public FilterConfig getFilterConfig();
@@ -41,6 +43,16 @@ public interface IHTTPFilter extends Filter, IServletCommonOperations
 
     public default void initialize() throws ServletException
     {
+    }
+
+    public default boolean isOncePerRequest()
+    {
+        return false;
+    }
+
+    public default String getOncePerRequestAttribute()
+    {
+        return toTrimOrElse(getName(), getClass().getName()) + ALREADY_FILTERED_SUFFIX;
     }
 
     @Override
@@ -69,7 +81,32 @@ public interface IHTTPFilter extends Filter, IServletCommonOperations
     @Override
     public default void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
     {
-        filter((HttpServletRequest) request, (HttpServletResponse) response, chain);
+        if (isOncePerRequest())
+        {
+            final String attr = getOncePerRequestAttribute();
+
+            if (null != request.getAttribute(attr))
+            {
+                chain.doFilter(request, response);
+            }
+            else
+            {
+                request.setAttribute(attr, Boolean.TRUE);
+
+                try
+                {
+                    filter((HttpServletRequest) request, (HttpServletResponse) response, chain);
+                }
+                finally
+                {
+                    request.removeAttribute(attr);
+                }
+            }
+        }
+        else
+        {
+            filter((HttpServletRequest) request, (HttpServletResponse) response, chain);
+        }
     }
 
     @Override

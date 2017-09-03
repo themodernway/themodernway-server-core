@@ -22,6 +22,8 @@ import org.apache.log4j.Logger;
 
 public abstract class HTTPFilterBase implements IHTTPFilter
 {
+    private boolean      m_isonceper = false;
+
     private boolean      m_iscontent = false;
 
     private int          m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
@@ -32,6 +34,17 @@ public abstract class HTTPFilterBase implements IHTTPFilter
 
     protected HTTPFilterBase()
     {
+    }
+
+    public void setOncePerRequest(final boolean once)
+    {
+        m_isonceper = once;
+    }
+
+    @Override
+    public boolean isOncePerRequest()
+    {
+        return m_isonceper;
     }
 
     @Override

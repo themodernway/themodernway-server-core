@@ -26,7 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.servlet.ContentUploadServlet;
 
-public class ContentUploadServletContextCustomizer extends AbstractServletContextCustomizer
+public class ContentUploadServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
 {
     private String m_stor  = null;
 
@@ -35,11 +35,15 @@ public class ContentUploadServletContextCustomizer extends AbstractServletContex
     public ContentUploadServletContextCustomizer(final String name, final String maps)
     {
         super(name, maps);
+
+        setServletFactory(this);
     }
 
     public ContentUploadServletContextCustomizer(final String name, final Collection<String> maps)
     {
         super(name, maps);
+
+        setServletFactory(this);
     }
 
     public String getFileItemStorageName()
@@ -63,7 +67,7 @@ public class ContentUploadServletContextCustomizer extends AbstractServletContex
     }
 
     @Override
-    protected Servlet doMakeServlet(final ServletContext sc, final WebApplicationContext context)
+    public Servlet make(final ServletContext sc, final WebApplicationContext context)
     {
         final ContentUploadServlet inst = new ContentUploadServlet();
 

@@ -25,29 +25,19 @@ import com.themodernway.server.core.servlet.ICoreServletConstants;
 
 public enum BinderType implements IBinderFactory, IStringValued
 {
-    JSON(IBINDER_FACTORY_TYPE_JSON, JSONBinder::new), YAML(IBINDER_FACTORY_TYPE_YAML, YAMLBinder::new), XML(IBINDER_FACTORY_TYPE_XML, XMLBinder::new), PROPERTIES(IBINDER_FACTORY_TYPE_PROPERTIES, PropertiesBinder::new);
-
-    private final String         m_value;
+    JSON(JSONBinder::new), YAML(YAMLBinder::new), XML(XMLBinder::new), PROPERTIES(PropertiesBinder::new);
 
     private final IBinderFactory m_maker;
 
-    private BinderType(final String value, final IBinderFactory maker)
+    private BinderType(final IBinderFactory maker)
     {
-        m_value = StringOps.requireTrimOrNull(value).toUpperCase();
-
         m_maker = Objects.requireNonNull(maker);
     }
 
     @Override
     public final String getValue()
     {
-        return m_value;
-    }
-
-    @Override
-    public final String toString()
-    {
-        return m_value;
+        return toString();
     }
 
     @Override

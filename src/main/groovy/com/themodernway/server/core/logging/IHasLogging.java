@@ -18,6 +18,7 @@ package com.themodernway.server.core.logging;
 
 import org.apache.log4j.Logger;
 
+@FunctionalInterface
 public interface IHasLogging
 {
     public Logger logger();

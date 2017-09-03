@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json.binder;
+package com.themodernway.server.core.support.spring;
+
+import javax.servlet.Filter;
+import javax.servlet.ServletContext;
+
+import org.springframework.web.context.WebApplicationContext;
 
 @FunctionalInterface
-public interface IBinderFactory
+public interface IFilterFactory
 {
-    public IBinder getBinder();
+    public Filter make(ServletContext sc, WebApplicationContext context);
 }

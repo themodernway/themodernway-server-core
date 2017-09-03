@@ -25,20 +25,24 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.servlet.CoreSpringDispatcherServlet;
 
-public class SpringDispatcherServletContextCustomizer extends AbstractServletContextCustomizer
+public class SpringDispatcherServletContextCustomizer extends ServletFactoryContextCustomizer  implements IServletFactory
 {
     public SpringDispatcherServletContextCustomizer(final String name, final String maps)
     {
         super(name, maps);
+
+        setServletFactory(this);
     }
 
     public SpringDispatcherServletContextCustomizer(final String name, final Collection<String> maps)
     {
         super(name, maps);
+
+        setServletFactory(this);
     }
 
     @Override
-    protected Servlet doMakeServlet(final ServletContext sc, final WebApplicationContext context)
+    public Servlet make(final ServletContext sc, final WebApplicationContext context)
     {
         final CoreSpringDispatcherServlet inst = new CoreSpringDispatcherServlet(context);
 

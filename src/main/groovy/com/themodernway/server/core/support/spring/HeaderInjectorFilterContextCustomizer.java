@@ -29,13 +29,15 @@ import org.springframework.web.context.WebApplicationContext;
 import com.themodernway.server.core.servlet.filter.HeaderInjectorFilter;
 import com.themodernway.server.core.servlet.filter.IHeaderInjector;
 
-public class HeaderInjectorFilterContextCustomizer extends AbstractFilterContextCustomizer
+public class HeaderInjectorFilterContextCustomizer extends FilterFaxtoryContextCustomizer implements IFilterFactory
 {
     private final List<IHeaderInjector> m_injectors = new ArrayList<IHeaderInjector>();
 
     public HeaderInjectorFilterContextCustomizer(final String name, final String maps, final List<IHeaderInjector> injectors)
     {
         super(name, maps);
+
+        setFilterFactory(this);
 
         for (final IHeaderInjector injector : injectors)
         {
@@ -49,6 +51,8 @@ public class HeaderInjectorFilterContextCustomizer extends AbstractFilterContext
     public HeaderInjectorFilterContextCustomizer(final String name, final Collection<String> maps, final List<IHeaderInjector> injectors)
     {
         super(name, maps);
+
+        setFilterFactory(this);
 
         for (final IHeaderInjector injector : injectors)
         {
@@ -65,7 +69,7 @@ public class HeaderInjectorFilterContextCustomizer extends AbstractFilterContext
     }
 
     @Override
-    protected Filter doMakeFilter(final ServletContext sc, final WebApplicationContext context)
+    public Filter make(final ServletContext sc, final WebApplicationContext context)
     {
         return new HeaderInjectorFilter(getHeaderInjectors());
     }

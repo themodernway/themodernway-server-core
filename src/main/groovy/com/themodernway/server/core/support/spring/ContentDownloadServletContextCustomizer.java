@@ -25,18 +25,22 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.servlet.ContentDownloadServlet;
 
-public class ContentDownloadServletContextCustomizer extends AbstractServletContextCustomizer
+public class ContentDownloadServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
 {
     private String m_stor = null;
 
     public ContentDownloadServletContextCustomizer(final String name, final String maps)
     {
         super(name, maps);
+
+        setServletFactory(this);
     }
 
     public ContentDownloadServletContextCustomizer(final String name, final Collection<String> maps)
     {
         super(name, maps);
+
+        setServletFactory(this);
     }
 
     public String getFileItemStorageName()
@@ -50,7 +54,7 @@ public class ContentDownloadServletContextCustomizer extends AbstractServletCont
     }
 
     @Override
-    protected Servlet doMakeServlet(final ServletContext sc, final WebApplicationContext context)
+    public Servlet make(final ServletContext sc, final WebApplicationContext context)
     {
         final ContentDownloadServlet inst = new ContentDownloadServlet();
 
