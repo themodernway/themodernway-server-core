@@ -17,12 +17,12 @@
 package com.themodernway.server.core.security;
 
 import java.security.MessageDigest;
-import java.util.Objects;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
 import com.themodernway.common.api.hash.Hasher;
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.IHTTPConstants;
 
 public final class SimpleSHA512HashProvider implements ISHA512HashProvider
@@ -38,7 +38,7 @@ public final class SimpleSHA512HashProvider implements ISHA512HashProvider
     @Override
     public String sha512(final String text)
     {
-        Objects.requireNonNull(text);
+        CommonOps.requireNonNull(text);
 
         MessageDigest md;
 
@@ -46,7 +46,7 @@ public final class SimpleSHA512HashProvider implements ISHA512HashProvider
         {
             md = MessageDigest.getInstance("SHA-512");
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("No SHA-512 Algorithm ", e);
 
@@ -58,7 +58,7 @@ public final class SimpleSHA512HashProvider implements ISHA512HashProvider
         {
             bytes = text.getBytes(IHTTPConstants.CHARSET_UTF_8);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("No " + IHTTPConstants.CHARSET_UTF_8 + " encoding ", e);
 
@@ -72,12 +72,12 @@ public final class SimpleSHA512HashProvider implements ISHA512HashProvider
     @Override
     public String sha512(final String text, final String salt)
     {
-        return m_hasher.sha512(Objects.requireNonNull(text), Objects.requireNonNull(salt));
+        return m_hasher.sha512(CommonOps.requireNonNull(text), CommonOps.requireNonNull(salt));
     }
 
     @Override
     public String sha512(final String text, final String salt, final int iter)
     {
-        return m_hasher.sha512(Objects.requireNonNull(text), Objects.requireNonNull(salt), iter);
+        return m_hasher.sha512(CommonOps.requireNonNull(text), CommonOps.requireNonNull(salt), iter);
     }
 }

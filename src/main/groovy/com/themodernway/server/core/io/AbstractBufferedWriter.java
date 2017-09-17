@@ -18,17 +18,18 @@ package com.themodernway.server.core.io;
 
 import java.io.BufferedWriter;
 import java.io.Writer;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public abstract class AbstractBufferedWriter<T extends AbstractBufferedWriter<T>> extends BufferedWriter implements IFormatted<T>
 {
     public AbstractBufferedWriter(final Writer writer)
     {
-        super(Objects.requireNonNull(writer), IO.DEFAULT_BUFFER_CAPACITY);
+        super(CommonOps.requireNonNull(writer), IO.DEFAULT_BUFFER_CAPACITY);
     }
 
     public AbstractBufferedWriter(final Writer writer, final int capacity)
     {
-        super(Objects.requireNonNull(writer), IO.toValidBufferCapacity(capacity));
+        super(CommonOps.requireNonNull(writer), IO.toValidBufferCapacity(capacity));
     }
 }

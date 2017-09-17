@@ -17,23 +17,24 @@
 package com.themodernway.server.core.json;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.json.JSONObjectDefinition;
 import com.themodernway.common.api.json.JSONType;
-import com.themodernway.server.core.json.binder.JSONBinder;
+import com.themodernway.server.core.io.OutputStreamProxyWriter;
+import com.themodernway.server.core.json.binder.BinderType;
 
 @JacksonXmlRootElement(localName = "result")
 public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
@@ -48,17 +49,17 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
     public JSONObject(final Map<String, ?> map)
     {
-        super(map);
+        super(CommonOps.requireNonNull(map));
     }
 
     public JSONObject(final List<?> list)
     {
-        put("list", Objects.requireNonNull(list));
+        put("list", CommonOps.requireNonNull(list));
     }
 
     public JSONObject(final String name, final Object value)
     {
-        put(Objects.requireNonNull(name), value);
+        put(CommonOps.requireNonNull(name), value);
     }
 
     public String dumpClassNamesToString()
@@ -142,6 +143,15 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         }
     }
 
+    static final void writeJSONString(final Map<?, ?> map, final OutputStream out, final IJSONContext context, final boolean strict) throws IOException
+    {
+        final OutputStreamProxyWriter writer = new OutputStreamProxyWriter(out);
+
+        writeJSONString(map, writer, context, strict);
+
+        writer.flush();
+    }
+
     @Override
     public void writeJSONString(final Writer out) throws IOException
     {
@@ -153,7 +163,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         if (false == strict)
         {
-            JSONUtils.writeObjectAsJSON(out, this);
+            writeJSONString(out);
         }
         else
         {
@@ -166,7 +176,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         if (null == context)
         {
-            JSONUtils.writeObjectAsJSON(out, this);
+            writeJSONString(out);
         }
         else
         {
@@ -179,7 +189,56 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         if ((false == strict) && (null == context))
         {
-            JSONUtils.writeObjectAsJSON(out, this);
+            writeJSONString(out);
+        }
+        else
+        {
+            writeJSONString(this, out, context, strict);
+        }
+    }
+
+    @Override
+    public void writeJSONString(final OutputStream out) throws IOException
+    {
+        final OutputStreamWriter writer = new OutputStreamWriter(out, StringOps.CHARSET_UTF_8);
+
+        writeJSONString(writer);
+
+        writer.flush();
+    }
+
+    @Override
+    public void writeJSONString(final OutputStream out, final boolean strict) throws IOException
+    {
+        if (false == strict)
+        {
+            writeJSONString(out);
+        }
+        else
+        {
+            writeJSONString(this, out, null, strict);
+        }
+    }
+
+    @Override
+    public void writeJSONString(final OutputStream out, final IJSONContext context) throws IOException
+    {
+        if (null == context)
+        {
+            writeJSONString(out);
+        }
+        else
+        {
+            writeJSONString(this, out, context, false);
+        }
+    }
+
+    @Override
+    public void writeJSONString(final OutputStream out, final IJSONContext context, final boolean strict) throws IOException
+    {
+        if ((false == strict) && (null == context))
+        {
+            writeJSONString(out);
         }
         else
         {
@@ -189,7 +248,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
     public JSONObject set(final String key, final Object value)
     {
-        put(Objects.requireNonNull(key), value);
+        put(CommonOps.requireNonNull(key), value);
 
         return this;
     }
@@ -197,13 +256,13 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public List<String> keys()
     {
-        return Collections.unmodifiableList(new ArrayList<String>(keySet()));
+        return CommonOps.toUnmodifiableList(CommonOps.toList(keySet()));
     }
 
     @Override
     public boolean isDefined(final String key)
     {
-        return containsKey(Objects.requireNonNull(key));
+        return containsKey(CommonOps.requireNonNull(key));
     }
 
     @Override
@@ -215,49 +274,49 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public boolean isArray(final String key)
     {
-        return JSONUtils.isArray(get(Objects.requireNonNull(key)));
+        return JSONUtils.isArray(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public boolean isObject(final String key)
     {
-        return JSONUtils.isObject(get(Objects.requireNonNull(key)));
+        return JSONUtils.isObject(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public boolean isString(final String key)
     {
-        return JSONUtils.isString(get(Objects.requireNonNull(key)));
+        return JSONUtils.isString(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public boolean isBoolean(final String key)
     {
-        return JSONUtils.isBoolean(get(Objects.requireNonNull(key)));
+        return JSONUtils.isBoolean(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public boolean isDate(final String key)
     {
-        return JSONUtils.isDate(get(Objects.requireNonNull(key)));
+        return JSONUtils.isDate(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public boolean isNumber(final String key)
     {
-        return JSONUtils.isNumber(get(Objects.requireNonNull(key)));
+        return JSONUtils.isNumber(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public boolean isInteger(final String key)
     {
-        return JSONUtils.isInteger(get(Objects.requireNonNull(key)));
+        return JSONUtils.isInteger(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public boolean isDouble(final String key)
     {
-        return JSONUtils.isDouble(get(Objects.requireNonNull(key)));
+        return JSONUtils.isDouble(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
@@ -269,60 +328,60 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public JSONArray getAsArray(final String key)
     {
-        return JSONUtils.asArray(get(Objects.requireNonNull(key)));
+        return JSONUtils.asArray(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public JSONObject getAsObject(final String key)
     {
-        return JSONUtils.asObject(get(Objects.requireNonNull(key)));
+        return JSONUtils.asObject(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public String getAsString(final String key)
     {
-        return JSONUtils.asString(get(Objects.requireNonNull(key)));
+        return JSONUtils.asString(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public Date getAsDate(final String key)
     {
-        return JSONUtils.asDate(get(Objects.requireNonNull(key)));
+        return JSONUtils.asDate(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public Boolean getAsBoolean(final String key)
     {
-        return JSONUtils.asBoolean(get(Objects.requireNonNull(key)));
+        return JSONUtils.asBoolean(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public Number getAsNumber(final String key)
     {
-        return JSONUtils.asNumber(get(Objects.requireNonNull(key)));
+        return JSONUtils.asNumber(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public Integer getAsInteger(final String key)
     {
-        return JSONUtils.asInteger(get(Objects.requireNonNull(key)));
+        return JSONUtils.asInteger(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public Double getAsDouble(final String key)
     {
-        return JSONUtils.asDouble(get(Objects.requireNonNull(key)));
+        return JSONUtils.asDouble(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
     public Object remove(final String key)
     {
-        return super.remove(Objects.requireNonNull(key));
+        return super.remove(CommonOps.requireNonNull(key));
     }
 
     public JSONObject minus(final String... keys)
     {
-        Objects.requireNonNull(keys);
+        CommonOps.requireNonNull(keys);
 
         for (final String key : keys)
         {
@@ -333,7 +392,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
     public JSONObject minus(final List<String> keys)
     {
-        Objects.requireNonNull(keys);
+        CommonOps.requireNonNull(keys);
 
         for (final String key : keys)
         {
@@ -344,14 +403,14 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
     public JSONObject merge(final Map<String, ?> map)
     {
-        putAll(Objects.requireNonNull(map));
+        putAll(CommonOps.requireNonNull(map));
 
         return this;
     }
 
     public JSONObject merge(final JSONObject json)
     {
-        putAll(Objects.requireNonNull(json));
+        putAll(CommonOps.requireNonNull(json));
 
         return this;
     }
@@ -359,7 +418,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @SuppressWarnings("unchecked")
     public <T> T asType(final Class<T> type)
     {
-        Objects.requireNonNull(type);
+        CommonOps.requireNonNull(type);
 
         if (String.class.equals(type))
         {
@@ -371,7 +430,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         }
         try
         {
-            final T valu = new JSONBinder().bind(this, type);
+            final T valu = BinderType.JSON.getBinder().bind(this, type);
 
             if (null != valu)
             {
@@ -435,7 +494,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public JSONType getJSONType(final String key)
     {
-        return JSONUtils.getJSONType(get(Objects.requireNonNull(key)));
+        return JSONUtils.getJSONType(get(CommonOps.requireNonNull(key)));
     }
 
     @Override

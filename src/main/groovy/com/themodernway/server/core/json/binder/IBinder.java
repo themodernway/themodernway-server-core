@@ -28,7 +28,9 @@ import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.themodernway.server.core.json.IJSONEnabled;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
 
@@ -46,7 +48,7 @@ public interface IBinder
 
     public <T> T bind(URL url, Class<T> claz) throws ParserException;
 
-    public <T> T bind(JSONObject json, Class<T> claz) throws ParserException;
+    public <T> T bind(IJSONEnabled json, Class<T> claz) throws ParserException;
 
     public <T> T bind(Properties properties, Class<T> claz) throws ParserException;
 
@@ -111,6 +113,8 @@ public interface IBinder
     public JSONObject toJSONObject(Object object) throws ParserException;
 
     public String toJSONString(Object object) throws ParserException;
+
+    public ObjectMapper getMapper();
 
     public boolean canSerializeType(Class<?> type);
 

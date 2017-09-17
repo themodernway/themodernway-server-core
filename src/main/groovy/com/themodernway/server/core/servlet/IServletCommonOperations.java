@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.ICoreCommon;
@@ -305,5 +306,20 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
     public default String getConfigurationParameterOrPropertyOtherwise(final String name, final String otherwise)
     {
         return toTrimOrElse(getConfigurationParameter(name), getServerContext().getPropertyByName(name, otherwise));
+    }
+
+    public default boolean isNotModifiedSince(final HttpServletRequest request, final HttpServletResponse response, final long time)
+    {
+        return getServletWebRequest(request, response).checkNotModified(time);
+    }
+
+    public default boolean isModifiedSince(final HttpServletRequest request, final HttpServletResponse response, final long time)
+    {
+        return (false == isNotModifiedSince(request, response, time));
+    }
+
+    public default ServletWebRequest getServletWebRequest(final HttpServletRequest request, final HttpServletResponse response)
+    {
+        return new ServletWebRequest(request, response);
     }
 }

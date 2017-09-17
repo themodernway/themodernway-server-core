@@ -19,7 +19,6 @@ package com.themodernway.server.core.support.spring;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -28,22 +27,23 @@ import javax.servlet.ServletRegistration.Dynamic;
 import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
 
-public class ServletFactoryContextCustomizer implements IServletContextCustomizer, ICoreCommon
+public class ServletFactoryContextCustomizer implements IServletContextCustomizer, ICoreCommon, IServletFactoryContextCustomizer
 {
-    private final Logger   m_logs = Logger.getLogger(getClass());
+    private final Logger    m_logs = Logger.getLogger(getClass());
 
-    private final String   m_name;
+    private final String    m_name;
 
-    private final String[] m_maps;
+    private final String[]  m_maps;
 
-    private int            m_load = 1;
+    private int             m_load = 1;
 
-    private double         m_rate = 0.0;
+    private double          m_rate = 0.0;
 
-    private List<String>   m_role = arrayList();
+    private List<String>    m_role = arrayList();
 
     private IServletFactory m_fact;
 
@@ -59,16 +59,19 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
         m_maps = StringOps.toUniqueArray(maps);
     }
 
+    @Override
     public void setServletFactory(final IServletFactory fact)
     {
-        m_fact = Objects.requireNonNull(fact);
+        m_fact = CommonOps.requireNonNull(fact);
     }
 
-    public void setRateLinit(final double rate)
+    @Override
+    public void setRateLimit(final double rate)
     {
         m_rate = rate;
     }
 
+    @Override
     public double getRateLimit()
     {
         return m_rate;
@@ -80,31 +83,37 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
         return m_logs;
     }
 
+    @Override
     public void setLoadOnStartup(final int load)
     {
         m_load = load;
     }
 
+    @Override
     public int getLoadOnStartup()
     {
         return m_load;
     }
 
+    @Override
     public String getServletName()
     {
         return m_name;
     }
 
+    @Override
     public String[] getMappings()
     {
         return StringOps.toUniqueArray(m_maps);
     }
 
+    @Override
     public List<String> getRequiredRoles()
     {
         return toUnmodifiableList(m_role);
     }
 
+    @Override
     public void setRequiredRoles(String roles)
     {
         if (null == (roles = toTrimOrNull(roles)))
@@ -117,6 +126,7 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
         }
     }
 
+    @Override
     public void setRequiredRoles(final List<String> roles)
     {
         m_role = (roles == null ? arrayList() : roles);
@@ -138,7 +148,7 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
 
             if ((null != maps) && (maps.length > 0))
             {
-                final Servlet servlet = m_fact.make(sc, context);
+                final Servlet servlet = m_fact.make(this, sc, context);
 
                 if (null != servlet)
                 {

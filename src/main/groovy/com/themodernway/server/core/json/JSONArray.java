@@ -17,6 +17,8 @@
 package com.themodernway.server.core.json;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -24,12 +26,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.json.JSONArrayDefinition;
 import com.themodernway.common.api.json.JSONType;
+import com.themodernway.server.core.io.OutputStreamProxyWriter;
+import com.themodernway.server.core.json.binder.BinderType;
 
 @JacksonXmlRootElement(localName = "results")
 public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
@@ -47,12 +51,12 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
 
     public JSONArray(final List<?> value)
     {
-        addAll(Objects.requireNonNull(value));
+        addAll(CommonOps.requireNonNull(value));
     }
 
     public JSONArray append(final List<?> value)
     {
-        addAll(Objects.requireNonNull(value));
+        addAll(CommonOps.requireNonNull(value));
 
         return this;
     }
@@ -174,6 +178,15 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         }
     }
 
+    static final void writeJSONString(final List<?> list, final OutputStream out, final IJSONContext context, final boolean strict) throws IOException
+    {
+        final OutputStreamProxyWriter writer = new OutputStreamProxyWriter(out);
+
+        writeJSONString(list, writer, context, strict);
+
+        writer.flush();
+    }
+
     @Override
     public void writeJSONString(final Writer out) throws IOException
     {
@@ -185,7 +198,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     {
         if (false == strict)
         {
-            JSONUtils.writeObjectAsJSON(out, this);
+            writeJSONString(out);
         }
         else
         {
@@ -198,7 +211,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     {
         if (null == context)
         {
-            JSONUtils.writeObjectAsJSON(out, this);
+            writeJSONString(out);
         }
         else
         {
@@ -211,7 +224,57 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     {
         if ((false == strict) && (null == context))
         {
-            JSONUtils.writeObjectAsJSON(out, this);
+            writeJSONString(out);
+        }
+        else
+        {
+            writeJSONString(this, out, context, strict);
+        }
+    }
+
+    @Override
+    public void writeJSONString(final OutputStream out) throws IOException
+    {
+        final OutputStreamWriter writer = new OutputStreamWriter(out, StringOps.CHARSET_UTF_8);
+
+        writeJSONString(writer);
+
+        writer.flush();
+
+    }
+
+    @Override
+    public void writeJSONString(final OutputStream out, final boolean strict) throws IOException
+    {
+        if (false == strict)
+        {
+            writeJSONString(out);
+        }
+        else
+        {
+            writeJSONString(this, out, null, strict);
+        }
+    }
+
+    @Override
+    public void writeJSONString(final OutputStream out, final IJSONContext context) throws IOException
+    {
+        if (null == context)
+        {
+            writeJSONString(out);
+        }
+        else
+        {
+            writeJSONString(this, out, context, false);
+        }
+    }
+
+    @Override
+    public void writeJSONString(final OutputStream out, final IJSONContext context, final boolean strict) throws IOException
+    {
+        if ((false == strict) && (null == context))
+        {
+            writeJSONString(out);
         }
         else
         {
@@ -330,7 +393,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @SuppressWarnings("unchecked")
     public <T> T asType(final Class<T> type)
     {
-        Objects.requireNonNull(type);
+        CommonOps.requireNonNull(type);
 
         if (String.class.equals(type))
         {
@@ -339,6 +402,19 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         if (type.isAssignableFrom(getClass()))
         {
             return (T) this;
+        }
+        try
+        {
+            final T valu = BinderType.JSON.getBinder().bind(this, type);
+
+            if (null != valu)
+            {
+                return valu;
+            }
+        }
+        catch (final ParserException e)
+        {
+            throw new ClassCastException(getClass().getName() + " cannot be parsed into " + type.getName());
         }
         throw new ClassCastException(getClass().getName() + " cannot be coerced into " + type.getName());
     }

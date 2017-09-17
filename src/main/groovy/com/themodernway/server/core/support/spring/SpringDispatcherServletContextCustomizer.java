@@ -25,7 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.servlet.CoreSpringDispatcherServlet;
 
-public class SpringDispatcherServletContextCustomizer extends ServletFactoryContextCustomizer  implements IServletFactory
+public class SpringDispatcherServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
 {
     public SpringDispatcherServletContextCustomizer(final String name, final String maps)
     {
@@ -42,13 +42,13 @@ public class SpringDispatcherServletContextCustomizer extends ServletFactoryCont
     }
 
     @Override
-    public Servlet make(final ServletContext sc, final WebApplicationContext context)
+    public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
         final CoreSpringDispatcherServlet inst = new CoreSpringDispatcherServlet(context);
 
-        inst.setRateLimit(getRateLimit());
+        inst.setRateLimit(customizer.getRateLimit());
 
-        inst.setRequiredRoles(getRequiredRoles());
+        inst.setRequiredRoles(customizer.getRequiredRoles());
 
         return inst;
     }

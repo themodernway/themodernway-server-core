@@ -23,11 +23,12 @@ import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import javax.crypto.SecretKey;
 
 import org.opensaml.xml.security.x509.X509Credential;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class KeyStoreX509Credential extends AbstractCredential implements X509Credential
 {
@@ -46,11 +47,11 @@ public class KeyStoreX509Credential extends AbstractCredential implements X509Cr
     {
         super(alias);
 
-        m_password = Objects.requireNonNull(password);
+        m_password = CommonOps.requireNonNull(password);
 
-        m_keyspass = Objects.requireNonNull(keyspass);
+        m_keyspass = CommonOps.requireNonNull(keyspass);
 
-        m_keystore = Objects.requireNonNull(keystore);
+        m_keystore = CommonOps.requireNonNull(keystore);
 
         refresh();
     }

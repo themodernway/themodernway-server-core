@@ -16,10 +16,10 @@
 
 package com.themodernway.server.core.limiting;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.ITimeSupplier;
 
 public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
@@ -36,11 +36,11 @@ public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
 
     public BaseTimeWindowMovingAverage(final TimeUnit base, final long window, final TimeUnit unit, final ITimeSupplier tick)
     {
-        m_baseof = Objects.requireNonNull(base);
+        m_baseof = CommonOps.requireNonNull(base);
 
-        m_ticker = Objects.requireNonNull(tick);
+        m_ticker = CommonOps.requireNonNull(tick);
 
-        m_window = getUnitOf(validate(window, 1, 1), Objects.requireNonNull(unit));
+        m_window = getUnitOf(validate(window, 1, 1), CommonOps.requireNonNull(unit));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
     @Override
     public long getWindow(final TimeUnit unit)
     {
-        return getUnitOf(getWindow(), Objects.requireNonNull(unit));
+        return getUnitOf(getWindow(), CommonOps.requireNonNull(unit));
     }
 
     @Override
@@ -102,7 +102,7 @@ public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
     {
         if (m_moment != 0)
         {
-            m_moment -= getUnitOf(validate(duration, 1, 1), Objects.requireNonNull(unit));
+            m_moment -= getUnitOf(validate(duration, 1, 1), CommonOps.requireNonNull(unit));
         }
     }
 
@@ -120,7 +120,7 @@ public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
 
     protected long getUnitOf(final long duration, final TimeUnit unit)
     {
-        return Objects.requireNonNull(getUnit()).convert(duration, Objects.requireNonNull(unit));
+        return CommonOps.requireNonNull(getUnit()).convert(duration, CommonOps.requireNonNull(unit));
     }
 
     protected long validate(final long duration, final long lbounds, final long minimum)

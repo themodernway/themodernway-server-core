@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.Objects;
 import java.util.stream.Stream;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.json.JSONObject;
 
 public abstract class AbstractFileItemWrapper<T extends IFileItem> extends AbstractWrappedFileItem<T> implements IFileItemWrapper
@@ -50,6 +50,19 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
         try
         {
             return getWrappedFileItem().getName();
+        }
+        catch (final IOException e)
+        {
+            throw new FileStorageException(e);
+        }
+    }
+
+    @Override
+    public String getBaseName() throws FileStorageException
+    {
+        try
+        {
+            return getWrappedFileItem().getBaseName();
         }
         catch (final IOException e)
         {
@@ -319,13 +332,13 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
     @Override
     public long writeTo(final Writer output) throws IOException
     {
-        return getWrappedFileItem().writeTo(Objects.requireNonNull(output));
+        return getWrappedFileItem().writeTo(CommonOps.requireNonNull(output));
     }
 
     @Override
     public long writeTo(final OutputStream output) throws IOException
     {
-        return getWrappedFileItem().writeTo(Objects.requireNonNull(output));
+        return getWrappedFileItem().writeTo(CommonOps.requireNonNull(output));
     }
 
     protected IFileItemWrapper cast(final IFileItem item)

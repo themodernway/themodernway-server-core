@@ -18,19 +18,20 @@ package com.themodernway.server.core.io;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.util.Objects;
 
 import org.apache.commons.io.input.ReaderInputStream;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class ReaderProxyInputStream extends ReaderInputStream
 {
     public ReaderProxyInputStream(final Reader reader)
     {
-        super(Objects.requireNonNull(reader), IO.UTF_8_CHARSET);
+        super(CommonOps.requireNonNull(reader), IO.UTF_8_CHARSET);
     }
 
     public ReaderProxyInputStream(final Reader reader, final Charset charset)
     {
-        super(Objects.requireNonNull(reader), Objects.requireNonNull(charset));
+        super(CommonOps.requireNonNull(reader), CommonOps.requireNonNull(charset));
     }
 }

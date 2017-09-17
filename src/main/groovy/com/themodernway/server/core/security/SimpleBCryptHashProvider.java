@@ -16,9 +16,9 @@
 
 package com.themodernway.server.core.security;
 
-import java.util.Objects;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public final class SimpleBCryptHashProvider implements IBCryptHashProvider
 {
@@ -37,12 +37,12 @@ public final class SimpleBCryptHashProvider implements IBCryptHashProvider
     @Override
     public final String makeBCrypt(final String text)
     {
-        return m_bcrypt.encode(Objects.requireNonNull(text));
+        return m_bcrypt.encode(CommonOps.requireNonNull(text));
     }
 
     @Override
     public final synchronized boolean testBCrypt(final String text, final String value)
     {
-        return m_bcrypt.matches(Objects.requireNonNull(text), Objects.requireNonNull(value));
+        return m_bcrypt.matches(CommonOps.requireNonNull(text), CommonOps.requireNonNull(value));
     }
 }

@@ -84,6 +84,15 @@ public final class FileAndPathUtils
         return path;
     }
 
+    public static final String base(String path)
+    {
+        if (null != (path = normalize(path)))
+        {
+            return FilenameUtils.getBaseName(path);
+        }
+        return path;
+    }
+
     public static final String patch(String path)
     {
         path = path.trim();

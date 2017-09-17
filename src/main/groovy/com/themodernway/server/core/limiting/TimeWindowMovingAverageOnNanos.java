@@ -16,13 +16,14 @@
 
 package com.themodernway.server.core.limiting;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class TimeWindowMovingAverageOnNanos extends BaseTimeWindowMovingAverage
 {
     public TimeWindowMovingAverageOnNanos(final long window, final TimeUnit unit)
     {
-        super(TimeUnit.NANOSECONDS, window, Objects.requireNonNull(unit), System::nanoTime);
+        super(TimeUnit.NANOSECONDS, window, CommonOps.requireNonNull(unit), System::nanoTime);
     }
 }

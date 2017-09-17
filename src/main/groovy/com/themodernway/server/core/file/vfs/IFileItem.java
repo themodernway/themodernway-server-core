@@ -30,6 +30,8 @@ public interface IFileItem
 
     public String getName() throws IOException;
 
+    public String getBaseName() throws IOException;
+
     public String getExtension() throws IOException;
 
     public long getSize() throws IOException;

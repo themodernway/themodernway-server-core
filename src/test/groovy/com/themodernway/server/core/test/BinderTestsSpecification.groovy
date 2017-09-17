@@ -41,19 +41,101 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     def "test binder"()
     {
         setup:
+        def bind = BinderType.JSON.getBinder()
         BinderPOJO pojo = new BinderPOJO()
         pojo.setName('Dean S. /Jones')
-        String text = binder().toJSONString(pojo)
-        BinderPOJO make = binder().bind(text, BinderPOJO)
-        JSONObject json = binder().toJSONObject(make)
+        String text = bind.toJSONString(pojo)
+        BinderPOJO make = bind.bind(text, BinderPOJO)
+        JSONObject json = bind.toJSONObject(make)
         String valu = json.toJSONString(false)
         pojo = json as BinderPOJO
         pojo.setName('Bob')
-        println binder().toJSONString(pojo)
-        println text
-        println valu
-        binder().send(System.out, "Hi")
-        println ""
+        echo bind.toJSONString(pojo)
+        echo text
+        echo valu
+
+        expect:
+        text == valu
+    }
+
+    def "test yaml pojo 1"()
+    {
+        setup:
+        def bind = BinderType.YAML.getBinder()
+        BinderPOJO make = bind.bind(resource('classpath:/com/themodernway/server/core/test/pojo.yml'), BinderPOJO)
+        String valu = bind.toString(make)
+        echo valu
+
+        expect:
+        valu == valu
+    }
+
+    def "test yaml pojo 2"()
+    {
+        setup:
+        def bind = BinderType.YAML.getBinder()
+        JSONObject json = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/pojo.yml'))
+        String valu = json.toJSONString()
+        echo valu
+
+        expect:
+        valu == valu
+    }
+
+    def "test yaml json 1"()
+    {
+        setup:
+        def bind = BinderType.YAML.getBinder()
+        JSONObject json = json(type: 'API', active: true, versions: [1, 2, 3, false], pojo: new BinderPOJO("Rosaria", 100), list:[])
+        String valu = bind.toString(json)
+        echo valu
+        echo json.toJSONString()
+
+        expect:
+        valu == valu
+    }
+
+    def "test yaml json 3"()
+    {
+        setup:
+        def bind = BinderType.YAML.getBinder()
+        JSONObject json = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/test.yml'))
+        String valu = json.toJSONString()
+        echo valu
+
+        expect:
+        valu == valu
+    }
+
+    def "test yaml pojo recycle"()
+    {
+        setup:
+        def bind = BinderType.YAML.getBinder()
+        BinderPOJO pojo = new BinderPOJO()
+        pojo.setName('Dean S. Jones')
+        pojo.setCost(9.99)
+        String text = bind.toString(pojo)
+        BinderPOJO make = bind.bind(text, BinderPOJO)
+        String valu = bind.toString(make)
+        echo text
+        echo valu
+
+        expect:
+        text == valu
+    }
+
+    def "test xml pojo recycle"()
+    {
+        setup:
+        def bind = BinderType.XML.getBinder()
+        BinderPOJO pojo = new BinderPOJO()
+        pojo.setName('Dean S. Jones')
+        pojo.setCost(9.99)
+        String text = bind.toString(pojo)
+        BinderPOJO make = bind.bind(text, BinderPOJO)
+        String valu = bind.toString(make)
+        echo text
+        echo valu
 
         expect:
         text == valu
@@ -63,14 +145,15 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     def "test props pojo recycle"()
     {
         setup:
+        def bind = BinderType.PROPERTIES.getBinder()
         BinderPOJO pojo = new BinderPOJO()
         pojo.setName('Dean S. Jones')
         pojo.setCost(9.99)
-        String text = binder(BinderType.PROPERTIES).toString(pojo)
-        BinderPOJO make = binder(BinderType.PROPERTIES).bind(text, BinderPOJO)
-        String valu = binder(BinderType.PROPERTIES).toString(make)
-        println text
-        println valu
+        String text = bind.toString(pojo)
+        BinderPOJO make = bind.bind(text, BinderPOJO)
+        String valu = bind.toString(make)
+        echo text
+        echo valu
 
         expect:
         text == valu
@@ -79,16 +162,17 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     def "test props list recycle"()
     {
         setup:
+        def bind = BinderType.PROPERTIES.getBinder()
         BindeListPOJO pojo = new BindeListPOJO()
         pojo.setName('Dean S. Jones')
         pojo.setCost(9.99)
-        String text = binder(BinderType.PROPERTIES).toString(pojo)
-        BindeListPOJO make = binder(BinderType.PROPERTIES).bind(text, BindeListPOJO)
-        String valu = binder(BinderType.PROPERTIES).toString(make)
-        String json = binder(BinderType.PROPERTIES).bindJSON(valu).toString()
-        println json
-        println text
-        println valu
+        String text = bind.toString(pojo)
+        BindeListPOJO make = bind.bind(text, BindeListPOJO)
+        String valu = bind.toString(make)
+        String json = bind.bindJSON(valu).toString()
+        echo json
+        echo text
+        echo valu
 
         expect:
         text == valu

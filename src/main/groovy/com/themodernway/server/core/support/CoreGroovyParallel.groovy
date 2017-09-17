@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.support
 
+import com.themodernway.common.api.java.util.CommonOps
+
 import groovyx.gpars.ParallelEnhancer
 
 public final class CoreGroovyParallel
@@ -26,6 +28,6 @@ public final class CoreGroovyParallel
 
     public static final <T> T parallel(final T collection)
     {
-        ParallelEnhancer.enhanceInstance(Objects.requireNonNull(collection)).makeConcurrent()
+        ParallelEnhancer.enhanceInstance(CommonOps.requireNonNull(collection)).makeConcurrent()
     }
 }

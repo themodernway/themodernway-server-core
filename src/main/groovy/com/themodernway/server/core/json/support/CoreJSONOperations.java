@@ -20,15 +20,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.json.binder.JSONBinder;
 
@@ -52,12 +51,6 @@ public class CoreJSONOperations implements ICoreJSONOperations
     }
 
     @Override
-    public final IBinder binder(final BinderType type)
-    {
-        return type.getBinder();
-    }
-
-    @Override
     public final JSONArray jarr()
     {
         return new JSONArray();
@@ -67,7 +60,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @SuppressWarnings("unchecked")
     public final JSONArray jarr(final Collection<?> collection)
     {
-        Objects.requireNonNull(collection);
+        CommonOps.requireNonNull(collection);
 
         if (collection instanceof List)
         {
@@ -83,7 +76,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONArray jarr(final Future<?> future)
     {
-        Objects.requireNonNull(future);
+        CommonOps.requireNonNull(future);
 
         try
         {
@@ -98,26 +91,26 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONArray jarr(final JSONObject object)
     {
-        return jarr().push(Objects.requireNonNull(object));
+        return jarr().push(CommonOps.requireNonNull(object));
     }
 
     @Override
     public final JSONArray jarr(final List<?> list)
     {
-        return new JSONArray(Objects.requireNonNull(list));
+        return new JSONArray(CommonOps.requireNonNull(list));
     }
 
     @Override
     public final JSONArray jarr(final Map<String, ?> map)
     {
-        return jarr(json(Objects.requireNonNull(map)));
+        return jarr(json(CommonOps.requireNonNull(map)));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public final JSONArray jarr(final Object object)
     {
-        Objects.requireNonNull(object);
+        CommonOps.requireNonNull(object);
 
         if (object instanceof JSONObject)
         {
@@ -172,7 +165,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONArray jarr(final String name, final Object value)
     {
-        return jarr(json(Objects.requireNonNull(name), value));
+        return jarr(json(CommonOps.requireNonNull(name), value));
     }
 
     @Override
@@ -184,14 +177,14 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONObject json(final JSONObject object)
     {
-        return new JSONObject(Objects.requireNonNull(object));
+        return new JSONObject(CommonOps.requireNonNull(object));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public final JSONObject json(final Collection<?> collection)
     {
-        Objects.requireNonNull(collection);
+        CommonOps.requireNonNull(collection);
 
         if (collection instanceof Map)
         {
@@ -207,7 +200,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONObject json(final Future<?> future)
     {
-        Objects.requireNonNull(future);
+        CommonOps.requireNonNull(future);
 
         try
         {
@@ -228,19 +221,19 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONObject json(final List<?> list)
     {
-        return new JSONObject(Objects.requireNonNull(list));
+        return new JSONObject(CommonOps.requireNonNull(list));
     }
 
     @Override
     public final JSONObject json(final Map<String, ?> map)
     {
-        return new JSONObject(Objects.requireNonNull(map));
+        return new JSONObject(CommonOps.requireNonNull(map));
     }
 
     @Override
     public final JSONObject json(final Object object)
     {
-        Objects.requireNonNull(object);
+        CommonOps.requireNonNull(object);
 
         if (object instanceof Collection<?>)
         {
@@ -281,6 +274,6 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final JSONObject json(final String name, final Object value)
     {
-        return new JSONObject(Objects.requireNonNull(name), value);
+        return new JSONObject(CommonOps.requireNonNull(name), value);
     }
 }

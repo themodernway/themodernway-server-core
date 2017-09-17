@@ -16,10 +16,10 @@
 
 package com.themodernway.server.core.security;
 
-import java.util.Objects;
-
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public final class AESStringCryptoProvider implements IStringCryptoProvider
 {
@@ -27,18 +27,18 @@ public final class AESStringCryptoProvider implements IStringCryptoProvider
 
     public AESStringCryptoProvider(final String pass, final String salt)
     {
-        m_pcrypt = Encryptors.text(Objects.requireNonNull(pass), Objects.requireNonNull(salt));
+        m_pcrypt = Encryptors.text(CommonOps.requireNonNull(pass), CommonOps.requireNonNull(salt));
     }
 
     @Override
     public final String encrypt(final String text)
     {
-        return m_pcrypt.encrypt(Objects.requireNonNull(text));
+        return m_pcrypt.encrypt(CommonOps.requireNonNull(text));
     }
 
     @Override
     public final String decrypt(final String text)
     {
-        return m_pcrypt.decrypt(Objects.requireNonNull(text));
+        return m_pcrypt.decrypt(CommonOps.requireNonNull(text));
     }
 }

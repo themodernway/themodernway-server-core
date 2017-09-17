@@ -18,7 +18,6 @@ package com.themodernway.server.core.support.spring;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -29,6 +28,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 
 public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryAware, Closeable
@@ -85,7 +85,7 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
 
     private final String resolve(final String name)
     {
-        Objects.requireNonNull(m_factory);
+        CommonOps.requireNonNull(m_factory);
 
         return m_docache.computeIfAbsent(StringOps.requireTrimOrNull(name, "getPropertyByName(null)"), resolve());
     }

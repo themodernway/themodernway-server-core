@@ -18,6 +18,7 @@ package com.themodernway.server.core.support.spring.network.websocket
 
 import javax.websocket.Session
 
+import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.common.api.java.util.StringOps
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
@@ -42,11 +43,11 @@ public class WebSocketServiceContext implements IWebSocketServiceContext
 
     public WebSocketServiceContext(final JSONObject attribs, final Session session, final IWebSocketService service)
     {
-        m_session = Objects.requireNonNull(session)
+        m_session = CommonOps.requireNonNull(session)
 
-        m_service = Objects.requireNonNull(service)
+        m_service = CommonOps.requireNonNull(service)
 
-        m_attribs = Objects.requireNonNull(attribs).merge(m_session.getPathParameters()).merge(m_service.getAttributes())
+        m_attribs = CommonOps.requireNonNull(attribs).merge(m_session.getPathParameters()).merge(m_service.getAttributes())
     }
 
     public final void setStrict(final boolean strict)
@@ -104,7 +105,7 @@ public class WebSocketServiceContext implements IWebSocketServiceContext
     @Override
     public void reply(final String text) throws Exception
     {
-        reply(Objects.requireNonNull(text), true)
+        reply(CommonOps.requireNonNull(text), true)
     }
 
     @Override
@@ -114,7 +115,7 @@ public class WebSocketServiceContext implements IWebSocketServiceContext
 
         synchronized (sess)
         {
-            sess.getBasicRemote().sendText(Objects.requireNonNull(text), last)
+            sess.getBasicRemote().sendText(CommonOps.requireNonNull(text), last)
         }
     }
 

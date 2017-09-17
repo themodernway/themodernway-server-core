@@ -24,15 +24,12 @@ import javax.servlet.ServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.servlet.ContentGetServlet;
-import com.themodernway.server.core.servlet.IServletCommonOperations;
 
 public class ContentGetServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
 {
     private String  m_stor = null;
 
     private boolean m_noch = false;
-
-    private long    m_cdim = IServletCommonOperations.DEFAULT_CACHE_DELTA_IN_MILLISECONDS;
 
     public ContentGetServletContextCustomizer(final String name, final String maps)
     {
@@ -68,18 +65,8 @@ public class ContentGetServletContextCustomizer extends ServletFactoryContextCus
         m_noch = nocache;
     }
 
-    public long getCacheDelta()
-    {
-        return m_cdim;
-    }
-
-    public void setCacheDelta(final long deltams)
-    {
-        m_cdim = deltams;
-    }
-
     @Override
-    public Servlet make(final ServletContext sc, final WebApplicationContext context)
+    public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
         final ContentGetServlet inst = new ContentGetServlet();
 
@@ -89,13 +76,11 @@ public class ContentGetServletContextCustomizer extends ServletFactoryContextCus
         {
             inst.setFileItemStorageName(name);
         }
-        inst.setRateLimit(getRateLimit());
+        inst.setRateLimit(customizer.getRateLimit());
 
         inst.setNeverCache(isNeverCache());
 
-        inst.setCacheDelta(getCacheDelta());
-
-        inst.setRequiredRoles(getRequiredRoles());
+        inst.setRequiredRoles(customizer.getRequiredRoles());
 
         return inst;
     }

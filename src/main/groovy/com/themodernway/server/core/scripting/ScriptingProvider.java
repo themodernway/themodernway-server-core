@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Objects;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
@@ -34,6 +33,7 @@ import javax.script.ScriptEngineManager;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.io.IO;
 
@@ -45,7 +45,7 @@ public class ScriptingProvider implements IScriptingProvider
 
     public ScriptingProvider(final List<IScriptingProperties> list)
     {
-        for (IScriptingProperties prop : list)
+        for (final IScriptingProperties prop : list)
         {
             final ScriptType type = prop.getType();
 
@@ -75,7 +75,7 @@ public class ScriptingProvider implements IScriptingProvider
     @Override
     public ScriptEngine engine(final ScriptType type, final ClassLoader loader)
     {
-        return getScriptEngineManager(Objects.requireNonNull(loader)).getEngineByName(StringOps.requireTrimOrNull(type.getValue()));
+        return getScriptEngineManager(CommonOps.requireNonNull(loader)).getEngineByName(StringOps.requireTrimOrNull(type.getValue()));
     }
 
     @Override
@@ -107,15 +107,15 @@ public class ScriptingProvider implements IScriptingProvider
     {
         final HashSet<String> look = new HashSet<String>();
 
-        for (ScriptEngineFactory factory : getScriptEngineManager(Objects.requireNonNull(loader)).getEngineFactories())
+        for (final ScriptEngineFactory factory : getScriptEngineManager(CommonOps.requireNonNull(loader)).getEngineFactories())
         {
             look.addAll(factory.getNames());
         }
         final HashSet<String> find = new HashSet<String>();
 
-        for (ScriptType type : ScriptType.values())
+        for (final ScriptType type : ScriptType.values())
         {
-            for (String name : look)
+            for (final String name : look)
             {
                 if (type.getValue().equalsIgnoreCase(name))
                 {
@@ -131,15 +131,15 @@ public class ScriptingProvider implements IScriptingProvider
     {
         final HashSet<String> look = new HashSet<String>();
 
-        for (ScriptEngineFactory factory : getScriptEngineManager().getEngineFactories())
+        for (final ScriptEngineFactory factory : getScriptEngineManager().getEngineFactories())
         {
             look.addAll(factory.getNames());
         }
         final HashSet<String> find = new HashSet<String>();
 
-        for (ScriptType type : ScriptType.values())
+        for (final ScriptType type : ScriptType.values())
         {
-            for (String name : look)
+            for (final String name : look)
             {
                 if (type.getValue().equalsIgnoreCase(name))
                 {
@@ -155,15 +155,15 @@ public class ScriptingProvider implements IScriptingProvider
     {
         final HashSet<String> look = new HashSet<String>();
 
-        for (ScriptEngineFactory factory : getScriptEngineManager().getEngineFactories())
+        for (final ScriptEngineFactory factory : getScriptEngineManager().getEngineFactories())
         {
             look.addAll(factory.getNames());
         }
         final HashSet<ScriptType> find = new HashSet<ScriptType>();
 
-        for (ScriptType type : ScriptType.values())
+        for (final ScriptType type : ScriptType.values())
         {
-            for (String name : look)
+            for (final String name : look)
             {
                 if (type.getValue().equalsIgnoreCase(name))
                 {
@@ -179,15 +179,15 @@ public class ScriptingProvider implements IScriptingProvider
     {
         final HashSet<String> look = new HashSet<String>();
 
-        for (ScriptEngineFactory factory : getScriptEngineManager(Objects.requireNonNull(loader)).getEngineFactories())
+        for (final ScriptEngineFactory factory : getScriptEngineManager(CommonOps.requireNonNull(loader)).getEngineFactories())
         {
             look.addAll(factory.getNames());
         }
         final HashSet<ScriptType> find = new HashSet<ScriptType>();
 
-        for (ScriptType type : ScriptType.values())
+        for (final ScriptType type : ScriptType.values())
         {
-            for (String name : look)
+            for (final String name : look)
             {
                 if (type.getValue().equalsIgnoreCase(name))
                 {
@@ -201,7 +201,7 @@ public class ScriptingProvider implements IScriptingProvider
     @Override
     public void close() throws IOException
     {
-        for (IScriptingProperties prop : m_dict.values())
+        for (final IScriptingProperties prop : m_dict.values())
         {
             prop.close();
         }
@@ -216,7 +216,7 @@ public class ScriptingProvider implements IScriptingProvider
     @Override
     public ScriptEngineManager getScriptEngineManager(final ClassLoader loader)
     {
-        return new ScriptEngineManager(Objects.requireNonNull(loader));
+        return new ScriptEngineManager(CommonOps.requireNonNull(loader));
     }
 
     @Override

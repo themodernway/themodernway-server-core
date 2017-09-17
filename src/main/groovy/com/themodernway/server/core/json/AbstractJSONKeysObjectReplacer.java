@@ -16,12 +16,11 @@
 
 package com.themodernway.server.core.json;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public abstract class AbstractJSONKeysObjectReplacer implements IJSONObjectKeysReplacer
 {
@@ -42,7 +41,7 @@ public abstract class AbstractJSONKeysObjectReplacer implements IJSONObjectKeysR
     {
         m_mode = mode;
 
-        add(Objects.requireNonNull(keys));
+        add(keys);
     }
 
     protected AbstractJSONKeysObjectReplacer(final boolean mode, final String... keys)
@@ -55,13 +54,13 @@ public abstract class AbstractJSONKeysObjectReplacer implements IJSONObjectKeysR
     @Override
     public final List<String> keys()
     {
-        return Collections.unmodifiableList(new ArrayList<String>(m_keys));
+        return CommonOps.toUnmodifiableList(CommonOps.toList(m_keys));
     }
 
     @Override
     public final void add(final Collection<String> keys)
     {
-        m_keys.addAll(Objects.requireNonNull(keys));
+        m_keys.addAll(CommonOps.requireNonNull(keys));
     }
 
     @Override
@@ -82,10 +81,10 @@ public abstract class AbstractJSONKeysObjectReplacer implements IJSONObjectKeysR
     @Override
     public Object replace(final String name, final Object value)
     {
-        if (UNDEFINED == value)
+        if (JSONUtils.UNDEFINED_JSON == value)
         {
-            return UNDEFINED;
+            return JSONUtils.UNDEFINED_JSON;
         }
-        return (m_keys.contains(Objects.requireNonNull(name)) == m_mode) ? value : UNDEFINED;
+        return (m_keys.contains(CommonOps.requireNonNull(name)) == m_mode) ? value : JSONUtils.UNDEFINED_JSON;
     }
 }

@@ -17,6 +17,7 @@
 package com.themodernway.server.core.json;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 
 public interface IJSONStreamAware
@@ -28,4 +29,12 @@ public interface IJSONStreamAware
     public void writeJSONString(Writer out, IJSONContext context) throws IOException;
 
     public void writeJSONString(Writer out, IJSONContext context, boolean strict) throws IOException;
+
+    public void writeJSONString(OutputStream out) throws IOException;
+
+    public void writeJSONString(OutputStream out, boolean strict) throws IOException;
+
+    public void writeJSONString(OutputStream out, IJSONContext context) throws IOException;
+
+    public void writeJSONString(OutputStream out, IJSONContext context, boolean strict) throws IOException;
 }

@@ -22,7 +22,6 @@ import java.io.Reader;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -39,6 +38,7 @@ import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.SubscribableChannel;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
@@ -465,31 +465,31 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final <T> T requireNonNull(final T object)
     {
-        return Objects.requireNonNull(object);
+        return CommonOps.requireNonNull(object);
     }
 
     @Override
     public final <T> T requireNonNull(final T object, final String message)
     {
-        return Objects.requireNonNull(object, message);
+        return CommonOps.requireNonNull(object, message);
     }
 
     @Override
     public final <T> T requireNonNull(final T object, final Supplier<String> message)
     {
-        return Objects.requireNonNull(object, message);
+        return CommonOps.requireNonNull(object, message);
     }
 
     @Override
     public <T> T requireNonNullOrElse(final T object, final T otherwise)
     {
-        return (Objects.nonNull(object) ? object : otherwise);
+        return CommonOps.requireNonNullOrElse(object, otherwise);
     }
 
     @Override
     public <T> T requireNonNullOrElse(final T object, final Supplier<T> otherwise)
     {
-        return (Objects.nonNull(object) ? object : otherwise.get());
+        return CommonOps.requireNonNullOrElse(object, otherwise);
     }
 
     @Override

@@ -19,7 +19,8 @@ package com.themodernway.server.core.support.spring;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public abstract class AbstractPrincipalsKeysProvider implements IPrincipalsKeysProvider
 {
@@ -31,7 +32,7 @@ public abstract class AbstractPrincipalsKeysProvider implements IPrincipalsKeysP
 
     protected AbstractPrincipalsKeysProvider(final List<String> keys)
     {
-        m_list.addAll(Objects.requireNonNull(keys));
+        m_list.addAll(CommonOps.requireNonNull(keys));
     }
 
     @Override

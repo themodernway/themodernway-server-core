@@ -21,7 +21,6 @@ import java.util.stream.Stream
 
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
-import com.themodernway.server.core.json.binder.BinderType
 import com.themodernway.server.core.json.binder.IBinder
 
 import groovy.transform.CompileStatic
@@ -35,17 +34,12 @@ public trait JSONTrait
     {
         CoreJSONOperations.getCoreJSONOperationse()
     }
-    
+
     public IBinder binder()
     {
         getCoreJSONOperationse().binder()
     }
-    
-    public IBinder binder(BinderType type)
-    {
-        getCoreJSONOperationse().binder(type)
-    }
-    
+
     public JSONArray jarr()
     {
         new JSONArray()
@@ -58,9 +52,9 @@ public trait JSONTrait
 
     public JSONArray jarr(Future<?> future)
     {
-       getCoreJSONOperationse().jarr(future)
+        getCoreJSONOperationse().jarr(future)
     }
-    
+
     public JSONArray jarr(JSONObject object)
     {
         getCoreJSONOperationse().jarr(object)
@@ -90,12 +84,12 @@ public trait JSONTrait
     {
         getCoreJSONOperationse().jarr(stream)
     }
-    
+
     public JSONArray jarr(String name, Object value)
     {
         getCoreJSONOperationse().jarr(name, value)
     }
-    
+
     public JSONObject json()
     {
         new JSONObject()
@@ -105,7 +99,7 @@ public trait JSONTrait
     {
         getCoreJSONOperationse().json(collection)
     }
-    
+
     public JSONObject json(Future<?> future)
     {
         getCoreJSONOperationse().json(future)
@@ -118,14 +112,14 @@ public trait JSONTrait
 
     public JSONObject json(Map<String, ?> map)
     {
-       new JSONObject(Objects.requireNonNull(map))
+        new JSONObject(map)
     }
-    
+
     public JSONObject json(Object object)
     {
         getCoreJSONOperationse().json(object)
     }
-    
+
     public JSONObject json(Optional<?> optional)
     {
         getCoreJSONOperationse().json(optional)
@@ -133,6 +127,6 @@ public trait JSONTrait
 
     public JSONObject json(String name, Object value)
     {
-        new JSONObject(Objects.requireNonNull(name), value)
+        new JSONObject(name, value)
     }
 }

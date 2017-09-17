@@ -19,18 +19,19 @@ package com.themodernway.server.core.io;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class NoCloseBufferedReader extends BufferedReader
 {
     public NoCloseBufferedReader(final Reader reader)
     {
-        super(Objects.requireNonNull(reader));
+        super(CommonOps.requireNonNull(reader));
     }
 
     public NoCloseBufferedReader(final Reader reader, final int capacity)
     {
-        super(Objects.requireNonNull(reader), capacity);
+        super(CommonOps.requireNonNull(reader), capacity);
     }
 
     @Override

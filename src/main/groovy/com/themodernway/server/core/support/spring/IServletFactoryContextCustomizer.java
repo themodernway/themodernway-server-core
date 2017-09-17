@@ -14,9 +14,29 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.support.spring;
 
-public interface IJSONReplacerUtil
+import java.util.List;
+
+public interface IServletFactoryContextCustomizer extends IServletContextCustomizer
 {
-    public static final Object UNDEFINED = new Object();
+    public void setServletFactory(IServletFactory fact);
+
+    public void setRateLimit(double rate);
+
+    public double getRateLimit();
+
+    public void setLoadOnStartup(int load);
+
+    public int getLoadOnStartup();
+
+    public String getServletName();
+
+    public String[] getMappings();
+
+    public List<String> getRequiredRoles();
+
+    public void setRequiredRoles(String roles);
+
+    public void setRequiredRoles(List<String> roles);
 }

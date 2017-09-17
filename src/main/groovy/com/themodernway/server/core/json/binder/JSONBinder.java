@@ -18,11 +18,10 @@ package com.themodernway.server.core.json.binder;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Objects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
@@ -38,23 +37,21 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
     @Override
     public void send(final File file, final Object object) throws ParserException
     {
-        Objects.requireNonNull(object);
+        CommonOps.requireNonNull(object);
 
         try
         {
             if ((isStrict()) && (object instanceof JSONObject))
             {
-                final Writer writer = new OutputStreamWriter(IO.toOutputStream(file), IO.UTF_8_CHARSET);
+                final OutputStream stream = IO.toOutputStream(file);
 
                 try
                 {
-                    ((JSONObject) object).writeJSONString(writer, isStrict());
-
-                    writer.flush();
+                    ((JSONObject) object).writeJSONString(stream, isStrict());
                 }
                 finally
                 {
-                    IO.close(writer);
+                    IO.close(stream);
                 }
             }
             else
@@ -71,17 +68,13 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
     @Override
     public void send(final OutputStream stream, final Object object) throws ParserException
     {
-        Objects.requireNonNull(object);
+        CommonOps.requireNonNull(object);
 
         try
         {
             if ((isStrict()) && (object instanceof JSONObject))
             {
-                final Writer writer = new OutputStreamWriter(stream, IO.UTF_8_CHARSET);
-
-                ((JSONObject) object).writeJSONString(writer, isStrict());
-
-                writer.flush();
+                ((JSONObject) object).writeJSONString(stream, isStrict());
             }
             else
             {
@@ -97,7 +90,7 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
     @Override
     public void send(final Writer writer, final Object object) throws ParserException
     {
-        Objects.requireNonNull(object);
+        CommonOps.requireNonNull(object);
 
         try
         {

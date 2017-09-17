@@ -17,18 +17,17 @@
 package com.themodernway.server.core;
 
 import java.text.NumberFormat;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public final class ThreadLocalNumberFormat extends ThreadLocalFormat<Number, NumberFormat>
 {
     public final static ThreadLocalNumberFormat withInitial(final Supplier<NumberFormat> supplier)
     {
-        return new ThreadLocalNumberFormat(Objects.requireNonNull(supplier));
+        return new ThreadLocalNumberFormat(supplier);
     }
 
     private ThreadLocalNumberFormat(final Supplier<NumberFormat> supplier)
     {
-        super(Objects.requireNonNull(supplier));
+        super(supplier);
     }
 }

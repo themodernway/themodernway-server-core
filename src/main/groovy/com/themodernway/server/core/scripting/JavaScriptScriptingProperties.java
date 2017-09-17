@@ -17,9 +17,10 @@
 package com.themodernway.server.core.scripting;
 
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.core.io.Resource;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class JavaScriptScriptingProperties extends AbstractScriptingProperties
 {
@@ -32,13 +33,13 @@ public class JavaScriptScriptingProperties extends AbstractScriptingProperties
     {
         this();
 
-        populate(Objects.requireNonNull(properties));
+        populate(CommonOps.requireNonNull(properties));
     }
 
     public JavaScriptScriptingProperties(final Resource resource) throws Exception
     {
         this();
 
-        populate(Objects.requireNonNull(resource));
+        populate(CommonOps.requireNonNull(resource));
     }
 }

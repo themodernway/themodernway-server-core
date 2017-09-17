@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.Objects;
 
 import javax.activation.FileTypeMap;
 import javax.activation.MimetypesFileTypeMap;
@@ -30,6 +29,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.io.IO;
 
 public class CoreContentTypeMapper implements ICoreContentTypeMapper, InitializingBean
@@ -48,7 +48,7 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
 
     public CoreContentTypeMapper(final Resource resource)
     {
-        m_rsrc = Objects.requireNonNull(resource);
+        m_rsrc = CommonOps.requireNonNull(resource);
     }
 
     private final MimetypesFileTypeMap iniFileTypeMap() throws IOException
@@ -109,13 +109,13 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
     @Override
     public String getContentType(final String file)
     {
-        return getFileTypeMap().getContentType(Objects.requireNonNull(file));
+        return getFileTypeMap().getContentType(CommonOps.requireNonNull(file));
     }
 
     @Override
     public String getContentType(final File file)
     {
-        return getFileTypeMap().getContentType(Objects.requireNonNull(file));
+        return getFileTypeMap().getContentType(CommonOps.requireNonNull(file));
     }
 
     @Override

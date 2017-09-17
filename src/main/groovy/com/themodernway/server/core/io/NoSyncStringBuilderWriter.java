@@ -18,7 +18,8 @@ package com.themodernway.server.core.io;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class NoSyncStringBuilderWriter extends Writer implements CharSequence, IFormatted<NoSyncStringBuilderWriter>
 {
@@ -31,7 +32,7 @@ public class NoSyncStringBuilderWriter extends Writer implements CharSequence, I
 
     public NoSyncStringBuilderWriter(final StringBuilder builder)
     {
-        super(Objects.requireNonNull(builder));
+        super(CommonOps.requireNonNull(builder));
 
         m_builder = builder;
     }

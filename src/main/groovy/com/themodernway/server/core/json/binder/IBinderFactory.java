@@ -16,8 +16,9 @@
 
 package com.themodernway.server.core.json.binder;
 
-@FunctionalInterface
 public interface IBinderFactory
 {
     public IBinder getBinder();
+
+    public IBinder getBinderForThread();
 }

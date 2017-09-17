@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.LinkedHashMap;
-import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.log4j.Level;
@@ -30,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.springframework.util.DefaultPropertiesPersister;
 import org.springframework.util.PropertiesPersister;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.logging.ICoreLoggingOperations;
 import com.themodernway.server.core.security.IStringCryptoProvider;
@@ -44,7 +44,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
     public CoreEncryptedPropertiesProviderPlaceholderConfigurer(final IStringCryptoProvider crypto, final String prefix)
     {
-        setPropertiesPersister(new CoreEncryptionPropertiesPersister(Objects.requireNonNull(crypto), this, StringOps.requireTrimOrNull(prefix)));
+        setPropertiesPersister(new CoreEncryptionPropertiesPersister(CommonOps.requireNonNull(crypto), this, StringOps.requireTrimOrNull(prefix)));
     }
 
     @Override
@@ -107,9 +107,9 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
         public CoreEncryptionPropertiesPersister(final IStringCryptoProvider crypto, final CoreEncryptedPropertiesProviderPlaceholderConfigurer parent, final String prefix)
         {
-            m_crypto = Objects.requireNonNull(crypto);
+            m_crypto = CommonOps.requireNonNull(crypto);
 
-            m_parent = Objects.requireNonNull(parent);
+            m_parent = CommonOps.requireNonNull(parent);
 
             m_prefix = StringOps.requireTrimOrNull(prefix);
         }

@@ -19,7 +19,7 @@ package com.themodernway.server.core.json;
 import com.themodernway.server.core.ThreadLocalDateFormat;
 import com.themodernway.server.core.ThreadLocalNumberFormat;
 
-public interface IJSONContext extends IJSONReplacerUtil
+public interface IJSONContext
 {
     public IJSONObjectReplacer getObjectReplacer();
 

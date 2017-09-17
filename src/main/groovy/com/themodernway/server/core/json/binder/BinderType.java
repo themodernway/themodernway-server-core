@@ -16,9 +16,9 @@
 
 package com.themodernway.server.core.json.binder;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.IStringValued;
 import com.themodernway.server.core.servlet.ICoreServletConstants;
@@ -27,11 +27,15 @@ public enum BinderType implements IBinderFactory, IStringValued
 {
     JSON(JSONBinder::new), YAML(YAMLBinder::new), XML(XMLBinder::new), PROPERTIES(PropertiesBinder::new);
 
-    private final IBinderFactory m_maker;
+    private final Supplier<IBinder>    m_maker;
 
-    private BinderType(final IBinderFactory maker)
+    private final ThreadLocal<IBinder> m_local;
+
+    private BinderType(final Supplier<IBinder> binder)
     {
-        m_maker = Objects.requireNonNull(maker);
+        m_maker = CommonOps.requireNonNull(binder);
+
+        m_local = ThreadLocal.withInitial(m_maker);
     }
 
     @Override
@@ -43,7 +47,13 @@ public enum BinderType implements IBinderFactory, IStringValued
     @Override
     public final IBinder getBinder()
     {
-        return m_maker.getBinder();
+        return m_maker.get();
+    }
+
+    @Override
+    public final IBinder getBinderForThread()
+    {
+        return m_local.get();
     }
 
     public static final BinderType forContentType(final String type)
@@ -120,7 +130,7 @@ public enum BinderType implements IBinderFactory, IStringValued
             }
             else
             {
-                return null;
+                return BinderType.JSON;
             }
         }
     }

@@ -20,12 +20,13 @@ import java.io.Closeable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public abstract class AbstractBeanFactoryProvider<T extends Closeable> implements IBeanFactoryProvider<T>
 {
@@ -39,7 +40,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
 
     protected AbstractBeanFactoryProvider(final Class<T> classof)
     {
-        m_classof = Objects.requireNonNull(classof, "null bean class.");
+        m_classof = CommonOps.requireNonNull(classof, "null bean class.");
     }
 
     @Override

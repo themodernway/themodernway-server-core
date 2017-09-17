@@ -18,12 +18,12 @@ package com.themodernway.server.core.scripting;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.Activatable;
 
 public abstract class AbstractScriptingProperties extends Activatable implements IScriptingProperties
@@ -36,7 +36,7 @@ public abstract class AbstractScriptingProperties extends Activatable implements
 
     protected AbstractScriptingProperties(final ScriptType type)
     {
-        m_type = Objects.requireNonNull(type);
+        m_type = CommonOps.requireNonNull(type);
     }
 
     @Override
@@ -71,12 +71,12 @@ public abstract class AbstractScriptingProperties extends Activatable implements
 
     protected void populate(final Resource resource) throws Exception
     {
-        getProperties().load(Objects.requireNonNull(Objects.requireNonNull(resource).getInputStream()));
+        getProperties().load(CommonOps.requireNonNull(CommonOps.requireNonNull(resource).getInputStream()));
     }
 
     protected void populate(final Map<String, String> properties)
     {
-        getProperties().putAll(Objects.requireNonNull(properties));
+        getProperties().putAll(CommonOps.requireNonNull(properties));
     }
 
     public Logger logger()

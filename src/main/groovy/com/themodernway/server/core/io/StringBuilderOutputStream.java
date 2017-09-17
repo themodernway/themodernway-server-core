@@ -21,13 +21,15 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.output.WriterOutputStream;
 
+import com.themodernway.common.api.java.util.CommonOps;
+
 public class StringBuilderOutputStream extends WriterOutputStream implements CharSequence, IFormatted<StringBuilderOutputStream>
 {
     private final NoSyncStringBuilderWriter m_writer;
 
     protected StringBuilderOutputStream(final NoSyncStringBuilderWriter writer, final Charset charset)
     {
-        super(writer, charset);
+        super(CommonOps.requireNonNull(writer), CommonOps.requireNonNull(charset));
 
         m_writer = writer;
     }

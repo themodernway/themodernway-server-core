@@ -25,14 +25,11 @@ import java.util.stream.Stream;
 
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
 
 public interface ICoreJSONOperations
 {
     public IBinder binder();
-
-    public IBinder binder(BinderType type);
 
     public JSONArray jarr();
 

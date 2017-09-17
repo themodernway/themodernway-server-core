@@ -18,17 +18,16 @@ package com.themodernway.server.core.io;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.util.Objects;
 
 public class NoCloseReaderProxyInputStream extends ReaderProxyInputStream
 {
     public NoCloseReaderProxyInputStream(final Reader reader)
     {
-        super(new NoCloseProxyReader(Objects.requireNonNull(reader)), IO.UTF_8_CHARSET);
+        super(new NoCloseProxyReader(reader));
     }
 
     public NoCloseReaderProxyInputStream(final Reader reader, final Charset charset)
     {
-        super(new NoCloseProxyReader(Objects.requireNonNull(reader)), Objects.requireNonNull(charset));
+        super(new NoCloseProxyReader(reader), charset);
     }
 }

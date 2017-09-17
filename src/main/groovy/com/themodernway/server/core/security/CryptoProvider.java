@@ -17,7 +17,8 @@
 package com.themodernway.server.core.security;
 
 import java.io.IOException;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public final class CryptoProvider implements ICryptoProvider
 {
@@ -36,7 +37,7 @@ public final class CryptoProvider implements ICryptoProvider
         this(pass, salt, pass, DEFAULT_STRENGTH);
     }
 
-    public CryptoProvider(final String pass, final String salt, int strength)
+    public CryptoProvider(final String pass, final String salt, final int strength)
     {
         this(pass, salt, pass, strength);
     }
@@ -46,15 +47,15 @@ public final class CryptoProvider implements ICryptoProvider
         this(pass, salt, sign, DEFAULT_STRENGTH);
     }
 
-    public CryptoProvider(final String pass, final String salt, final String sign, int strength)
+    public CryptoProvider(final String pass, final String salt, final String sign, final int strength)
     {
         m_hasher = new SimpleSHA512HashProvider();
 
         m_bcrypt = new SimpleBCryptHashProvider(strength);
 
-        m_secret = new SimpleKeyStringSigningProvider(Objects.requireNonNull(sign));
+        m_secret = new SimpleKeyStringSigningProvider(CommonOps.requireNonNull(sign));
 
-        m_pcrypt = new AESStringCryptoProvider(Objects.requireNonNull(pass), Objects.requireNonNull(salt));
+        m_pcrypt = new AESStringCryptoProvider(CommonOps.requireNonNull(pass), CommonOps.requireNonNull(salt));
 
         m_keygen = SimpleCryptoKeysGenerator.getCryptoKeysGenerator();
     }
@@ -80,55 +81,55 @@ public final class CryptoProvider implements ICryptoProvider
     @Override
     public final String makeSignature(final String text)
     {
-        return m_secret.makeSignature(Objects.requireNonNull(text));
+        return m_secret.makeSignature(CommonOps.requireNonNull(text));
     }
 
     @Override
     public final boolean testSignature(final String text, final String value)
     {
-        return m_secret.testSignature(Objects.requireNonNull(text), Objects.requireNonNull(value));
+        return m_secret.testSignature(CommonOps.requireNonNull(text), CommonOps.requireNonNull(value));
     }
 
     @Override
     public final String makeBCrypt(final String text)
     {
-        return m_bcrypt.makeBCrypt(Objects.requireNonNull(text));
+        return m_bcrypt.makeBCrypt(CommonOps.requireNonNull(text));
     }
 
     @Override
     public final String encrypt(final String text)
     {
-        return m_pcrypt.encrypt(Objects.requireNonNull(text));
+        return m_pcrypt.encrypt(CommonOps.requireNonNull(text));
     }
 
     @Override
     public final String decrypt(final String text)
     {
-        return m_pcrypt.decrypt(Objects.requireNonNull(text));
+        return m_pcrypt.decrypt(CommonOps.requireNonNull(text));
     }
 
     @Override
     public final boolean testBCrypt(final String text, final String value)
     {
-        return m_bcrypt.testBCrypt(Objects.requireNonNull(text), Objects.requireNonNull(value));
+        return m_bcrypt.testBCrypt(CommonOps.requireNonNull(text), CommonOps.requireNonNull(value));
     }
 
     @Override
     public String sha512(final String text, final String salt)
     {
-        return m_hasher.sha512(Objects.requireNonNull(text), Objects.requireNonNull(salt));
+        return m_hasher.sha512(CommonOps.requireNonNull(text), CommonOps.requireNonNull(salt));
     }
 
     @Override
     public String sha512(final String text, final String salt, final int iter)
     {
-        return m_hasher.sha512(Objects.requireNonNull(text), Objects.requireNonNull(salt), iter);
+        return m_hasher.sha512(CommonOps.requireNonNull(text), CommonOps.requireNonNull(salt), iter);
     }
 
     @Override
     public String sha512(final String text)
     {
-        return m_hasher.sha512(Objects.requireNonNull(text));
+        return m_hasher.sha512(CommonOps.requireNonNull(text));
     }
 
     @Override

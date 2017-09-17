@@ -21,23 +21,21 @@ import javax.script.ScriptEngine
 import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.io.NoOpWriter
 import com.themodernway.server.core.json.JSONObject
-import com.themodernway.server.core.json.binder.BinderType
 import com.themodernway.server.core.json.parser.JSONParser
 import com.themodernway.server.core.json.support.JSONMapToTreeSolver
 import com.themodernway.server.core.logging.MDC
 import com.themodernway.server.core.scripting.ScriptType
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
-import com.themodernway.server.core.test.util.BinderPOJO
 
 public class BasicTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
     def setupSpec()
     {
         setupServerCoreDefault(
-            "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
-            "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
-        )
+                "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
+                "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
+                )
     }
 
     def cleanupSpec()
@@ -59,7 +57,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         setup:
         def valu = json(count: 1L)
         def text = valu as String
-        println text
+        echo text
 
         expect:
         valu['count'] == 1L
@@ -69,9 +67,9 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def valu = json(count: 1L, name: "Dean", last: 1.5)
-        println valu as String
+        echo valu as String
         valu - ['name', 'last']
-        println valu as String
+        echo valu as String
 
         expect:
         valu['count'] == 1L
@@ -81,7 +79,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def lang = scripting().getScriptingLanguageNames()
-        println json(languages: lang)
+        echo json(languages: lang)
 
         expect:
         "dean" == "dean"
@@ -91,9 +89,9 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         ScriptEngine engine = scripting().engine(ScriptType.JAVASCRIPT, reader('classpath:/com/themodernway/server/core/test/test.js'))
-        println "JavaScript " + engine.get('x')
+        echo "JavaScript " + engine.get('x')
         engine.eval('increment_x()')
-        println "JavaScript " + engine.get('x')
+        echo "JavaScript " + engine.get('x')
 
         expect:
         "dean" == "dean"
@@ -103,110 +101,12 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         ScriptEngine engine = scripting().engine(ScriptType.GROOVY, reader('classpath:/com/themodernway/server/core/test/test.gy'))
-        println "Groovy " + engine.get('x')
+        echo "Groovy " + engine.get('x')
         engine.eval('increment_x()')
-        println "Groovy " + engine.get('x')
+        echo "Groovy " + engine.get('x')
 
         expect:
         "dean" == "dean"
-    }
-
-    def "test binder"()
-    {
-        setup:
-        BinderPOJO pojo = new BinderPOJO()
-        pojo.setName('Dean S. /Jones')
-        String text = binder().toJSONString(pojo)
-        BinderPOJO make = binder().bind(text, BinderPOJO)
-        JSONObject json = binder().toJSONObject(make)
-        String valu = json.toJSONString(false)
-        pojo = json as BinderPOJO
-        pojo.setName('Bob')
-        println binder().toJSONString(pojo)
-        println text
-        println valu
-        binder().send(System.out, "Hi")
-        println ""
-
-        expect:
-        text == valu
-    }
-
-    def "test yaml pojo 1"()
-    {
-        setup:
-        BinderPOJO make = binder(BinderType.YAML).bind(resource('classpath:/com/themodernway/server/core/test/pojo.yml'), BinderPOJO)
-        String valu = binder(BinderType.YAML).toString(make)
-        println valu
-
-        expect:
-        valu == valu
-    }
-
-    def "test yaml pojo 2"()
-    {
-        setup:
-        JSONObject json = binder(BinderType.YAML).bindJSON(resource('classpath:/com/themodernway/server/core/test/pojo.yml'))
-        String valu = json.toJSONString()
-        println valu
-
-        expect:
-        valu == valu
-    }
-
-    def "test yaml json 1"()
-    {
-        setup:
-        JSONObject json = json(type: 'API', active: true, versions: [1, 2, 3, false], pojo: new BinderPOJO("Rosaria", 100), list:[])
-        String valu = binder(BinderType.YAML).toString(json)
-        println valu
-        println json.toJSONString()
-
-        expect:
-        valu == valu
-    }
-
-    def "test yaml json 3"()
-    {
-        setup:
-        JSONObject json = binder(BinderType.YAML).bindJSON(resource('classpath:/com/themodernway/server/core/test/test.yml'))
-        String valu = json.toJSONString()
-        println valu
-
-        expect:
-        valu == valu
-    }
-
-    def "test yaml pojo recycle"()
-    {
-        setup:
-        BinderPOJO pojo = new BinderPOJO()
-        pojo.setName('Dean S. Jones')
-        pojo.setCost(9.99)
-        String text = binder(BinderType.YAML).toString(pojo)
-        BinderPOJO make = binder(BinderType.YAML).bind(text, BinderPOJO)
-        String valu = binder(BinderType.YAML).toString(make)
-        println text
-        println valu
-
-        expect:
-        text == valu
-    }
-
-    def "test xml pojo recycle"()
-    {
-        setup:
-        BinderPOJO pojo = new BinderPOJO()
-        pojo.setName('Dean S. Jones')
-        pojo.setCost(9.99)
-        String text = binder(BinderType.XML).toString(pojo)
-        BinderPOJO make = binder(BinderType.XML).bind(text, BinderPOJO)
-        String valu = binder(BinderType.XML).toString(make)
-        println text
-        println valu
-
-        expect:
-        text == valu
     }
 
     def "test tree"()
@@ -220,7 +120,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         tree << [id: '3', level: 3, tree: 2]
         JSONObject json = tree.solve('tree')
         String valu = json.toJSONString()
-        println valu
+        echo valu
 
         expect:
         valu == valu
@@ -250,7 +150,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         p.testargs(5, 'dean')
         p.x = 5
         def z = p.x
-        println z
+        echo z
 
         expect:
         z == 5
@@ -265,7 +165,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         p.testargs(5, 'dean')
         p.x = 5
         def z = p.x
-        println z
+        echo z
 
         expect:
         z == 5
@@ -275,7 +175,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def t = new NanoTimer()
-        println t
+        echo t
 
         expect:
         "dean" == "dean"
@@ -286,7 +186,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         setup:
         def t = new NanoTimer()
         Thread.sleep(500)
-        println t
+        echo t
 
         expect:
         "dean" == "dean"
@@ -299,10 +199,10 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
         def j = new JSONParser().parse(r)
         def b = binder().bindJSON(r)
-        println j.toString() + " Tiger JSON parsed out"
-        println b.toString() + " Tiger JSON parsed out"
-        println t.toString() + " Tiger JSON parsed out"
-        println b.dumpClassNamesToString()
+        echo j.toString() + " Tiger JSON parsed out"
+        echo b.toString() + " Tiger JSON parsed out"
+        echo t.toString() + " Tiger JSON parsed out"
+        echo b.dumpClassNamesToString()
 
         expect:
         j.toString() == b.toString()
@@ -319,7 +219,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             b.toString()
         }
-        println t.toString() + " Lion JSON out many"
+        echo t.toString() + " Lion JSON out many"
 
         expect:
         j.toString() == b.toString()
@@ -336,7 +236,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             binder().toString(j)
         }
-        println t.toString() + " Lion JSON out many 2"
+        echo t.toString() + " Lion JSON out many 2"
 
         expect:
         j.toString() == b.toString()
@@ -353,7 +253,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             j.writeJSONString(w, true)
         }
-        println t.toString() + " Time Tiger JSON out"
+        echo t.toString() + " Time Tiger JSON out"
 
         expect:
         "dean" == "dean"
@@ -370,7 +270,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             j.writeJSONString(w, false)
         }
-        println t.toString() + " Time Tiger JSON out"
+        echo t.toString() + " Time Tiger JSON out"
 
         expect:
         "dean" == "dean"
@@ -387,7 +287,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             j.writeJSONString(w, true)
         }
-        println t.toString() + " Time Tiny JSON out true"
+        echo t.toString() + " Time Tiny JSON out true"
 
         expect:
         "dean" == "dean"
@@ -404,7 +304,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             j.writeJSONString(w, false)
         }
-        println t.toString() + " Time Tiny JSON out false"
+        echo t.toString() + " Time Tiny JSON out false"
 
         expect:
         "dean" == "dean"
@@ -421,7 +321,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             j.toJSONString(true)
         }
-        println t.toString() + " Time Tiny JSON string true"
+        echo t.toString() + " Time Tiny JSON string true"
 
         expect:
         "dean" == "dean"
@@ -438,7 +338,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             def s = j.toJSONString(false)
         }
-        println t.toString() + " Time Tiny JSON string false"
+        echo t.toString() + " Time Tiny JSON string false"
 
         expect:
         "dean" == "dean"
@@ -455,7 +355,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             j.toJSONString(true)
         }
-        println t.toString() + " Time Tiger JSON string true"
+        echo t.toString() + " Time Tiger JSON string true"
 
         expect:
         "dean" == "dean"
@@ -472,7 +372,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             def s = j.toJSONString(false)
         }
-        println t.toString() + " Time Tiger JSON string false"
+        echo t.toString() + " Time Tiger JSON string false"
 
         expect:
         "dean" == "dean"
@@ -488,7 +388,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             p.parse(r)
         }
-        println t.toString() + " Tiger JSON parsed"
+        echo t.toString() + " Tiger JSON parsed"
 
         expect:
         "dean" == "dean"
@@ -504,7 +404,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             b.bindJSON(r)
         }
-        println t.toString() + " Tiger BINDER parsed"
+        echo t.toString() + " Tiger BINDER parsed"
 
         expect:
         "dean" == "dean"
@@ -520,7 +420,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             p.parse(r)
         }
-        println t.toString() + " Lion JSON parsed"
+        echo t.toString() + " Lion JSON parsed"
 
         expect:
         "dean" == "dean"
@@ -536,7 +436,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             b.bindJSON(r)
         }
-        println t.toString() + " Lion BINDER parsed"
+        echo t.toString() + " Lion BINDER parsed"
 
         expect:
         "dean" == "dean"
@@ -552,7 +452,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             p.parse(r)
         }
-        println t.toString() + " Tiny JSON parsed"
+        echo t.toString() + " Tiny JSON parsed"
 
         expect:
         "dean" == "dean"
@@ -568,7 +468,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             b.bindJSON(r)
         }
-        println t.toString() + " Tiny BINDER parsed"
+        echo t.toString() + " Tiny BINDER parsed"
 
         expect:
         "dean" == "dean"
@@ -584,7 +484,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             p.parse(r)
         }
-        println t.toString() + " Tiny JSON parsed string"
+        echo t.toString() + " Tiny JSON parsed string"
 
         expect:
         "dean" == "dean"
@@ -600,7 +500,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             b.bindJSON(r)
         }
-        println t.toString() + " Tiny BINDER parsed string"
+        echo t.toString() + " Tiny BINDER parsed string"
 
         expect:
         "dean" == "dean"
@@ -616,7 +516,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             b.bindJSON(r)
         }
-        println t.toString() + " Tiny BINDER parsed string 2"
+        echo t.toString() + " Tiny BINDER parsed string 2"
 
         expect:
         "dean" == "dean"
@@ -632,7 +532,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             p.parse(r)
         }
-        println t.toString() + " Tiny JSON parsed string 2"
+        echo t.toString() + " Tiny JSON parsed string 2"
 
         expect:
         "dean" == "dean"
@@ -648,7 +548,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             p.parse(r)
         }
-        println t.toString() + " Tiny JSON parsed string 3"
+        echo t.toString() + " Tiny JSON parsed string 3"
 
         expect:
         "dean" == "dean"
@@ -658,7 +558,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def t = new NanoTimer()
-        println t
+        echo t
 
         expect:
         "dean" == "dean"

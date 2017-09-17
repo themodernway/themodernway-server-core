@@ -19,7 +19,6 @@ package com.themodernway.server.core.support.spring;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.Objects;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
@@ -29,10 +28,11 @@ import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
 
-public class FilterFaxtoryContextCustomizer implements IServletContextCustomizer, ICoreCommon
+public class FilterFactoryContextCustomizer implements IServletContextCustomizer, ICoreCommon
 {
     private final Logger   m_logs = Logger.getLogger(getClass());
 
@@ -44,12 +44,12 @@ public class FilterFaxtoryContextCustomizer implements IServletContextCustomizer
 
     private IFilterFactory m_fact;
 
-    public FilterFaxtoryContextCustomizer(final String name, final String maps)
+    public FilterFactoryContextCustomizer(final String name, final String maps)
     {
         this(name, StringOps.toUniqueTokenStringList(maps));
     }
 
-    public FilterFaxtoryContextCustomizer(final String name, final Collection<String> maps)
+    public FilterFactoryContextCustomizer(final String name, final Collection<String> maps)
     {
         m_maps = StringOps.toUniqueArray(maps);
 
@@ -58,7 +58,7 @@ public class FilterFaxtoryContextCustomizer implements IServletContextCustomizer
 
     public void setFilterFactory(final IFilterFactory fact)
     {
-        m_fact = Objects.requireNonNull(fact);
+        m_fact = CommonOps.requireNonNull(fact);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class FilterFaxtoryContextCustomizer implements IServletContextCustomizer
 
                 if ((null != maps) && (maps.length > 0))
                 {
-                    final Filter filter = m_fact.make(sc, context);
+                    final Filter filter = m_fact.make(this, sc, context);
 
                     if (null != filter)
                     {

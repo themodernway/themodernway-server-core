@@ -30,10 +30,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.json.JSONType;
@@ -72,14 +72,21 @@ public final class JSONUtils
 
     public final static BigInteger                      BIG_INT_DEC_MIN = BIG_DECIMAL_MIN.toBigInteger();
 
-    private final static int                            INDENT_ADDED    = 4;
+    public static final Object                          UNDEFINED_JSON  = new Object();
 
-    private static final CoreObjectMapper               MAPPER          = new CoreObjectMapper();
+    private final static int                            INDENT_ADDED    = 4;
 
     private static final LinkedHashMap<Integer, String> INDENT_CACHE    = new LinkedHashMap<Integer, String>();
 
+    private static final ThreadLocal<CoreObjectMapper>  MAPPERS         = ThreadLocal.withInitial(CoreObjectMapper::new);
+
     protected JSONUtils()
     {
+    }
+
+    public static final CoreObjectMapper toMapper()
+    {
+        return MAPPERS.get();
     }
 
     public static final String toJSONString(final Object value, final boolean strict)
@@ -327,14 +334,14 @@ public final class JSONUtils
 
     static final void writeObjectAsJSON(final Writer out, final Object object) throws IOException
     {
-        MAPPER.writeValue(new NoCloseProxyWriter(Objects.requireNonNull(out)), Objects.requireNonNull(object));
+        toMapper().writeValue(new NoCloseProxyWriter(CommonOps.requireNonNull(out)), CommonOps.requireNonNull(object));
     }
 
     static final String writeObjectAsJSONString(final Object object)
     {
         try
         {
-            return MAPPER.writeValueAsString(Objects.requireNonNull(object));
+            return toMapper().writeValueAsString(CommonOps.requireNonNull(object));
         }
         catch (final NullPointerException n)
         {

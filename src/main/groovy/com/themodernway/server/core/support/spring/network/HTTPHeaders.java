@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
@@ -61,7 +61,7 @@ public class HTTPHeaders extends HttpHeaders
 
     public HTTPHeaders addAllHeaders(final Map<String, List<String>> head)
     {
-        Objects.requireNonNull(head);
+        CommonOps.requireNonNull(head);
 
         if (false == head.isEmpty())
         {

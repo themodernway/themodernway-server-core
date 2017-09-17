@@ -26,13 +26,10 @@ import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 
+@SuppressWarnings("serial")
 public class ContentGetServlet extends AbstractContentServlet
 {
-    private static final long serialVersionUID = 3234352594365724118L;
-
-    private boolean           m_nocache        = false;
-
-    private long              m_deltams        = DEFAULT_CACHE_DELTA_IN_MILLISECONDS;
+    private boolean m_nocache = false;
 
     public ContentGetServlet()
     {
@@ -53,16 +50,6 @@ public class ContentGetServlet extends AbstractContentServlet
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
         content(request, response, true);
-    }
-
-    public long getCacheDelta()
-    {
-        return m_deltams;
-    }
-
-    public void setCacheDelta(final long deltams)
-    {
-        m_deltams = deltams;
     }
 
     public boolean isRedirectOn()
@@ -168,38 +155,7 @@ public class ContentGetServlet extends AbstractContentServlet
         }
         else
         {
-            final long last = file.getLastModified();
-
-            final long delt = Math.max(0, getCacheDelta());
-
-            try
-            {
-                long date = request.getDateHeader(IF_UNMODIFIED_SINCE_HEADER);
-
-                if ((date != IS_NOT_FOUND) && (last >= (date + delt)))
-                {
-                    response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
-
-                    return false;
-                }
-                date = request.getDateHeader(IF_MODIFIED_SINCE_HEADER);
-
-                if ((date != IS_NOT_FOUND) && ((last < (date + delt)) && (null == request.getHeader(IF_NONE_MATCH_HEADER))))
-                {
-                    response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-
-                    return false;
-                }
-            }
-            catch (final IllegalArgumentException e)
-            {
-                logger().error("Captured header exception.", e);
-            }
-            if ((false == response.containsHeader(LAST_MODIFIED_HEADER)) && (last >= 0))
-            {
-                response.setDateHeader(LAST_MODIFIED_HEADER, last);
-            }
-            return true;
+            return isModifiedSince(request, response, file.getLastModified());
         }
     }
 
@@ -207,25 +163,25 @@ public class ContentGetServlet extends AbstractContentServlet
     {
         if (send)
         {
-            final long size = file.getSize();
-
-            if (size >= 0)
-            {
-                response.setContentLengthLong(size);
-            }
             final String type = toTrimOrNull(file.getContentType());
 
             if ((null != type) && (false == CONTENT_TYPE_APPLCATION_OCTET_STREAM.equals(type)))
             {
                 response.setContentType(type);
             }
-            file.writeTo(response.getOutputStream());
+            final long size = Math.max(file.getSize(), 0L);
+
+            response.setContentLengthLong(size);
+
+            if (size > 0L)
+            {
+                file.writeTo(response.getOutputStream());
+            }
         }
         else
         {
-            response.setContentLengthLong(0);
+            response.setContentLengthLong(0L);
         }
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     public String getHomePage()

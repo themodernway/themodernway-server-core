@@ -17,7 +17,8 @@
 package com.themodernway.server.core.security.session;
 
 import java.util.List;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 @SuppressWarnings("serial")
 public abstract class AbstractServerSessionRepository implements IServerSessionRepository
@@ -31,7 +32,7 @@ public abstract class AbstractServerSessionRepository implements IServerSessionR
 
     protected AbstractServerSessionRepository(final IServerSessionHelper helper)
     {
-        m_helper = Objects.requireNonNull(helper);
+        m_helper = CommonOps.requireNonNull(helper);
     }
 
     @Override

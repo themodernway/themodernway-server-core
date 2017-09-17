@@ -18,12 +18,13 @@ package com.themodernway.server.core.io;
 
 import java.io.FilterWriter;
 import java.io.Writer;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public abstract class AbstractProxyWriter<T extends AbstractProxyWriter<T>> extends FilterWriter implements IFormatted<T>
 {
     public AbstractProxyWriter(final Writer writer)
     {
-        super(Objects.requireNonNull(writer));
+        super(CommonOps.requireNonNull(writer));
     }
 }

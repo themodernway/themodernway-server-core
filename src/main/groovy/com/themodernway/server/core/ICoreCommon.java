@@ -16,17 +16,11 @@
 
 package com.themodernway.server.core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
@@ -47,55 +41,6 @@ public interface ICoreCommon extends IHasLogging
     public static <T> T NULL()
     {
         return null;
-    }
-
-    public static void setConsumerUniqueStringArray(final String list, final Consumer<String[]> prop)
-    {
-        Objects.requireNonNull(prop);
-
-        final String toks = StringOps.toTrimOrNull(list);
-
-        if (null != toks)
-        {
-            final String[] uniq = StringOps.toArray(StringOps.toUniqueTokenStringList(toks));
-
-            if ((null != uniq) && (uniq.length > 0))
-            {
-                prop.accept(uniq);
-
-                return;
-            }
-        }
-        prop.accept(NULL());
-    }
-
-    public static void setConsumerUniqueStringArray(final Collection<String> list, final Consumer<String[]> prop)
-    {
-        Objects.requireNonNull(prop);
-
-        if ((null != list) && (false == list.isEmpty()))
-        {
-            final String[] uniq = StringOps.toUniqueArray(list);
-
-            if ((null != uniq) && (uniq.length > 0))
-            {
-                prop.accept(uniq);
-
-                return;
-            }
-        }
-        prop.accept(NULL());
-    }
-
-    public static List<String> getSupplierUniqueStringArray(final Supplier<String[]> prop)
-    {
-        final String[] uniq = Objects.requireNonNull(prop).get();
-
-        if ((null != uniq) && (uniq.length > 0))
-        {
-            return StringOps.toUnique(uniq);
-        }
-        return new ArrayList<String>(0);
     }
 
     default public String format(final String format, final Object... args)
@@ -135,32 +80,32 @@ public interface ICoreCommon extends IHasLogging
 
     default public String requireTrimOrNull(final String string, final Supplier<String> reason)
     {
-        return requireNonNull(toTrimOrNull(string), reason);
+        return StringOps.requireTrimOrNull(string, reason);
     }
 
     default public <T> T requireNonNull(final T object)
     {
-        return Objects.requireNonNull(object);
+        return CommonOps.requireNonNull(object);
     }
 
     default public <T> T requireNonNull(final T object, final String reason)
     {
-        return Objects.requireNonNull(object, reason);
+        return CommonOps.requireNonNull(object, reason);
     }
 
     default public <T> T requireNonNull(final T object, final Supplier<String> reason)
     {
-        return Objects.requireNonNull(object, reason);
+        return CommonOps.requireNonNull(object, reason);
     }
 
     default public <T> T requireNonNullOrElse(final T object, final T otherwise)
     {
-        return (Objects.nonNull(object) ? object : otherwise);
+        return CommonOps.requireNonNullOrElse(object, otherwise);
     }
 
     default public <T> T requireNonNullOrElse(final T object, final Supplier<T> otherwise)
     {
-        return (Objects.nonNull(object) ? object : otherwise.get());
+        return CommonOps.requireNonNullOrElse(object, otherwise);
     }
 
     default public String getEnvironmentProperty(final String name)
@@ -222,9 +167,9 @@ public interface ICoreCommon extends IHasLogging
         return StringOps.toPrintableString(collection);
     }
 
-    default public List<String> toUniqueStringList(final Collection<String> strings)
+    default public List<String> toUniqueStringList(final Collection<String> collection)
     {
-        return StringOps.toUnique(strings);
+        return StringOps.toUnique(collection);
     }
 
     default public List<String> toUniqueStringList(final Stream<String> strings)
@@ -249,52 +194,52 @@ public interface ICoreCommon extends IHasLogging
 
     default public <T> List<T> emptyList()
     {
-        return Collections.emptyList();
+        return CommonOps.emptyList();
     }
 
     default public <K, V> Map<K, V> emptyMap()
     {
-        return Collections.emptyMap();
+        return CommonOps.emptyMap();
     }
 
     default public <K, V> Map<K, V> toUnmodifiableMap(final Map<K, V> maps)
     {
-        return Collections.unmodifiableMap(maps);
+        return CommonOps.toUnmodifiableMap(maps);
     }
 
     default public <T> List<T> arrayList()
     {
-        return new ArrayList<T>();
+        return CommonOps.arrayList();
     }
 
     default public <T> List<T> arrayList(final int size)
     {
-        return new ArrayList<T>(size);
+        return CommonOps.arrayList(size);
     }
 
     default public <T> List<T> toList(final T source[])
     {
-        return Arrays.asList(source);
+        return CommonOps.toList(source);
     }
 
     default public <T> List<T> toList(final Stream<T> source)
     {
-        return source.collect(Collectors.toList());
+        return CommonOps.toList(source);
     }
 
     default public <T> List<T> toList(final Enumeration<T> source)
     {
-        return Collections.list(source);
+        return CommonOps.toList(source);
     }
 
     default public <T> List<T> toList(final Collection<T> source)
     {
-        return new ArrayList<T>(source);
+        return CommonOps.toList(source);
     }
 
     default public <T> List<T> toUnmodifiableList(final List<T> list)
     {
-        return Collections.unmodifiableList(list);
+        return CommonOps.toUnmodifiableList(list);
     }
 
     default public <T> List<T> toUnmodifiableList(final T source[])

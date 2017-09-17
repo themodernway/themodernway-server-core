@@ -58,18 +58,18 @@ public class ContentDownloadServlet extends ContentGetServlet
     {
         if (send)
         {
-            final long size = file.getSize();
+            final long size = Math.max(file.getSize(), 0L);
 
-            if (size >= 0)
+            response.setContentLengthLong(size);
+
+            if (size > 0L)
             {
-                response.setContentLengthLong(size);
+                file.writeTo(response.getOutputStream());
             }
-            file.writeTo(response.getOutputStream());
         }
         else
         {
-            response.setContentLengthLong(0);
+            response.setContentLengthLong(0L);
         }
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

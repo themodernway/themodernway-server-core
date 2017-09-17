@@ -18,9 +18,9 @@ package com.themodernway.server.core.security.session;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ITimeSupplier;
 import com.themodernway.server.core.json.JSONObject;
@@ -42,7 +42,7 @@ public class SimpleJSONServerSession implements IServerSession
     {
         m_attr = new JSONObject();
 
-        m_repo = Objects.requireNonNull(repo);
+        m_repo = CommonOps.requireNonNull(repo);
 
         m_attr.put(getHelper().getSessionIdKey(), getServerContext().uuid());
 
@@ -55,9 +55,9 @@ public class SimpleJSONServerSession implements IServerSession
 
     public SimpleJSONServerSession(final Map<String, ?> attr, final IServerSessionRepository repo)
     {
-        m_attr = new JSONObject(Objects.requireNonNull(attr));
+        m_attr = new JSONObject(CommonOps.requireNonNull(attr));
 
-        m_repo = Objects.requireNonNull(repo);
+        m_repo = CommonOps.requireNonNull(repo);
 
         if (null == getId())
         {
@@ -155,7 +155,7 @@ public class SimpleJSONServerSession implements IServerSession
     @SuppressWarnings("unchecked")
     public <T> T getAttribute(final String name)
     {
-        return (T) m_attr.get(Objects.requireNonNull(name));
+        return (T) m_attr.get(CommonOps.requireNonNull(name));
     }
 
     @Override
@@ -167,7 +167,7 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public void setAttribute(final String name, final Object valu)
     {
-        if (m_attr.isDefined(Objects.requireNonNull(name)))
+        if (m_attr.isDefined(CommonOps.requireNonNull(name)))
         {
             final Object prev = m_attr.put(name, valu);
 
@@ -187,7 +187,7 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public void removeAttribute(final String name)
     {
-        if (m_attr.isDefined(Objects.requireNonNull(name)))
+        if (m_attr.isDefined(CommonOps.requireNonNull(name)))
         {
             m_attr.remove(name);
 

@@ -16,13 +16,14 @@
 
 package com.themodernway.server.core.limiting;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class TimeWindowMovingAverageOnMills extends BaseTimeWindowMovingAverage
 {
     public TimeWindowMovingAverageOnMills(final long window, final TimeUnit unit)
     {
-        super(TimeUnit.MILLISECONDS, window, Objects.requireNonNull(unit), System::currentTimeMillis);
+        super(TimeUnit.MILLISECONDS, window, CommonOps.requireNonNull(unit), System::currentTimeMillis);
     }
 }

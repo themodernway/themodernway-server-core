@@ -26,6 +26,9 @@ public interface IFileItemWrapper extends IFileItem
     public String getName() throws FileStorageException;
 
     @Override
+    public String getBaseName() throws FileStorageException;
+
+    @Override
     public String getExtension() throws FileStorageException;
 
     @Override

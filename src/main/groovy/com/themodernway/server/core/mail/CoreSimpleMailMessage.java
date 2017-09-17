@@ -18,13 +18,13 @@ package com.themodernway.server.core.mail;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 
-import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
 @SuppressWarnings("serial")
@@ -44,14 +44,14 @@ public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSim
 
     public CoreSimpleMailMessage(final SimpleMailMessage original)
     {
-        super(Objects.requireNonNull(original));
+        super(CommonOps.requireNonNull(original));
 
         m_send = null;
     }
 
     public CoreSimpleMailMessage(final SimpleMailMessage original, final IMailSender send)
     {
-        super(Objects.requireNonNull(original));
+        super(CommonOps.requireNonNull(original));
 
         m_send = send;
     }
@@ -59,55 +59,55 @@ public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSim
     @Override
     public void setMailToList(final String list)
     {
-        ICoreCommon.setConsumerUniqueStringArray(list, this::setTo);
+        StringOps.setConsumerUniqueStringArray(list, this::setTo);
     }
 
     @Override
     public void setMailToList(final Collection<String> list)
     {
-        ICoreCommon.setConsumerUniqueStringArray(list, this::setTo);
+        StringOps.setConsumerUniqueStringArray(list, this::setTo);
     }
 
     @Override
     public List<String> getMailToList()
     {
-        return ICoreCommon.getSupplierUniqueStringArray(this::getTo);
+        return StringOps.getSupplierUniqueStringArray(this::getTo);
     }
 
     @Override
     public void setMailCcList(final String list)
     {
-        ICoreCommon.setConsumerUniqueStringArray(list, this::setCc);
+        StringOps.setConsumerUniqueStringArray(list, this::setCc);
     }
 
     @Override
     public void setMailCcList(final Collection<String> list)
     {
-        ICoreCommon.setConsumerUniqueStringArray(list, this::setCc);
+        StringOps.setConsumerUniqueStringArray(list, this::setCc);
     }
 
     @Override
     public List<String> getMailCcList()
     {
-        return ICoreCommon.getSupplierUniqueStringArray(this::getCc);
+        return StringOps.getSupplierUniqueStringArray(this::getCc);
     }
 
     @Override
     public void setMailBccList(final String list)
     {
-        ICoreCommon.setConsumerUniqueStringArray(list, this::setBcc);
+        StringOps.setConsumerUniqueStringArray(list, this::setBcc);
     }
 
     @Override
     public void setMailBccList(final Collection<String> list)
     {
-        ICoreCommon.setConsumerUniqueStringArray(list, this::setBcc);
+        StringOps.setConsumerUniqueStringArray(list, this::setBcc);
     }
 
     @Override
     public List<String> getMailBccList()
     {
-        return ICoreCommon.getSupplierUniqueStringArray(this::getBcc);
+        return StringOps.getSupplierUniqueStringArray(this::getBcc);
     }
 
     @Override

@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.security;
 
-import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -24,6 +23,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 
 public final class BootstrapStringCryptoProvider implements IStringCryptoProvider
@@ -67,12 +67,12 @@ public final class BootstrapStringCryptoProvider implements IStringCryptoProvide
     @Override
     public final String encrypt(final String text)
     {
-        return m_pcrypt.encrypt(Objects.requireNonNull(text));
+        return m_pcrypt.encrypt(CommonOps.requireNonNull(text));
     }
 
     @Override
     public final String decrypt(final String text)
     {
-        return m_pcrypt.decrypt(Objects.requireNonNull(text));
+        return m_pcrypt.decrypt(CommonOps.requireNonNull(text));
     }
 }

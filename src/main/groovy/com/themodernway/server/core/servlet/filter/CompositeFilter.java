@@ -18,7 +18,6 @@ package com.themodernway.server.core.servlet.filter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -28,7 +27,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.common.collect.Lists;
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class CompositeFilter extends HTTPFilterBase
 {
@@ -36,7 +35,7 @@ public class CompositeFilter extends HTTPFilterBase
 
     public CompositeFilter(final List<? extends Filter> filters)
     {
-        m_filters = Objects.requireNonNull(filters);
+        m_filters = CommonOps.requireNonNull(filters);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class CompositeFilter extends HTTPFilterBase
     @Override
     public void destroy()
     {
-        for (final Filter filter : Lists.reverse(m_filters))
+        for (final Filter filter : m_filters)
         {
             filter.destroy();
         }
@@ -88,11 +87,9 @@ public class CompositeFilter extends HTTPFilterBase
             else
             {
                 m_curposn++;
-                final Filter nextFilter = m_filters.get(m_curposn - 1);
-                nextFilter.doFilter(request, response, this);
+
+                m_filters.get(m_curposn - 1).doFilter(request, response, this);
             }
-
         }
-
     }
 }

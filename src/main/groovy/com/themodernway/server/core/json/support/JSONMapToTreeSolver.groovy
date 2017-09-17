@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.json.support
 
+import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.server.core.json.JSONObject
 
 import groovy.transform.CompileStatic
@@ -35,12 +36,12 @@ public class JSONMapToTreeSolver implements JSONTrait
 
     public JSONMapToTreeSolver(final Map spec)
     {
-        this([Objects.requireNonNull(spec)])
+        this([CommonOps.requireNonNull(spec)])
     }
 
     public JSONMapToTreeSolver(final List<Map> spec)
     {
-        Objects.requireNonNull(spec)
+        CommonOps.requireNonNull(spec)
 
         spec.each { Map cols ->
 
@@ -133,7 +134,7 @@ public class JSONMapToTreeSolver implements JSONTrait
 
     public JSONObject solve(final String name, Closure c = null)
     {
-        json(Objects.requireNonNull(name), solve(c))
+        json(CommonOps.requireNonNull(name), solve(c))
     }
 
     public void add(final Map jrow)

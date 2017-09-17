@@ -32,12 +32,12 @@ import org.springframework.messaging.PollableChannel
 import org.springframework.messaging.SubscribableChannel
 import org.springframework.web.context.WebApplicationContext
 
+import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.server.core.file.vfs.IFileItemStorage
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
 import com.themodernway.server.core.jmx.management.ICoreServerManager
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
-import com.themodernway.server.core.json.binder.BinderType
 import com.themodernway.server.core.json.binder.IBinder
 import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
@@ -362,31 +362,31 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public <T> T requireNonNull(T object)
     {
-        Objects.requireNonNull(object)
+        CommonOps.requireNonNull(object)
     }
 
     @Override
     public <T> T requireNonNull(T object, String message)
     {
-        Objects.requireNonNull(object, message)
+        CommonOps.requireNonNull(object, message)
     }
 
     @Override
     public <T> T requireNonNull(T object, Supplier<String> message)
     {
-        Objects.requireNonNull(object, message)
+        CommonOps.requireNonNull(object, message)
     }
 
     @Override
     public <T> T requireNonNullOrElse(T object, T otherwise)
     {
-        Objects.nonNull(object) ? object : otherwise
+        CommonOps.requireNonNullOrElse(object, otherwise)
     }
 
     @Override
     public <T> T requireNonNullOrElse(T object, Supplier<T> otherwise)
     {
-        Objects.nonNull(object) ? object : otherwise.get()
+        CommonOps.requireNonNullOrElse(object, otherwise)
     }
 
     @Memoized
@@ -434,12 +434,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public IBinder binder()
     {
         getServerContext().binder()
-    }
-
-    @Override
-    public IBinder binder(BinderType type)
-    {
-        getServerContext().binder(requireNonNull(type))
     }
 
     @Override
@@ -535,7 +529,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public JSONObject json(Map<String, ?> map)
     {
-        new JSONObject(requireNonNull(map))
+        new JSONObject(map)
     }
 
     @Override
@@ -559,6 +553,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public JSONObject json(String name, Object value)
     {
-        new JSONObject(requireNonNull(name), value)
+        new JSONObject(name, value)
     }
 }

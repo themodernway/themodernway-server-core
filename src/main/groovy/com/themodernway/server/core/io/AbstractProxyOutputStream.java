@@ -18,12 +18,13 @@ package com.themodernway.server.core.io;
 
 import java.io.FilterOutputStream;
 import java.io.OutputStream;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public abstract class AbstractProxyOutputStream<T extends AbstractProxyOutputStream<T>> extends FilterOutputStream implements IFormatted<T>
 {
     public AbstractProxyOutputStream(final OutputStream stream)
     {
-        super(Objects.requireNonNull(stream));
+        super(CommonOps.requireNonNull(stream));
     }
 }

@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
@@ -29,6 +28,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 
 public final class SignatoryProvider implements ISignatoryProvider, BeanFactoryAware
@@ -72,7 +72,7 @@ public final class SignatoryProvider implements ISignatoryProvider, BeanFactoryA
     @Override
     public ISignatory getSignatory(final String name)
     {
-        return m_signatories.get(Objects.requireNonNull(name));
+        return m_signatories.get(CommonOps.requireNonNull(name));
     }
 
     @Override
@@ -80,7 +80,7 @@ public final class SignatoryProvider implements ISignatoryProvider, BeanFactoryA
     {
         if (factory instanceof DefaultListableBeanFactory)
         {
-            for (ISignatory signatory : ((DefaultListableBeanFactory) factory).getBeansOfType(ISignatory.class).values())
+            for (final ISignatory signatory : ((DefaultListableBeanFactory) factory).getBeansOfType(ISignatory.class).values())
             {
                 addSignatory(signatory);
             }

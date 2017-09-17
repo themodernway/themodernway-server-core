@@ -29,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.themodernway.server.core.servlet.filter.HeaderInjectorFilter;
 import com.themodernway.server.core.servlet.filter.IHeaderInjector;
 
-public class HeaderInjectorFilterContextCustomizer extends FilterFaxtoryContextCustomizer implements IFilterFactory
+public class HeaderInjectorFilterContextCustomizer extends FilterFactoryContextCustomizer implements IFilterFactory
 {
     private final List<IHeaderInjector> m_injectors = new ArrayList<IHeaderInjector>();
 
@@ -69,7 +69,7 @@ public class HeaderInjectorFilterContextCustomizer extends FilterFaxtoryContextC
     }
 
     @Override
-    public Filter make(final ServletContext sc, final WebApplicationContext context)
+    public Filter make(final FilterFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
         return new HeaderInjectorFilter(getHeaderInjectors());
     }

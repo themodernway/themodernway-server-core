@@ -24,5 +24,5 @@ import org.springframework.web.context.WebApplicationContext;
 @FunctionalInterface
 public interface IServletFactory
 {
-    public Servlet make(ServletContext sc, WebApplicationContext context);
+    public Servlet make(IServletFactoryContextCustomizer customizer, ServletContext sc, WebApplicationContext context);
 }

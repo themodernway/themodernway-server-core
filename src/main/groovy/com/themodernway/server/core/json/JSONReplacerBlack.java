@@ -17,7 +17,6 @@
 package com.themodernway.server.core.json;
 
 import java.util.Collection;
-import java.util.Objects;
 
 public class JSONReplacerBlack extends AbstractJSONKeysObjectReplacer
 {
@@ -28,7 +27,7 @@ public class JSONReplacerBlack extends AbstractJSONKeysObjectReplacer
 
     public JSONReplacerBlack(final Collection<String> keys)
     {
-        super(false, Objects.requireNonNull(keys));
+        super(false, keys);
     }
 
     public JSONReplacerBlack(final String... keys)

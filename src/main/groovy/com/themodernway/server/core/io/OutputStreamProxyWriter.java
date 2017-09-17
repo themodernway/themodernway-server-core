@@ -16,21 +16,21 @@
 
 package com.themodernway.server.core.io;
 
-import java.io.FilterReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public class NoCloseProxyReader extends FilterReader
+public class OutputStreamProxyWriter extends OutputStreamWriter implements IFormatted<OutputStreamProxyWriter>
 {
-    public NoCloseProxyReader(final Reader reader)
+    public OutputStreamProxyWriter(final OutputStream stream)
     {
-        super(CommonOps.requireNonNull(reader));
+        super(CommonOps.requireNonNull(stream), IO.UTF_8_CHARSET);
     }
 
-    @Override
-    public void close() throws IOException
+    public OutputStreamProxyWriter(final OutputStream stream, final Charset charset)
     {
+        super(CommonOps.requireNonNull(stream), CommonOps.requireNonNull(charset));
     }
 }

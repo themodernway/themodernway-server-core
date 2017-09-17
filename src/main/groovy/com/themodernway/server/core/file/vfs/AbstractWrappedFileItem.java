@@ -16,7 +16,7 @@
 
 package com.themodernway.server.core.file.vfs;
 
-import java.util.Objects;
+import com.themodernway.common.api.java.util.CommonOps;
 
 public abstract class AbstractWrappedFileItem<T extends IFileItem> implements IWrappedFileItem<T>
 {
@@ -24,7 +24,7 @@ public abstract class AbstractWrappedFileItem<T extends IFileItem> implements IW
 
     protected AbstractWrappedFileItem(final T item)
     {
-        m_item = Objects.requireNonNull(item);
+        m_item = CommonOps.requireNonNull(item);
     }
 
     @Override

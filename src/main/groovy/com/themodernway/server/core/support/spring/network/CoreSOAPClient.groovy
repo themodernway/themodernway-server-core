@@ -16,40 +16,42 @@
 
 package com.themodernway.server.core.support.spring.network
 
+import com.themodernway.common.api.java.util.CommonOps
+
 import groovy.transform.CompileStatic
 import wslite.soap.SOAPClient
 
 @CompileStatic
 public class CoreSOAPClient implements ISOAPClient
 {
-    private final SOAPClient m_client;
+    private final SOAPClient m_client
 
     public CoreSOAPClient(final SOAPClient client)
     {
-        m_client = Objects.requireNonNull(client)
+        m_client = CommonOps.requireNonNull(client)
     }
 
     @Override
     public ISOAPResponse send(final Closure<?> content)
     {
-        new CoreSOAPResponse(m_client.send(Objects.requireNonNull(content)))
+        new CoreSOAPResponse(m_client.send(CommonOps.requireNonNull(content)))
     }
 
     @Override
     public ISOAPResponse send(final Map<String, ?> params, final Closure<?> content)
     {
-        new CoreSOAPResponse(m_client.send(Objects.requireNonNull(params), Objects.requireNonNull(content)))
+        new CoreSOAPResponse(m_client.send(CommonOps.requireNonNull(params), CommonOps.requireNonNull(content)))
     }
 
     @Override
     public ISOAPResponse send(final String content)
     {
-        new CoreSOAPResponse(m_client.send(Objects.requireNonNull(content)))
+        new CoreSOAPResponse(m_client.send(CommonOps.requireNonNull(content)))
     }
 
     @Override
     public ISOAPResponse send(final Map<String, ?> params, final String content)
     {
-        new CoreSOAPResponse(m_client.send(Objects.requireNonNull(params), Objects.requireNonNull(content)))
+        new CoreSOAPResponse(m_client.send(CommonOps.requireNonNull(params), CommonOps.requireNonNull(content)))
     }
 }

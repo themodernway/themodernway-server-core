@@ -29,6 +29,7 @@ import org.springframework.messaging.PollableChannel
 import org.springframework.messaging.SubscribableChannel
 import org.springframework.web.context.WebApplicationContext
 
+import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.server.core.file.vfs.IFileItemStorage
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
 import com.themodernway.server.core.jmx.management.ICoreServerManager
@@ -289,27 +290,27 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
 
     public <T> T requireNonNull(T object)
     {
-        Objects.requireNonNull(object)
+        CommonOps.requireNonNull(object)
     }
 
     public <T> T requireNonNull(T object, String message)
     {
-        Objects.requireNonNull(object, message)
+        CommonOps.requireNonNull(object, message)
     }
 
     public <T> T requireNonNull(T object, Supplier<String> message)
     {
-        Objects.requireNonNull(object, message)
+        CommonOps.requireNonNull(object, message)
     }
 
     public <T> T requireNonNullOrElse(T object, T otherwise)
     {
-        Objects.nonNull(object) ? object : otherwise
+        CommonOps.requireNonNullOrElse(object, otherwise)
     }
 
     public <T> T requireNonNullOrElse(T object, Supplier<T> otherwise)
     {
-        Objects.nonNull(object) ? object : otherwise.get()
+        CommonOps.requireNonNullOrElse(object, otherwise)
     }
 
     @Memoized

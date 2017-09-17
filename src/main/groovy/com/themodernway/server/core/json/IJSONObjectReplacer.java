@@ -16,7 +16,7 @@
 
 package com.themodernway.server.core.json;
 
-public interface IJSONObjectReplacer extends IJSONReplacerUtil
+public interface IJSONObjectReplacer
 {
     public Object replace(String name, Object value);
 }

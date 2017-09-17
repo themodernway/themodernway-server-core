@@ -17,11 +17,12 @@
 package com.themodernway.server.core.json;
 
 import java.util.ArrayList;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class JSONObjectReplacerStack implements IJSONObjectReplacer
 {
-    private final ArrayList<IJSONObjectReplacer> m_list           = new ArrayList<IJSONObjectReplacer>();
+    private final ArrayList<IJSONObjectReplacer> m_list = new ArrayList<IJSONObjectReplacer>();
 
     public JSONObjectReplacerStack()
     {
@@ -45,7 +46,7 @@ public class JSONObjectReplacerStack implements IJSONObjectReplacer
     {
         push(item);
 
-        for (IJSONObjectReplacer valu : list)
+        for (final IJSONObjectReplacer valu : list)
         {
             push(valu);
         }
@@ -55,11 +56,11 @@ public class JSONObjectReplacerStack implements IJSONObjectReplacer
     @Override
     public Object replace(final String name, Object value)
     {
-        if (UNDEFINED == value)
+        if (JSONUtils.UNDEFINED_JSON == value)
         {
-            return UNDEFINED;
+            return JSONUtils.UNDEFINED_JSON;
         }
-        Objects.requireNonNull(name);
+        CommonOps.requireNonNull(name);
 
         final int size = m_list.size();
 
@@ -71,9 +72,9 @@ public class JSONObjectReplacerStack implements IJSONObjectReplacer
         {
             value = m_list.get(i).replace(name, value);
 
-            if (UNDEFINED == value)
+            if (JSONUtils.UNDEFINED_JSON == value)
             {
-                return UNDEFINED;
+                return JSONUtils.UNDEFINED_JSON;
             }
         }
         return value;

@@ -18,7 +18,8 @@ package com.themodernway.server.core.io;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Objects;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class NoSyncStringReader extends Reader
 {
@@ -32,7 +33,7 @@ public class NoSyncStringReader extends Reader
 
     public NoSyncStringReader(final String buff)
     {
-        m_buff = Objects.requireNonNull(buff);
+        m_buff = CommonOps.requireNonNull(buff);
 
         m_size = m_buff.length();
     }

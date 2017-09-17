@@ -18,7 +18,6 @@ package com.themodernway.server.core.io;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Objects;
 
 public abstract class AbstractNoSyncBufferedWriter<T extends AbstractNoSyncBufferedWriter<T>> extends AbstractBufferedWriter<T>
 {
@@ -32,12 +31,12 @@ public abstract class AbstractNoSyncBufferedWriter<T extends AbstractNoSyncBuffe
 
     public AbstractNoSyncBufferedWriter(final Writer writer)
     {
-        this(Objects.requireNonNull(writer), IO.DEFAULT_BUFFER_CAPACITY);
+        this(writer, IO.DEFAULT_BUFFER_CAPACITY);
     }
 
     public AbstractNoSyncBufferedWriter(final Writer writer, final int capacity)
     {
-        super(Objects.requireNonNull(writer), IO.toValidBufferCapacity(capacity));
+        super(writer, IO.toValidBufferCapacity(capacity));
 
         m_writer = writer;
 

@@ -18,19 +18,20 @@ package com.themodernway.server.core.io;
 
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.Objects;
 
 import org.apache.commons.io.output.WriterOutputStream;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public abstract class AbstractWriterProxyOutputStream<T extends AbstractWriterProxyOutputStream<T>> extends WriterOutputStream implements IFormatted<T>
 {
     public AbstractWriterProxyOutputStream(final Writer writer)
     {
-        super(Objects.requireNonNull(writer), IO.UTF_8_CHARSET);
+        super(CommonOps.requireNonNull(writer), IO.UTF_8_CHARSET);
     }
 
     public AbstractWriterProxyOutputStream(final Writer writer, final Charset charset)
     {
-        super(Objects.requireNonNull(writer), Objects.requireNonNull(charset));
+        super(CommonOps.requireNonNull(writer), CommonOps.requireNonNull(charset));
     }
 }

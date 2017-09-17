@@ -16,14 +16,13 @@
 
 package com.themodernway.server.core.security;
 
-import java.util.Objects;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.IHTTPConstants;
 
 public class SimpleKeyStringSigningProvider implements IStringSigningProvider
@@ -36,9 +35,9 @@ public class SimpleKeyStringSigningProvider implements IStringSigningProvider
     {
         try
         {
-            m_secret = new SecretKeySpec(Objects.requireNonNull(sign).getBytes(IHTTPConstants.CHARSET_UTF_8), HMAC_ALGORITHM);
+            m_secret = new SecretKeySpec(CommonOps.requireNonNull(sign).getBytes(IHTTPConstants.CHARSET_UTF_8), HMAC_ALGORITHM);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("hmac error", e);
 
@@ -49,13 +48,13 @@ public class SimpleKeyStringSigningProvider implements IStringSigningProvider
     @Override
     public String makeSignature(final String text)
     {
-        return hmac(Objects.requireNonNull(text));
+        return hmac(CommonOps.requireNonNull(text));
     }
 
     @Override
     public boolean testSignature(final String text, final String value)
     {
-        return Objects.requireNonNull(value).equals(hmac(Objects.requireNonNull(text)));
+        return CommonOps.requireNonNull(value).equals(hmac(CommonOps.requireNonNull(text)));
     }
 
     private final String hmac(final String text)
@@ -68,7 +67,7 @@ public class SimpleKeyStringSigningProvider implements IStringSigningProvider
 
             return Hex.encodeHexString(hmac.doFinal(text.getBytes(IHTTPConstants.CHARSET_UTF_8)));
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("hmac error", e);
 

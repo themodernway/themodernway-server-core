@@ -18,18 +18,17 @@ package com.themodernway.server.core;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public final class ThreadLocalDateFormat extends ThreadLocalFormat<Date, DateFormat>
 {
     public final static ThreadLocalDateFormat withInitial(final Supplier<DateFormat> supplier)
     {
-        return new ThreadLocalDateFormat(Objects.requireNonNull(supplier));
+        return new ThreadLocalDateFormat(supplier);
     }
 
     private ThreadLocalDateFormat(final Supplier<DateFormat> supplier)
     {
-        super(Objects.requireNonNull(supplier));
+        super(supplier);
     }
 }

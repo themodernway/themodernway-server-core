@@ -18,8 +18,9 @@ package com.themodernway.server.core;
 
 import java.text.Format;
 import java.text.ParseException;
-import java.util.Objects;
 import java.util.function.Supplier;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public abstract class ThreadLocalFormat<T, F extends Format>
 {
@@ -27,7 +28,7 @@ public abstract class ThreadLocalFormat<T, F extends Format>
 
     protected ThreadLocalFormat(final Supplier<F> supplier)
     {
-        m_local = ThreadLocal.withInitial(Objects.requireNonNull(supplier));
+        m_local = ThreadLocal.withInitial(CommonOps.requireNonNull(supplier));
     }
 
     public F getFormat()
@@ -37,7 +38,7 @@ public abstract class ThreadLocalFormat<T, F extends Format>
 
     public String format(final T object)
     {
-        return getFormat().format(Objects.requireNonNull(object));
+        return getFormat().format(CommonOps.requireNonNull(object));
     }
 
     public String format(final Supplier<T> supplier)
@@ -48,7 +49,7 @@ public abstract class ThreadLocalFormat<T, F extends Format>
     @SuppressWarnings("unchecked")
     public T parse(final String source) throws ParseException
     {
-        return (T) getFormat().parseObject(Objects.requireNonNull(source));
+        return (T) getFormat().parseObject(CommonOps.requireNonNull(source));
     }
 
     public T parse(final Supplier<String> supplier) throws ParseException

@@ -24,7 +24,6 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 
 import org.springframework.core.io.Resource;
@@ -33,16 +32,19 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.io.NoCloseProxyInputStream;
 import com.themodernway.server.core.io.NoCloseProxyOutputStream;
 import com.themodernway.server.core.io.NoCloseProxyReader;
 import com.themodernway.server.core.io.NoCloseProxyWriter;
-import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
+import com.themodernway.server.core.json.IJSONEnabled;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
 import com.themodernway.server.core.json.binder.PropertiesBinder.CorePropertiesMapper;
+import com.themodernway.server.core.json.binder.XMLBinder.CoreXMLMapper;
+import com.themodernway.server.core.json.binder.YAMLBinder.CoreYAMLMapper;
 
 public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBinder
 {
@@ -50,10 +52,9 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
     private boolean m_strict = false;
 
-    @SuppressWarnings("unchecked")
-    protected final static JSONObject MAKE(final Object make)
+    protected final static JSONObject MAKE(final Map<?, ?> make)
     {
-        return new JSONObject((Map<String, Object>) make);
+        return new JSONObject(CommonOps.CAST_RAW_MAP(make));
     }
 
     protected AbstractDataBinder(final M mapper)
@@ -278,7 +279,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     }
 
     @Override
-    public <T> T bind(final JSONObject json, final Class<T> claz) throws ParserException
+    public <T> T bind(final IJSONEnabled json, final Class<T> claz) throws ParserException
     {
         return bind(json.toJSONString(isStrict()), claz);
     }
@@ -341,7 +342,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public void send(final File file, final Object object) throws ParserException
     {
-        Objects.requireNonNull(object);
+        CommonOps.requireNonNull(object);
 
         try
         {
@@ -356,7 +357,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public void send(final OutputStream stream, final Object object) throws ParserException
     {
-        Objects.requireNonNull(object);
+        CommonOps.requireNonNull(object);
 
         try
         {
@@ -371,7 +372,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public void send(final Writer writer, final Object object) throws ParserException
     {
-        Objects.requireNonNull(object);
+        CommonOps.requireNonNull(object);
 
         try
         {
@@ -386,7 +387,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public String toString(final Object object) throws ParserException
     {
-        Objects.requireNonNull(object);
+        CommonOps.requireNonNull(object);
 
         try
         {
@@ -401,7 +402,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public JSONObject toJSONObject(final Object object) throws ParserException
     {
-        Objects.requireNonNull(object);
+        CommonOps.requireNonNull(object);
 
         try
         {
@@ -411,7 +412,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
             }
             else if (object instanceof Map)
             {
-                return MAKE(object);
+                return MAKE((Map<?, ?>) object);
             }
             else if (object instanceof CharSequence)
             {
@@ -419,11 +420,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
             }
             else
             {
-                final NoSyncStringBuilderWriter writer = new NoSyncStringBuilderWriter();
-
-                getMapperForJSON().writeValue(writer, object);
-
-                return bindJSON(writer.toString());
+                return bindJSON(getMapperForJSON().writeValueAsString(object));
             }
         }
         catch (final Exception e)
@@ -441,7 +438,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public boolean canSerializeType(final Class<?> type)
     {
-        return m_mapper.canSerialize(Objects.requireNonNull(type));
+        return m_mapper.canSerialize(CommonOps.requireNonNull(type));
     }
 
     @Override
@@ -454,7 +451,8 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         return false;
     }
 
-    protected M getMapper()
+    @Override
+    public M getMapper()
     {
         return m_mapper;
     }
@@ -468,4 +466,15 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         return new CorePropertiesMapper();
     }
+
+    protected CoreXMLMapper getMapperForXML()
+    {
+        return new CoreXMLMapper();
+    }
+
+    protected CoreYAMLMapper getMapperForYAML()
+    {
+        return new CoreYAMLMapper();
+    }
+
 }

@@ -17,12 +17,12 @@
 package com.themodernway.server.core.pubsub;
 
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.json.JSONObject;
 
 public class JSONMessageBuilder
@@ -33,51 +33,51 @@ public class JSONMessageBuilder
 
     public static final Message<JSONObject> createMessage(final JSONObject payload, final MessageHeaders headers)
     {
-        return MessageBuilder.createMessage(Objects.requireNonNull(payload), Objects.requireNonNull(headers));
+        return MessageBuilder.createMessage(CommonOps.requireNonNull(payload), CommonOps.requireNonNull(headers));
     }
 
     public static final Message<JSONObject> createMessage(final JSONObject payload)
     {
-        return createMessage(Objects.requireNonNull(payload), new JSONObject());
+        return createMessage(CommonOps.requireNonNull(payload), new JSONObject());
     }
 
     public static final Message<JSONObject> createMessage(final Map<String, ?> payload)
     {
-        return createMessage(new JSONObject(Objects.requireNonNull(payload)));
+        return createMessage(new JSONObject(CommonOps.requireNonNull(payload)));
     }
 
     public static final Message<JSONObject> createMessage(final Map<String, ?> payload, final Map<String, ?> headers)
     {
-        return createMessage(new JSONObject(Objects.requireNonNull(payload)), Objects.requireNonNull(headers));
+        return createMessage(new JSONObject(CommonOps.requireNonNull(payload)), CommonOps.requireNonNull(headers));
     }
 
     public static final Message<JSONObject> createMessage(final Map<String, ?> payload, final MessageHeaders headers)
     {
-        return createMessage(new JSONObject(Objects.requireNonNull(payload)), Objects.requireNonNull(headers));
+        return createMessage(new JSONObject(CommonOps.requireNonNull(payload)), CommonOps.requireNonNull(headers));
     }
 
     public static final Message<JSONObject> createMessage(final JSONObject payload, final JSONObject headers)
     {
-        return createMessage(Objects.requireNonNull(payload), new MessageHeaders(Objects.requireNonNull(headers)));
+        return createMessage(CommonOps.requireNonNull(payload), new MessageHeaders(CommonOps.requireNonNull(headers)));
     }
 
     public static final Message<JSONObject> createMessage(final JSONObject payload, final Map<String, ?> headers)
     {
-        return createMessage(Objects.requireNonNull(payload), new JSONObject(Objects.requireNonNull(headers)));
+        return createMessage(CommonOps.requireNonNull(payload), new JSONObject(CommonOps.requireNonNull(headers)));
     }
 
     public static final MessageBuilder<JSONObject> fromMessage(final Message<JSONObject> message)
     {
-        return MessageBuilder.fromMessage(Objects.requireNonNull(message));
+        return MessageBuilder.fromMessage(CommonOps.requireNonNull(message));
     }
 
     public static final MessageBuilder<JSONObject> withPayload(final JSONObject payload)
     {
-        return MessageBuilder.withPayload(Objects.requireNonNull(payload));
+        return MessageBuilder.withPayload(CommonOps.requireNonNull(payload));
     }
 
     public static final MessageBuilder<JSONObject> withPayload(final Map<String, ?> payload)
     {
-        return MessageBuilder.withPayload(new JSONObject(Objects.requireNonNull(payload)));
+        return MessageBuilder.withPayload(new JSONObject(CommonOps.requireNonNull(payload)));
     }
 }

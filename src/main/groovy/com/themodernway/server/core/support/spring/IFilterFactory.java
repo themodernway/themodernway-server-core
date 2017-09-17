@@ -24,5 +24,5 @@ import org.springframework.web.context.WebApplicationContext;
 @FunctionalInterface
 public interface IFilterFactory
 {
-    public Filter make(ServletContext sc, WebApplicationContext context);
+    public Filter make(FilterFactoryContextCustomizer customizer, ServletContext sc, WebApplicationContext context);
 }

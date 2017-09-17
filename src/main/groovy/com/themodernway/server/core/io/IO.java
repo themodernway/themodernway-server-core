@@ -30,20 +30,18 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 
 import com.google.common.collect.Streams;
-import com.themodernway.common.api.java.util.IHTTPConstants;
-import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.file.vfs.IFileItem;
 
 public final class IO
 {
-    public static final int     EOF                     = ICoreCommon.IS_NOT_FOUND;
+    public static final int     EOF                     = CommonOps.IS_NOT_FOUND;
 
     public static final int     MINIMUM_BUFFER_CAPACITY = 16;
 
@@ -51,7 +49,7 @@ public final class IO
 
     public static final int     MAXIMUM_BUFFER_CAPACITY = DEFAULT_BUFFER_CAPACITY * 4;
 
-    public static final Charset UTF_8_CHARSET           = Charset.forName(IHTTPConstants.CHARSET_UTF_8);
+    public static final Charset UTF_8_CHARSET           = Charset.forName(CommonOps.CHARSET_UTF_8);
 
     private IO()
     {
@@ -259,7 +257,7 @@ public final class IO
 
     public static final Stream<String> lines(final Path path) throws IOException
     {
-        return Files.lines(Objects.requireNonNull(path), UTF_8_CHARSET);
+        return Files.lines(CommonOps.requireNonNull(path), UTF_8_CHARSET);
     }
 
     public static final Stream<String> lines(final Resource resource) throws IOException
@@ -280,12 +278,12 @@ public final class IO
 
     public static final Stream<String> lines(final Reader reader) throws IOException
     {
-        return Streams.stream(IOUtils.lineIterator(Objects.requireNonNull(reader)));
+        return Streams.stream(IOUtils.lineIterator(CommonOps.requireNonNull(reader)));
     }
 
     public static final Stream<String> lines(final InputStream stream) throws IOException
     {
-        return Streams.stream(IOUtils.lineIterator(Objects.requireNonNull(stream), UTF_8_CHARSET));
+        return Streams.stream(IOUtils.lineIterator(CommonOps.requireNonNull(stream), UTF_8_CHARSET));
     }
 
     public static final Stream<String> lines(final File file) throws IOException
@@ -305,7 +303,7 @@ public final class IO
 
     public static final InputStream toInputStream(final Path path, final OpenOption... options) throws IOException
     {
-        return Files.newInputStream(Objects.requireNonNull(path), options);
+        return Files.newInputStream(CommonOps.requireNonNull(path), options);
     }
 
     public static final OutputStream toOutputStream(final File file, final OpenOption... options) throws IOException
@@ -315,6 +313,6 @@ public final class IO
 
     public static final OutputStream toOutputStream(final Path path, final OpenOption... options) throws IOException
     {
-        return Files.newOutputStream(Objects.requireNonNull(path), options);
+        return Files.newOutputStream(CommonOps.requireNonNull(path), options);
     }
 }

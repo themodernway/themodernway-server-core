@@ -28,8 +28,8 @@ import org.opensaml.xml.security.credential.CredentialContextSet;
 import org.opensaml.xml.security.credential.UsageType;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.common.api.types.IRefreshable;
 import com.themodernway.server.core.ICoreCommon;
-import com.themodernway.server.core.IRefreshable;
 
 public abstract class AbstractCredential implements Credential, ICoreCommon, IRefreshable
 {

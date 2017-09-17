@@ -315,6 +315,14 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
+        public String getBaseName() throws IOException
+        {
+            validate();
+
+            return toTrimOrElse(FileAndPathUtils.base(getPath()), EMPTY_STRING);
+        }
+
+        @Override
         public String getExtension() throws IOException
         {
             validate();
