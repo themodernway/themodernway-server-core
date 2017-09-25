@@ -37,6 +37,10 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
 
     private final List<Integer>                   m_good_codes = new ArrayList<Integer>();
 
+    private final RestTemplate                    m_rest_execs = new RestTemplate();
+
+    private final HTTPHeaders                     m_no_headers = new HTTPHeaders();
+
     private static final PathParameters           EMPTY_PARAMS = new PathParameters();
 
     private static final CoreResponseErrorHandler NO_ERRORS_CB = new CoreResponseErrorHandler();
@@ -61,6 +65,9 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
         {
             m_good_codes.add(i);
         }
+        m_rest_execs.setErrorHandler(NO_ERRORS_CB);
+
+        m_no_headers.doRESTHeaders(getDefaultUserAgent());
     }
 
     @Override
@@ -194,23 +201,21 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
 
         if (null == headers)
         {
-            headers = new HTTPHeaders();
+            headers = m_no_headers;
         }
-        headers.doRESTHeaders(getDefaultUserAgent());
-
+        else
+        {
+            headers.doRESTHeaders(getDefaultUserAgent());
+        }
         final HttpEntity<String> entity = (null == body) ? new HttpEntity<String>(headers) : new HttpEntity<String>(body.toJSONString(), headers);
 
         if (null == params)
         {
             params = EMPTY_PARAMS;
         }
-        final RestTemplate rest = new RestTemplate();
-
-        rest.setErrorHandler(NO_ERRORS_CB);
-
         try
         {
-            return new CoreRESTResponse(this, rest.exchange(curl, method, entity, String.class, params));
+            return new CoreRESTResponse(this, m_rest_execs.exchange(curl, method, entity, String.class, params));
         }
         catch (final Exception e)
         {

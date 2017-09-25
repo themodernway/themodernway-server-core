@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.apache.log4j.Level;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -151,4 +152,8 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public IMailSenderProvider getMailSenderProvider();
 
     public IMailSender getMailSender(String name);
+
+    public Level getLoggingLevel();
+
+    public void setLoggingLevel(Level level);
 }

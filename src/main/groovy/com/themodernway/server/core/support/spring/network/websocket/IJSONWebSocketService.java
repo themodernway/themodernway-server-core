@@ -17,11 +17,11 @@
 package com.themodernway.server.core.support.spring.network.websocket;
 
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.parser.JSONParser;
+import com.themodernway.server.core.json.binder.IBinder;
 
 public interface IJSONWebSocketService extends IWebSocketService
 {
-    public JSONParser getJSONParser();
+    public IBinder getJSONBinder();
 
     public void onMessage(IWebSocketServiceContext context, JSONObject json) throws Exception;
 }

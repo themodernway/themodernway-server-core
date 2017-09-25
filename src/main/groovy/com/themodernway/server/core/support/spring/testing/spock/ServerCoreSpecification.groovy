@@ -18,11 +18,12 @@ package com.themodernway.server.core.support.spring.testing.spock
 
 import static java.lang.System.err
 
+import org.apache.log4j.Level
 import org.apache.log4j.Logger
 
 import com.themodernway.common.api.json.JSONStringify
 import com.themodernway.server.core.logging.MDC
-import com.themodernway.server.core.servlet.IServletCommonOperations
+import com.themodernway.server.core.support.spring.IServerContext
 import com.themodernway.server.core.support.spring.testing.IServerCoreTesting
 
 import groovy.transform.CompileStatic
@@ -31,27 +32,39 @@ import spock.lang.Specification
 @CompileStatic
 public abstract class ServerCoreSpecification extends Specification implements IServerCoreTesting
 {
-    private Logger      m_logger
+    private static IServerContext   s_context
 
-    private boolean     m_logging = true
-    
+    private Logger                  m_logger
+
+    private boolean                 m_logging = true
+
     public static final void setupServerCoreDefault(final String... locations) throws Exception
     {
-        MDC.put('session', IServletCommonOperations.UNKNOWN_USER)
-        
-        IServerCoreTesting.TestingOps.setupServerCoreDefault(locations)
+        MDC.put('session', "%-TEST-SESSION-%")
+
+        s_context = IServerCoreTesting.TestingOps.setupServerCoreDefault(locations)
     }
-    
+
     public static final void closeServerCoreDefault()
     {
         IServerCoreTesting.TestingOps.closeServerCoreDefault()
+
+        s_context = null
     }
-    
+
     def setup()
     {
         m_logging = true
     }
-    
+
+    public void level(Level value = Level.INFO)
+    {
+        if ((s_context) && (value))
+        {
+            s_context.setLoggingLevel(value)
+        }
+    }
+
     public Logger logger()
     {
         if (null == m_logger)
@@ -60,12 +73,12 @@ public abstract class ServerCoreSpecification extends Specification implements I
         }
         m_logger
     }
-    
+
     public void logging(boolean on = true)
     {
         m_logging = on
     }
-    
+
     public void echo(JSONStringify o)
     {
         if (m_logging)
@@ -89,7 +102,7 @@ public abstract class ServerCoreSpecification extends Specification implements I
             println "" + o?.toString()
         }
     }
-    
+
     public void oops(JSONStringify o)
     {
         if (m_logging)

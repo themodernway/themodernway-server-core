@@ -20,6 +20,7 @@ import java.util.concurrent.Future
 import java.util.function.Supplier
 import java.util.stream.Stream
 
+import org.apache.log4j.Level
 import org.apache.log4j.Logger
 import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
@@ -43,8 +44,8 @@ import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
 import com.themodernway.server.core.pubsub.JSONMessageBuilder
 import com.themodernway.server.core.scripting.IScriptingProvider
-import com.themodernway.server.core.security.AuthorizationResult
 import com.themodernway.server.core.security.IAuthorizationProvider
+import com.themodernway.server.core.security.IAuthorizationResult
 import com.themodernway.server.core.security.ICryptoProvider
 import com.themodernway.server.core.security.ISignatoryProvider
 import com.themodernway.server.core.security.session.IServerSessionRepository
@@ -205,7 +206,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Override
-    public AuthorizationResult isAuthorized(Object target, List<String> roles)
+    public IAuthorizationResult isAuthorized(Object target, List<String> roles)
     {
         getServerContext().isAuthorized(requireNonNull(target), requireNonNull(roles))
     }
@@ -554,5 +555,17 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public JSONObject json(String name, Object value)
     {
         new JSONObject(name, value)
+    }
+
+    @Override
+    public Level getLoggingLevel()
+    {
+        getServerContext().getLoggingLevel()
+    }
+
+    @Override
+    public void setLoggingLevel(Level level)
+    {
+        getServerContext().setLoggingLevel(level)
     }
 }

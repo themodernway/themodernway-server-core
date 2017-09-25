@@ -33,7 +33,7 @@ import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.ITimeSupplier;
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.security.AuthorizationResult;
+import com.themodernway.server.core.security.IAuthorizationResult;
 import com.themodernway.server.core.security.session.IServerSession;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
@@ -152,7 +152,7 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return toUniqueStringList(arrayListOfListSuppliers(() -> role, () -> (sess == null) ? arrayList() : sess.getRoles()));
     }
 
-    public default AuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)
+    public default IAuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)
     {
         return getServerContext().isAuthorized(target, getCombinedRoles(session, roles));
     }

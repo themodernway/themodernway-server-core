@@ -41,7 +41,6 @@ import com.themodernway.server.core.ThreadLocalDateFormat;
 import com.themodernway.server.core.io.NoCloseProxyWriter;
 import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
 import com.themodernway.server.core.io.StringBuilderOutputStream;
-import com.themodernway.server.core.json.binder.JSONBinder;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
 
 public final class JSONUtils
@@ -482,18 +481,7 @@ public final class JSONUtils
         }
         try
         {
-            final JSONBinder binder = new JSONBinder();
-
-            if (binder.canSerializeType(value.getClass()))
-            {
-                binder.send(out, value);
-
-                return;
-            }
-            else
-            {
-                logger.warn("Can't serialize type " + value.getClass().getName() + ", trying toString()");
-            }
+            writeObjectAsJSON(out, value);
         }
         catch (final Exception e)
         {
@@ -519,7 +507,14 @@ public final class JSONUtils
 
             if (null != formatter)
             {
-                return formatter.format(date);
+                try
+                {
+                    return formatter.format(date);
+                }
+                catch (final Exception e)
+                {
+                    logger.error("Can't serialize type " + date.getClass().getName() + ", trying toString()", e);
+                }
             }
         }
         return date.toString();

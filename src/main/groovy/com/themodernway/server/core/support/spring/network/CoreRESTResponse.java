@@ -16,14 +16,12 @@
 
 package com.themodernway.server.core.support.spring.network;
 
-import java.util.Collections;
-
 import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
-import com.themodernway.server.core.json.parser.JSONParser;
+import com.themodernway.server.core.json.binder.BinderType;
 
 public class CoreRESTResponse implements IRESTResponse
 {
@@ -41,7 +39,7 @@ public class CoreRESTResponse implements IRESTResponse
 
     public CoreRESTResponse(final ICoreNetworkProvider prov, final ResponseEntity<String> resp)
     {
-        this(prov, resp.getStatusCode().value(), (resp.hasBody() ? resp.getBody() : null), new HTTPHeaders(Collections.unmodifiableMap(resp.getHeaders())));
+        this(prov, resp.getStatusCode().value(), (resp.hasBody() ? resp.getBody() : null), new HTTPHeaders(resp.getHeaders()));
     }
 
     public CoreRESTResponse(final ICoreNetworkProvider prov, final int code, final String body, final HTTPHeaders head)
@@ -82,7 +80,7 @@ public class CoreRESTResponse implements IRESTResponse
             {
                 return null;
             }
-            return (m_json = (new JSONParser().parse(body)));
+            return (m_json = BinderType.JSON.getBinder().bindJSON(body));
         }
         catch (final ParserException e)
         {

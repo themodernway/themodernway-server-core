@@ -18,6 +18,7 @@ package com.themodernway.server.core.support
 
 import java.util.function.Supplier
 
+import org.apache.log4j.Level
 import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
@@ -39,8 +40,8 @@ import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
 import com.themodernway.server.core.pubsub.JSONMessageBuilder
 import com.themodernway.server.core.scripting.IScriptingProvider
-import com.themodernway.server.core.security.AuthorizationResult
 import com.themodernway.server.core.security.IAuthorizationProvider
+import com.themodernway.server.core.security.IAuthorizationResult
 import com.themodernway.server.core.security.ICryptoProvider
 import com.themodernway.server.core.security.ISignatoryProvider
 import com.themodernway.server.core.security.session.IServerSessionRepository
@@ -166,7 +167,7 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
         getServerSessionRepositoryProvider().getServerSessionRepository(requireNonNull(domain))
     }
 
-    public AuthorizationResult isAuthorized(Object target, List<String> roles)
+    public IAuthorizationResult isAuthorized(Object target, List<String> roles)
     {
         getServerContext().isAuthorized(requireNonNull(target), requireNonNull(roles))
     }
@@ -357,5 +358,15 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     public IMailSender getMailSender(String name)
     {
         getMailSenderProvider().getItem(requireNonNull(name))
+    }
+
+    public Level getLoggingLevel()
+    {
+        getServerContext().getLoggingLevel()
+    }
+
+    public void setLoggingLevel(Level level)
+    {
+        getServerContext().setLoggingLevel(level)
     }
 }

@@ -60,7 +60,8 @@ import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.io.NoOpOutputStream;
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.parser.JSONParser;
+import com.themodernway.server.core.json.binder.BinderType;
+import com.themodernway.server.core.json.binder.IBinder;
 
 public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 {
@@ -875,7 +876,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     {
         try (final SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content"))
         {
-            stor.getRoot().wrap().items(ItemsOptions.RECURSIVE).forEach(item -> System.out.format("file (%s) type (%s).\n", item.getPath(), item.getContentType()));
+            stor.getRoot().wrap().items(ItemsOptions.RECURSIVE).forEach(item -> System.out.format("file (%s) type (%s) base(%s).\n", item.getPath(), item.getContentType(), item.getBaseName()));
 
             stor.getRoot().wrap().items(ItemsOptions.FILE).filter(item -> item.getPath().endsWith(".json")).map(item -> item.lines()).flatMap(lines -> lines).forEach(line -> System.out.println(line));
 
@@ -917,9 +918,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
     public static void cat(final IFileItem item, final JSONArray list)
     {
+        final IBinder binder = BinderType.JSON.getBinder();
+
         try (InputStream is = item.getInputStream())
         {
-            list.add(new JSONParser().bindJSON(is));
+            list.add(binder.bindJSON(is));
         }
         catch (final Exception e)
         {

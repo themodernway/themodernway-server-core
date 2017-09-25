@@ -39,7 +39,7 @@ import com.themodernway.server.core.json.binder.BinderType;
 @JacksonXmlRootElement(localName = "result")
 public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {
-    private static final long   serialVersionUID = -6811236788038367702L;
+    private static final long   serialVersionUID = 1L;
 
     private static final char[] FLUSH_KEY_ARRAY  = { '"', ':' };
 

@@ -11,25 +11,18 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License. ThreadLocal.withInitial(supplier);
  */
 
-package com.themodernway.server.core.security;
+package com.themodernway.server.core;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.function.Supplier;
 
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE })
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Authorized
+import com.themodernway.common.api.types.IValued;
+
+public interface IThreadLocalValued<T> extends IValued<T>
 {
-    String[] not() default {};
+    public Supplier<T> toSupplier();
 
-    String[] all() default {};
-
-    String[] any() default {};
-
-    String[] value() default "USER";
+    public ThreadLocal<T> getThreadLocal();
 }

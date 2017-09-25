@@ -18,21 +18,16 @@ package com.themodernway.server.core.security;
 
 import java.util.List;
 
+@FunctionalInterface
 public interface IAuthorizer
 {
-    public static final int E_IS_VALIDATED = 0;
+    public static final int I_WASVALIDATED = 0;
 
-    public static final int E_DEAD_SESSION = 1;
+    public static final int E_NOTVALIDROLE = 1;
 
-    public static final int E_NO_USER_INFO = 2;
+    public static final int E_EXCLUDEDROLE = 2;
 
-    public static final int E_NOT_ADMIN_ID = 3;
+    public static final int E_RUNTIMEERROR = 500;
 
-    public static final int E_NO_ANONYMOUS = 4;
-
-    public static final int E_NO_VALIDROLE = 5;
-
-    public static final int E_SERVER_ERROR = 500;
-
-    public AuthorizationResult isAuthorized(Object target, List<String> roles);
+    public IAuthorizationResult isAuthorized(Object target, List<String> roles);
 }

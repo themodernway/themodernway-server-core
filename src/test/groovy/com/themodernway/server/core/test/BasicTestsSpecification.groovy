@@ -21,7 +21,6 @@ import javax.script.ScriptEngine
 import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.io.NoOpWriter
 import com.themodernway.server.core.json.JSONObject
-import com.themodernway.server.core.json.parser.JSONParser
 import com.themodernway.server.core.json.support.JSONMapToTreeSolver
 import com.themodernway.server.core.logging.MDC
 import com.themodernway.server.core.scripting.ScriptType
@@ -197,9 +196,8 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         setup:
         def t = new NanoTimer()
         def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
-        def j = new JSONParser().parse(r)
         def b = binder().bindJSON(r)
-        echo j.toString() + " Tiger JSON parsed out"
+        def j = b.toJSONString()
         echo b.toString() + " Tiger JSON parsed out"
         echo t.toString() + " Tiger JSON parsed out"
         echo b.dumpClassNamesToString()
@@ -212,14 +210,14 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
-        def j = new JSONParser().parse(r)
         def b = binder().bindJSON(r)
+        def j = b.toJSONString()
         def t = new NanoTimer()
         for(int i = 0; i < 5000; i++)
         {
             b.toString()
         }
-        echo t.toString() + " Lion JSON out many"
+        echo t.toString() + " Parse Lion JSON out many"
 
         expect:
         j.toString() == b.toString()
@@ -229,14 +227,15 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
-        def j = new JSONParser().parse(r)
-        def b = binder().bindJSON(r)
+        def z = binder()
+        def b = z.bindJSON(r)
+        def j = b.toJSONString()
         def t = new NanoTimer()
         for(int i = 0; i < 5000; i++)
         {
-            binder().toString(j)
+            z.toString(b)
         }
-        echo t.toString() + " Lion JSON out many 2"
+        echo t.toString() + " Parse Lion JSON out many 2"
 
         expect:
         j.toString() == b.toString()
@@ -246,14 +245,14 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
-        def j = new JSONParser().parse(r)
+        def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
         for(int i = 0; i < 5000; i++)
         {
             j.writeJSONString(w, true)
         }
-        echo t.toString() + " Time Tiger JSON out"
+        echo t.toString() + " Time Tiger JSON out strict true"
 
         expect:
         "dean" == "dean"
@@ -263,14 +262,14 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
-        def j = new JSONParser().parse(r)
+        def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
         for(int i = 0; i < 5000; i++)
         {
             j.writeJSONString(w, false)
         }
-        echo t.toString() + " Time Tiger JSON out"
+        echo t.toString() + " Time Tiger JSON out strict false"
 
         expect:
         "dean" == "dean"
@@ -280,14 +279,14 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
-        def j = new JSONParser().parse(r)
+        def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
         for(int i = 0; i < 10000; i++)
         {
             j.writeJSONString(w, true)
         }
-        echo t.toString() + " Time Tiny JSON out true"
+        echo t.toString() + " Time Tiny JSON out strict true"
 
         expect:
         "dean" == "dean"
@@ -297,14 +296,14 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
-        def j = new JSONParser().parse(r)
+        def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
         for(int i = 0; i < 10000; i++)
         {
             j.writeJSONString(w, false)
         }
-        echo t.toString() + " Time Tiny JSON out false"
+        echo t.toString() + " Time Tiny JSON out strict false"
 
         expect:
         "dean" == "dean"
@@ -314,14 +313,14 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
-        def j = new JSONParser().parse(r)
+        def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
         for(int i = 0; i < 10000; i++)
         {
             j.toJSONString(true)
         }
-        echo t.toString() + " Time Tiny JSON string true"
+        echo t.toString() + " Time Tiny JSON string strict true"
 
         expect:
         "dean" == "dean"
@@ -331,14 +330,14 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
-        def j = new JSONParser().parse(r)
+        def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
         for(int i = 0; i < 10000; i++)
         {
             def s = j.toJSONString(false)
         }
-        echo t.toString() + " Time Tiny JSON string false"
+        echo t.toString() + " Time Tiny JSON string strict false"
 
         expect:
         "dean" == "dean"
@@ -348,14 +347,14 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
-        def j = new JSONParser().parse(r)
+        def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
         for(int i = 0; i < 10000; i++)
         {
             j.toJSONString(true)
         }
-        echo t.toString() + " Time Tiger JSON string true"
+        echo t.toString() + " Time Tiger JSON string strict true"
 
         expect:
         "dean" == "dean"
@@ -365,30 +364,14 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
-        def j = new JSONParser().parse(r)
+        def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
         for(int i = 0; i < 10000; i++)
         {
             def s = j.toJSONString(false)
         }
-        echo t.toString() + " Time Tiger JSON string false"
-
-        expect:
-        "dean" == "dean"
-    }
-
-    def "Parse Tiger JSON"()
-    {
-        setup:
-        def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
-        def p = new JSONParser()
-        def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++)
-        {
-            p.parse(r)
-        }
-        echo t.toString() + " Tiger JSON parsed"
+        echo t.toString() + " Time Tiger JSON string strict false"
 
         expect:
         "dean" == "dean"
@@ -404,23 +387,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             b.bindJSON(r)
         }
-        echo t.toString() + " Tiger BINDER parsed"
-
-        expect:
-        "dean" == "dean"
-    }
-
-    def "Parse Lion JSON"()
-    {
-        setup:
-        def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
-        def p = new JSONParser()
-        def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++)
-        {
-            p.parse(r)
-        }
-        echo t.toString() + " Lion JSON parsed"
+        echo t.toString() + " Parse Tiger Binder"
 
         expect:
         "dean" == "dean"
@@ -436,23 +403,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             b.bindJSON(r)
         }
-        echo t.toString() + " Lion BINDER parsed"
-
-        expect:
-        "dean" == "dean"
-    }
-
-    def "Parse Tiny JSON"()
-    {
-        setup:
-        def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
-        def p = new JSONParser()
-        def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++)
-        {
-            p.parse(r)
-        }
-        echo t.toString() + " Tiny JSON parsed"
+        echo t.toString() + " Parse Lion Binder"
 
         expect:
         "dean" == "dean"
@@ -468,23 +419,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             b.bindJSON(r)
         }
-        echo t.toString() + " Tiny BINDER parsed"
-
-        expect:
-        "dean" == "dean"
-    }
-
-    def "Parse String JSON"()
-    {
-        setup:
-        def r = '{"dean": 53}'
-        def p = new JSONParser()
-        def t = new NanoTimer()
-        for(int i = 0; i < 10000; i++)
-        {
-            p.parse(r)
-        }
-        echo t.toString() + " Tiny JSON parsed string"
+        echo t.toString() + " Parse Tiny Binder"
 
         expect:
         "dean" == "dean"
@@ -500,55 +435,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         {
             b.bindJSON(r)
         }
-        echo t.toString() + " Tiny BINDER parsed string"
-
-        expect:
-        "dean" == "dean"
-    }
-
-    def "Parse String Binder 2"()
-    {
-        setup:
-        def r = '{"dean": 53}'
-        def b = binder()
-        def t = new NanoTimer()
-        for(int i = 0; i < 10000; i++)
-        {
-            b.bindJSON(r)
-        }
-        echo t.toString() + " Tiny BINDER parsed string 2"
-
-        expect:
-        "dean" == "dean"
-    }
-
-    def "Parse String JSON 2"()
-    {
-        setup:
-        def r = '{"dean": 53}'
-        def p = new JSONParser()
-        def t = new NanoTimer()
-        for(int i = 0; i < 10000; i++)
-        {
-            p.parse(r)
-        }
-        echo t.toString() + " Tiny JSON parsed string 2"
-
-        expect:
-        "dean" == "dean"
-    }
-
-    def "Parse String JSON 3"()
-    {
-        setup:
-        def r = '{"dean": 53}'
-        def p = new JSONParser()
-        def t = new NanoTimer()
-        for(int i = 0; i < 10000; i++)
-        {
-            p.parse(r)
-        }
-        echo t.toString() + " Tiny JSON parsed string 3"
+        echo t.toString() + " Parse String Binder"
 
         expect:
         "dean" == "dean"

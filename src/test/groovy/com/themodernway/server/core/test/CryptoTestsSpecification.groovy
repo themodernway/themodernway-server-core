@@ -19,10 +19,14 @@ package com.themodernway.server.core.test
 import java.security.Provider
 import java.security.Security
 
+import org.apache.log4j.Level
+
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 import com.themodernway.server.core.test.util.AdminPOJO
 import com.themodernway.server.core.test.util.AdminUserPOJO
+import com.themodernway.server.core.test.util.AuthAllPOJO
+import com.themodernway.server.core.test.util.AuthAnyPOJO
 
 import spock.lang.Unroll
 
@@ -31,40 +35,30 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def setupSpec()
     {
         setupServerCoreDefault(
-            "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
-            "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
-        )
+                "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
+                "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
+                )
     }
 
     def cleanupSpec()
     {
         closeServerCoreDefault()
     }
-    
+
     def "Test Providers"()
     {
         setup:
         def prov = Security.getProviders()
-        
+
         expect:
         prov != null
-        
+
         cleanup:
-        for (Provider p: prov)
-        {
-            echo p.toString()
-            
-            for (Provider.Service s: p.getServices())
-                {
-                    try
-                    {
-                    echo s.toString()
-                    }
-                    catch(Throwable e)
-                    {
-                        
-                    }
-                }
+        prov?.each { Provider p ->
+            echo "Provider: " + p
+            p.getServices().each { s ->
+                echo "Service: " + s
+            }
         }
     }
 
@@ -73,16 +67,16 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         def pass = getCryptoProvider().getRandomPass()
         def salt = getCryptoProvider().getRandomSalt()
-        
+
         expect:
         getCryptoProvider().isPassValid(pass) == true
         getCryptoProvider().isPassValid(salt) == false
-        
+
         cleanup:
         echo "random pass (${pass})"
         echo "random salt (${salt})"
     }
-    
+
     @Unroll
     def "Test Encryption of ('#text')"(String text)
     {
@@ -98,7 +92,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         where:
         text << ['test', ' ', '', '1234', uuid()]
     }
-    
+
     @Unroll
     def "Test Signature of ('#text')"(String text)
     {
@@ -114,84 +108,214 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         where:
         text << ['test', ' ', '', '1234', uuid()]
     }
-    
+
     def "Test Authorized AdminPOJO [TEST]"()
     {
         setup:
         def test = new AdminPOJO('TEST')
         def answ = getAuthorizationProvider().isAuthorized(test, ['TEST'])
-        
+
         expect:
         answ.isAuthorized() == false
     }
-    
+
     def "Test Authorized AdminPOJO [USER]"()
     {
         setup:
         def test = new AdminPOJO('USER')
         def answ = getAuthorizationProvider().isAuthorized(test, ['USER'])
-        
+
         expect:
         answ.isAuthorized() == false
     }
-    
+
     def "Test Authorized AdminPOJO [ADMIN]"()
     {
         setup:
         def test = new AdminPOJO('ADMIN')
         def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN'])
-        
+
         expect:
         answ.isAuthorized() == true
     }
-    
+
     def "Test Authorized AdminPOJO [ADMIN,USER,TEST]"()
     {
         setup:
         def test = new AdminPOJO('ADMIN')
         def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER', 'TEST'])
-        
+
         expect:
         answ.isAuthorized() == true
     }
-    
+
     def "Test Authorized AdminUserPOJO [TEST]"()
     {
         setup:
         def test = new AdminUserPOJO('TEST')
         def answ = getAuthorizationProvider().isAuthorized(test, ['TEST'])
-        
+
         expect:
         answ.isAuthorized() == false
     }
-    
+
     def "Test Authorized AdminUserPOJO [USER]"()
     {
         setup:
         def test = new AdminUserPOJO('USER')
         def answ = getAuthorizationProvider().isAuthorized(test, ['USER'])
-        
+
         expect:
         answ.isAuthorized() == false
     }
-    
+
     def "Test Authorized AdminUserPOJO [ADMIN]"()
     {
         setup:
         def test = new AdminUserPOJO('ADMIN')
         def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN'])
-        
+
         expect:
         answ.isAuthorized() == false
     }
-    
+
     def "Test Authorized AdminUserPOJO [ADMIN,USER]"()
     {
         setup:
+        level(Level.DEBUG)
         def test = new AdminUserPOJO('ADMIN')
         def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER'])
-        
+
         expect:
         answ.isAuthorized() == true
+
+        cleanup:
+        level()
+    }
+
+    def "Test Authorized AuthAllPOJO [ADMIN,USER]"()
+    {
+        setup:
+        level(Level.DEBUG)
+        def test = new AuthAllPOJO('ALL')
+        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER'])
+
+        expect:
+        answ.isAuthorized() == true
+
+        cleanup:
+        level()
+    }
+
+    def "Test Authorized AuthAllPOJO [ADMIN]"()
+    {
+        setup:
+        level(Level.DEBUG)
+        def test = new AuthAllPOJO('ALL')
+        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN'])
+
+        expect:
+        answ.isAuthorized() == false
+
+        cleanup:
+        level()
+    }
+
+    def "Test Authorized AuthAllPOJO [ADMIN,USER] not [ANON]"()
+    {
+        setup:
+        level(Level.DEBUG)
+        def test = new AuthAllPOJO('ALL')
+        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER', 'ANON'])
+
+        expect:
+        answ.isAuthorized() == false
+
+        cleanup:
+        level()
+    }
+
+    def "Test Authorized AuthAnyPOJO [ADMIN,USER]"()
+    {
+        setup:
+        level(Level.DEBUG)
+        def test = new AuthAnyPOJO('ANY')
+        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER'])
+
+        expect:
+        answ.isAuthorized() == true
+
+        cleanup:
+        level()
+    }
+
+    def "Test Authorized AuthAnyPOJO [ADMIN]"()
+    {
+        setup:
+        level(Level.DEBUG)
+        def test = new AuthAnyPOJO('ANY')
+        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN'])
+
+        expect:
+        answ.isAuthorized() == true
+
+        cleanup:
+        level()
+    }
+
+    def "Test Authorized AuthAnyPOJO [USER]"()
+    {
+        setup:
+        level(Level.DEBUG)
+        def test = new AuthAnyPOJO('ANY')
+        def answ = getAuthorizationProvider().isAuthorized(test, ['USER'])
+
+        expect:
+        answ.isAuthorized() == true
+
+        cleanup:
+        level()
+    }
+
+    def "Test Authorized AuthAnyPOJO [USER,TEST]"()
+    {
+        setup:
+        level(Level.DEBUG)
+        def test = new AuthAnyPOJO('ANY')
+        def answ = getAuthorizationProvider().isAuthorized(test, ['USER', 'TEST'])
+
+        expect:
+        answ.isAuthorized() == true
+
+        cleanup:
+        level()
+    }
+
+    def "Test Authorized AuthAnyPOJO [TEST]"()
+    {
+        setup:
+        level(Level.DEBUG)
+        def test = new AuthAnyPOJO('ANY')
+        def answ = getAuthorizationProvider().isAuthorized(test, ['TEST'])
+
+        expect:
+        answ.isAuthorized() == false
+
+        cleanup:
+        level()
+    }
+
+    def "Test Authorized AuthAnyPOJO [ADMIN,USER] not [ANON]"()
+    {
+        setup:
+        level(Level.DEBUG)
+        def test = new AuthAnyPOJO('ANY')
+        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER', 'ANON'])
+
+        expect:
+        answ.isAuthorized() == false
+
+        cleanup:
+        level()
     }
 }

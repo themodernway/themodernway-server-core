@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.security;
+package com.themodernway.server.core.servlet.filter;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.themodernway.server.core.ITimeSupplier;
 
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE })
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Authorized
+public class ExpiresDateHeaderInjector extends SimpleDateHeaderInjector
 {
-    String[] not() default {};
+    public ExpiresDateHeaderInjector()
+    {
+        this(ITimeSupplier.now() - YEAR_IN_MILLISECONDS);
+    }
 
-    String[] all() default {};
-
-    String[] any() default {};
-
-    String[] value() default "USER";
+    public ExpiresDateHeaderInjector(final long valu)
+    {
+        super(EXPIRES_HEADER, valu);
+    }
 }

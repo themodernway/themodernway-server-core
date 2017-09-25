@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.security;
+package com.themodernway.server.core.test.util;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.themodernway.common.api.types.IIdentified;
+import com.themodernway.server.core.security.Authorized;
 
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE })
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Authorized
+@Authorized(any={"ADMIN", "USER"}, not="ANON")
+public class AuthAnyPOJO implements IIdentified
 {
-    String[] not() default {};
+    private final String m_id;
 
-    String[] all() default {};
+    public AuthAnyPOJO(final String id)
+    {
+        m_id = id;
+    }
 
-    String[] any() default {};
-
-    String[] value() default "USER";
+    @Override
+    public String getId()
+    {
+        return m_id;
+    }
 }

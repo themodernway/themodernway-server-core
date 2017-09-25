@@ -240,7 +240,6 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         writeJSONString(writer);
 
         writer.flush();
-
     }
 
     @Override

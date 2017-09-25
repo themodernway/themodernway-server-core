@@ -17,7 +17,8 @@
 package com.themodernway.server.core.support.spring.network.websocket
 
 import com.themodernway.server.core.json.JSONObject
-import com.themodernway.server.core.json.parser.JSONParser
+import com.themodernway.server.core.json.binder.BinderType
+import com.themodernway.server.core.json.binder.IBinder
 
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
@@ -32,13 +33,13 @@ public abstract class JSONWebSocketServiceSupport extends WebSocketServiceSuppor
     @Override
     public void onMessage(final IWebSocketServiceContext context, final String text, final boolean last) throws Exception
     {
-        onMessage(context, getJSONParser().parse(text))
+        onMessage(context, getJSONBinder().bindJSON(text))
     }
 
     @Override
-    public JSONParser getJSONParser()
+    public IBinder getJSONBinder()
     {
-        new JSONParser()
+        BinderType.JSON.getBinderForThread()
     }
 
     @Memoized

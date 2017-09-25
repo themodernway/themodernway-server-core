@@ -19,45 +19,163 @@ package com.themodernway.server.core.security;
 import java.io.IOException;
 import java.util.List;
 
-public class DefaultAuthorizationProvider implements IAuthorizationProvider
+import org.apache.log4j.Logger;
+
+import com.themodernway.server.core.ICoreCommon;
+
+public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICoreCommon
 {
+    private final Logger m_logger = Logger.getLogger(getClass());
+
+    public DefaultAuthorizationProvider()
+    {
+        logger().info("DefaultAuthorizationProvider()");
+    }
+
     @Override
-    public AuthorizationResult isAuthorized(final Object target, final List<String> roles)
+    public IAuthorizationResult isAuthorized(final Object target, List<String> roles)
     {
         if (null == target)
         {
-            return new AuthorizationResult(false, false, E_SERVER_ERROR, "null target");
+            logger().error("error null target");
+
+            return new AuthorizationResult(false, E_RUNTIMEERROR, "error null target");
         }
         if (null == roles)
         {
-            return new AuthorizationResult(false, false, E_SERVER_ERROR, "null roles");
+            logger().error("error null roles");
+
+            return new AuthorizationResult(false, E_RUNTIMEERROR, "error null roles");
         }
+        roles = toUniqueStringList(roles);
+
         if (roles.isEmpty())
         {
-            return new AuthorizationResult(false, false, E_SERVER_ERROR, "empty roles");
+            logger().error("error empty roles");
+
+            return new AuthorizationResult(false, E_RUNTIMEERROR, "error empty roles");
         }
         if (target instanceof IAuthorizedObject)
         {
-            return ((IAuthorizedObject) target).isAuthorized(roles);
+            if (logger().isDebugEnabled())
+            {
+                logger().debug("dispatch authorization roles " + toPrintableString(roles));
+            }
+            final IAuthorizationResult result = ((IAuthorizedObject) target).isAuthorized(roles);
+
+            if (null != result)
+            {
+                if (logger().isDebugEnabled())
+                {
+                    logger().debug("dispatch to authorization result " + result.toString());
+                }
+                return result;
+            }
+            logger().error("error null authorization result");
+
+            return new AuthorizationResult(false, E_RUNTIMEERROR, "error null authorization result");
         }
         final Authorized authorized = target.getClass().getAnnotation(Authorized.class);
 
         if (null == authorized)
         {
-            return new AuthorizationResult(true, false, E_IS_VALIDATED, "valid");
-        }
-        for (String type : authorized.value())
-        {
-            if (false == roles.contains(type))
+            if (logger().isDebugEnabled())
             {
-                return new AuthorizationResult(false, false, E_NO_VALIDROLE, type);
+                logger().debug("pass no authorizations present");
+            }
+            return new AuthorizationResult(true, I_WASVALIDATED, "pass no authorizations present");
+        }
+        List<String> list = toUniqueStringList(authorized.not());
+
+        if (false == list.isEmpty())
+        {
+            for (final String type : list)
+            {
+                if (roles.contains(type))
+                {
+                    if (logger().isDebugEnabled())
+                    {
+                        logger().debug("fail not role " + type + " in roles " + toPrintableString(roles));
+                    }
+                    return new AuthorizationResult(false, E_EXCLUDEDROLE, "fail not role " + type);
+                }
             }
         }
-        return new AuthorizationResult(true, false, E_IS_VALIDATED, "valid");
+        long look = 0;
+
+        list = toUniqueStringList(authorized.all());
+
+        if (false == list.isEmpty())
+        {
+            for (final String type : list)
+            {
+                if (false == roles.contains(type))
+                {
+                    if (logger().isDebugEnabled())
+                    {
+                        logger().debug("fail and role " + type + " in roles " + toPrintableString(roles));
+                    }
+                    return new AuthorizationResult(false, E_NOTVALIDROLE, "fail and role " + type);
+                }
+            }
+            look++;
+        }
+        list = toUniqueStringList(authorized.any());
+
+        if (false == list.isEmpty())
+        {
+            for (final String type : list)
+            {
+                if (roles.contains(type))
+                {
+                    if (logger().isDebugEnabled())
+                    {
+                        logger().debug("pass any role " + type + " in roles " + toPrintableString(roles));
+                    }
+                    return new AuthorizationResult(true, I_WASVALIDATED, "pass any role " + type);
+                }
+            }
+            if (logger().isDebugEnabled())
+            {
+                logger().debug("fail any " + toPrintableString(list) + " in roles " + toPrintableString(roles));
+            }
+            return new AuthorizationResult(false, E_NOTVALIDROLE, "fail any role");
+        }
+        if (look < 1)
+        {
+            list = toUniqueStringList(authorized.value());
+
+            if (false == list.isEmpty())
+            {
+                for (final String type : list)
+                {
+                    if (false == roles.contains(type))
+                    {
+                        if (logger().isDebugEnabled())
+                        {
+                            logger().debug("fail value role " + type + " in roles " + toPrintableString(roles));
+                        }
+                        return new AuthorizationResult(false, E_NOTVALIDROLE, "fail value role " + type);
+                    }
+                }
+            }
+        }
+        if (logger().isDebugEnabled())
+        {
+            logger().debug("pass no authorizations matched in roles " + toPrintableString(roles));
+        }
+        return new AuthorizationResult(true, I_WASVALIDATED, "pass no authorizations matched");
+    }
+
+    @Override
+    public Logger logger()
+    {
+        return m_logger;
     }
 
     @Override
     public void close() throws IOException
     {
+        logger().info("DefaultAuthorizationProvider().close()");
     }
 }

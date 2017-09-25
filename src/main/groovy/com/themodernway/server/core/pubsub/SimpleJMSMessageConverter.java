@@ -27,7 +27,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
-import com.themodernway.server.core.json.parser.JSONParser;
+import com.themodernway.server.core.json.binder.BinderType;
 
 public class SimpleJMSMessageConverter extends SimpleMessageConverter
 {
@@ -62,7 +62,7 @@ public class SimpleJMSMessageConverter extends SimpleMessageConverter
         {
             try
             {
-                return new JSONParser().parse(((TextMessage) message).getText());
+                return BinderType.JSON.getBinder().bindJSON(((TextMessage) message).getText());
             }
             catch (final ParserException e)
             {

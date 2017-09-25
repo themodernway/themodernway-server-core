@@ -24,12 +24,12 @@ import com.themodernway.server.core.support.CoreGroovySupport
 
 class ScriptingProxy extends CoreGroovySupport
 {
-    private final def m_getter = new Object()
+    private final Object m_getter = new Object()
 
     private final ScriptType m_type
 
     private final ScriptEngine m_engine
-    
+
     public ScriptingProxy(final ScriptType type, final Resource resource) throws Exception
     {
         this(type, resource.getInputStream())
@@ -43,7 +43,7 @@ class ScriptingProxy extends CoreGroovySupport
     public ScriptingProxy(final ScriptType type, final Reader reader) throws Exception
     {
         m_type = type
-        
+
         m_engine = scripting().engine(type, reader)
     }
 

@@ -11,25 +11,20 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License. ThreadLocal.withInitial(supplier);
  */
 
-package com.themodernway.server.core.security;
+package com.themodernway.server.core;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.function.Supplier;
 
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE })
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Authorized
+public interface IFormattingParser<T>
 {
-    String[] not() default {};
+    public String format(T value) throws Exception;
 
-    String[] all() default {};
+    public String format(Supplier<T> value) throws Exception;
 
-    String[] any() default {};
+    public T parse(String string) throws Exception;
 
-    String[] value() default "USER";
+    public T parse(Supplier<String> string) throws Exception;
 }

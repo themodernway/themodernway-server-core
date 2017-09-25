@@ -16,40 +16,39 @@
 
 package com.themodernway.server.core;
 
-import java.text.Format;
 import java.util.function.Supplier;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public abstract class ThreadLocalFormat<T, F extends Format> extends ThreadLocalValued<F> implements IFormattingParser<T>
+public class ThreadLocalValued<T> implements IThreadLocalValued<T>
 {
-    protected ThreadLocalFormat(final Supplier<F> supplier)
+    private final ThreadLocal<T> m_local;
+
+    public ThreadLocalValued(final Supplier<T> supplier)
     {
-        super(supplier);
+        this(ThreadLocal.withInitial(CommonOps.requireNonNull(supplier)));
+    }
+
+    public ThreadLocalValued(final ThreadLocal<T> local)
+    {
+        m_local = CommonOps.requireNonNull(local);
     }
 
     @Override
-    public String format(final T object) throws Exception
+    public T getValue()
     {
-        return getValue().format(CommonOps.requireNonNull(object));
+        return getThreadLocal().get();
     }
 
     @Override
-    public String format(final Supplier<T> supplier) throws Exception
+    public ThreadLocal<T> getThreadLocal()
     {
-        return format(supplier.get());
+        return m_local;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T parse(final String source) throws Exception
+    public Supplier<T> toSupplier()
     {
-        return (T) getValue().parseObject(CommonOps.requireNonNull(source));
-    }
-
-    @Override
-    public T parse(final Supplier<String> supplier) throws Exception
-    {
-        return parse(supplier.get());
+        return () -> getThreadLocal().get();
     }
 }

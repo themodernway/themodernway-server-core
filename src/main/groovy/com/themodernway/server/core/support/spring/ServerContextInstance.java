@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.cache.CacheManager;
@@ -50,9 +52,9 @@ import com.themodernway.server.core.mail.IMailSender;
 import com.themodernway.server.core.mail.IMailSenderProvider;
 import com.themodernway.server.core.pubsub.JSONMessageBuilder;
 import com.themodernway.server.core.scripting.IScriptingProvider;
-import com.themodernway.server.core.security.AuthorizationResult;
 import com.themodernway.server.core.security.DefaultAuthorizationProvider;
 import com.themodernway.server.core.security.IAuthorizationProvider;
+import com.themodernway.server.core.security.IAuthorizationResult;
 import com.themodernway.server.core.security.ICryptoProvider;
 import com.themodernway.server.core.security.ISignatoryProvider;
 import com.themodernway.server.core.security.session.IServerSessionRepository;
@@ -337,7 +339,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public final AuthorizationResult isAuthorized(final Object target, final List<String> roles)
+    public final IAuthorizationResult isAuthorized(final Object target, final List<String> roles)
     {
         return getAuthorizationProvider().isAuthorized(target, roles);
     }
@@ -529,8 +531,34 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public CacheManager getCacheManager(final String name)
+    public final CacheManager getCacheManager(final String name)
     {
         return getBeanSafely(requireNonNull(name), CacheManager.class);
+    }
+
+    @Override
+    public final Level getLoggingLevel()
+    {
+        if (isApplicationContextInitialized())
+        {
+            return getCoreServerManager().getLoggingLevel();
+        }
+        return LogManager.getRootLogger().getLevel();
+    }
+
+    @Override
+    public final void setLoggingLevel(final Level level)
+    {
+        if (null != level)
+        {
+            if (isApplicationContextInitialized())
+            {
+                getCoreServerManager().setLoggingLevel(level);
+            }
+            else
+            {
+                LogManager.getRootLogger().setLevel(level);
+            }
+        }
     }
 }

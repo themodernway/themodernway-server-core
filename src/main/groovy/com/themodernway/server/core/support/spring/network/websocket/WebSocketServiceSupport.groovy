@@ -31,11 +31,11 @@ import groovy.transform.Memoized
 public abstract class WebSocketServiceSupport extends CoreGroovySupport implements IWebSocketService, INamedType
 {
     private String      m_name
-    
+
     private RateLimiter m_rate
-    
+
     private JSONObject  m_attr = json()
-    
+
     protected WebSocketServiceSupport()
     {
         m_rate = RateLimiterFactory.create(getClass())
@@ -61,7 +61,7 @@ public abstract class WebSocketServiceSupport extends CoreGroovySupport implemen
         }
         claz.getSimpleName()
     }
-    
+
     @Override
     public void acquire()
     {
@@ -76,7 +76,7 @@ public abstract class WebSocketServiceSupport extends CoreGroovySupport implemen
     {
         true
     }
-    
+
     @Override
     public JSONObject getAttributes()
     {

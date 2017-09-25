@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 public final class NanoTimer implements Serializable
 {
-    private static final long serialVersionUID = 3808909409015875020L;
+    private static final long serialVersionUID = 1L;
 
     private volatile long     m_mills;
 

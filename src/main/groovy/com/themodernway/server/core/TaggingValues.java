@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.security;
+package com.themodernway.server.core;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,13 +23,7 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Authorized
+public @interface TaggingValues
 {
-    String[] not() default {};
-
-    String[] all() default {};
-
-    String[] any() default {};
-
-    String[] value() default "USER";
+    String[] value() default {};
 }

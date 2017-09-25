@@ -39,9 +39,9 @@ import com.themodernway.server.core.json.JSONObject;
 
 public class HTTPHeaders extends HttpHeaders
 {
-    private static final long           serialVersionUID   = -7217466640722875327L;
+    private static final long           serialVersionUID   = 1L;
 
-    public static final String          DEFAULT_USER_AGENT = "Ahome-Tooling-Server-Core/1.1.X";
+    public static final String          DEFAULT_USER_AGENT = "The Modern Way/1.2.0 (Language=Java/1.8.0)";
 
     public static final List<MediaType> JSON_MEDIA_TYPE    = Collections.unmodifiableList(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
 

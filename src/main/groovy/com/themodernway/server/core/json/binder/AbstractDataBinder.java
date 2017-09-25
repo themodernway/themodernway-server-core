@@ -476,5 +476,4 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         return new CoreYAMLMapper();
     }
-
 }

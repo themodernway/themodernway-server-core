@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.test
 
+import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.network.PathParameters
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
@@ -27,9 +28,9 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
     def setupSpec()
     {
         setupServerCoreDefault(
-            "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
-            "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
-        )
+                "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
+                "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
+                )
     }
 
     def cleanupSpec()
@@ -87,6 +88,34 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
 
         cleanup:
         echo answ
+    }
+
+    def "test parallel off"()
+    {
+        setup:
+        def t = new NanoTimer()
+        def n = network()
+        def list = (1..100).collect { int id ->
+            n.get("http://jsonplaceholder.typicode.com/posts/${id}").json()
+        }
+        echo t.toString() + " test parallel off"
+
+        expect:
+        list.size() == 100
+    }
+
+    def "test parallel on"()
+    {
+        setup:
+        def t = new NanoTimer()
+        def n = network()
+        def list = parallel(1..100).collect { int id ->
+            n.get("http://jsonplaceholder.typicode.com/posts/${id}").json()
+        }
+        echo t.toString() + " test parallel on"
+
+        expect:
+        list.size() == 100
     }
 
     @Unroll

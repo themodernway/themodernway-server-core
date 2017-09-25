@@ -16,20 +16,11 @@
 
 package com.themodernway.server.core.security;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE })
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Authorized
+public interface IAuthorizationResult
 {
-    String[] not() default {};
+    public int getCode();
 
-    String[] all() default {};
+    public String getText();
 
-    String[] any() default {};
-
-    String[] value() default "USER";
+    public boolean isAuthorized();
 }

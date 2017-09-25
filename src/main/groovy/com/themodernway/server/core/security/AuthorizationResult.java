@@ -18,55 +18,44 @@ package com.themodernway.server.core.security;
 
 import com.themodernway.common.api.java.util.StringOps;
 
-public class AuthorizationResult
+public class AuthorizationResult implements IAuthorizationResult
 {
     private final boolean m_authd;
-
-    private final boolean m_admin;
 
     private final int     m_ecode;
 
     private final String  m_etext;
 
-    public AuthorizationResult(final boolean authd, final boolean admin, final int ecode, final String etext)
+    public AuthorizationResult(final boolean authd, final int ecode, final String etext)
     {
         m_authd = authd;
 
-        m_admin = admin;
-
         m_ecode = ecode;
 
-        m_etext = doFixText(etext);
+        m_etext = StringOps.toTrimOrElse(etext, "unknown");
     }
 
-    private final String doFixText(String etext)
-    {
-        etext = StringOps.toTrimOrNull(etext);
-
-        if (null != etext)
-        {
-            return etext;
-        }
-        return "unknown";
-    }
-
+    @Override
     public boolean isAuthorized()
     {
         return m_authd;
     }
 
-    public boolean isAdmin()
-    {
-        return m_admin;
-    }
-
+    @Override
     public int getCode()
     {
         return m_ecode;
     }
 
+    @Override
     public String getText()
     {
         return m_etext;
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("(%b, %d, '%s')", isAuthorized(), getCode(), StringOps.toTrimOrElse(getText(), "unknown"));
     }
 }

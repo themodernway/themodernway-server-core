@@ -16,7 +16,10 @@
 
 package com.themodernway.server.core.security;
 
+import java.util.List;
+
+@FunctionalInterface
 public interface IAuthorizedObject
 {
-    public AuthorizationResult isAuthorized(Iterable<String> roles);
+    public IAuthorizationResult isAuthorized(List<String> roles);
 }

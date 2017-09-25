@@ -59,18 +59,18 @@ public interface IServerCoreTesting
             return instance;
         }
 
-        public static final void setupServerCoreDefault(final String... locations) throws Exception
+        public static final IServerContext setupServerCoreDefault(final String... locations) throws Exception
         {
             setupServerCoreLogging();
 
-            setupServerCoreContext(locations);
+            return setupServerCoreContext(locations);
         }
 
-        public static final void setupServerCoreDefault(final List<String> locations) throws Exception
+        public static final IServerContext setupServerCoreDefault(final List<String> locations) throws Exception
         {
             setupServerCoreLogging();
 
-            setupServerCoreContext(locations);
+            return setupServerCoreContext(locations);
         }
 
         public static final IServerContext setupServerCoreContext(final List<String> locations)
