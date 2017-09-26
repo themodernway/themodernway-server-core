@@ -30,6 +30,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
@@ -314,5 +315,51 @@ public final class IO
     public static final OutputStream toOutputStream(final Path path, final OpenOption... options) throws IOException
     {
         return Files.newOutputStream(CommonOps.requireNonNull(path), options);
+    }
+
+    public static final Properties toProperties(final Properties prop, final InputStream stream) throws IOException
+    {
+        try
+        {
+            prop.load(CommonOps.requireNonNull(stream));
+        }
+        finally
+        {
+            IO.close(stream);
+        }
+        return prop;
+    }
+
+    public static final Properties toProperties(final Properties prop, final Reader reader) throws IOException
+    {
+        try
+        {
+            prop.load(CommonOps.requireNonNull(reader));
+        }
+        finally
+        {
+            IO.close(reader);
+        }
+        return prop;
+    }
+
+    public static final Properties toProperties(final InputStream stream) throws IOException
+    {
+        return toProperties(new Properties(), stream);
+    }
+
+    public static final Properties toProperties(final Reader reader) throws IOException
+    {
+        return toProperties(new Properties(), reader);
+    }
+
+    public static final Properties toProperties(final Properties prop, final Resource resource) throws IOException
+    {
+        return toProperties(prop, resource.getInputStream());
+    }
+
+    public static final Properties toProperties(final Resource resource) throws IOException
+    {
+        return toProperties(resource.getInputStream());
     }
 }

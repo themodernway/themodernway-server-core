@@ -14,16 +14,16 @@
  * limitations under the License. ThreadLocal.withInitial(supplier);
  */
 
-package com.themodernway.server.core;
+package com.themodernway.server.core.function;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-public final class Memoizer<T, R>
+public final class FunctionMemoizer<T, R>
 {
     private final ConcurrentHashMap<T, R> m_cache = new ConcurrentHashMap<T, R>();
 
-    private Memoizer()
+    private FunctionMemoizer()
     {
     }
 
@@ -34,6 +34,6 @@ public final class Memoizer<T, R>
 
     public static final <T, R> Function<T, R> memoize(final Function<T, R> function)
     {
-        return new Memoizer<T, R>().remember(function);
+        return new FunctionMemoizer<T, R>().remember(function);
     }
 }

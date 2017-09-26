@@ -25,6 +25,7 @@ import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.io.IO;
 
 public final class BootstrapStringCryptoProvider implements IStringCryptoProvider
 {
@@ -41,9 +42,7 @@ public final class BootstrapStringCryptoProvider implements IStringCryptoProvide
     {
         logger.info("BootstrapStringCryptoProvider(" + resource.getURI().toString() + ", " + passname + ", " + saltname + ")");
 
-        final Properties properties = new Properties();
-
-        properties.load(resource.getInputStream());
+        final Properties properties = IO.toProperties(resource);
 
         final String pass = StringOps.requireTrimOrNull(properties.getProperty(StringOps.requireTrimOrNull(passname)));
 

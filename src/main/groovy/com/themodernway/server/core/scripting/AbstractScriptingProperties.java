@@ -25,6 +25,7 @@ import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.Activatable;
+import com.themodernway.server.core.io.IO;
 
 public abstract class AbstractScriptingProperties extends Activatable implements IScriptingProperties
 {
@@ -71,7 +72,7 @@ public abstract class AbstractScriptingProperties extends Activatable implements
 
     protected void populate(final Resource resource) throws Exception
     {
-        getProperties().load(CommonOps.requireNonNull(CommonOps.requireNonNull(resource).getInputStream()));
+        IO.toProperties(getProperties(), resource);
     }
 
     protected void populate(final Map<String, String> properties)

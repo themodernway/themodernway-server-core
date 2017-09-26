@@ -17,18 +17,20 @@
 package com.themodernway.server.core.mail;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import javax.activation.FileTypeMap;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.ICoreContentTypeMapper;
+import com.themodernway.server.core.io.IO;
 
 public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, InitializingBean
 {
@@ -43,6 +45,11 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, I
     public CoreMailSender(final Properties properties)
     {
         setJavaMailProperties(properties);
+    }
+
+    public CoreMailSender(final Resource resource) throws IOException
+    {
+        this(IO.toProperties(resource));
     }
 
     @Override
@@ -118,7 +125,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, I
         }
 
         @Override
-        public ISimpleMailMessageBuilder to(final Collection<String> list)
+        public ISimpleMailMessageBuilder to(final List<String> list)
         {
             m_mess.setMailToList(list);
 
@@ -126,7 +133,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, I
         }
 
         @Override
-        public ISimpleMailMessageBuilder cc(final Collection<String> list)
+        public ISimpleMailMessageBuilder cc(final List<String> list)
         {
             m_mess.setMailCcList(list);
 
@@ -134,7 +141,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, I
         }
 
         @Override
-        public ISimpleMailMessageBuilder bcc(final Collection<String> list)
+        public ISimpleMailMessageBuilder bcc(final List<String> list)
         {
             m_mess.setMailBccList(list);
 
@@ -169,6 +176,14 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, I
         public ISimpleMailMessageBuilder reply(final String valu)
         {
             m_mess.setReplyTo(valu);
+
+            return this;
+        }
+
+        @Override
+        public ISimpleMailMessageBuilder subject(final String valu)
+        {
+            m_mess.setSubject(valu);
 
             return this;
         }

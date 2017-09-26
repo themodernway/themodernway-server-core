@@ -16,16 +16,16 @@
 
 package com.themodernway.server.core.mail;
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public interface ISimpleMailMessageBuilder
 {
-    public ISimpleMailMessageBuilder to(Collection<String> list);
+    public ISimpleMailMessageBuilder to(List<String> list);
 
-    public ISimpleMailMessageBuilder cc(Collection<String> list);
+    public ISimpleMailMessageBuilder cc(List<String> list);
 
-    public ISimpleMailMessageBuilder bcc(Collection<String> list);
+    public ISimpleMailMessageBuilder bcc(List<String> list);
 
     public ISimpleMailMessageBuilder date(Date valu);
 
@@ -34,6 +34,8 @@ public interface ISimpleMailMessageBuilder
     public ISimpleMailMessageBuilder text(String valu);
 
     public ISimpleMailMessageBuilder reply(String valu);
+
+    public ISimpleMailMessageBuilder subject(String valu);
 
     public CoreSimpleMailMessage make();
 }

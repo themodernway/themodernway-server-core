@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.mail;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.mail.MailMessage;
@@ -32,15 +31,15 @@ public interface ICoreSimpleMailMessage extends ISmartMailMessage, MailMessage, 
 
     public List<String> getMailToList();
 
-    public void setMailBccList(Collection<String> list);
+    public void setMailBccList(List<String> list);
 
     public void setMailBccList(String list);
 
-    public void setMailCcList(Collection<String> list);
+    public void setMailCcList(List<String> list);
 
     public void setMailCcList(String list);
 
-    public void setMailToList(Collection<String> list);
+    public void setMailToList(List<String> list);
 
     public void setMailToList(String list);
 }

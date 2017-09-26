@@ -43,6 +43,21 @@ public interface ICoreCommon extends IHasLogging
         return null;
     }
 
+    public static List<String> TAGGING_VALUES(final Object target)
+    {
+        if (null == target)
+        {
+            return CommonOps.emptyList();
+        }
+        final TaggingValues tagging = target.getClass().getAnnotation(TaggingValues.class);
+
+        if (null == tagging)
+        {
+            return CommonOps.emptyList();
+        }
+        return StringOps.toUnique(tagging.value());
+    }
+
     default public String format(final String format, final Object... args)
     {
         return String.format(format, args);

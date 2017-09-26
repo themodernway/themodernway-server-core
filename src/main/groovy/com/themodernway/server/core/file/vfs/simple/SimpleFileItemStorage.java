@@ -766,7 +766,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             try
             {
-                stream = new ReaderInputStream(reader);
+                stream = new ReaderInputStream(reader, IO.UTF_8_CHARSET);
 
                 return create(name, stream);
             }

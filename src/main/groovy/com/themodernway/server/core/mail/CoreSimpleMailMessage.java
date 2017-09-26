@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.mail;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.mail.MailException;
@@ -63,7 +62,7 @@ public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSim
     }
 
     @Override
-    public void setMailToList(final Collection<String> list)
+    public void setMailToList(final List<String> list)
     {
         StringOps.setConsumerUniqueStringArray(list, this::setTo);
     }
@@ -81,7 +80,7 @@ public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSim
     }
 
     @Override
-    public void setMailCcList(final Collection<String> list)
+    public void setMailCcList(final List<String> list)
     {
         StringOps.setConsumerUniqueStringArray(list, this::setCc);
     }
@@ -99,7 +98,7 @@ public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSim
     }
 
     @Override
-    public void setMailBccList(final Collection<String> list)
+    public void setMailBccList(final List<String> list)
     {
         StringOps.setConsumerUniqueStringArray(list, this::setBcc);
     }
