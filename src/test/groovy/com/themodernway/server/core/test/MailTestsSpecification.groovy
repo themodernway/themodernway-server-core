@@ -37,7 +37,7 @@ public class MailTestsSpecification extends ServerCoreSpecification implements C
     def "test mail sender"()
     {
         setup:
-        def mess = getMailSender("GoogleMailSender").builder().to(['deansjones@icloud.com', 'John.Wheeler2@wellsfargo.com']).from('deansjones@gmail.com').subject('Testing Mail Sender ' + uuid()).text("Test\n1\n2\n3\n\n\nDean S. Jones").reply('deansjones@gmail.com').make()
+        def mess = getMailSender("GoogleMailSender").builder().to(['deansjones@icloud.com']).from('deansjones@gmail.com').subject('Testing Mail Sender ' + uuid()).text("Test\n1\n2\n3\n\n\nDean S. Jones").reply('deansjones@gmail.com').make()
         //mess.send()
 
         expect:
