@@ -27,9 +27,9 @@ public enum BinderType implements IBinderFactory, IStringValued
 {
     JSON(JSONBinder::new), YAML(YAMLBinder::new), XML(XMLBinder::new), PROPERTIES(PropertiesBinder::new);
 
-    private final Supplier<IBinder>    m_maker;
+    private transient Supplier<IBinder>    m_maker;
 
-    private final ThreadLocal<IBinder> m_local;
+    private transient ThreadLocal<IBinder> m_local;
 
     private BinderType(final Supplier<IBinder> binder)
     {
