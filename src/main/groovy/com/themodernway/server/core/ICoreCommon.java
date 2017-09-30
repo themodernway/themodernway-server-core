@@ -40,10 +40,10 @@ public interface ICoreCommon extends IHasLogging
 
     public static <T> T NULL()
     {
-        return null;
+        return CommonOps.NULL();
     }
 
-    public static List<String> TAGGING_VALUES(final Object target)
+    public static List<String> toTaggingValues(final Object target)
     {
         if (null == target)
         {
