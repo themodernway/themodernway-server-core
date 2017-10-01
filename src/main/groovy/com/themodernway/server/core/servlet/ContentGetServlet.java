@@ -22,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.themodernway.server.core.ITimeSupplier;
 import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
@@ -155,6 +156,8 @@ public class ContentGetServlet extends AbstractContentServlet
         }
         else
         {
+            response.setDateHeader(DATE_HEADER, ITimeSupplier.now());
+            
             return isModifiedSince(request, response, file.getLastModified());
         }
     }

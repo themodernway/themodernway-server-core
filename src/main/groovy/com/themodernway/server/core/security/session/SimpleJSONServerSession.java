@@ -65,11 +65,11 @@ public class SimpleJSONServerSession implements IServerSession
         }
         final long time = ITimeSupplier.mills().getTime();
 
-        if (0 == getCreationTime())
+        if (0L == getCreationTime())
         {
             m_attr.put(m_repo.getHelper().getCreationTimeKey(), time);
         }
-        if (0 == getLastAccessedTime())
+        if (0L == getLastAccessedTime())
         {
             m_attr.put(m_repo.getHelper().getLastAccessedTimeKey(), time);
         }
@@ -78,16 +78,13 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public long getCreationTime()
     {
-        if (m_attr.isNumber(m_repo.getHelper().getCreationTimeKey()))
-        {
-            final Long lval = JSONUtils.asLong(m_attr.get(getHelper().getCreationTimeKey()));
+        final Long lval = JSONUtils.asLong(m_attr.get(getHelper().getCreationTimeKey()));
 
-            if (null != lval)
-            {
-                return lval;
-            }
+        if (null != lval)
+        {
+            return lval;
         }
-        return 0;
+        return 0L;
     }
 
     @Override
@@ -99,16 +96,13 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public long getLastAccessedTime()
     {
-        if (m_attr.isNumber(getHelper().getLastAccessedTimeKey()))
-        {
-            final Long lval = JSONUtils.asLong(m_attr.get(getHelper().getLastAccessedTimeKey()));
+        final Long lval = JSONUtils.asLong(m_attr.get(getHelper().getLastAccessedTimeKey()));
 
-            if (null != lval)
-            {
-                return lval;
-            }
+        if (null != lval)
+        {
+            return lval;
         }
-        return 0;
+        return 0L;
     }
 
     @Override
