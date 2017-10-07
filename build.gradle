@@ -42,7 +42,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.2.2-RELEASE'
+version = '1.2.3-RELEASE'
 
 group = 'com.themodernway'
 
@@ -231,7 +231,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.2-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.3-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '5.1')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')
@@ -239,7 +239,7 @@ dependencies {
     compile(group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'log4j-over-slf4j', version: '1.7.25')
     compile(group: 'cglib', name: 'cglib-nodep', version: '3.2.4')
-    compile(group: 'org.fusesource.jansi', name: 'jansi', version: '1.15')
+    compile(group: 'org.fusesource.jansi', name: 'jansi', version: '1.16')
     compile(group: 'joda-time', name: 'joda-time', version: '2.9.9')
     compile(group: 'commons-io', name: 'commons-io', version: '2.5')
     compile(group: 'commons-net', name: 'commons-net', version: '3.6')
@@ -252,7 +252,7 @@ dependencies {
     compile(group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3')
     compile(group: 'org.opensaml', name: 'opensaml', version: '2.6.4')
     compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3')
-    compile(group: 'com.google.guava', name: 'guava', version: '23.0')
+    compile(group: 'com.google.guava', name: 'guava', version: '23.1-jre')
     compile(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.6')
     compile(group: 'com.github.ben-manes.caffeine', name: 'jcache', version: '2.5.6')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.1')

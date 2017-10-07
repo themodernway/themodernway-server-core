@@ -20,29 +20,13 @@ import com.themodernway.common.api.java.util.IHTTPConstants;
 
 public interface ICoreServletConstants extends IHTTPConstants
 {
-    public static final int    DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH = 64;
+    public static final String SESSION_PROVIDER_DEFAULT             = "default";
 
-    public static final int    MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH = 128;
+    public static final String CONTENT_SERVLET_STORAGE_NAME_DEFAULT = "content";
 
-    public static final long   DEFAULT_CACHE_DELTA_IN_MILLISECONDS    = 1000L;
+    public static final String CONTENT_SERVLET_STORAGE_NAME_PARAM   = "core.server.content.servlet.storage.name";
 
-    public static final String CONTENT_TYPE_TEXT_PROPERTIES           = "text/x-java-properties";
+    public static final String SESSION_PROVIDER_DOMAIN_NAME_PARAM   = "core.server.session.provider.domain.name";
 
-    public static final String UNKNOWN_USER                           = "%-UNKNOWN-USER-%";
-
-    public static final String NULL_SESSION                           = "%-NULL-SESSION-%";
-
-    public static final String PROTO_1_1_SUFFIX_DEFAULT               = "1.1";
-
-    public static final String HTTPS_URL_PREFIX_DEFAULT               = "https";
-
-    public static final String SESSION_PROVIDER_DEFAULT               = "default";
-
-    public static final String CONTENT_SERVLET_STORAGE_NAME_DEFAULT   = "content";
-
-    public static final String CONTENT_SERVLET_STORAGE_NAME_PARAM     = "core.server.content.servlet.storage.name";
-
-    public static final String SESSION_PROVIDER_DOMAIN_NAME_PARAM     = "core.server.session.provider.domain.name";
-
-    public static final String CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM   = "core.server.content.type.max.header.length";
+    public static final String CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM = "core.server.content.type.max.header.length";
 }
