@@ -96,7 +96,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         def t = new NanoTimer()
         def n = network()
         def list = (1..100).collect { int id ->
-            n.get("http://jsonplaceholder.typicode.com/posts/${id}").json()
+            n.get('http://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
         }
         echo t.toString() + " test parallel off"
 
@@ -110,7 +110,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         def t = new NanoTimer()
         def n = network()
         def list = parallel(1..100).collect { int id ->
-            n.get("http://jsonplaceholder.typicode.com/posts/${id}").json()
+            n.get('http://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
         }
         echo t.toString() + " test parallel on"
 
