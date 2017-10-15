@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.file.vfs;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -73,6 +74,8 @@ public interface IFileItem
     public Stream<String> lines() throws IOException;
 
     public InputStream getInputStream() throws IOException;
+
+    public BufferedReader getBufferedReader() throws IOException;
 
     public long writeTo(OutputStream output) throws IOException;
 

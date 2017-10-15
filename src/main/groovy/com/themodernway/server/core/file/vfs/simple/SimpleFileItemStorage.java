@@ -20,6 +20,7 @@ import static com.themodernway.server.core.file.FileAndPathUtils.SINGLE_SLASH;
 import static com.themodernway.server.core.file.FileAndPathUtils.concat;
 import static com.themodernway.server.core.file.FileAndPathUtils.normalize;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +68,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 {
     protected static final IFileItem MAKE(final File file, final IFileItemStorage stor)
     {
-        if (file.isDirectory())
+        if (IO.isFolder(file))
         {
             return new SimpleFolderItem(file, stor);
         }
@@ -104,13 +105,13 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     {
         m_name = requireTrimOrNull(name);
 
-        m_base = requireTrimOrNull(normalize(requireTrimOrNull(base)));
+        m_base = requireTrimOrNull(normalize(requireTrimOrNull(failIfNullBytePresent(base))));
 
         m_file = new File(m_base);
 
         m_root = new SimpleFolderItem(m_file, this);
 
-        if ((m_file.exists()) && (m_file.isDirectory()) && (m_file.canRead()))
+        if ((IO.exists(m_file)) && (IO.isFolder(m_file)) && (IO.isReadable(m_file)))
         {
             m_open = true;
 
@@ -230,14 +231,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            if (false == exists())
-            {
-                throw new IOException(format("Can't type missing (%s).", getPath()));
-            }
-            if (isHidden())
-            {
-                throw new IOException(format("Can't type hidden (%s).", getPath()));
-            }
             final ICoreContentTypeMapper maps = getFileItemStorage().getContentTypeMapper();
 
             if (null != maps)
@@ -252,14 +245,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            if (false == exists())
-            {
-                throw new IOException(format("Can't meta-data missing (%s).", getPath()));
-            }
-            if (isHidden())
-            {
-                throw new IOException(format("Can't meta-data hidden (%s).", getPath()));
-            }
             final IFileItemMetaDataFactory fact = getFileItemStorage().getFileItemMetaDataFactory();
 
             if (null != fact)
@@ -271,7 +256,9 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                     return json;
                 }
             }
-            return new JSONObject().set("path", getPath()).set("size", getSize()).set("last", getLastModified()).set("type", getContentType()).set("mode", String.format("%s%s%s", (isFolder() ? "d" : "-"), (isReadable() ? "r" : "-"), (isWritable() ? "w" : "-")));
+            final File file = getFile();
+
+            return new JSONObject().set("path", getPath()).set("size", getSize()).set("last", getLastModified()).set("type", getContentType()).set("mode", String.format("%s%s%s", (isFolder(file) ? "d" : "-"), (isReadable(file) ? "r" : "-"), (isWritable(file, getFileItemStorage()) ? "w" : "-")));
         }
 
         @Override
@@ -279,14 +266,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            if (false == exists())
-            {
-                throw new IOException(format("Can't get limit missing (%s).", getPath()));
-            }
-            if (isHidden())
-            {
-                throw new IOException(format("Can't get limit hidden (%s).", getPath()));
-            }
             return getFile().getUsableSpace();
         }
 
@@ -295,39 +274,33 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            readtest();
+            final File file = readtest(getFile());
 
-            if (isFolder())
+            if (isFolder(file))
             {
-                return getAsFolderItem().items().map(file -> file.wrap().getName());
+                return getAsFolderItem().items().map(f -> f.wrap().getName());
             }
             else
             {
-                return IO.lines(getFile());
+                return IO.lines(file);
             }
         }
 
         @Override
         public String getName() throws IOException
         {
-            validate();
-
             return toTrimOrElse(FileAndPathUtils.name(getPath()), SINGLE_SLASH);
         }
 
         @Override
         public String getBaseName() throws IOException
         {
-            validate();
-
             return toTrimOrElse(FileAndPathUtils.base(getPath()), EMPTY_STRING);
         }
 
         @Override
         public String getExtension() throws IOException
         {
-            validate();
-
             return toTrimOrElse(FileAndPathUtils.extn(getAbsolutePath()), EMPTY_STRING);
         }
 
@@ -336,14 +309,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            if (false == exists())
-            {
-                throw new IOException(format("Can't size missing (%s).", getPath()));
-            }
-            if (isHidden())
-            {
-                throw new IOException(format("Can't size hidden (%s).", getPath()));
-            }
             return getFile().length();
         }
 
@@ -352,7 +317,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            if (getFile().isHidden())
+            if (isHidden(getFile()))
             {
                 return true;
             }
@@ -370,7 +335,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            return getFile().canRead();
+            return isReadable(getFile());
         }
 
         @Override
@@ -378,7 +343,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            return getFile().canWrite() && getFileItemStorage().isWritable();
+            return isWritable(getFile(), getFileItemStorage());
         }
 
         @Override
@@ -386,7 +351,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            return getFile().isFile();
+            return isFile(getFile());
         }
 
         @Override
@@ -394,14 +359,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            return getFile().isDirectory();
+            return isFolder(getFile());
         }
 
         @Override
         public String getPath() throws IOException
         {
-            validate();
-
             return normalize(getAbsolutePath().replace(getFileItemStorage().getBasePath(), SINGLE_SLASH));
         }
 
@@ -416,8 +379,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public IFolderItem getParent() throws IOException
         {
-            validate();
-
             if (normalize(getAbsolutePath()).equals(normalize(getFileItemStorage().getBasePath())))
             {
                 return null;
@@ -440,9 +401,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             {
                 return (IFolderItem) this;
             }
-            if (isFolder())
+            final File file = getFile();
+
+            if (isFolder(file))
             {
-                return new SimpleFolderItem(getFile(), getFileItemStorage());
+                return new SimpleFolderItem(file, getFileItemStorage());
             }
             return null;
         }
@@ -460,9 +423,27 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            readtest();
+            final File file = readtest(getFile());
 
-            return IO.toInputStream(getFile());
+            if (isFolder(file))
+            {
+                throw new IOException(format("Can't stream folder (%s).", getPath()));
+            }
+            return IO.toInputStream(file);
+        }
+
+        @Override
+        public BufferedReader getBufferedReader() throws IOException
+        {
+            validate();
+
+            final File file = readtest(getFile());
+
+            if (isFolder(file))
+            {
+                throw new IOException(format("Can't read folder (%s).", getPath()));
+            }
+            return IO.toBufferedReader(file);
         }
 
         @Override
@@ -470,14 +451,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            if (false == exists())
-            {
-                throw new IOException(format("Can't date missing (%s).", getPath()));
-            }
-            if (isHidden())
-            {
-                throw new IOException(format("Can't date hidden (%s).", getPath()));
-            }
             return getFile().lastModified();
         }
 
@@ -486,7 +459,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            return getFile().exists();
+            return exists(getFile());
         }
 
         @Override
@@ -497,10 +470,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             if (false == getFileItemStorage().isWritable())
             {
                 throw new IOException(format("Can't delete nowrite (%s).", getPath()));
-            }
-            if (false == exists())
-            {
-                throw new IOException(format("Can't delete missing (%s).", getPath()));
             }
             if (isHidden())
             {
@@ -534,11 +503,16 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         protected void readtest() throws IOException
         {
-            if (false == exists())
+            readtest(getFile());
+        }
+
+        protected File readtest(final File file) throws IOException
+        {
+            if (false == exists(file))
             {
                 throw new IOException(format("Can't read missing (%s).", getPath()));
             }
-            if (false == isReadable())
+            if (false == isReadable(file))
             {
                 throw new IOException(format("Can't read (%s).", getPath()));
             }
@@ -546,6 +520,59 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             {
                 throw new IOException(format("Can't read hidden (%s).", getPath()));
             }
+            return file;
+        }
+
+        protected String nametest(String name, final boolean make) throws IOException
+        {
+            validate();
+
+            name = failIfNullBytePresent(requireNonNull(name));
+
+            if ((make) && (false == getFileItemStorage().isWritable()))
+            {
+                throw new IOException(format("Can't create nowrite (%s).", name));
+            }
+            return name;
+        }
+
+        protected boolean exists(final File file)
+        {
+            return IO.exists(file);
+        }
+
+        protected boolean isFolder(final File file)
+        {
+            return IO.isFolder(file);
+        }
+
+        protected boolean isFile(final File file)
+        {
+            return IO.isFile(file);
+        }
+
+        protected boolean isReadable(final File file)
+        {
+            return IO.isReadable(file);
+        }
+
+        protected boolean isWritable(final File file)
+        {
+            return IO.isWritable(file);
+        }
+
+        protected boolean isHidden(final File file)
+        {
+            return IO.isHidden(file);
+        }
+
+        protected boolean isWritable(final File file, final IFileItemStorage stor)
+        {
+            if ((null != stor) && (false == stor.isWritable()))
+            {
+                return false;
+            }
+            return IO.isWritable(file);
         }
     }
 
@@ -579,9 +606,9 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            readtest();
+            final File self = readtest(getFile());
 
-            if (isFolder())
+            if (isFolder(self))
             {
                 if (options.isEmpty())
                 {
@@ -599,7 +626,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
                     final ArrayList<Path> list = new ArrayList<Path>();
 
-                    final Path root = getFile().toPath();
+                    final Path root = self.toPath();
 
                     final SimpleFileVisitor<Path> visitor = new SimpleFileVisitor<Path>()
                     {
@@ -633,7 +660,9 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                     };
                     Files.walkFileTree(root, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, visitor);
 
-                    return list.stream().map(file -> MAKE(file, getFileItemStorage()));
+                    final IFileItemStorage stor = getFileItemStorage();
+
+                    return list.stream().map(file -> MAKE(file, stor));
                 }
                 else
                 {
@@ -660,14 +689,14 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         private final Stream<IFileItem> normal(final Predicate<File> test)
         {
-            return Arrays.stream(getFile().listFiles()).filter(test.and(file -> false == file.isHidden())).map(file -> MAKE(file, getFileItemStorage()));
+            final IFileItemStorage stor = getFileItemStorage();
+
+            return Arrays.stream(getFile().listFiles()).filter(test.and(file -> false == file.isHidden())).map(file -> MAKE(file, stor));
         }
 
         @Override
         public IFileItem find(final String name) throws IOException
         {
-            validate();
-
             final IFileItem item = file(name);
 
             if ((null != item) && (item.exists()))
@@ -680,19 +709,19 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public IFileItem file(final String name) throws IOException
         {
-            validate();
-
-            String path = normalize(name);
+            String path = normalize(nametest(name, false));
 
             if (false == path.startsWith(SINGLE_SLASH))
             {
                 path = concat(getPath(), path);
             }
-            path = concat(getFileItemStorage().getBasePath(), toTrimOrElse(path, EMPTY_STRING));
+            final IFileItemStorage stor = getFileItemStorage();
+
+            path = concat(stor.getBasePath(), toTrimOrElse(path, EMPTY_STRING));
 
             if (null != path)
             {
-                return MAKE(new File(path), getFileItemStorage());
+                return MAKE(new File(path), stor);
             }
             return null;
         }
@@ -700,23 +729,15 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public IFileItem create(final String name, final File file) throws IOException
         {
-            if (false == getFileItemStorage().isWritable())
-            {
-                throw new IOException(format("Can't create nowrite (%s).", name));
-            }
             return create(name, file.toPath());
         }
 
         @Override
-        public IFileItem create(final String name, final Path path) throws IOException
+        public IFileItem create(String name, final Path path) throws IOException
         {
-            validate();
-
-            if (false == getFileItemStorage().isWritable())
-            {
-                throw new IOException(format("Can't create nowrite (%s).", name));
-            }
             InputStream stream = null;
+
+            name = nametest(name, true);
 
             try
             {
@@ -731,15 +752,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
-        public IFileItem create(final String name, final Resource resource) throws IOException
+        public IFileItem create(String name, final Resource resource) throws IOException
         {
-            validate();
-
-            if (false == getFileItemStorage().isWritable())
-            {
-                throw new IOException(format("Can't create nowrite (%s).", name));
-            }
             InputStream stream = null;
+
+            name = nametest(name, true);
 
             try
             {
@@ -754,15 +771,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
-        public IFileItem create(final String name, final Reader reader) throws IOException
+        public IFileItem create(String name, final Reader reader) throws IOException
         {
-            validate();
-
-            if (false == getFileItemStorage().isWritable())
-            {
-                throw new IOException(format("Can't create nowrite (%s).", name));
-            }
             InputStream stream = null;
+
+            name = nametest(name, true);
 
             try
             {
@@ -777,12 +790,10 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
-        public IFileItem create(final String name, final InputStream input) throws IOException
+        public IFileItem create(String name, final InputStream input) throws IOException
         {
-            if (false == getFileItemStorage().isWritable())
-            {
-                throw new IOException(format("Can't create nowrite (%s).", name));
-            }
+            name = nametest(name, true);
+
             final IFileItem item = file(name);
 
             if (null != item)
@@ -846,17 +857,21 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            readtest();
-
             throw new IOException(format("Can't stream folder (%s).", getPath()));
+        }
+
+        @Override
+        public BufferedReader getBufferedReader() throws IOException
+        {
+            validate();
+
+            throw new IOException(format("Can't read folder (%s).", getPath()));
         }
 
         @Override
         public long writeTo(final OutputStream output) throws IOException
         {
             validate();
-
-            readtest();
 
             throw new IOException(format("Can't stream folder (%s).", getPath()));
         }
@@ -865,8 +880,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         public long writeTo(final Writer output) throws IOException
         {
             validate();
-
-            readtest();
 
             throw new IOException(format("Can't stream folder (%s).", getPath()));
         }

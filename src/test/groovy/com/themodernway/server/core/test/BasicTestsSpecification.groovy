@@ -19,6 +19,7 @@ package com.themodernway.server.core.test
 import javax.script.ScriptEngine
 
 import com.themodernway.server.core.NanoTimer
+import com.themodernway.server.core.io.IO
 import com.themodernway.server.core.io.NoOpWriter
 import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.support.JSONMapToTreeSolver
@@ -439,6 +440,28 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
 
         expect:
         "dean" == "dean"
+    }
+
+    def "Tiny JSON lengt"()
+    {
+        setup:
+        def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
+        def s = IO.getStringAtMost(r, 2048, 0)
+        echo s.length() + " Tiny JSON length"
+
+        expect:
+        s.length() <= 2048
+    }
+
+    def "Tiger JSON lengt"()
+    {
+        setup:
+        def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
+        def s = IO.getStringAtMost(r, 2048, 0)
+        echo s.length() + " Tiger JSON length"
+
+        expect:
+        s.length() >= 2048
     }
 
     def "Nano Timer Last"()

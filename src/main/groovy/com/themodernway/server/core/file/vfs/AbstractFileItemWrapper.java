@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.file.vfs;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -314,6 +315,12 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
     public InputStream getInputStream() throws IOException
     {
         return getWrappedFileItem().getInputStream();
+    }
+
+    @Override
+    public BufferedReader getBufferedReader() throws IOException
+    {
+        return getWrappedFileItem().getBufferedReader();
     }
 
     @Override

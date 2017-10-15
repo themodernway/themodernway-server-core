@@ -98,6 +98,15 @@ public interface ICoreCommon extends IHasLogging
         return StringOps.requireTrimOrNull(string, reason);
     }
 
+    default public String failIfNullBytePresent(final String string)
+    {
+        if (null != string)
+        {
+            StringOps.failIfNullBytePresent(string);
+        }
+        return string;
+    }
+
     default public <T> T requireNonNull(final T object)
     {
         return CommonOps.requireNonNull(object);
