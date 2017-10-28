@@ -18,36 +18,52 @@ package com.themodernway.server.core.file;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 
 public final class FileAndPathUtils
 {
-    public static final String                SINGLE_SLASH         = "/";
+    public static final char                   SINGLE_PREFIX_CHAR   = '~';
 
-    public static final String                SINGLE_TILDE         = "~";
+    public static final char                   EXT_SEPARATOR_CHAR   = '.';
 
-    public static final String                EMPTY_STRING         = StringOps.EMPTY_STRING;
+    public static final char                   UNX_SEPARATOR_CHAR   = '/';
 
-    public static final String                DOUBLE_SLASH         = SINGLE_SLASH + SINGLE_SLASH;
+    public static final char                   WIN_SEPARATOR_CHAR   = '\\';
 
-    public static final String                SLASHY_TILDE         = SINGLE_SLASH + SINGLE_TILDE;
+    public static final char                   SYS_SEPARATOR_CHAR   = File.separatorChar;
 
-    public static final String                TILDE_SLASHY         = SINGLE_TILDE + SINGLE_SLASH;
+    public static final String                 EXT_SEPARATOR_STRING = Character.toString(EXT_SEPARATOR_CHAR);
 
-    public static final String                POINT_SLASHY         = FilenameUtils.EXTENSION_SEPARATOR_STR + SINGLE_SLASH;
+    public static final String                 UNX_SEPARATOR_STRING = Character.toString(UNX_SEPARATOR_CHAR);
 
-    public static final CoreContentTypeMapper CORE_MIMETYPE_MAPPER = new CoreContentTypeMapper();
+    public static final String                 WIN_SEPARATOR_STRING = Character.toString(WIN_SEPARATOR_CHAR);
 
-    public static final Pattern               NOWHITESPACE_PATTERN = Pattern.compile("\\s");
+    public static final String                 SYS_SEPARATOR_STRING = Character.toString(SYS_SEPARATOR_CHAR);
 
-    public static final Pattern               DOUBLE_SLASH_PATTERN = Pattern.compile(DOUBLE_SLASH);
+    public static final String                 SINGLE_TILDE         = Character.toString(SINGLE_PREFIX_CHAR);
 
-    protected FileAndPathUtils()
+    public static final String                 SINGLE_SLASH         = Character.toString(UNX_SEPARATOR_CHAR);
+
+    public static final String                 DOUBLE_SLASH         = SINGLE_SLASH + SINGLE_SLASH;
+
+    public static final String                 SLASHY_TILDE         = SINGLE_SLASH + SINGLE_TILDE;
+
+    public static final String                 TILDE_SLASHY         = SINGLE_TILDE + SINGLE_SLASH;
+
+    public static final String                 POINT_SLASHY         = EXT_SEPARATOR_STRING + UNX_SEPARATOR_STRING;
+
+    public static final Pattern                NOWHITESPACE_PATTERN = Pattern.compile("\\s");
+
+    public static final Pattern                DOUBLE_SLASH_PATTERN = Pattern.compile(DOUBLE_SLASH);
+
+    public static final ICoreContentTypeMapper CORE_MIMETYPE_MAPPER = new CoreContentTypeMapper();
+
+    private FileAndPathUtils()
     {
     }
 
@@ -63,7 +79,17 @@ public final class FileAndPathUtils
 
     public static final String getContentType(final String path)
     {
-        return CORE_MIMETYPE_MAPPER.getContentType(normalize(path));
+        return CORE_MIMETYPE_MAPPER.getContentType(path);
+    }
+
+    public static final boolean isSystemUnix()
+    {
+        return SYS_SEPARATOR_CHAR == UNX_SEPARATOR_CHAR;
+    }
+
+    public static final boolean isSystemWindows()
+    {
+        return SYS_SEPARATOR_CHAR == WIN_SEPARATOR_CHAR;
     }
 
     public final static String extn(String path)
@@ -104,22 +130,6 @@ public final class FileAndPathUtils
         return path;
     }
 
-    public static final String path(final String path)
-    {
-        Path look = Paths.get(path);
-
-        if (null != look)
-        {
-            look = look.normalize();
-
-            if (null != look)
-            {
-                return (look.toString());
-            }
-        }
-        return null;
-    }
-
     public static final String trunk(String path)
     {
         path = patch(path);
@@ -128,17 +138,20 @@ public final class FileAndPathUtils
         {
             path = path.substring(1).trim();
         }
-        while (path.startsWith(TILDE_SLASHY))
+        if (CommonOps.IS_NOT_FOUND != path.indexOf(SINGLE_PREFIX_CHAR))
         {
-            path = path.substring(2).trim();
-        }
-        while (path.startsWith(SLASHY_TILDE))
-        {
-            path = SINGLE_SLASH + path.substring(2).trim();
-        }
-        while (path.startsWith(SINGLE_TILDE))
-        {
-            path = path.substring(1).trim();
+            while (path.startsWith(TILDE_SLASHY))
+            {
+                path = path.substring(2).trim();
+            }
+            while (path.startsWith(SLASHY_TILDE))
+            {
+                path = SINGLE_SLASH + path.substring(2).trim();
+            }
+            while (path.startsWith(SINGLE_TILDE))
+            {
+                path = path.substring(1).trim();
+            }
         }
         final int prfx = FilenameUtils.getPrefixLength(path);
 
@@ -146,7 +159,7 @@ public final class FileAndPathUtils
         {
             path = trunk(path.substring(prfx).trim());
         }
-        return path(path);
+        return path;
     }
 
     public static final String normalize(String path)
@@ -155,9 +168,9 @@ public final class FileAndPathUtils
 
         if (null != path)
         {
-            path = StringOps.toTrimOrNull(FilenameUtils.normalizeNoEndSeparator(patch(path)));
+            path = StringOps.toTrimOrNull(FilenameUtils.normalizeNoEndSeparator(patch(path), true));
 
-            if (null != path)
+            if ((null != path) && (CommonOps.IS_NOT_FOUND != path.indexOf(SINGLE_PREFIX_CHAR)))
             {
                 if (path.startsWith(TILDE_SLASHY))
                 {
@@ -171,7 +184,6 @@ public final class FileAndPathUtils
                 {
                     return normalize(path.substring(1));
                 }
-                return path(path);
             }
         }
         return path;
@@ -179,12 +191,12 @@ public final class FileAndPathUtils
 
     public static final String concat(final String path, final String last)
     {
-        return normalize(FilenameUtils.concat(normalize(path), normalize(trunk(last))));
+        return normalize(normalize(path) + SINGLE_SLASH + normalize(trunk(last)));
     }
 
     public static final String fixPathBinding(String path)
     {
-        if ((null != (path = StringOps.toTrimOrNull(path))) && (null != (path = StringOps.toTrimOrNull(normalize(NOWHITESPACE_PATTERN.matcher(path).replaceAll(EMPTY_STRING))))))
+        if ((null != (path = StringOps.toTrimOrNull(path))) && (null != (path = StringOps.toTrimOrNull(normalize(NOWHITESPACE_PATTERN.matcher(path).replaceAll(StringOps.EMPTY_STRING))))))
         {
             if (false == path.startsWith(SINGLE_SLASH))
             {
@@ -197,5 +209,10 @@ public final class FileAndPathUtils
             path = StringOps.toTrimOrNull(path);
         }
         return path;
+    }
+
+    public static void main(final String... strings)
+    {
+        System.out.println(fixPathBinding("oops//ho/.."));
     }
 }

@@ -107,9 +107,9 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
     }
 
     @Override
-    public String getContentType(final String file)
+    public String getContentType(final String path)
     {
-        return getFileTypeMap().getContentType(CommonOps.requireNonNull(file));
+        return getFileTypeMap().getContentType(CommonOps.requireNonNull(path));
     }
 
     @Override

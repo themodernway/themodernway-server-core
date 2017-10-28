@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file;
+package com.themodernway.server.core.servlet;
 
-import java.io.File;
-import java.nio.file.Path;
+import javax.servlet.http.HttpServletRequest;
 
-import javax.activation.FileTypeMap;
-
-public interface ICoreContentTypeMapper
+@FunctionalInterface
+public interface ISessionExtractID
 {
-    public FileTypeMap getFileTypeMap();
-
-    public String getContentType(Path path);
-
-    public String getContentType(File file);
-
-    public String getContentType(String path);
+    public String getSessionID(HttpServletRequest request);
 }
