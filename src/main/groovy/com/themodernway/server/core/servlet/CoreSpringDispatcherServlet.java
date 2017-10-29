@@ -34,19 +34,19 @@ import com.themodernway.server.core.security.session.IServerSession;
 
 public class CoreSpringDispatcherServlet extends DispatcherServlet implements IRateLimited, IServletCommonOperations
 {
-    private static final long              serialVersionUID = 1L;
+    private static final long                        serialVersionUID = 1L;
 
-    private transient Logger               m_logger         = Logger.getLogger(getClass());
+    private transient Logger                         m_logger         = Logger.getLogger(getClass());
 
-    private transient RateLimiter          m_ratelimit      = null;
+    private transient RateLimiter                    m_ratelimit      = null;
 
-    private boolean                        m_iscontent      = false;
+    private boolean                                  m_iscontent      = false;
 
-    private int                            m_contentmx      = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private int                                      m_contentmx      = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    private List<String>                   m_roleslist      = arrayList();
+    private List<String>                             m_roleslist      = arrayList();
 
-    private ISessionIDFromRequestExtractor m_extractor      = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
+    private transient ISessionIDFromRequestExtractor m_extractor      = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
 
     public CoreSpringDispatcherServlet(final WebApplicationContext context)
     {
