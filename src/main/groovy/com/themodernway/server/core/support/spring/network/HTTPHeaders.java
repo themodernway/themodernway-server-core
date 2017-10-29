@@ -41,7 +41,7 @@ public class HTTPHeaders extends HttpHeaders
 {
     private static final long           serialVersionUID   = 1L;
 
-    public static final String          DEFAULT_USER_AGENT = "The Modern Way/1.2.0 (Language=Java/1.8.0)";
+    public static final String          DEFAULT_USER_AGENT = "The Modern Way/1.2.6 (Language=Java/1.8.0)";
 
     public static final List<MediaType> JSON_MEDIA_TYPE    = Collections.unmodifiableList(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
 
