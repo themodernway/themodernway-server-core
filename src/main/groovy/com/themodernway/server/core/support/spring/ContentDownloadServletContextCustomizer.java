@@ -24,6 +24,7 @@ import javax.servlet.ServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.servlet.ContentDownloadServlet;
+import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
 public class ContentDownloadServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
 {
@@ -63,6 +64,12 @@ public class ContentDownloadServletContextCustomizer extends ServletFactoryConte
         if (null != name)
         {
             inst.setFileItemStorageName(name);
+        }
+        final ISessionIDFromRequestExtractor extr = customizer.getSessionIDFromRequestExtractor();
+
+        if (null != extr)
+        {
+            inst.setSessionIDFromRequestExtractor(extr);
         }
         inst.setRateLimit(customizer.getRateLimit());
 

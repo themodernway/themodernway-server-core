@@ -239,7 +239,7 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
         return m_extractor;
     }
 
-    public void getSessionIDFromRequestExtractor(final ISessionIDFromRequestExtractor extractor)
+    public void setSessionIDFromRequestExtractor(final ISessionIDFromRequestExtractor extractor)
     {
         m_extractor = extractor;
     }

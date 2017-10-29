@@ -316,7 +316,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         return m_extractor;
     }
 
-    public void getSessionIDFromRequestExtractor(final ISessionIDFromRequestExtractor extractor)
+    public void setSessionIDFromRequestExtractor(final ISessionIDFromRequestExtractor extractor)
     {
         m_extractor = extractor;
     }

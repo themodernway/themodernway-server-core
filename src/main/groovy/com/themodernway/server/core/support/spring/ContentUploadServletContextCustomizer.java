@@ -25,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.servlet.ContentUploadServlet;
+import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
 public class ContentUploadServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
 {
@@ -76,6 +77,12 @@ public class ContentUploadServletContextCustomizer extends ServletFactoryContext
         if (null != name)
         {
             inst.setFileItemStorageName(name);
+        }
+        final ISessionIDFromRequestExtractor extr = customizer.getSessionIDFromRequestExtractor();
+
+        if (null != extr)
+        {
+            inst.setSessionIDFromRequestExtractor(extr);
         }
         inst.setRateLimit(customizer.getRateLimit());
 

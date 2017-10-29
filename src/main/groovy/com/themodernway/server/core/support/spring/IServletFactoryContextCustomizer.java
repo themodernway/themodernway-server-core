@@ -18,6 +18,8 @@ package com.themodernway.server.core.support.spring;
 
 import java.util.List;
 
+import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
+
 public interface IServletFactoryContextCustomizer extends IServletContextCustomizer
 {
     public void setServletFactory(IServletFactory fact);
@@ -39,4 +41,8 @@ public interface IServletFactoryContextCustomizer extends IServletContextCustomi
     public void setRequiredRoles(String roles);
 
     public void setRequiredRoles(List<String> roles);
+
+    public ISessionIDFromRequestExtractor getSessionIDFromRequestExtractor();
+
+    public void getSessionIDFromRequestExtractor(ISessionIDFromRequestExtractor extractor);
 }
