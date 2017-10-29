@@ -16,10 +16,12 @@
 
 package com.themodernway.server.core.servlet;
 
-import javax.servlet.http.HttpServletRequest;
-
-@FunctionalInterface
-public interface ISessionExtractID
+public class DefaultHeaderNameSessionIDFromRequestExtractor extends HeaderNameSessionIDFromRequestExtractor
 {
-    public String getSessionID(HttpServletRequest request);
+    public static final DefaultHeaderNameSessionIDFromRequestExtractor DEFAULT = new DefaultHeaderNameSessionIDFromRequestExtractor();
+
+    public DefaultHeaderNameSessionIDFromRequestExtractor()
+    {
+        super(ICoreServletConstants.X_SESSION_ID_HEADER);
+    }
 }

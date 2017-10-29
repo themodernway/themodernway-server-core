@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.security.session.IServerSession;
@@ -97,35 +96,6 @@ public final class HTTPUtils implements ICoreServletConstants
         return null;
     }
 
-    public static String getSessionID(final HttpServletRequest request, String lookup)
-    {
-        lookup = StringOps.toTrimOrElse(lookup, X_SESSION_ID_HEADER);
-
-        String sessid = StringOps.toTrimOrNull(request.getHeader(lookup));
-
-        if (null != sessid)
-        {
-            return sessid;
-        }
-        final HttpSession httpsession = request.getSession(false);
-
-        if (null != httpsession)
-        {
-            final Object attribute = httpsession.getAttribute(lookup);
-
-            if (attribute instanceof String)
-            {
-                sessid = StringOps.toTrimOrNull(attribute.toString());
-
-                if (null != sessid)
-                {
-                    return sessid;
-                }
-            }
-        }
-        return null;
-    }
-
     public static IServerSession getSession(String sessid)
     {
         if (null == (sessid = StringOps.toTrimOrNull(sessid)))
@@ -166,11 +136,6 @@ public final class HTTPUtils implements ICoreServletConstants
             }
         }
         return null;
-    }
-
-    public static String getSessionID(final HttpServletRequest request)
-    {
-        return getSessionID(request, X_SESSION_ID_HEADER);
     }
 
     public static IServerContext getServerContext()

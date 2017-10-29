@@ -115,16 +115,6 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return principals;
     }
 
-    public default String getSessionID(final HttpServletRequest request, final String lookup)
-    {
-        return HTTPUtils.getSessionID(request, lookup);
-    }
-
-    public default String getSessionID(final HttpServletRequest request)
-    {
-        return HTTPUtils.getSessionID(request);
-    }
-
     public default IServerSession getSession(final String sessid, final String domain)
     {
         return HTTPUtils.getSession(sessid, domain);
@@ -133,11 +123,6 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
     public default IServerSession getSession(final String sessid)
     {
         return getSession(sessid, getSessionProviderDomainName());
-    }
-
-    public default IServerSession getSession(final HttpServletRequest request)
-    {
-        return getSession(getSessionID(request));
     }
 
     @Override

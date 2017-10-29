@@ -34,15 +34,17 @@ import com.themodernway.server.core.security.session.IServerSession;
 @SuppressWarnings("serial")
 public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IServletCommonOperations
 {
-    private final Logger m_logger    = Logger.getLogger(getClass());
+    private final Logger                   m_logger    = Logger.getLogger(getClass());
 
-    private RateLimiter  m_ratelimit = null;
+    private RateLimiter                    m_ratelimit = null;
 
-    private boolean      m_iscontent = false;
+    private boolean                        m_iscontent = false;
 
-    private List<String> m_roleslist = arrayList();
+    private List<String>                   m_roleslist = arrayList();
 
-    private int          m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private int                            m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+
+    private ISessionIDFromRequestExtractor m_extractor = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
 
     protected HTTPServletBase()
     {
@@ -183,7 +185,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
             IServerSession session = null;
 
-            final String sessid = getSessionID(request);
+            final String sessid = requireNonNullOrElse(getSessionIDFromRequestExtractor(), DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT).getSessionID(request);
 
             if (null != sessid)
             {
@@ -307,6 +309,16 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
             return;
         }
+    }
+
+    public ISessionIDFromRequestExtractor getSessionIDFromRequestExtractor()
+    {
+        return m_extractor;
+    }
+
+    public void getSessionIDFromRequestExtractor(final ISessionIDFromRequestExtractor extractor)
+    {
+        m_extractor = extractor;
     }
 
     @Override

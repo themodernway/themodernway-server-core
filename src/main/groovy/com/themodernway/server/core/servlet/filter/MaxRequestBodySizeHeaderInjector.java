@@ -19,15 +19,15 @@ package com.themodernway.server.core.servlet.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ContentLengthProtectionHeaderInjector extends HeaderInjectorBase
+public class MaxRequestBodySizeHeaderInjector extends HeaderInjectorBase
 {
     private long m_leng;
 
-    public ContentLengthProtectionHeaderInjector()
+    public MaxRequestBodySizeHeaderInjector()
     {
     }
 
-    public ContentLengthProtectionHeaderInjector(final long leng)
+    public MaxRequestBodySizeHeaderInjector(final long leng)
     {
         m_leng = leng;
     }
@@ -35,21 +35,21 @@ public class ContentLengthProtectionHeaderInjector extends HeaderInjectorBase
     @Override
     public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
-        final long leng = getMaxLength();
+        final long leng = getMaxRequestBodySize();
 
         if ((leng > 0L) && (request.getContentLengthLong() > leng))
         {
-            return HttpServletResponse.SC_BAD_REQUEST;
+            return HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE;
         }
         return HttpServletResponse.SC_OK;
     }
 
-    public void setMaxLength(final long leng)
+    public void setMaxRequestBodySize(final long leng)
     {
         m_leng = leng;
     }
 
-    public long getMaxLength()
+    public long getMaxRequestBodySize()
     {
         return m_leng;
     }
