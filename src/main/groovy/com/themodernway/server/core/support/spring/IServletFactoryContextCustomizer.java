@@ -44,5 +44,5 @@ public interface IServletFactoryContextCustomizer extends IServletContextCustomi
 
     public ISessionIDFromRequestExtractor getSessionIDFromRequestExtractor();
 
-    public void getSessionIDFromRequestExtractor(ISessionIDFromRequestExtractor extractor);
+    public void setSessionIDFromRequestExtractor(ISessionIDFromRequestExtractor extractor);
 }

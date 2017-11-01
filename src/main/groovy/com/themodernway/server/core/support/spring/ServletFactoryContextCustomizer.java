@@ -147,7 +147,7 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
     }
 
     @Override
-    public void getSessionIDFromRequestExtractor(final ISessionIDFromRequestExtractor extractor)
+    public void setSessionIDFromRequestExtractor(final ISessionIDFromRequestExtractor extractor)
     {
         m_extr = extractor;
     }
