@@ -261,6 +261,11 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.toList(source);
     }
 
+    default public <T> List<T> toList(final Iterable<T> source)
+    {
+        return CommonOps.toList(source);
+    }
+
     default public <T> List<T> toUnmodifiableList(final List<T> list)
     {
         return CommonOps.toUnmodifiableList(list);
