@@ -63,7 +63,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
     def "REST GET users 7"()
     {
         setup:
-        def resp = network().get('http://jsonplaceholder.typicode.com/users/7')
+        def resp = network().get('https://jsonplaceholder.typicode.com/users/7')
         def answ = resp.json()
 
         expect:
@@ -78,7 +78,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
     def "REST GET posts PathPaeameters(id:50)"()
     {
         setup:
-        def resp = network().get('http://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: 50))
+        def resp = network().get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: 50))
         def answ = resp.json()
 
         expect:
@@ -96,7 +96,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         def t = new NanoTimer()
         def n = network()
         def list = (1..100).collect { int id ->
-            n.get('http://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
+            n.get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
         }
         echo t.toString() + " test parallel off"
 
@@ -110,7 +110,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         def t = new NanoTimer()
         def n = network()
         def list = parallel(1..100).collect { int id ->
-            n.get('http://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
+            n.get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
         }
         echo t.toString() + " test parallel on"
 
