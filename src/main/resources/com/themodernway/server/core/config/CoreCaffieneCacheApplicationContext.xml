@@ -24,7 +24,7 @@
 						http://www.springframework.org/schema/cache
 						http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-	<bean id="CoreCaffeineCacheManager" class="com.themodernway.server.core.support.spring.cache.CoreCaffeineCacheManager"  destroy-method="close">
+	<bean id="CoreCaffeineCacheManager" class="com.themodernway.server.core.support.spring.cache.CoreCaffeineCacheManager" destroy-method="close">
 	    <constructor-arg value="${core.caffiene.cache.manager.names:__DYNAMIC__}"/>
 	</bean>
 	

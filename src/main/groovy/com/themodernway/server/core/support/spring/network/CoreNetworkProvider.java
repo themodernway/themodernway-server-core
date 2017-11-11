@@ -25,6 +25,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriTemplateHandler;
 
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
@@ -40,6 +41,8 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
     private final RestTemplate                    m_rest_execs = new RestTemplate();
 
     private final HTTPHeaders                     m_no_headers = new HTTPHeaders();
+
+    private final DefaultUriTemplateHandler       m_urlhandler = new DefaultUriTemplateHandler();
 
     private static final PathParameters           EMPTY_PARAMS = new PathParameters();
 
@@ -67,7 +70,19 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
         }
         m_rest_execs.setErrorHandler(NO_ERRORS_CB);
 
+        m_rest_execs.setUriTemplateHandler(m_urlhandler);
+
         m_no_headers.doRESTHeaders(getDefaultUserAgent());
+    }
+
+    public void setParsePath(final boolean parse)
+    {
+        m_urlhandler.setParsePath(parse);
+    }
+
+    public void setStrictEncoding(final boolean strict)
+    {
+        m_urlhandler.setStrictEncoding(strict);
     }
 
     @Override

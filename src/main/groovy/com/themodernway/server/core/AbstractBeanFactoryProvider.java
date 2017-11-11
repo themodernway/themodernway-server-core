@@ -26,8 +26,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
-import com.themodernway.common.api.java.util.CommonOps;
-
 public abstract class AbstractBeanFactoryProvider<T extends Closeable> implements IBeanFactoryProvider<T>
 {
     private String                         m_beansid;
@@ -40,7 +38,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
 
     protected AbstractBeanFactoryProvider(final Class<T> classof)
     {
-        m_classof = CommonOps.requireNonNull(classof, "null bean class.");
+        m_classof = requireNonNull(classof, "null bean class.");
     }
 
     @Override

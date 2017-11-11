@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.security;
 
+@FunctionalInterface
 public interface ISignatoryEncoder
 {
     public String encodeBytes(byte[] src) throws Exception;

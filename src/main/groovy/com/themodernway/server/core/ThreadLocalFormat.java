@@ -41,10 +41,9 @@ public abstract class ThreadLocalFormat<T, F extends Format> extends ThreadLocal
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T parse(final String source) throws Exception
     {
-        return (T) getValue().parseObject(CommonOps.requireNonNull(source));
+        return CommonOps.CAST(getValue().parseObject(CommonOps.requireNonNull(source)));
     }
 
     @Override

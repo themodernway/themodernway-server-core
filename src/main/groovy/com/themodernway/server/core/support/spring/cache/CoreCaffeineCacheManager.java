@@ -60,7 +60,7 @@ public class CoreCaffeineCacheManager extends CaffeineCacheManager implements Ca
 
         if ((null != caches) && (false == caches.isEmpty()))
         {
-            names = toUniqueStringList(caches);
+            names = toUnique(caches);
         }
         if (false == names.isEmpty())
         {

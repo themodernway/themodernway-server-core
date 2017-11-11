@@ -47,7 +47,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
 
             return new AuthorizationResult(false, E_RUNTIMEERROR, "error null roles");
         }
-        roles = toUniqueStringList(roles);
+        roles = toUnique(roles);
 
         if (roles.isEmpty())
         {
@@ -85,7 +85,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
             }
             return new AuthorizationResult(true, I_WASVALIDATED, "pass no authorizations present");
         }
-        List<String> list = toUniqueStringList(authorized.not());
+        List<String> list = toUnique(authorized.not());
 
         if (false == list.isEmpty())
         {
@@ -103,7 +103,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
         }
         long look = 0;
 
-        list = toUniqueStringList(authorized.all());
+        list = toUnique(authorized.all());
 
         if (false == list.isEmpty())
         {
@@ -120,7 +120,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
             }
             look++;
         }
-        list = toUniqueStringList(authorized.any());
+        list = toUnique(authorized.any());
 
         if (false == list.isEmpty())
         {
@@ -143,7 +143,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
         }
         if (look < 1)
         {
-            list = toUniqueStringList(authorized.value());
+            list = toUnique(authorized.value());
 
             if (false == list.isEmpty())
             {
