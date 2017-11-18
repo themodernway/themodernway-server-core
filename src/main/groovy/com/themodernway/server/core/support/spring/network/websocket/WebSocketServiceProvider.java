@@ -17,9 +17,7 @@
 package com.themodernway.server.core.support.spring.network.websocket;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +33,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.INamedType;
 
 public class WebSocketServiceProvider implements IWebSocketServiceProvider, BeanFactoryAware
@@ -81,7 +80,7 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
     @Override
     public List<String> getWebSocketServiceNames()
     {
-        return Collections.unmodifiableList(new ArrayList<String>(m_services.keySet()));
+        return CommonOps.toUnmodifiableList(m_services.keySet());
     }
 
     @Override
@@ -204,13 +203,13 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
     @Override
     public List<IWebSocketServiceSession> getWebSocketServiceSessions()
     {
-        return Collections.unmodifiableList(new ArrayList<IWebSocketServiceSession>(m_sessions.values()));
+        return CommonOps.toUnmodifiableList(m_sessions.values());
     }
 
     @Override
     public List<IWebSocketServiceSession> findSessions(final Predicate<IWebSocketServiceSession> predicate)
     {
-        return Collections.unmodifiableList(getWebSocketServiceSessions().stream().filter(predicate).collect(Collectors.toList()));
+        return CommonOps.toUnmodifiableList(getWebSocketServiceSessions().stream().filter(predicate).collect(Collectors.toList()));
     }
 
     @Override

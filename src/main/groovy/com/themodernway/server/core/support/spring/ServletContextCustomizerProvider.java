@@ -18,13 +18,14 @@ package com.themodernway.server.core.support.spring;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+
+import com.themodernway.common.api.java.util.CommonOps;
 
 public class ServletContextCustomizerProvider implements IServletContextCustomizerProvider, BeanFactoryAware
 {
@@ -33,7 +34,7 @@ public class ServletContextCustomizerProvider implements IServletContextCustomiz
     @Override
     public List<IServletContextCustomizer> getServletContextCustomizers()
     {
-        return Collections.unmodifiableList(m_customizers);
+        return CommonOps.toUnmodifiableList(m_customizers);
     }
 
     @Override

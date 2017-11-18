@@ -53,9 +53,20 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.NULL();
     }
 
-    public static <T> T CAST(final Object object)
+    public static <T> T CAST(final Object source)
     {
-        return CommonOps.CAST(object);
+        return CommonOps.CAST(source);
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static <K, V> Map<K, V> RAWMAP(final Map source)
+    {
+        return CommonOps.RAWMAP(source);
+    }
+
+    public static Map<String, Object> STRMAP(final Map<String, ?> source)
+    {
+        return CommonOps.STRMAP(source);
     }
 
     public static List<String> toTaggingValues(final Object target)
@@ -75,7 +86,7 @@ public interface ICoreCommon extends IHasLogging
 
     default public String format(final String format, final Object... args)
     {
-        return String.format(format, args);
+        return String.format(requireNonNull(format), args);
     }
 
     default public String uuid()
@@ -206,14 +217,14 @@ public interface ICoreCommon extends IHasLogging
         return ServerContextInstance.getServerContextInstance();
     }
 
-    default public boolean isNull(final Object object)
+    default public boolean isNull(final Object value)
     {
-        return CommonOps.isNull(object);
+        return CommonOps.isNull(value);
     }
 
-    default public boolean isNonNull(final Object object)
+    default public boolean isNonNull(final Object value)
     {
-        return CommonOps.isNonNull(object);
+        return CommonOps.isNonNull(value);
     }
 
     default public <T> T requireNonNullOrElse(final T value, final T otherwise)
@@ -241,34 +252,34 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.requireNonNull(value, reason);
     }
 
-    default public <T> Supplier<T> toSupplier(final T valu)
+    default public <T> Supplier<T> toSupplier(final T value)
     {
-        return () -> valu;
+        return () -> value;
     }
 
-    default public IntSupplier toSupplier(final int valu)
+    default public IntSupplier toSupplier(final int value)
     {
-        return () -> valu;
+        return () -> value;
     }
 
-    default public LongSupplier toSupplier(final long valu)
+    default public LongSupplier toSupplier(final long value)
     {
-        return () -> valu;
+        return () -> value;
     }
 
-    default public DoubleSupplier toSupplier(final double valu)
+    default public DoubleSupplier toSupplier(final double value)
     {
-        return () -> valu;
+        return () -> value;
     }
 
-    default public BooleanSupplier toSupplier(final boolean valu)
+    default public BooleanSupplier toSupplier(final boolean value)
     {
-        return () -> valu;
+        return () -> value;
     }
 
-    default public <T> Optional<T> toOptional(final T valu)
+    default public <T> Optional<T> toOptional(final T value)
     {
-        return CommonOps.toOptional(valu);
+        return CommonOps.toOptional(value);
     }
 
     @SuppressWarnings("unchecked")
@@ -277,9 +288,9 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.toList(source);
     }
 
-    default public <T> List<T> toList(final Stream<T> stream)
+    default public <T> List<T> toList(final Stream<T> source)
     {
-        return CommonOps.toList(stream);
+        return CommonOps.toList(source);
     }
 
     default public <T> List<T> toList(final Enumeration<? extends T> source)
@@ -287,19 +298,19 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.toList(source);
     }
 
-    default public <T> List<T> toList(final Collection<? extends T> collection)
+    default public <T> List<T> toList(final Collection<? extends T> source)
     {
-        return CommonOps.toList(collection);
+        return CommonOps.toList(source);
     }
 
-    default public <T> List<T> toList(final ICursor<? extends T> cursor)
+    default public <T> List<T> toList(final ICursor<? extends T> source)
     {
-        return CommonOps.toList(cursor);
+        return CommonOps.toList(source);
     }
 
-    default public <T> List<T> toList(final IFixedIterable<? extends T> iterable)
+    default public <T> List<T> toList(final IFixedIterable<? extends T> source)
     {
-        return CommonOps.toList(iterable);
+        return CommonOps.toList(source);
     }
 
     default public <T> List<T> emptyList()
@@ -312,19 +323,19 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.emptyMap();
     }
 
-    default public <T> List<T> toKeys(final Map<? extends T, ?> maps)
+    default public <T> List<T> toKeys(final Map<? extends T, ?> source)
     {
-        return CommonOps.toKeys(maps);
+        return CommonOps.toKeys(source);
     }
 
-    default public <K, V> Map<K, V> toUnmodifiableMap(final Map<? extends K, ? extends V> maps)
+    default public <K, V> Map<K, V> toUnmodifiableMap(final Map<? extends K, ? extends V> source)
     {
-        return CommonOps.toUnmodifiableMap(maps);
+        return CommonOps.toUnmodifiableMap(source);
     }
 
-    default public <T> List<T> toUnmodifiableList(final Collection<? extends T> list)
+    default public <T> List<T> toUnmodifiableList(final Collection<? extends T> source)
     {
-        return CommonOps.toUnmodifiableList(toList(list));
+        return CommonOps.toUnmodifiableList(source);
     }
 
     default public <T> ArrayList<T> arrayList()
@@ -343,24 +354,24 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.arrayList(source);
     }
 
-    default public <T> ArrayList<T> arrayList(final Stream<T> stream)
+    default public <T> ArrayList<T> arrayList(final Stream<T> source)
     {
-        return CommonOps.arrayList(stream);
+        return CommonOps.arrayList(source);
     }
 
-    default public <T> ArrayList<T> arrayList(final Collection<? extends T> collection)
+    default public <T> ArrayList<T> arrayList(final Collection<? extends T> source)
     {
-        return CommonOps.arrayList(collection);
+        return CommonOps.arrayList(source);
     }
 
-    default public <T> ArrayList<T> arrayList(final ICursor<? extends T> cursor)
+    default public <T> ArrayList<T> arrayList(final ICursor<? extends T> source)
     {
-        return CommonOps.arrayList(cursor);
+        return CommonOps.arrayList(source);
     }
 
-    default public <T> ArrayList<T> arrayList(final IFixedIterable<? extends T> iterable)
+    default public <T> ArrayList<T> arrayList(final IFixedIterable<? extends T> source)
     {
-        return CommonOps.arrayList(iterable);
+        return CommonOps.arrayList(source);
     }
 
     default public <T> ArrayList<T> arrayList(final Enumeration<? extends T> source)
@@ -368,43 +379,23 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.arrayList(source);
     }
 
-    default public <T> T[] toArray(final Collection<T> collection, final T[] base)
+    default public <T> T[] toArray(final Collection<T> source, final T[] base)
     {
-        return CommonOps.toArray(collection, base);
+        return CommonOps.toArray(source, base);
     }
 
-    default public <T> T[] toArray(final Collection<T> collection, final IntFunction<T[]> generator)
+    default public <T> T[] toArray(final Collection<T> source, final IntFunction<T[]> generator)
     {
-        return CommonOps.toArray(collection, generator);
+        return CommonOps.toArray(source, generator);
     }
 
-    default public <T> T[] toArray(final Stream<T> stream, final IntFunction<T[]> generator)
+    default public <T> T[] toArray(final Stream<T> source, final IntFunction<T[]> generator)
     {
-        return CommonOps.toArray(stream, generator);
+        return CommonOps.toArray(source, generator);
     }
 
     @SuppressWarnings("unchecked")
     default public <T> T[] toArray(final T... source)
-    {
-        return CommonOps.toArray(source);
-    }
-
-    default public int[] toArray(final int... source)
-    {
-        return CommonOps.toArray(source);
-    }
-
-    default public long[] toArray(final long... source)
-    {
-        return CommonOps.toArray(source);
-    }
-
-    default public double[] toArray(final double... source)
-    {
-        return CommonOps.toArray(source);
-    }
-
-    default public boolean[] toArray(final boolean... source)
     {
         return CommonOps.toArray(source);
     }
@@ -424,44 +415,44 @@ public interface ICoreCommon extends IHasLogging
         return StringOps.getSupplierUniqueStringArray(prop);
     }
 
-    default public String[] toArray(final Collection<String> collection)
+    default public String[] toArray(final Collection<String> source)
     {
-        return StringOps.toArray(collection);
+        return StringOps.toArray(source);
     }
 
-    default public String[] toArray(final String... collection)
+    default public String[] toArray(final String... source)
     {
-        return StringOps.toArray(collection);
+        return StringOps.toArray(source);
     }
 
-    default public String[] toArray(final Stream<String> stream)
+    default public String[] toArray(final Stream<String> source)
     {
-        return StringOps.toArray(stream);
+        return StringOps.toArray(source);
     }
 
-    default public String[] toUniqueArray(final Collection<String> collection)
+    default public String[] toUniqueArray(final Collection<String> source)
     {
-        return StringOps.toUniqueArray(collection);
+        return StringOps.toUniqueArray(source);
     }
 
-    default public String[] toUniqueArray(final String... collection)
+    default public String[] toUniqueArray(final String... source)
     {
-        return StringOps.toUniqueArray(collection);
+        return StringOps.toUniqueArray(source);
     }
 
-    default public Stream<String> toUnique(final Stream<String> stream)
+    default public Stream<String> toUnique(final Stream<String> source)
     {
-        return StringOps.toUnique(stream);
+        return StringOps.toUnique(source);
     }
 
-    default public List<String> toUnique(final Collection<String> collection)
+    default public List<String> toUnique(final Collection<String> source)
     {
-        return StringOps.toUnique(collection);
+        return StringOps.toUnique(source);
     }
 
-    default public List<String> toUnique(final String... collection)
+    default public List<String> toUnique(final String... source)
     {
-        return StringOps.toUnique(collection);
+        return StringOps.toUnique(source);
     }
 
     default public List<String> toUniqueTokenStringList(final String strings)
@@ -469,19 +460,19 @@ public interface ICoreCommon extends IHasLogging
         return StringOps.toUniqueTokenStringList(strings);
     }
 
-    default public String toPrintableString(final Collection<String> collection)
+    default public String toPrintableString(final Collection<String> source)
     {
-        return StringOps.toPrintableString(collection);
+        return StringOps.toPrintableString(source);
     }
 
-    default public String toCommaSeparated(final Collection<String> collection)
+    default public String toCommaSeparated(final Collection<String> source)
     {
-        return StringOps.toCommaSeparated(collection);
+        return StringOps.toCommaSeparated(source);
     }
 
-    default public String toCommaSeparated(final String... collection)
+    default public String toCommaSeparated(final String... source)
     {
-        return StringOps.toCommaSeparated(collection);
+        return StringOps.toCommaSeparated(source);
     }
 
     default public Collection<String> tokenizeToStringCollection(final String string)
@@ -504,9 +495,9 @@ public interface ICoreCommon extends IHasLogging
         return StringOps.tokenizeToStringCollection(string, delimiters, trim, ignore);
     }
 
-    default public String toPrintableString(final String... list)
+    default public String toPrintableString(final String... source)
     {
-        return StringOps.toPrintableString(list);
+        return StringOps.toPrintableString(source);
     }
 
     default public String toTrimOrNull(final String string)

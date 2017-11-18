@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.support.spring.network
 
+import com.themodernway.common.api.java.util.CommonOps
+
 import groovy.util.slurpersupport.GPathResult
 import wslite.soap.SOAPResponse
 
@@ -47,7 +49,7 @@ public class CoreSOAPResponse implements ISOAPResponse
                 }
             }
         }
-        m_head = new HTTPHeaders(Collections.unmodifiableMap(make))
+        m_head = new HTTPHeaders(CommonOps.toUnmodifiableMap(make))
     }
 
     @Override

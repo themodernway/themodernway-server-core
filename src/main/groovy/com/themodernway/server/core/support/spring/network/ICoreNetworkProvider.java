@@ -17,14 +17,11 @@
 package com.themodernway.server.core.support.spring.network;
 
 import java.io.Closeable;
-import java.util.List;
 
 import com.themodernway.server.core.json.JSONObject;
 
 public interface ICoreNetworkProvider extends Closeable
 {
-    public static final int UNKNOWN_ERROR = 520;
-
     public String getDefaultUserAgent();
 
     public void setDefaultUserAgent(String agent);
@@ -70,8 +67,6 @@ public interface ICoreNetworkProvider extends Closeable
     public IRESTResponse delete(String path, PathParameters params, HTTPHeaders headers);
 
     public boolean isGoodCode(int code);
-
-    public void setGoodCodes(List<Integer> list);
 
     public ISOAPClient soap(String path);
 }

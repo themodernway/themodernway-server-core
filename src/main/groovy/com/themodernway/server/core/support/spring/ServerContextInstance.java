@@ -19,7 +19,6 @@ package com.themodernway.server.core.support.spring;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -182,7 +181,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public <B> Map<String, B> getBeansOfType(final Class<B> type) throws Exception
     {
-        return Collections.unmodifiableMap(getApplicationContext().getBeansOfType(requireNonNull(type)));
+        return CommonOps.toUnmodifiableMap(getApplicationContext().getBeansOfType(requireNonNull(type)));
     }
 
     @Override

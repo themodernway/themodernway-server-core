@@ -17,7 +17,6 @@
 package com.themodernway.server.core.support.spring;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.themodernway.common.api.java.util.CommonOps;
@@ -38,6 +37,6 @@ public abstract class AbstractPrincipalsKeysProvider implements IPrincipalsKeysP
     @Override
     public List<String> getPrincipalsKeys()
     {
-        return Collections.unmodifiableList(m_list);
+        return CommonOps.toUnmodifiableList(m_list);
     }
 }

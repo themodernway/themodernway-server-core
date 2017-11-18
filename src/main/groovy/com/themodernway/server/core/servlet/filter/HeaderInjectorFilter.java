@@ -18,7 +18,6 @@ package com.themodernway.server.core.servlet.filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.FilterChain;
@@ -26,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.json.JSONObject;
 
 public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjectorFilter
@@ -119,7 +119,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
     @Override
     public final List<IHeaderInjector> getHeaderInjectors()
     {
-        return Collections.unmodifiableList(m_injectors);
+        return CommonOps.toUnmodifiableList(m_injectors);
     }
 
     @Override

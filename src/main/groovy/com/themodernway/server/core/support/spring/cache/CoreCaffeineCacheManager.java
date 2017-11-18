@@ -19,12 +19,12 @@ package com.themodernway.server.core.support.spring.cache;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.ICoreCommon;
 
 public class CoreCaffeineCacheManager extends CaffeineCacheManager implements CacheManager, ICoreCommon, Closeable
@@ -56,7 +56,7 @@ public class CoreCaffeineCacheManager extends CaffeineCacheManager implements Ca
     @Override
     public void setCacheNames(final Collection<String> caches)
     {
-        List<String> names = Collections.emptyList();
+        List<String> names = CommonOps.emptyList();
 
         if ((null != caches) && (false == caches.isEmpty()))
         {

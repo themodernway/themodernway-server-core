@@ -14,7 +14,7 @@
  * limitations under the License. ThreadLocal.withInitial(supplier);
  */
 
-package com.themodernway.server.core.function;
+package com.themodernway.server.core.cache;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;

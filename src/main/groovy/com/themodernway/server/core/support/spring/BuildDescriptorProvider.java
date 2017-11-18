@@ -17,8 +17,6 @@
 package com.themodernway.server.core.support.spring;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -28,6 +26,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
@@ -73,13 +72,13 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
     @Override
     public List<String> getBuildDescriptorNames()
     {
-        return Collections.unmodifiableList(new ArrayList<String>(m_descriptors.keySet()));
+        return CommonOps.toUnmodifiableList(m_descriptors.keySet());
     }
 
     @Override
     public List<IBuildDescriptor> getBuildDescriptors()
     {
-        return Collections.unmodifiableList(new ArrayList<IBuildDescriptor>(m_descriptors.values()));
+        return CommonOps.toUnmodifiableList(m_descriptors.values());
     }
 
     @Override
@@ -87,7 +86,7 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
     {
         if (factory instanceof DefaultListableBeanFactory)
         {
-            for (IBuildDescriptor descriptor : ((DefaultListableBeanFactory) factory).getBeansOfType(IBuildDescriptor.class).values())
+            for (final IBuildDescriptor descriptor : ((DefaultListableBeanFactory) factory).getBeansOfType(IBuildDescriptor.class).values())
             {
                 addDescriptor(descriptor);
             }
@@ -104,7 +103,7 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
     {
         final JSONArray list = new JSONArray();
 
-        for (IBuildDescriptor descriptor : m_descriptors.values())
+        for (final IBuildDescriptor descriptor : m_descriptors.values())
         {
             list.add(descriptor.toJSONObject());
         }

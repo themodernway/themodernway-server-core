@@ -22,43 +22,30 @@ public final class NanoTimer implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    private volatile long     m_mills;
-
     private volatile long     m_nanos;
 
     public NanoTimer()
     {
-        m_mills = ITimeSupplier.mills().getTime();
-
-        m_nanos = ITimeSupplier.nanos().getTime();
+        m_nanos = System.nanoTime();
     }
 
     public synchronized void reset()
     {
-        m_mills = ITimeSupplier.mills().getTime();
-
-        m_nanos = ITimeSupplier.nanos().getTime();
-    }
-
-    public final String toPrintable()
-    {
-        final long ndiff = ITimeSupplier.nanos().getTime() - m_nanos;
-
-        final long mdiff = ITimeSupplier.mills().getTime() - m_mills;
-
-        if (mdiff < 1)
-        {
-            return String.format("(%s) nanos.", ndiff);
-        }
-        else
-        {
-            return String.format("(%s) mills.", mdiff);
-        }
+        m_nanos = System.nanoTime();
     }
 
     @Override
     public final String toString()
     {
-        return toPrintable();
+        final long ndiff = System.nanoTime() - m_nanos;
+
+        if (ndiff < 1000000L)
+        {
+            return String.format("(%s) ns.", ndiff);
+        }
+        else
+        {
+            return String.format("(%.2f) ms.", 1.0E-6 * ndiff);
+        }
     }
 }

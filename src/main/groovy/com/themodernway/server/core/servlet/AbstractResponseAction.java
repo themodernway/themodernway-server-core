@@ -35,6 +35,7 @@ public abstract class AbstractResponseAction implements IResponseAction
             if ((null != maps) && (false == maps.isEmpty()))
             {
                 maps.forEach((k, v) -> {
+
                     if (v instanceof Collection)
                     {
                         ((Collection<?>) v).forEach(m -> response.addHeader(k, m.toString()));

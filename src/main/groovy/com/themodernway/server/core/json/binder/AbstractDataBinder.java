@@ -54,7 +54,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
     protected final static JSONObject MAKE(final Map<?, ?> make)
     {
-        return new JSONObject(CommonOps.CAST_RAW_MAP(make));
+        return new JSONObject(CommonOps.RAWMAP(make));
     }
 
     protected AbstractDataBinder(final M mapper)

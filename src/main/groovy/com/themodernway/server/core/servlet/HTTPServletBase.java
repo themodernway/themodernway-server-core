@@ -17,7 +17,6 @@
 package com.themodernway.server.core.servlet;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -28,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.google.common.util.concurrent.RateLimiter;
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.limiting.IRateLimited;
 import com.themodernway.server.core.security.session.IServerSession;
 
@@ -238,7 +238,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
                     return;
                 }
-                if (Collections.disjoint(roles, perms))
+                if (CommonOps.none(roles, perms))
                 {
                     logger().error(format("session (%s) with no matching roles of (%s) in (%s).", session.getId(), toPrintableString(perms), toPrintableString(roles)));
 

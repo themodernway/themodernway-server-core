@@ -16,14 +16,13 @@
 
 package com.themodernway.server.core.support.spring;
 
-import java.util.Arrays;
-
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.IHTTPConstants;
 
 public final class DefaultPrincipalsKeysProvider extends AbstractPrincipalsKeysProvider implements IHTTPConstants
 {
     public DefaultPrincipalsKeysProvider()
     {
-        super(Arrays.asList(X_USER_ID_HEADER, X_SESSION_ID_HEADER, X_CLIENT_UUID_HEADER, X_SESSION_UUID_HEADER, X_XSRF_TOKEN_HEADER));
+        super(CommonOps.toList(X_USER_ID_HEADER, X_SESSION_ID_HEADER, X_CLIENT_UUID_HEADER, X_SESSION_UUID_HEADER, X_XSRF_TOKEN_HEADER));
     }
 }

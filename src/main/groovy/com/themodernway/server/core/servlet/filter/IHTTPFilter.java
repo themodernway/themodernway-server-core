@@ -17,7 +17,6 @@
 package com.themodernway.server.core.servlet.filter;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.Filter;
@@ -29,6 +28,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.servlet.IServletCommonOperations;
 
 public interface IHTTPFilter extends Filter, IServletCommonOperations
@@ -70,7 +70,7 @@ public interface IHTTPFilter extends Filter, IServletCommonOperations
     @Override
     public default List<String> getConfigurationParameterNames()
     {
-        return Collections.list(getFilterConfig().getInitParameterNames());
+        return CommonOps.toList(getFilterConfig().getInitParameterNames());
     }
 
     @Override

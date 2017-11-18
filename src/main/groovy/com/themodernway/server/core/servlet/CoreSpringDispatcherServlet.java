@@ -17,7 +17,6 @@
 package com.themodernway.server.core.servlet;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -29,6 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import com.google.common.util.concurrent.RateLimiter;
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.limiting.IRateLimited;
 import com.themodernway.server.core.security.session.IServerSession;
 
@@ -185,7 +185,7 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
 
                     return;
                 }
-                if (Collections.disjoint(roles, perms))
+                if (CommonOps.none(roles, perms))
                 {
                     logger().error(format("session (%s) with no matching roles of (%s) in (%s).", session.getId(), toPrintableString(perms), toPrintableString(roles)));
 

@@ -17,9 +17,7 @@
 package com.themodernway.server.core.support.spring.network;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -41,9 +39,9 @@ public class HTTPHeaders extends HttpHeaders
 {
     private static final long           serialVersionUID   = 1L;
 
-    public static final String          DEFAULT_USER_AGENT = "The Modern Way/1.2.9 (Language=Java/1.8.0)";
+    public static final String          DEFAULT_USER_AGENT = "The Modern Way/1.2.11 (Language=Java/1.8.0)";
 
-    public static final List<MediaType> JSON_MEDIA_TYPE    = Collections.unmodifiableList(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
+    public static final List<MediaType> JSON_MEDIA_TYPE    = CommonOps.toUnmodifiableList(CommonOps.toList(MediaType.APPLICATION_JSON_UTF8));
 
     HTTPHeaders(final HttpHeaders head)
     {

@@ -17,11 +17,10 @@
 package com.themodernway.server.core.support.spring.network;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -35,8 +34,6 @@ import wslite.soap.SOAPClient;
 public class CoreNetworkProvider implements ICoreNetworkProvider
 {
     private String                                m_user_agent = HTTPHeaders.DEFAULT_USER_AGENT;
-
-    private final List<Integer>                   m_good_codes = new ArrayList<Integer>();
 
     private final RestTemplate                    m_rest_execs = new RestTemplate();
 
@@ -64,10 +61,6 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
 
     public CoreNetworkProvider()
     {
-        for (int i = 200; i < 300; i++)
-        {
-            m_good_codes.add(i);
-        }
         m_rest_execs.setErrorHandler(NO_ERRORS_CB);
 
         m_rest_execs.setUriTemplateHandler(m_urlhandler);
@@ -234,7 +227,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
         }
         catch (final Exception e)
         {
-            return new CoreRESTResponse(this, UNKNOWN_ERROR, e.getMessage(), headers);
+            return new CoreRESTResponse(this, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), headers);
         }
     }
 
@@ -259,14 +252,6 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
     @Override
     public boolean isGoodCode(final int code)
     {
-        return m_good_codes.contains(code);
-    }
-
-    @Override
-    public void setGoodCodes(final List<Integer> list)
-    {
-        m_good_codes.clear();
-
-        m_good_codes.addAll(list);
+        return HttpStatus.valueOf(code).is2xxSuccessful();
     }
 }

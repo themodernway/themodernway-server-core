@@ -18,7 +18,6 @@ package com.themodernway.server.core.support.spring;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.Filter;
@@ -26,6 +25,7 @@ import javax.servlet.ServletContext;
 
 import org.springframework.web.context.WebApplicationContext;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.servlet.filter.HeaderInjectorFilter;
 import com.themodernway.server.core.servlet.filter.IHeaderInjector;
 
@@ -65,7 +65,7 @@ public class HeaderInjectorFilterContextCustomizer extends FilterFactoryContextC
 
     protected List<IHeaderInjector> getHeaderInjectors()
     {
-        return Collections.unmodifiableList(m_injectors);
+        return CommonOps.toUnmodifiableList(m_injectors);
     }
 
     @Override

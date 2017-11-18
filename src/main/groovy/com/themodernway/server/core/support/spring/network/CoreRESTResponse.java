@@ -17,6 +17,7 @@
 package com.themodernway.server.core.support.spring.network;
 
 import org.apache.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.themodernway.server.core.json.JSONObject;
@@ -27,11 +28,11 @@ public class CoreRESTResponse implements IRESTResponse
 {
     private static final Logger        logger = Logger.getLogger(CoreRESTResponse.class);
 
-    private final int                  m_code;
-
     private final String               m_body;
 
     private final HTTPHeaders          m_head;
+
+    private final HttpStatus           m_stat;
 
     private final ICoreNetworkProvider m_prov;
 
@@ -39,24 +40,24 @@ public class CoreRESTResponse implements IRESTResponse
 
     public CoreRESTResponse(final ICoreNetworkProvider prov, final ResponseEntity<String> resp)
     {
-        this(prov, resp.getStatusCode().value(), (resp.hasBody() ? resp.getBody() : null), new HTTPHeaders(resp.getHeaders()));
+        this(prov, resp.getStatusCode(), (resp.hasBody() ? resp.getBody() : null), new HTTPHeaders(resp.getHeaders()));
     }
 
-    public CoreRESTResponse(final ICoreNetworkProvider prov, final int code, final String body, final HTTPHeaders head)
+    public CoreRESTResponse(final ICoreNetworkProvider prov, final HttpStatus stat, final String body, final HTTPHeaders head)
     {
-        m_code = code;
+        m_prov = prov;
+
+        m_stat = stat;
 
         m_body = body;
 
         m_head = head;
-
-        m_prov = prov;
     }
 
     @Override
     public int code()
     {
-        return m_code;
+        return m_stat.value();
     }
 
     @Override
@@ -98,7 +99,7 @@ public class CoreRESTResponse implements IRESTResponse
     @Override
     public boolean good()
     {
-        return network().isGoodCode(code());
+        return m_stat.is2xxSuccessful();
     }
 
     @Override
