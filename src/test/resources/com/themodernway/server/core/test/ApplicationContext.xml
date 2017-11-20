@@ -51,8 +51,8 @@
 	<bean id="GoogleMailSender" class="com.themodernway.server.core.mail.CoreMailSender">
 		<property name="host" value="smtp.gmail.com"/>
 		<property name="port" value="587"/>
-		<property name="username" value="deansjones@gmail.com"/>
-		<property name="password" value="XXXXXXXXXX"/>
+		<property name="username" value="${mailsender.google.user}"/>
+		<property name="password" value="${mailsender.google.pass}"/>
 		<property name="javaMailProperties">
 			<props>
        	      <prop key="mail.smtp.auth">true</prop>
