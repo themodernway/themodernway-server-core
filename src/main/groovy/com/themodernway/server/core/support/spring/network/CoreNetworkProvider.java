@@ -26,6 +26,7 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriTemplateHandler;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
@@ -68,6 +69,11 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
         m_no_headers.doRESTHeaders(getDefaultUserAgent());
     }
 
+    protected IRestTemplateBuilder getDefaultIRestTemplateBuilder()
+    {
+        return (final DefaultUriTemplateHandler handler) -> m_rest_execs;
+    }
+
     public void setParsePath(final boolean parse)
     {
         m_urlhandler.setParsePath(parse);
@@ -86,124 +92,244 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
     @Override
     public IRESTResponse get(final String path)
     {
-        return exec(path, HttpMethod.GET, null, null, null);
+        return exec(path, HttpMethod.GET, null, null, null, null);
     }
 
     @Override
     public IRESTResponse get(final String path, final HTTPHeaders headers)
     {
-        return exec(path, HttpMethod.GET, null, null, headers);
+        return exec(path, HttpMethod.GET, null, null, headers, null);
     }
 
     @Override
     public IRESTResponse get(final String path, final PathParameters params)
     {
-        return exec(path, HttpMethod.GET, null, params, null);
+        return exec(path, HttpMethod.GET, null, params, null, null);
     }
 
     @Override
     public IRESTResponse get(final String path, final PathParameters params, final HTTPHeaders headers)
     {
-        return exec(path, HttpMethod.GET, null, params, headers);
+        return exec(path, HttpMethod.GET, null, params, headers, null);
+    }
+
+    @Override
+    public IRESTResponse get(final String path, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.GET, null, null, null, builder);
+    }
+
+    @Override
+    public IRESTResponse get(final String path, final HTTPHeaders headers, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.GET, null, null, headers, builder);
+    }
+
+    @Override
+    public IRESTResponse get(final String path, final PathParameters params, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.GET, null, params, null, builder);
+    }
+
+    @Override
+    public IRESTResponse get(final String path, final PathParameters params, final HTTPHeaders headers, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.GET, null, params, headers, builder);
     }
 
     @Override
     public IRESTResponse put(final String path, final JSONObject body)
     {
-        return exec(path, HttpMethod.PUT, body, null, null);
+        return exec(path, HttpMethod.PUT, body, null, null, null);
     }
 
     @Override
     public IRESTResponse put(final String path, final JSONObject body, final HTTPHeaders headers)
     {
-        return exec(path, HttpMethod.PUT, body, null, headers);
+        return exec(path, HttpMethod.PUT, body, null, headers, null);
     }
 
     @Override
     public IRESTResponse put(final String path, final JSONObject body, final PathParameters params)
     {
-        return exec(path, HttpMethod.PUT, body, params, null);
+        return exec(path, HttpMethod.PUT, body, params, null, null);
     }
 
     @Override
     public IRESTResponse put(final String path, final JSONObject body, final PathParameters params, final HTTPHeaders headers)
     {
-        return exec(path, HttpMethod.PUT, body, params, headers);
+        return exec(path, HttpMethod.PUT, body, params, headers, null);
+    }
+
+    @Override
+    public IRESTResponse put(final String path, final JSONObject body, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.PUT, body, null, null, builder);
+    }
+
+    @Override
+    public IRESTResponse put(final String path, final JSONObject body, final HTTPHeaders headers, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.PUT, body, null, headers, builder);
+    }
+
+    @Override
+    public IRESTResponse put(final String path, final JSONObject body, final PathParameters params, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.PUT, body, params, null, builder);
+    }
+
+    @Override
+    public IRESTResponse put(final String path, final JSONObject body, final PathParameters params, final HTTPHeaders headers, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.PUT, body, params, headers, builder);
     }
 
     @Override
     public IRESTResponse post(final String path, final JSONObject body)
     {
-        return exec(path, HttpMethod.POST, body, null, null);
+        return exec(path, HttpMethod.POST, body, null, null, null);
     }
 
     @Override
     public IRESTResponse post(final String path, final JSONObject body, final HTTPHeaders headers)
     {
-        return exec(path, HttpMethod.POST, body, null, headers);
+        return exec(path, HttpMethod.POST, body, null, headers, null);
     }
 
     @Override
     public IRESTResponse post(final String path, final JSONObject body, final PathParameters params)
     {
-        return exec(path, HttpMethod.POST, body, params, null);
+        return exec(path, HttpMethod.POST, body, params, null, null);
     }
 
     @Override
     public IRESTResponse post(final String path, final JSONObject body, final PathParameters params, final HTTPHeaders headers)
     {
-        return exec(path, HttpMethod.POST, body, params, headers);
+        return exec(path, HttpMethod.POST, body, params, headers, null);
+    }
+
+    @Override
+    public IRESTResponse post(final String path, final JSONObject body, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.POST, body, null, null, builder);
+    }
+
+    @Override
+    public IRESTResponse post(final String path, final JSONObject body, final HTTPHeaders headers, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.POST, body, null, headers, builder);
+    }
+
+    @Override
+    public IRESTResponse post(final String path, final JSONObject body, final PathParameters params, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.POST, body, params, null, builder);
+    }
+
+    @Override
+    public IRESTResponse post(final String path, final JSONObject body, final PathParameters params, final HTTPHeaders headers, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.POST, body, params, headers, builder);
     }
 
     @Override
     public IRESTResponse patch(final String path, final JSONObject body)
     {
-        return exec(path, HttpMethod.PATCH, body, null, null);
+        return exec(path, HttpMethod.PATCH, body, null, null, null);
     }
 
     @Override
     public IRESTResponse patch(final String path, final JSONObject body, final HTTPHeaders headers)
     {
-        return exec(path, HttpMethod.PATCH, body, null, headers);
+        return exec(path, HttpMethod.PATCH, body, null, headers, null);
     }
 
     @Override
     public IRESTResponse patch(final String path, final JSONObject body, final PathParameters params)
     {
-        return exec(path, HttpMethod.PATCH, body, params, null);
+        return exec(path, HttpMethod.PATCH, body, params, null, null);
     }
 
     @Override
     public IRESTResponse patch(final String path, final JSONObject body, final PathParameters params, final HTTPHeaders headers)
     {
-        return exec(path, HttpMethod.PATCH, body, params, headers);
+        return exec(path, HttpMethod.PATCH, body, params, headers, null);
+    }
+
+    @Override
+    public IRESTResponse patch(final String path, final JSONObject body, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.PATCH, body, null, null, builder);
+    }
+
+    @Override
+    public IRESTResponse patch(final String path, final JSONObject body, final HTTPHeaders headers, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.PATCH, body, null, headers, builder);
+    }
+
+    @Override
+    public IRESTResponse patch(final String path, final JSONObject body, final PathParameters params, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.PATCH, body, params, null, builder);
+    }
+
+    @Override
+    public IRESTResponse patch(final String path, final JSONObject body, final PathParameters params, final HTTPHeaders headers, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.PATCH, body, params, headers, builder);
     }
 
     @Override
     public IRESTResponse delete(final String path)
     {
-        return exec(path, HttpMethod.DELETE, null, null, null);
+        return exec(path, HttpMethod.DELETE, null, null, null, null);
     }
 
     @Override
     public IRESTResponse delete(final String path, final HTTPHeaders headers)
     {
-        return exec(path, HttpMethod.DELETE, null, null, headers);
+        return exec(path, HttpMethod.DELETE, null, null, headers, null);
     }
 
     @Override
     public IRESTResponse delete(final String path, final PathParameters params)
     {
-        return exec(path, HttpMethod.DELETE, null, params, null);
+        return exec(path, HttpMethod.DELETE, null, params, null, null);
     }
 
     @Override
     public IRESTResponse delete(final String path, final PathParameters params, final HTTPHeaders headers)
     {
-        return exec(path, HttpMethod.DELETE, null, params, headers);
+        return exec(path, HttpMethod.DELETE, null, params, headers, null);
     }
 
-    protected IRESTResponse exec(final String path, final HttpMethod method, final JSONObject body, PathParameters params, HTTPHeaders headers)
+    @Override
+    public IRESTResponse delete(final String path, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.DELETE, null, null, null, builder);
+    }
+
+    @Override
+    public IRESTResponse delete(final String path, final HTTPHeaders headers, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.DELETE, null, null, headers, builder);
+    }
+
+    @Override
+    public IRESTResponse delete(final String path, final PathParameters params, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.DELETE, null, params, null, builder);
+    }
+
+    @Override
+    public IRESTResponse delete(final String path, final PathParameters params, final HTTPHeaders headers, final IRestTemplateBuilder builder)
+    {
+        return exec(path, HttpMethod.DELETE, null, params, headers, builder);
+    }
+
+    protected IRESTResponse exec(final String path, final HttpMethod method, final JSONObject body, PathParameters params, HTTPHeaders headers, final IRestTemplateBuilder builder)
     {
         final String curl = StringOps.requireTrimOrNull(path);
 
@@ -223,7 +349,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
         }
         try
         {
-            return new CoreRESTResponse(this, m_rest_execs.exchange(curl, method, entity, String.class, params));
+            return new CoreRESTResponse(this, CommonOps.requireNonNullOrElse(builder, getDefaultIRestTemplateBuilder()).build(m_urlhandler).exchange(curl, method, entity, String.class, params));
         }
         catch (final Exception e)
         {

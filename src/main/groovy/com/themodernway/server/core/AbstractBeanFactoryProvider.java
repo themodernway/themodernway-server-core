@@ -32,9 +32,9 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
 
     private final Class<T>                 m_classof;
 
-    private final Logger                   m_logging = Logger.getLogger(getClass());
+    private final LinkedHashMap<String, T> m_storage = linkedMap();
 
-    private final LinkedHashMap<String, T> m_storage = new LinkedHashMap<String, T>();
+    private final Logger                   m_logging = logger(getClass());
 
     protected AbstractBeanFactoryProvider(final Class<T> classof)
     {
@@ -75,23 +75,23 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
     {
         if (null == valu)
         {
-            logger().error("null valu.");
+            logger().error(format("null valu in (%s).", getName()));
 
             return false;
         }
         if (null == (name = name(name, valu)))
         {
-            logger().error("null name.");
+            logger().error(format("null valu in (%s).", getName()));
 
             return false;
         }
         if (null != m_storage.putIfAbsent(name, valu))
         {
-            logger().error(format("duplicate name(%s) ignored.", name));
+            logger().error(format("duplicate name(%s) ignored in (%s).", name, getName()));
 
             return false;
         }
-        logger().info(format("stored name(%s).", name));
+        logger().info(format("stored name(%s) in (%s).", name, getName()));
 
         return true;
     }

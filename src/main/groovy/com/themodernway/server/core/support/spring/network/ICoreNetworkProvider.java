@@ -34,6 +34,14 @@ public interface ICoreNetworkProvider extends Closeable
 
     public IRESTResponse get(String path, PathParameters params, HTTPHeaders headers);
 
+    public IRESTResponse get(String path, IRestTemplateBuilder builder);
+
+    public IRESTResponse get(String path, HTTPHeaders headers, IRestTemplateBuilder builder);
+
+    public IRESTResponse get(String path, PathParameters params, IRestTemplateBuilder builder);
+
+    public IRESTResponse get(String path, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
+
     public IRESTResponse put(String path, JSONObject body);
 
     public IRESTResponse put(String path, JSONObject body, HTTPHeaders headers);
@@ -41,6 +49,14 @@ public interface ICoreNetworkProvider extends Closeable
     public IRESTResponse put(String path, JSONObject body, PathParameters params);
 
     public IRESTResponse put(String path, JSONObject body, PathParameters params, HTTPHeaders headers);
+
+    public IRESTResponse put(String path, JSONObject body, IRestTemplateBuilder builder);
+
+    public IRESTResponse put(String path, JSONObject body, HTTPHeaders headers, IRestTemplateBuilder builder);
+
+    public IRESTResponse put(String path, JSONObject body, PathParameters params, IRestTemplateBuilder builder);
+
+    public IRESTResponse put(String path, JSONObject body, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
 
     public IRESTResponse post(String path, JSONObject body);
 
@@ -50,6 +66,14 @@ public interface ICoreNetworkProvider extends Closeable
 
     public IRESTResponse post(String path, JSONObject body, PathParameters params, HTTPHeaders headers);
 
+    public IRESTResponse post(String path, JSONObject body, IRestTemplateBuilder builder);
+
+    public IRESTResponse post(String path, JSONObject body, HTTPHeaders headers, IRestTemplateBuilder builder);
+
+    public IRESTResponse post(String path, JSONObject body, PathParameters params, IRestTemplateBuilder builder);
+
+    public IRESTResponse post(String path, JSONObject body, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
+
     public IRESTResponse patch(String path, JSONObject body);
 
     public IRESTResponse patch(String path, JSONObject body, HTTPHeaders headers);
@@ -58,6 +82,14 @@ public interface ICoreNetworkProvider extends Closeable
 
     public IRESTResponse patch(String path, JSONObject body, PathParameters params, HTTPHeaders headers);
 
+    public IRESTResponse patch(String path, JSONObject body, IRestTemplateBuilder builder);
+
+    public IRESTResponse patch(String path, JSONObject body, HTTPHeaders headers, IRestTemplateBuilder builder);
+
+    public IRESTResponse patch(String path, JSONObject body, PathParameters params, IRestTemplateBuilder builder);
+
+    public IRESTResponse patch(String path, JSONObject body, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
+
     public IRESTResponse delete(String path);
 
     public IRESTResponse delete(String path, HTTPHeaders headers);
@@ -65,6 +97,14 @@ public interface ICoreNetworkProvider extends Closeable
     public IRESTResponse delete(String path, PathParameters params);
 
     public IRESTResponse delete(String path, PathParameters params, HTTPHeaders headers);
+
+    public IRESTResponse delete(String path, IRestTemplateBuilder builder);
+
+    public IRESTResponse delete(String path, HTTPHeaders headers, IRestTemplateBuilder builder);
+
+    public IRESTResponse delete(String path, PathParameters params, IRestTemplateBuilder builder);
+
+    public IRESTResponse delete(String path, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
 
     public boolean isGoodCode(int code);
 

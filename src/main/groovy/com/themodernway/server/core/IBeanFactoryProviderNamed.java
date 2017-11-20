@@ -37,5 +37,9 @@ public interface IBeanFactoryProviderNamed<T extends Closeable & INamed> extends
 
             logger().info(format("finished close(%s).", name));
         }
+        else
+        {
+            logger().info(format("null item close(%s).", getName()));
+        }
     }
 }

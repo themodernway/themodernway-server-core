@@ -19,6 +19,7 @@ package com.themodernway.server.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -207,6 +208,11 @@ public interface ICoreCommon extends IHasLogging
         return getServerContext().logger();
     }
 
+    default public Logger logger(final Class<?> type)
+    {
+        return Logger.getLogger(requireNonNull(type));
+    }
+
     default public String getOriginalBeanName(final String name)
     {
         return toTrimOrNull(BeanFactoryUtils.originalBeanName(requireNonNull(name)));
@@ -323,6 +329,11 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.emptyMap();
     }
 
+    default public <K, V> LinkedHashMap<K, V> linkedMap()
+    {
+        return CommonOps.linkedMap();
+    }
+
     default public <T> List<T> toKeys(final Map<? extends T, ?> source)
     {
         return CommonOps.toKeys(source);
@@ -336,6 +347,12 @@ public interface ICoreCommon extends IHasLogging
     default public <T> List<T> toUnmodifiableList(final Collection<? extends T> source)
     {
         return CommonOps.toUnmodifiableList(source);
+    }
+
+    @SuppressWarnings("unchecked")
+    default public <T> List<T> toUnmodifiableList(final T... source)
+    {
+        return CommonOps.toUnmodifiableList(toList(source));
     }
 
     default public <T> ArrayList<T> arrayList()
