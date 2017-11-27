@@ -138,6 +138,8 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             return toUnmodifiableMap(((DefaultListableBeanFactory) factory).getBeansOfType(getClassOf()));
         }
+        logger().error(format("not DefaultListableBeanFactory (%s).", getName()));
+
         return toUnmodifiableMap(emptyMap());
     }
 }

@@ -70,6 +70,11 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.STRMAP(source);
     }
 
+    public static  Logger LOGGER(final Class<?> type)
+    {
+        return Logger.getLogger(CommonOps.requireNonNull(type));
+    }
+
     public static List<String> toTaggingValues(final Object target)
     {
         if (null == target)
@@ -210,7 +215,7 @@ public interface ICoreCommon extends IHasLogging
 
     default public Logger logger(final Class<?> type)
     {
-        return Logger.getLogger(requireNonNull(type));
+        return LOGGER(type);
     }
 
     default public String getOriginalBeanName(final String name)
@@ -352,7 +357,7 @@ public interface ICoreCommon extends IHasLogging
     @SuppressWarnings("unchecked")
     default public <T> List<T> toUnmodifiableList(final T... source)
     {
-        return CommonOps.toUnmodifiableList(toList(source));
+        return CommonOps.toUnmodifiableList(source);
     }
 
     default public <T> ArrayList<T> arrayList()
@@ -360,9 +365,9 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.arrayList();
     }
 
-    default public <T> ArrayList<T> arrayList(final int size)
+    default public <T> ArrayList<T> arrayListOfSize(final int size)
     {
-        return CommonOps.arrayList(size);
+        return CommonOps.arrayListOfSize(size);
     }
 
     @SuppressWarnings("unchecked")
