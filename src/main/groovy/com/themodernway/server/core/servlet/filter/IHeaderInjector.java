@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.servlet.IServletCommonOperations;
 
@@ -41,7 +42,7 @@ public interface IHeaderInjector extends IServletCommonOperations
     @Override
     public default List<String> getConfigurationParameterNames()
     {
-        return getHeaderInjectorFilter().getConfigurationParameterNames();
+        return CommonOps.toUnmodifiableList(getHeaderInjectorFilter().getConfigurationParameterNames());
     }
 
     public default void config(final JSONObject config)
@@ -49,7 +50,7 @@ public interface IHeaderInjector extends IServletCommonOperations
     }
 
     public IHeaderInjectorFilter getHeaderInjectorFilter();
-    
+
     public void setHeaderInjectorFilter(final IHeaderInjectorFilter filter);
 
     public int inject(HttpServletRequest request, HttpServletResponse response);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.STRMAP(source);
     }
 
-    public static  Logger LOGGER(final Class<?> type)
+    public static Logger LOGGER(final Class<?> type)
     {
         return Logger.getLogger(CommonOps.requireNonNull(type));
     }
@@ -152,23 +152,6 @@ public interface ICoreCommon extends IHasLogging
             return prop;
         }
         return otherwise.get();
-    }
-
-    @SuppressWarnings("unchecked")
-    default public <T> List<T> arrayListOfListSuppliers(final Supplier<List<T>>... lists)
-    {
-        final List<T> list = arrayList();
-
-        for (final Supplier<List<T>> supp : lists)
-        {
-            final List<T> adds = supp.get();
-
-            if ((null != adds) && (false == adds.isEmpty()))
-            {
-                list.addAll(adds);
-            }
-        }
-        return list;
     }
 
     @SuppressWarnings("unchecked")

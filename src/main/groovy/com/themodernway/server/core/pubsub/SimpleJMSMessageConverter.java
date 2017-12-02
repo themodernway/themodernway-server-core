@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,19 +38,33 @@ public class SimpleJMSMessageConverter extends SimpleMessageConverter
     @Override
     public Message toMessage(final Object object, final Session session) throws JMSException, MessageConversionException
     {
-        if (object instanceof JSONObject)
-        {
-            return session.createTextMessage(object.toString());
-        }
         if (object instanceof org.springframework.messaging.Message)
         {
             final Object payload = ((org.springframework.messaging.Message<?>) object).getPayload();
 
             if (payload instanceof JSONObject)
             {
-                return session.createTextMessage(payload.toString());
+                try
+                {
+                    return session.createTextMessage(BinderType.JSON.getBinder().toJSONString(payload));
+                }
+                catch (final ParserException e)
+                {
+                    throw new MessageConversionException("Error parsing JSON", e);
+                }
             }
             throw new MessageConversionException("Can't convert payload of type [" + ObjectUtils.nullSafeClassName(payload) + "] to JSON text for JMS");
+        }
+        if (object instanceof JSONObject)
+        {
+            try
+            {
+                return session.createTextMessage(BinderType.JSON.getBinder().toJSONString(object));
+            }
+            catch (final ParserException e)
+            {
+                throw new MessageConversionException("Error parsing JSON", e);
+            }
         }
         throw new MessageConversionException("Can't convert object of type [" + ObjectUtils.nullSafeClassName(object) + "] to JSON text for JMS");
     }

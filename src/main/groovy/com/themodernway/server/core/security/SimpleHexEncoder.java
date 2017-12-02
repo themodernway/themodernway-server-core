@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.servlet.filter;
+package com.themodernway.server.core.security;
 
-import java.util.List;
+import org.apache.commons.codec.binary.Hex;
 
-public interface IHeaderInjectorFilter extends IHTTPFilter
+public class SimpleHexEncoder implements IHexEncoder
 {
-    public void addHeaderInjector(IHeaderInjector injector);
+    private static final SimpleHexEncoder INSTANCE = new SimpleHexEncoder();
 
-    public void setHeaderInjectors(List<IHeaderInjector> injectors);
+    public static IHexEncoder get()
+    {
+        return INSTANCE;
+    }
 
-    public void addHeaderInjectors(List<IHeaderInjector> injectors);
-
-    public void setHeaderInjectors(IHeaderInjector... injectors);
-
-    public void addHeaderInjectors(IHeaderInjector... injectors);
-    
-    public void configure(IHeaderInjector injector);
-
-    public List<IHeaderInjector> getHeaderInjectors();
+    @Override
+    public String encode(final byte[] src)
+    {
+        return Hex.encodeHexString(src);
+    }
 }

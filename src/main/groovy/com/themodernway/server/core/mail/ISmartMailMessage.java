@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.themodernway.server.core.mail;
 
 import org.springframework.mail.MailException;
 
+@FunctionalInterface
 public interface ISmartMailMessage
 {
     public void send() throws MailException;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.themodernway.server.core.support.spring;
 import java.io.Closeable;
 import java.util.List;
 
+import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
 
 public interface IBuildDescriptorProvider extends Closeable
@@ -28,6 +29,10 @@ public interface IBuildDescriptorProvider extends Closeable
     public List<IBuildDescriptor> getBuildDescriptors();
 
     public IBuildDescriptor getBuildDescriptor(String name);
-    
+
+    public JSONArray toJSONArray();
+
     public JSONObject toJSONObject();
+
+    public JSONObject toJSONObject(String label);
 }

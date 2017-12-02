@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ import com.themodernway.server.core.json.JSONObject;
 
 public class CacheControlHeaderInjector extends HeaderInjectorBase
 {
-    private String              m_dont_cache_regex = null;
+    private String m_dont_cache_regex = null;
 
-    private String              m_long_cache_regex = null;
+    private String m_long_cache_regex = null;
 
-    private String              m_near_cache_regex = null;
+    private String m_near_cache_regex = null;
 
-    private String              m_skip_cache_regex = null;
+    private String m_skip_cache_regex = null;
 
     public CacheControlHeaderInjector()
     {

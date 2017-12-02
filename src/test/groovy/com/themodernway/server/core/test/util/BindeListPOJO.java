@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import java.util.List;
 
 public class BindeListPOJO
 {
-    private String m_name = "";
+    private String       m_name = "";
 
     private List<String> m_scrp = Arrays.asList("a", "b");
 
-    private double m_cost = 0d;
+    private double       m_cost = 0d;
 
-    private long   m_time = System.currentTimeMillis();
+    private long         m_time = System.currentTimeMillis();
 
     public BindeListPOJO()
     {

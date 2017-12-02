@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,19 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
 
         expect:
         text == valu
+    }
+
+    def "test binder pretty"()
+    {
+        setup:
+        def bind = BinderType.JSON.getBinder().pretty()
+        def valu = bind.toJSONString(json(type: 'pretty', active: true, versions: [1, 2, 3, false], list:['hi']))
+
+        expect:
+        valu == valu
+
+        cleanup:
+        echo valu
     }
 
     def "test yaml pojo 1"()
@@ -140,7 +153,6 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
         expect:
         text == valu
     }
-
 
     def "test props pojo recycle"()
     {

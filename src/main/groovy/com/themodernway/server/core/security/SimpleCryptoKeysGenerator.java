@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.zip.CRC32;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.RandomStringUtils;
 
 import com.themodernway.server.core.io.IO;
@@ -53,7 +52,7 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
     @Override
     public String getRandomSalt()
     {
-        return Hex.encodeHexString(Tools.randomBytes(32));
+        return SimpleHexEncoder.get().encode(Tools.randomBytes(32));
     }
 
     @Override
@@ -110,7 +109,7 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 
         static final String checksumOfChars(final CharSequence valu)
         {
-            return Hex.encodeHexString(Tools.checksumToBytes(Tools.checksumOfBytes(valu.toString().getBytes(IO.UTF_8_CHARSET))));
+            return SimpleHexEncoder.get().encode(Tools.checksumToBytes(Tools.checksumOfBytes(valu.toString().getBytes(IO.UTF_8_CHARSET))));
         }
     }
 }

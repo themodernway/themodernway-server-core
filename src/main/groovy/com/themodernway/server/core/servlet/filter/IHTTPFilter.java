@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public interface IHTTPFilter extends Filter, IServletCommonOperations
     @Override
     public default List<String> getConfigurationParameterNames()
     {
-        return CommonOps.toList(getFilterConfig().getInitParameterNames());
+        return CommonOps.toUnmodifiableList(CommonOps.toList(getFilterConfig().getInitParameterNames()));
     }
 
     @Override

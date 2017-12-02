@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
     }
 
     @Override
-    public JSONObject toJSONObject()
+    public JSONArray toJSONArray()
     {
         final JSONArray list = new JSONArray();
 
@@ -107,6 +107,18 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
         {
             list.add(descriptor.toJSONObject());
         }
-        return new JSONObject("build_descriptor_list", list);
+        return list;
+    }
+
+    @Override
+    public JSONObject toJSONObject()
+    {
+        return toJSONObject("descriptors");
+    }
+
+    @Override
+    public JSONObject toJSONObject(final String label)
+    {
+        return new JSONObject(StringOps.requireTrimOrNull(label), toJSONArray());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,16 +21,14 @@ import com.themodernway.common.api.java.util.CommonOps
 import groovy.util.slurpersupport.GPathResult
 import wslite.soap.SOAPResponse
 
-public class CoreSOAPResponse implements ISOAPResponse
-{
+public class CoreSOAPResponse implements ISOAPResponse {
     private int m_code = 400
 
     private GPathResult m_body
 
     private HTTPHeaders m_head
 
-    public CoreSOAPResponse(final SOAPResponse resp)
-    {
+    public CoreSOAPResponse(final SOAPResponse resp) {
         final Map<String, List<String>> make = [:]
 
         if (resp) {
@@ -53,20 +51,17 @@ public class CoreSOAPResponse implements ISOAPResponse
     }
 
     @Override
-    public int code()
-    {
+    public int code() {
         m_code
     }
 
     @Override
-    public GPathResult body()
-    {
+    public GPathResult body() {
         m_body
     }
 
     @Override
-    public HTTPHeaders headers()
-    {
+    public HTTPHeaders headers() {
         m_head
     }
 }

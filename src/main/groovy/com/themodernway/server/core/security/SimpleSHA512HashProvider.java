@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,10 @@ package com.themodernway.server.core.security;
 
 import java.security.MessageDigest;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
 import com.themodernway.common.api.hash.Hasher;
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.java.util.IHTTPConstants;
 
 public final class SimpleSHA512HashProvider implements ISHA512HashProvider
 {
@@ -56,17 +54,17 @@ public final class SimpleSHA512HashProvider implements ISHA512HashProvider
 
         try
         {
-            bytes = text.getBytes(IHTTPConstants.CHARSET_UTF_8);
+            bytes = text.getBytes(CommonOps.CHARSET_UTF_8);
         }
         catch (final Exception e)
         {
-            logger.error("No " + IHTTPConstants.CHARSET_UTF_8 + " encoding ", e);
+            logger.error("No " + CommonOps.CHARSET_UTF_8 + " encoding ", e);
 
             throw new IllegalArgumentException(e);
         }
         md.update(bytes);
 
-        return Hex.encodeHexString(md.digest());
+        return SimpleHexEncoder.get().encode(md.digest());
     }
 
     @Override

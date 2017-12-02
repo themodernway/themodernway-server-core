@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package com.themodernway.server.core.security;
 
 public interface IBCryptHashProvider
 {
-    public static final int DEFAULT_STRENGTH = 10;
+    public static final int DEFAULT_STRENGTH = 12;
 
     public String makeBCrypt(String text);
 

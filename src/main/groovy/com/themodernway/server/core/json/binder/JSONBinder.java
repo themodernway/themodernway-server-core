@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.Writer;
 
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.io.IO;
@@ -117,15 +119,36 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 
     public static class CoreObjectMapper extends ObjectMapper
     {
-        private static final long serialVersionUID = 1L;
+        private static final long                 serialVersionUID = 1L;
+
+        private static final DefaultPrettyPrinter PRETTY           = PRETTY(4);
+
+        public static final DefaultPrettyPrinter PRETTY(final String indent)
+        {
+            return new DefaultPrettyPrinter().withArrayIndenter(new DefaultIndenter().withIndent(indent)).withObjectIndenter(new DefaultIndenter().withIndent(indent));
+        }
+
+        public static final DefaultPrettyPrinter PRETTY(final int indent)
+        {
+            String buffer = " ";
+
+            for (int i = 1; i < indent; i++)
+            {
+                buffer = buffer + " ";
+            }
+            return PRETTY(buffer);
+        }
 
         public CoreObjectMapper()
         {
+            setDefaultPrettyPrinter(PRETTY);
         }
 
         public CoreObjectMapper(final CoreObjectMapper parent)
         {
             super(parent);
+
+            setDefaultPrettyPrinter(PRETTY);
         }
 
         @Override

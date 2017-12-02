@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,7 +134,7 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
     @SuppressWarnings("unchecked")
     public default List<String> getCombinedRoles(final IServerSession sess, final List<String> role)
     {
-        return toUnique(arrayListOfListSuppliers(() -> role, () -> (sess == null) ? arrayList() : sess.getRoles()));
+        return toUnique(arrayListOfLists(role, (sess == null) ? arrayList() : sess.getRoles()));
     }
 
     public default IAuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)

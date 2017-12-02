@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,6 @@
 
 package com.themodernway.server.core.security;
 
-import org.apache.commons.codec.binary.Hex;
-
-public class SimpleHexSignatoryEncoder implements ISignatoryEncoder
+public class SimpleHexSignatoryEncoder extends SimpleHexEncoder implements ISignatoryEncoder
 {
-    @Override
-    public String encodeBytes(final byte[] src) throws Exception
-    {
-        return Hex.encodeHexString(src);
-    }
 }

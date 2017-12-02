@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,22 @@
 
 package com.themodernway.server.core.json;
 
+import com.themodernway.common.api.java.util.CommonOps;
+
+@SuppressWarnings("serial")
 public class ParserException extends Exception
 {
-    private static final long serialVersionUID           = -1386449426626594502L;
+    public static final int ERROR_UNEXPECTED_CHAR      = 0;
 
-    public static final int   ERROR_UNEXPECTED_CHAR      = 0;
+    public static final int ERROR_UNEXPECTED_TOKEN     = 1;
 
-    public static final int   ERROR_UNEXPECTED_TOKEN     = 1;
+    public static final int ERROR_UNEXPECTED_EXCEPTION = 2;
 
-    public static final int   ERROR_UNEXPECTED_EXCEPTION = 2;
+    private int             m_errorType                = ERROR_UNEXPECTED_EXCEPTION;
 
-    private int               m_errorType;
+    private Object          m_unexpectedObject         = CommonOps.NULL();
 
-    private Object            m_unexpectedObject         = null;
-
-    private int               m_position                 = -1;
+    private int             m_position                 = CommonOps.IS_NOT_FOUND;
 
     public ParserException(final Exception e)
     {
@@ -41,12 +42,12 @@ public class ParserException extends Exception
 
     public ParserException(final int errorType)
     {
-        this(-1, errorType, null);
+        this(CommonOps.IS_NOT_FOUND, errorType, CommonOps.NULL());
     }
 
     public ParserException(final int errorType, final Object unexpectedObject)
     {
-        this(-1, errorType, unexpectedObject);
+        this(CommonOps.IS_NOT_FOUND, errorType, unexpectedObject);
     }
 
     public ParserException(final int position, final int errorType, final Object unexpectedObject)

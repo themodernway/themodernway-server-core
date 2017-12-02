@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class PathParameters extends LinkedHashMap<String, Object>
 {
-    private static final long serialVersionUID = -1215997968274953434L;
+    private static final long serialVersionUID = 1L;
 
     public PathParameters()
     {

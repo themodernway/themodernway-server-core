@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ import org.apache.log4j.Logger;
 import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHandler;
-import org.springframework.messaging.MessagingException;
 
 import com.themodernway.server.core.logging.ICoreLoggingOperations;
 
@@ -35,52 +32,48 @@ public class CorePublishSubscribeLoggingService implements ICoreLoggingOperation
 
     public CorePublishSubscribeLoggingService(final PublishSubscribeChannel channel)
     {
-        channel.subscribe(new MessageHandler()
-        {
-            @Override
-            public void handleMessage(final Message<?> message) throws MessagingException
+        channel.subscribe(message -> {
+
+            Level level = getLoggingLevel();
+
+            if (null != level)
             {
-                Level level = getLoggingLevel();
-
-                if (null != level)
+                if (Level.OFF.equals(level))
                 {
-                    if (Level.OFF.equals(level))
-                    {
-                        return;
-                    }
-                    if (null != message)
-                    {
-                        final Object look = message.getHeaders().get(CORE_LOGGING_OPERATIONS_KEY);
+                    return;
+                }
+                if (null != message)
+                {
+                    final Object look = message.getHeaders().get(CORE_LOGGING_OPERATIONS_KEY);
 
-                        if (null != look)
+                    if (null != look)
+                    {
+                        if (look instanceof Level)
                         {
-                            if (look instanceof Level)
-                            {
-                                level = ((Level) look);
-                            }
-                            else if (look instanceof String)
-                            {
-                                level = Level.toLevel(look.toString(), level);
-                            }
-                            if (Level.OFF.equals(level))
-                            {
-                                return;
-                            }
+                            level = ((Level) look);
                         }
-
-                        /*
-                         * Converting a JSONObject to a String MAY be an expensive operation if
-                         * logging is not enabled at this level.
-                         */
-
-                        if (LogManager.getRootLogger().isEnabledFor(level))
+                        else if (look instanceof String)
                         {
-                            final Object payload = message.getPayload();
+                            level = Level.toLevel(look.toString(), level);
+                        }
+                        if (Level.OFF.equals(level))
+                        {
+                            return;
+                        }
+                    }
 
-                            if (null != payload)
-                            {
-                                m_logger.log(level, payload.toString());
-                            }
+                    /*
+                     * Converting a JSONObject to a String MAY be an expensive operation if
+                     * logging is not enabled at this level.
+                     */
+
+                    if (LogManager.getRootLogger().isEnabledFor(level))
+                    {
+                        final Object payload = message.getPayload();
+
+                        if (null != payload)
+                        {
+                            m_logger.log(level, payload.toString());
                         }
                     }
                 }

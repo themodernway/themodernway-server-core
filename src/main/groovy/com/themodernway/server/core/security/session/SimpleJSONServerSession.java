@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -239,16 +239,16 @@ public class SimpleJSONServerSession implements IServerSession
 
             if ((null != role) && (false == role.isEmpty()))
             {
-                return role;
+                return CommonOps.toUnmodifiableList(role);
             }
         }
         final List<String> role = m_repo.getDefaultRoles();
 
         if ((null != role) && (false == role.isEmpty()))
         {
-            return role;
+            return CommonOps.toUnmodifiableList(role);
         }
-        return getHelper().getDefaultRoles();
+        return CommonOps.toUnmodifiableList(getHelper().getDefaultRoles());
     }
 
     @Override

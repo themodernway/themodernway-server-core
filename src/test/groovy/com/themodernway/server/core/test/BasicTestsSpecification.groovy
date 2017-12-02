@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -201,7 +201,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def j = b.toJSONString()
         echo b.toString() + " Tiger JSON parsed out"
         echo t.toString() + " Tiger JSON parsed out"
-        echo b.dumpClassNamesToString()
+        //echo b.dumpClassNamesToString()
 
         expect:
         j.toString() == b.toString()

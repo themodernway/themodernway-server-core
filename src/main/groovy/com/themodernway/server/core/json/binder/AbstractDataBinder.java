@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -432,7 +432,13 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public String toJSONString(final Object object) throws ParserException
     {
-        return toJSONObject(object).toJSONString(isStrict());
+        final JSONObject json = toJSONObject(object);
+
+        if (isStrict())
+        {
+            return json.toJSONString(isStrict());
+        }
+        return toString(json);
     }
 
     @Override

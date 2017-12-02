@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,10 @@
 
 package com.themodernway.server.core.security.session;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 
 public interface IServerSessionHelper
@@ -48,7 +46,7 @@ public interface IServerSessionHelper
 
     public final static Integer              SP_MAX_INACTIVE_INTERVAL_IN_SECONDS     = 30 * 60;
 
-    public final static List<String>         SP_DEFAULT_ROLES_LIST                   = Collections.unmodifiableList(Arrays.asList("ANONYMOUS"));
+    public final static List<String>         SP_DEFAULT_ROLES_LIST                   = CommonOps.toUnmodifiableList("ANONYMOUS");
 
     public final static IServerSessionHelper SP_DEFAULT_HELPER_INSTANCE              = new IServerSessionHelper()
     {
@@ -139,7 +137,7 @@ public interface IServerSessionHelper
             }
             if (false == send.isEmpty())
             {
-                return Collections.unmodifiableList(new ArrayList<String>(send));
+                return CommonOps.toUnmodifiableList(send);
             }
         }
         return null;

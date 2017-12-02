@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.themodernway.common.api.java.util.CommonOps;
@@ -159,7 +158,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public JSONArray jarr(final Stream<?> stream)
     {
-        return jarr(stream.collect(Collectors.toList()));
+        return jarr(CommonOps.toList(stream));
     }
 
     @Override
@@ -215,7 +214,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public JSONObject json(final Stream<?> stream)
     {
-        return json(stream.collect(Collectors.toList()));
+        return json(CommonOps.toList(stream));
     }
 
     @Override

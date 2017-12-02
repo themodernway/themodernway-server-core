@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public enum ItemsOptions implements IStringValued
             {
                 for (final ItemsOptions item : ItemsOptions.values())
                 {
-                    if((false == list.contains(item)) && (item.getValue().equals(option.trim().toUpperCase())))
+                    if ((false == list.contains(item)) && (item.getValue().equals(option.trim().toUpperCase())))
                     {
                         list.add(item);
                     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -123,7 +121,7 @@ public class ScriptingProvider implements IScriptingProvider
                 }
             }
         }
-        return Collections.unmodifiableList(new ArrayList<String>(find));
+        return CommonOps.toUnmodifiableList(find);
     }
 
     @Override
@@ -147,7 +145,7 @@ public class ScriptingProvider implements IScriptingProvider
                 }
             }
         }
-        return Collections.unmodifiableList(new ArrayList<String>(find));
+        return CommonOps.toUnmodifiableList(find);
     }
 
     @Override
@@ -171,7 +169,7 @@ public class ScriptingProvider implements IScriptingProvider
                 }
             }
         }
-        return Collections.unmodifiableList(new ArrayList<ScriptType>(find));
+        return CommonOps.toUnmodifiableList(find);
     }
 
     @Override
@@ -195,7 +193,7 @@ public class ScriptingProvider implements IScriptingProvider
                 }
             }
         }
-        return Collections.unmodifiableList(new ArrayList<ScriptType>(find));
+        return CommonOps.toUnmodifiableList(find);
     }
 
     @Override

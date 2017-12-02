@@ -14,23 +14,10 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.servlet.filter;
+package com.themodernway.server.core.security;
 
-import java.util.List;
-
-public interface IHeaderInjectorFilter extends IHTTPFilter
+@FunctionalInterface
+public interface IHexEncoder
 {
-    public void addHeaderInjector(IHeaderInjector injector);
-
-    public void setHeaderInjectors(List<IHeaderInjector> injectors);
-
-    public void addHeaderInjectors(List<IHeaderInjector> injectors);
-
-    public void setHeaderInjectors(IHeaderInjector... injectors);
-
-    public void addHeaderInjectors(IHeaderInjector... injectors);
-    
-    public void configure(IHeaderInjector injector);
-
-    public List<IHeaderInjector> getHeaderInjectors();
+    public String encode(byte[] src);
 }

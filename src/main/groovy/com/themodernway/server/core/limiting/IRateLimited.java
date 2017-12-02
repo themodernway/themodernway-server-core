@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.themodernway.server.core.limiting;
 
 import com.google.common.util.concurrent.RateLimiter;
 
+@FunctionalInterface
 public interface IRateLimited
 {
     public static final double MAX_RATE_LIMIT = 10000000.0;

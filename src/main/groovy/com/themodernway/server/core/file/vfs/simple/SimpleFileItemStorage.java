@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -93,13 +94,13 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
     private final IFolderItem        m_root;
 
-    private boolean                  m_mods = true;
-
-    private boolean                  m_open = false;
-
     private ICoreContentTypeMapper   m_maps = null;
 
     private IFileItemMetaDataFactory m_meta = null;
+
+    private final AtomicBoolean      m_mods = new AtomicBoolean(true);
+
+    private final AtomicBoolean      m_open = new AtomicBoolean(false);
 
     public SimpleFileItemStorage(final String name, final String base)
     {
@@ -113,7 +114,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         if ((IO.exists(m_file)) && (IO.isFolder(m_file)) && (IO.isReadable(m_file)))
         {
-            m_open = true;
+            m_open.set(true);
 
             logger.info(format("SimpleFileItemStorage(%s,%s) open.", m_name, m_base));
         }
@@ -126,12 +127,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     @Override
     public boolean isWritable()
     {
-        return m_mods;
+        return m_mods.get();
     }
 
     public void setWritable(final boolean mods)
     {
-        m_mods = mods;
+        m_mods.set(mods);
     }
 
     @Override
@@ -170,7 +171,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     @Override
     public boolean isOpen()
     {
-        return m_open;
+        return m_open.get();
     }
 
     @Override
@@ -184,7 +185,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     @Override
     public void close() throws IOException
     {
-        m_open = false;
+        m_open.set(false);
 
         logger.info(format("SimpleFileItemStorage(%s,%s).close().", getName(), getBasePath()));
     }
@@ -258,7 +259,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             }
             final File file = getFile();
 
-            return new JSONObject().set("path", getPath()).set("size", getSize()).set("last", getLastModified()).set("type", getContentType()).set("mode", String.format("%s%s%s", (isFolder(file) ? "d" : "-"), (isReadable(file) ? "r" : "-"), (isWritable(file, getFileItemStorage()) ? "w" : "-")));
+            return new JSONObject().set("path", getPath()).set("size", getSize()).set("last", getLastModified()).set("type", getContentType()).set("mode", format("%s%s%s", (isFolder(file) ? "d" : "-"), (isReadable(file) ? "r" : "-"), (isWritable(file, getFileItemStorage()) ? "w" : "-")));
         }
 
         @Override

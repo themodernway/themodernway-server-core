@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,9 @@ package com.themodernway.server.core.security;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.java.util.IHTTPConstants;
 
 public class SimpleKeyStringSigningProvider implements IStringSigningProvider
 {
@@ -35,7 +33,7 @@ public class SimpleKeyStringSigningProvider implements IStringSigningProvider
     {
         try
         {
-            m_secret = new SecretKeySpec(CommonOps.requireNonNull(sign).getBytes(IHTTPConstants.CHARSET_UTF_8), HMAC_ALGORITHM);
+            m_secret = new SecretKeySpec(CommonOps.requireNonNull(sign).getBytes(CommonOps.CHARSET_UTF_8), HMAC_ALGORITHM);
         }
         catch (final Exception e)
         {
@@ -65,7 +63,7 @@ public class SimpleKeyStringSigningProvider implements IStringSigningProvider
 
             hmac.init(m_secret);
 
-            return Hex.encodeHexString(hmac.doFinal(text.getBytes(IHTTPConstants.CHARSET_UTF_8)));
+            return SimpleHexEncoder.get().encode(hmac.doFinal(text.getBytes(CommonOps.CHARSET_UTF_8)));
         }
         catch (final Exception e)
         {

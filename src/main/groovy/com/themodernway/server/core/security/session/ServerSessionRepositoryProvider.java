@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, The Modern Way. All rights reserved.
+ * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 package com.themodernway.server.core.security.session;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -28,14 +26,17 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.Activatable;
 
 public class ServerSessionRepositoryProvider extends Activatable implements IServerSessionRepositoryProvider, BeanFactoryAware
 {
-    private static final Logger                                   logger         = Logger.getLogger(ServerSessionRepositoryProvider.class);
+    private static final long                                     serialVersionUID = 1L;
 
-    private final LinkedHashMap<String, IServerSessionRepository> m_repositories = new LinkedHashMap<String, IServerSessionRepository>();
+    private static final Logger                                   logger           = Logger.getLogger(ServerSessionRepositoryProvider.class);
+
+    private final LinkedHashMap<String, IServerSessionRepository> m_repositories   = new LinkedHashMap<String, IServerSessionRepository>();
 
     public ServerSessionRepositoryProvider()
     {
@@ -108,7 +109,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
     @Override
     public List<String> getServerSessionRepositoryDomains()
     {
-        return Collections.unmodifiableList(new ArrayList<String>(m_repositories.keySet()));
+        return CommonOps.toUnmodifiableList(m_repositories.keySet());
     }
 
     @Override
