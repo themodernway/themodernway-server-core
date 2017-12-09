@@ -42,7 +42,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.2.16-RELEASE'
+version = '1.2.17-RELEASE'
 
 group = 'com.themodernway'
 
@@ -231,7 +231,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.16-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.17-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '5.1')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')
@@ -269,8 +269,8 @@ dependencies {
     compile(group: 'org.gebish', name: 'geb-core', version: '2.0') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
-    compile(group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.8.0')
-    compile(group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.8.0')
+    compile(group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.8.1')
+    compile(group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.8.1')
     springCorePackages().each { String name ->
         compile(group: 'org.springframework', name: name, version: '4.3.13.RELEASE')
     }

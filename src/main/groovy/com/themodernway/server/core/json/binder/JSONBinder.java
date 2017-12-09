@@ -24,6 +24,7 @@ import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
@@ -130,13 +131,7 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 
         public static final DefaultPrettyPrinter PRETTY(final int indent)
         {
-            String buffer = " ";
-
-            for (int i = 1; i < indent; i++)
-            {
-                buffer = buffer + " ";
-            }
-            return PRETTY(buffer);
+            return PRETTY(StringOps.repeat(" ", indent));
         }
 
         public CoreObjectMapper()

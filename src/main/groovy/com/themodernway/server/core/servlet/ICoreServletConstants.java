@@ -29,4 +29,14 @@ public interface ICoreServletConstants extends IHTTPConstants
     public static final String SESSION_PROVIDER_DOMAIN_NAME_PARAM   = "core.server.session.provider.domain.name";
 
     public static final String CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM = "core.server.content.type.max.header.length";
+
+    public static String doStrictTransportSecurityHeaderInSeconds(final long seconds, final boolean subdomains)
+    {
+        return CACHE_CONTROL_MAX_AGE_PREFIX + seconds + ((subdomains) ? "; includeSubDomains" : "");
+    }
+
+    public static String doStrictTransportSecurityHeader()
+    {
+        return doStrictTransportSecurityHeaderInSeconds(YEAR_IN_SECONDS, true);
+    }
 }

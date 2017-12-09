@@ -19,8 +19,8 @@ package com.themodernway.server.core.servlet.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.servlet.ICoreServletConstants;
 
 public class StrictTransportHeaderInjector extends HeaderInjectorBase
 {
@@ -50,7 +50,7 @@ public class StrictTransportHeaderInjector extends HeaderInjectorBase
     {
         if ((isAlways()) || (request.isSecure()))
         {
-            response.setHeader(STRICT_TRANSPORT_SECURITY_HEADER, IHTTPConstants.doStrictTransportSecurityHeader());
+            response.setHeader(STRICT_TRANSPORT_SECURITY_HEADER, ICoreServletConstants.doStrictTransportSecurityHeader());
         }
         return HttpServletResponse.SC_OK;
     }
