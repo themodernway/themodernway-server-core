@@ -277,6 +277,12 @@ public interface ICoreCommon extends IHasLogging
     }
 
     @SuppressWarnings("unchecked")
+    default public <T> Stream<T> toStream(final T... source)
+    {
+        return CommonOps.toStream(source);
+    }
+
+    @SuppressWarnings("unchecked")
     default public <T> List<T> toList(final T... source)
     {
         return CommonOps.toList(source);
@@ -322,6 +328,11 @@ public interface ICoreCommon extends IHasLogging
         return CommonOps.linkedMap();
     }
 
+    default public <K, V> LinkedHashMap<K, V> linkedMap(final Map<? extends K, ? extends V> source)
+    {
+        return CommonOps.linkedMap(source);
+    }
+
     default public <T> List<T> toKeys(final Map<? extends T, ?> source)
     {
         return CommonOps.toKeys(source);
@@ -333,6 +344,11 @@ public interface ICoreCommon extends IHasLogging
     }
 
     default public <T> List<T> toUnmodifiableList(final Collection<? extends T> source)
+    {
+        return CommonOps.toUnmodifiableList(source);
+    }
+
+    default public <T> List<T> toUnmodifiableList(final Stream<T> source)
     {
         return CommonOps.toUnmodifiableList(source);
     }
@@ -537,10 +553,6 @@ public interface ICoreCommon extends IHasLogging
 
     default public String failIfNullBytePresent(final String string)
     {
-        if (null != string)
-        {
-            StringOps.failIfNullBytePresent(string);
-        }
-        return string;
+        return StringOps.failIfNullBytePresent(string);
     }
 }

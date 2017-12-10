@@ -32,15 +32,13 @@ import com.themodernway.common.api.types.Activatable;
 
 public class ServerSessionRepositoryProvider extends Activatable implements IServerSessionRepositoryProvider, BeanFactoryAware
 {
-    private static final long                                     serialVersionUID = 1L;
+    private static final Logger                                   logger         = Logger.getLogger(ServerSessionRepositoryProvider.class);
 
-    private static final Logger                                   logger           = Logger.getLogger(ServerSessionRepositoryProvider.class);
-
-    private final LinkedHashMap<String, IServerSessionRepository> m_repositories   = new LinkedHashMap<String, IServerSessionRepository>();
+    private final LinkedHashMap<String, IServerSessionRepository> m_repositories = new LinkedHashMap<String, IServerSessionRepository>();
 
     public ServerSessionRepositoryProvider()
     {
-        setActive(true);
+        super(true);
     }
 
     protected void addSessionRepository(final IServerSessionRepository repository)
@@ -92,18 +90,6 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
                 }
             }
         }
-    }
-
-    @Override
-    public boolean isActive()
-    {
-        return super.isActive();
-    }
-
-    @Override
-    public boolean setActive(final boolean active)
-    {
-        return super.setActive(active);
     }
 
     @Override

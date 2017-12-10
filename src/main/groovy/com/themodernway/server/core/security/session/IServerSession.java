@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.security.session;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.session.ExpiringSession;
@@ -24,12 +23,12 @@ import org.springframework.session.ExpiringSession;
 import com.themodernway.common.api.json.JSONStringify;
 import com.themodernway.server.core.json.JSONObject;
 
-public interface IServerSession extends ExpiringSession, JSONStringify, Serializable
+public interface IServerSession extends ExpiringSession, JSONStringify
 {
     public String getUserId();
-    
+
     public String getDomain();
-    
+
     public String getStatus();
 
     public List<String> getRoles();
@@ -41,8 +40,8 @@ public interface IServerSession extends ExpiringSession, JSONStringify, Serializ
     public void setPersisted(boolean persisted);
 
     public void save();
-    
+
     public void touch();
-    
+
     public IServerSessionHelper getHelper();
 }

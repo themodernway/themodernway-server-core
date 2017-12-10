@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-@SuppressWarnings("serial")
 public abstract class AbstractServerSessionRepository implements IServerSessionRepository
 {
     private final IServerSessionHelper m_helper;
@@ -56,7 +55,12 @@ public abstract class AbstractServerSessionRepository implements IServerSessionR
     @Override
     public void touch(final String id)
     {
-        getSession(id).touch();
+        final IServerSession session = getSession(id);
+
+        if (null != session)
+        {
+            session.touch();
+        }
     }
 
     @Override

@@ -27,7 +27,6 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.Activatable;
 import com.themodernway.server.core.io.IO;
 
-@SuppressWarnings("serial")
 public abstract class AbstractScriptingProperties extends Activatable implements IScriptingProperties
 {
     private final ScriptType m_type;

@@ -24,9 +24,7 @@ import com.themodernway.server.core.json.JSONObject;
 
 public class SimpleMemoryServerSessionRepository extends AbstractServerSessionRepository
 {
-    private static final long                               serialVersionUID = 3762945174208290495L;
-
-    private final ConcurrentHashMap<String, IServerSession> m_sessions       = new ConcurrentHashMap<String, IServerSession>();
+    private final ConcurrentHashMap<String, IServerSession> m_sessions = new ConcurrentHashMap<String, IServerSession>();
 
     public SimpleMemoryServerSessionRepository()
     {

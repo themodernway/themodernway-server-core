@@ -37,6 +37,7 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
@@ -45,6 +46,8 @@ import com.themodernway.server.core.file.vfs.IFileItem;
 
 public final class IO
 {
+    private final static Logger logger                  = Logger.getLogger(IO.class);
+
     public static final int     EOF                     = CommonOps.IS_NOT_FOUND;
 
     public static final int     MINIMUM_BUFFER_CAPACITY = 16;
@@ -61,7 +64,20 @@ public final class IO
 
     public static final void close(final Closeable c)
     {
-        IOUtils.closeQuietly(c);
+        try
+        {
+            if (c != null)
+            {
+                c.close();
+            }
+        }
+        catch (final IOException e)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("close()", e);
+            }
+        }
     }
 
     public static final void close(final URLConnection c)

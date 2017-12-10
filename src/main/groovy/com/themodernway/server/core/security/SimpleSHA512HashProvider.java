@@ -62,9 +62,7 @@ public final class SimpleSHA512HashProvider implements ISHA512HashProvider
 
             throw new IllegalArgumentException(e);
         }
-        md.update(bytes);
-
-        return SimpleHexEncoder.get().encode(md.digest());
+        return SimpleHexEncoder.get().encode(md.digest(bytes));
     }
 
     @Override

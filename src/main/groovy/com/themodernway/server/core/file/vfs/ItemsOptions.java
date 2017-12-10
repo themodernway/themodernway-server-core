@@ -17,11 +17,11 @@
 package com.themodernway.server.core.file.vfs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.IStringValued;
 
 public enum ItemsOptions implements IStringValued
@@ -44,7 +44,7 @@ public enum ItemsOptions implements IStringValued
     @Override
     public final String toString()
     {
-        return m_value;
+        return getValue();
     }
 
     public static final EnumSet<ItemsOptions> make(final ItemsOptions... options)
@@ -53,7 +53,7 @@ public enum ItemsOptions implements IStringValued
         {
             return EnumSet.noneOf(ItemsOptions.class);
         }
-        return EnumSet.copyOf(Arrays.asList(options));
+        return EnumSet.copyOf(CommonOps.toList(options));
     }
 
     public static final EnumSet<ItemsOptions> make(final List<ItemsOptions> options)
@@ -71,7 +71,7 @@ public enum ItemsOptions implements IStringValued
         {
             return EnumSet.noneOf(ItemsOptions.class);
         }
-        return make(Arrays.asList(options));
+        return make(CommonOps.toList(options));
     }
 
     public static final EnumSet<ItemsOptions> make(final Collection<String> options)

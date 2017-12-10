@@ -19,6 +19,7 @@ package com.themodernway.server.core.security.session;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
@@ -30,13 +31,11 @@ import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 public class SimpleJSONServerSession implements IServerSession
 {
-    private static final long              serialVersionUID = 6207984040761462613L;
-
-    private boolean                        m_save;
-
     private final JSONObject               m_attr;
 
     private final IServerSessionRepository m_repo;
+
+    private final AtomicBoolean            m_save = new AtomicBoolean(false);
 
     public SimpleJSONServerSession(final IServerSessionRepository repo)
     {
@@ -260,13 +259,13 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public boolean isPersisted()
     {
-        return m_save;
+        return m_save.get();
     }
 
     @Override
     public void setPersisted(final boolean persisted)
     {
-        m_save = persisted;
+        m_save.set(persisted);
     }
 
     @Override

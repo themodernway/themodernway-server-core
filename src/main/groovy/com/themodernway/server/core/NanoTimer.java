@@ -16,13 +16,9 @@
 
 package com.themodernway.server.core;
 
-import java.io.Serializable;
-
-public final class NanoTimer implements Serializable
+public final class NanoTimer
 {
-    private static final long serialVersionUID = 1L;
-
-    private volatile long     m_nanos;
+    private long m_nanos;
 
     public NanoTimer()
     {
@@ -35,7 +31,7 @@ public final class NanoTimer implements Serializable
     }
 
     @Override
-    public final String toString()
+    public String toString()
     {
         final long ndiff = System.nanoTime() - m_nanos;
 

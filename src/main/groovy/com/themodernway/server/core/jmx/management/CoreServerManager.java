@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.jmx.management;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -32,7 +34,7 @@ public class CoreServerManager implements ICoreServerManager
 {
     private static final Logger logger    = Logger.getLogger(CoreServerManager.class);
 
-    private boolean             m_running = true;
+    private final AtomicBoolean m_running = new AtomicBoolean(true);
 
     public CoreServerManager()
     {
@@ -89,10 +91,8 @@ public class CoreServerManager implements ICoreServerManager
     @ManagedOperation(description = "Resume Server.")
     public void resume()
     {
-        if (false == m_running)
+        if (m_running.compareAndSet(false, true))
         {
-            m_running = true;
-
             logger.info("CoreServerManager.resume()");
         }
     }
@@ -100,10 +100,8 @@ public class CoreServerManager implements ICoreServerManager
     @ManagedOperation(description = "Suspend Server.")
     public void suspend()
     {
-        if (true == m_running)
+        if (m_running.compareAndSet(true, false))
         {
-            m_running = false;
-
             logger.info("CoreServerManager.suspend()");
         }
     }
@@ -112,6 +110,6 @@ public class CoreServerManager implements ICoreServerManager
     @ManagedOperation(description = "Is Server Running.")
     public boolean isRunning()
     {
-        return m_running;
+        return m_running.get();
     }
 }
