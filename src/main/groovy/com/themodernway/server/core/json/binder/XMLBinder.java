@@ -17,6 +17,7 @@
 package com.themodernway.server.core.json.binder;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.util.DefaultXmlPrettyPrinter;
 import com.themodernway.server.core.json.binder.XMLBinder.CoreXMLMapper;
 
 public class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
@@ -34,15 +35,20 @@ public class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
 
     public static class CoreXMLMapper extends XmlMapper
     {
-        private static final long serialVersionUID = 1L;
+        private static final long                   serialVersionUID = 1L;
+
+        public static final DefaultXmlPrettyPrinter PRETTY           = new DefaultXmlPrettyPrinter();
 
         public CoreXMLMapper()
         {
+            setDefaultPrettyPrinter(PRETTY);
         }
 
         public CoreXMLMapper(final CoreXMLMapper parent)
         {
             super(parent);
+
+            setDefaultPrettyPrinter(PRETTY);
         }
 
         @Override

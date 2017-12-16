@@ -120,9 +120,9 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 
     public static class CoreObjectMapper extends ObjectMapper
     {
-        private static final long                 serialVersionUID = 1L;
+        private static final long                serialVersionUID = 1L;
 
-        private static final DefaultPrettyPrinter PRETTY           = PRETTY(4);
+        public static final DefaultPrettyPrinter PRETTY           = PRETTY(4);
 
         public static final DefaultPrettyPrinter PRETTY(final String indent)
         {
@@ -131,7 +131,7 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 
         public static final DefaultPrettyPrinter PRETTY(final int indent)
         {
-            return PRETTY(StringOps.repeat(" ", indent));
+            return PRETTY(StringOps.repeat(StringOps.SPACE_STRING, indent));
         }
 
         public CoreObjectMapper()

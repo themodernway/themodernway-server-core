@@ -25,7 +25,6 @@ public class PathParameters extends LinkedHashMap<String, Object>
 
     public PathParameters()
     {
-        super();
     }
 
     public PathParameters(final Map<String, ?> vars)

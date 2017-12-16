@@ -22,6 +22,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriTemplateHandler;
@@ -36,9 +37,9 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
 {
     private String                                m_user_agent = HTTPHeaders.DEFAULT_USER_AGENT;
 
-    private final RestTemplate                    m_rest_execs = new RestTemplate();
-
     private final HTTPHeaders                     m_no_headers = new HTTPHeaders();
+
+    private final RestTemplate                    m_rest_execs = new RestTemplate();
 
     private final DefaultUriTemplateHandler       m_urlhandler = new DefaultUriTemplateHandler();
 
@@ -82,6 +83,14 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
     public void setStrictEncoding(final boolean strict)
     {
         m_urlhandler.setStrictEncoding(strict);
+    }
+
+    public void setUseHttpComponents(final boolean http)
+    {
+        if (http)
+        {
+            m_rest_execs.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        }
     }
 
     @Override
@@ -353,7 +362,9 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
         }
         catch (final Exception e)
         {
-            return new CoreRESTResponse(this, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), headers);
+            final HTTPHeaders keep = new HTTPHeaders(headers);
+
+            return new CoreRESTResponse(this, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), () -> keep);
         }
     }
 

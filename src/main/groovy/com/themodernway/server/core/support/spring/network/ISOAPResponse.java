@@ -22,6 +22,10 @@ public interface ISOAPResponse
 {
     public int code();
 
+    public String text();
+
+    public boolean good();
+
     public GPathResult body();
 
     public HTTPHeaders headers();

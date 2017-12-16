@@ -62,7 +62,7 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.JSON.getBinder().pretty()
-        def valu = bind.toJSONString(json(type: 'pretty', active: true, versions: [1, 2, 3, false], list:['hi']))
+        def valu = bind.toJSONString(json(type: 'pretty', active: true, versions: [1, 2, 3, false], list: ['hi']))
 
         expect:
         valu == valu
@@ -99,7 +99,7 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.YAML.getBinder()
-        JSONObject json = json(type: 'API', active: true, versions: [1, 2, 3, false], pojo: new BinderPOJO("Rosaria", 100), list:[])
+        JSONObject json = json(type: 'API', active: true, versions: [1, 2, 3, false], pojo: new BinderPOJO("Rosaria", 100), list: [])
         String valu = bind.toString(json)
         echo valu
         echo json.toJSONString()
@@ -141,6 +141,23 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.XML.getBinder()
+        BinderPOJO pojo = new BinderPOJO()
+        pojo.setName('Dean S. Jones')
+        pojo.setCost(9.99)
+        String text = bind.toString(pojo)
+        BinderPOJO make = bind.bind(text, BinderPOJO)
+        String valu = bind.toString(make)
+        echo text
+        echo valu
+
+        expect:
+        text == valu
+    }
+
+    def "test xml pojo recycle pretty"()
+    {
+        setup:
+        def bind = BinderType.XML.getBinder().pretty()
         BinderPOJO pojo = new BinderPOJO()
         pojo.setName('Dean S. Jones')
         pojo.setCost(9.99)

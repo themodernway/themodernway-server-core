@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.support.spring.network
 
+import org.springframework.http.HttpStatus
+
 import com.themodernway.common.api.java.util.CommonOps
 
 import groovy.util.slurpersupport.GPathResult
@@ -23,6 +25,8 @@ import wslite.soap.SOAPResponse
 
 public class CoreSOAPResponse implements ISOAPResponse {
     private int m_code = 400
+
+    private String m_text
 
     private GPathResult m_body
 
@@ -35,6 +39,8 @@ public class CoreSOAPResponse implements ISOAPResponse {
             if (resp.getHttpResponse()) {
                 m_code = resp.getHttpResponse().getStatusCode()
             }
+            m_text = resp.getText()
+
             m_body = resp.getBody()
 
             resp.httpResponse.headers.each { k, v ->
@@ -56,6 +62,11 @@ public class CoreSOAPResponse implements ISOAPResponse {
     }
 
     @Override
+    public String text() {
+        m_text
+    }
+
+    @Override
     public GPathResult body() {
         m_body
     }
@@ -63,5 +74,11 @@ public class CoreSOAPResponse implements ISOAPResponse {
     @Override
     public HTTPHeaders headers() {
         m_head
+    }
+
+    @Override
+    public boolean good()
+    {
+        return HttpStatus.valueOf(code()).is2xxSuccessful()
     }
 }

@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.support.spring.network;
 
+import java.util.function.Supplier;
+
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,27 +25,30 @@ import org.springframework.http.ResponseEntity;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.BinderType;
+import com.themodernway.server.core.json.binder.IBinder;
 
 public class CoreRESTResponse implements IRESTResponse
 {
-    private static final Logger        logger = Logger.getLogger(CoreRESTResponse.class);
+    private static final Logger         logger = Logger.getLogger(CoreRESTResponse.class);
 
-    private final String               m_body;
+    private static final IBinder        BINDER = BinderType.JSON.getBinder();
 
-    private final HTTPHeaders          m_head;
+    private final String                m_body;
 
-    private final HttpStatus           m_stat;
+    private final Supplier<HTTPHeaders> m_head;
 
-    private final ICoreNetworkProvider m_prov;
+    private final HttpStatus            m_stat;
 
-    private JSONObject                 m_json;
+    private final ICoreNetworkProvider  m_prov;
+
+    private JSONObject                  m_json;
 
     public CoreRESTResponse(final ICoreNetworkProvider prov, final ResponseEntity<String> resp)
     {
-        this(prov, resp.getStatusCode(), (resp.hasBody() ? resp.getBody() : null), new HTTPHeaders(resp.getHeaders()));
+        this(prov, resp.getStatusCode(), (resp.hasBody() ? resp.getBody() : null), () -> new HTTPHeaders(resp.getHeaders()));
     }
 
-    public CoreRESTResponse(final ICoreNetworkProvider prov, final HttpStatus stat, final String body, final HTTPHeaders head)
+    public CoreRESTResponse(final ICoreNetworkProvider prov, final HttpStatus stat, final String body, final Supplier<HTTPHeaders> head)
     {
         m_prov = prov;
 
@@ -67,7 +72,7 @@ public class CoreRESTResponse implements IRESTResponse
     }
 
     @Override
-    public synchronized JSONObject json()
+    public JSONObject json()
     {
         if (null != m_json)
         {
@@ -81,7 +86,7 @@ public class CoreRESTResponse implements IRESTResponse
             {
                 return null;
             }
-            return (m_json = BinderType.JSON.getBinder().bindJSON(body));
+            return (m_json = BINDER.bindJSON(body));
         }
         catch (final ParserException e)
         {
@@ -93,7 +98,7 @@ public class CoreRESTResponse implements IRESTResponse
     @Override
     public HTTPHeaders headers()
     {
-        return m_head;
+        return m_head.get();
     }
 
     @Override

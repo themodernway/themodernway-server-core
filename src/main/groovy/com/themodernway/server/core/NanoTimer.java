@@ -16,7 +16,7 @@
 
 package com.themodernway.server.core;
 
-public final class NanoTimer
+public class NanoTimer
 {
     private long m_nanos;
 
@@ -41,7 +41,7 @@ public final class NanoTimer
         }
         else
         {
-            return String.format("(%.2f) ms.", 1.0E-6 * ndiff);
+            return String.format("(%.3f) ms.", 1.0E-6 * ndiff);
         }
     }
 }

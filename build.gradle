@@ -20,7 +20,7 @@ buildscript {
         classpath(group: 'org.ajoberstar', name: 'grgit', version: '1.7.2')
         classpath(group: 'commons-codec', name: 'commons-codec', version: '1.11')
         classpath(group: 'commons-logging', name: 'commons-logging', version: '1.2')
-        classpath(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3')
+        classpath(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4')
     }
 }
 
@@ -232,13 +232,13 @@ configurations {
 
 dependencies {
     compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.19-RELEASE')
-    compile(group: 'org.ow2.asm', name: 'asm', version: '5.1')
+    compile(group: 'org.ow2.asm', name: 'asm', version: '6.0')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'log4j-over-slf4j', version: '1.7.25')
-    compile(group: 'cglib', name: 'cglib-nodep', version: '3.2.4')
+    compile(group: 'cglib', name: 'cglib-nodep', version: '3.2.5')
     compile(group: 'org.fusesource.jansi', name: 'jansi', version: '1.16')
     compile(group: 'joda-time', name: 'joda-time', version: '2.9.9')
     compile(group: 'commons-io', name: 'commons-io', version: '2.6')
@@ -251,7 +251,7 @@ dependencies {
     compile(group: 'commons-collections', name: 'commons-collections', version: '3.2.2')
     compile(group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3')
     compile(group: 'org.opensaml', name: 'opensaml', version: '2.6.4')
-    compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3')
+    compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4')
     compile(group: 'com.google.guava', name: 'guava', version: '23.5-jre')
     compile(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.0')
     compile(group: 'com.github.ben-manes.caffeine', name: 'jcache', version: '2.6.0')
