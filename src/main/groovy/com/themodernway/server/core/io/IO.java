@@ -389,32 +389,74 @@ public final class IO
 
     public static final Stream<String> lines(final Path path) throws IOException
     {
-        return Files.lines(CommonOps.requireNonNull(path), UTF_8_CHARSET);
+        return IO.lines(path, false);
+    }
+
+    public static final Stream<String> lines(final Path path, final boolean greedy) throws IOException
+    {
+        final Stream<String> lines = Files.lines(CommonOps.requireNonNull(path), UTF_8_CHARSET);
+
+        if (greedy)
+        {
+            return CommonOps.toList(lines).stream();
+        }
+        return lines;
     }
 
     public static final Stream<String> lines(final File file) throws IOException
     {
-        return IO.lines(file.toPath());
+        return IO.lines(file.toPath(), false);
+    }
+
+    public static final Stream<String> lines(final File file, final boolean greedy) throws IOException
+    {
+        return IO.lines(file.toPath(), greedy);
     }
 
     public static final Stream<String> lines(final Reader reader) throws IOException
     {
-        return IOUtils.toBufferedReader(reader).lines().onClose(IO.onClose(reader));
+        return IO.lines(reader, false);
+    }
+
+    public static final Stream<String> lines(final Reader reader, final boolean greedy) throws IOException
+    {
+        final Stream<String> lines = IO.toBufferedReader(reader).lines();
+
+        if (greedy)
+        {
+            return CommonOps.toList(lines.onClose(IO.onClose(reader))).stream();
+        }
+        return lines;
     }
 
     public static final Stream<String> lines(final InputStream stream) throws IOException
     {
-        return IO.lines(new InputStreamReader(stream, UTF_8_CHARSET));
+        return IO.lines(stream, false);
+    }
+
+    public static final Stream<String> lines(final InputStream stream, final boolean greedy) throws IOException
+    {
+        return IO.lines(new InputStreamReader(stream, UTF_8_CHARSET), greedy);
     }
 
     public static final Stream<String> lines(final Resource resource) throws IOException
     {
-        return IO.lines(resource.getInputStream());
+        return IO.lines(resource.getInputStream(), true);
+    }
+
+    public static final Stream<String> lines(final Resource resource, final boolean greedy) throws IOException
+    {
+        return IO.lines(resource.getInputStream(), greedy);
     }
 
     public static final Stream<String> lines(final IFileItem file) throws IOException
     {
         return file.lines();
+    }
+
+    public static final Stream<String> lines(final IFileItem file, final boolean greedy) throws IOException
+    {
+        return file.lines(greedy);
     }
 
     public static final InputStream toInputStream(final File file, final OpenOption... options) throws IOException
@@ -435,6 +477,16 @@ public final class IO
     public static final BufferedReader toBufferedReader(final File file) throws IOException
     {
         return IO.toBufferedReader(file.toPath());
+    }
+
+    public static final BufferedReader toBufferedReader(final Reader reader) throws IOException
+    {
+        return CommonOps.requireNonNull(reader) instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
+    }
+
+    public static final BufferedReader toBufferedReader(final Reader reader, final int capacity) throws IOException
+    {
+        return CommonOps.requireNonNull(reader) instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader, IO.toValidBufferCapacity(capacity));
     }
 
     public static BufferedWriter toBufferedWriter(final Path path, final OpenOption... options) throws IOException

@@ -312,6 +312,19 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
     }
 
     @Override
+    public Stream<String> lines(final boolean greedy) throws FileStorageException
+    {
+        try
+        {
+            return getWrappedFileItem().lines(greedy);
+        }
+        catch (final IOException e)
+        {
+            throw new FileStorageException(e);
+        }
+    }
+
+    @Override
     public InputStream getInputStream() throws IOException
     {
         return getWrappedFileItem().getInputStream();

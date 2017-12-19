@@ -273,6 +273,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public Stream<String> lines() throws IOException
         {
+            return lines(false);
+        }
+
+        @Override
+        public Stream<String> lines(final boolean greedy) throws IOException
+        {
             validate();
 
             final File file = readtest(getFile());
@@ -283,7 +289,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             }
             else
             {
-                return IO.lines(file);
+                return IO.lines(file, greedy);
             }
         }
 
@@ -500,11 +506,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         protected File getFile()
         {
             return m_file;
-        }
-
-        protected void readtest() throws IOException
-        {
-            readtest(getFile());
         }
 
         protected File readtest(final File file) throws IOException
@@ -900,17 +901,29 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             System.out.println(list.toJSONString());
 
-            final IFileItem item = stor.getRoot().file("b.json");
+            final IFileItem item = stor.getRoot().file("/x/y/z/b.json");
 
             final OutputStream puts = new NoOpOutputStream();
 
             final NanoTimer t = new NanoTimer();
 
-            for (int i = 0; i < 1000; i++)
+            long s = 0;
+
+            for (int i = 0; i < 50000; i++)
             {
-                cat(item, puts);
+                s += cat(item, puts);
             }
             System.out.println(t.toString());
+            System.out.println("" + s);
+            s = 0;
+            t.reset();
+            for (int i = 0; i < 50000; i++)
+            {
+                s += cat(stor.getRoot().file("/x/y/z/b.json"), puts);
+            }
+            System.out.println(t.toString());
+            System.out.println("" + s);
+
         }
         catch (final IOException e)
         {
@@ -918,16 +931,17 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
     }
 
-    public static void cat(final IFileItem item, final OutputStream ou)
+    public static long cat(final IFileItem item, final OutputStream ou)
     {
         try
         {
-            item.writeTo(ou);
+            return item.writeTo(ou);
         }
         catch (final Exception e)
         {
             e.printStackTrace();
         }
+        return 0;
     }
 
     public static void cat(final IFileItem item, final JSONArray list)

@@ -21,6 +21,7 @@ import java.io.IOException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -91,6 +92,12 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
         {
             m_rest_execs.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         }
+    }
+
+    @Override
+    public void setClientHttpRequestFactory(final ClientHttpRequestFactory factory)
+    {
+        m_rest_execs.setRequestFactory(factory);
     }
 
     @Override

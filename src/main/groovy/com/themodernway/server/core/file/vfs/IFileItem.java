@@ -73,6 +73,8 @@ public interface IFileItem
 
     public Stream<String> lines() throws IOException;
 
+    public Stream<String> lines(boolean greedy) throws IOException;
+
     public InputStream getInputStream() throws IOException;
 
     public BufferedReader getBufferedReader() throws IOException;

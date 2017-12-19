@@ -84,4 +84,7 @@ public interface IFileItemWrapper extends IFileItem
 
     @Override
     public Stream<String> lines() throws FileStorageException;
+
+    @Override
+    public Stream<String> lines(boolean greedy) throws FileStorageException;
 }
