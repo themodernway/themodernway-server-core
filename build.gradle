@@ -21,6 +21,7 @@ buildscript {
         classpath(group: 'commons-codec', name: 'commons-codec', version: '1.11')
         classpath(group: 'commons-logging', name: 'commons-logging', version: '1.2')
         classpath(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4')
+        classpath(group: 'org.owasp', name: 'dependency-check-gradle', version: '3.0.2')    
     }
 }
 
@@ -37,12 +38,13 @@ apply plugin: 'signing'
 apply plugin: 'eclipse'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
+apply plugin: 'org.owasp.dependencycheck'
 
 sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.2.20-RELEASE'
+version = '1.2.21-RELEASE'
 
 group = 'com.themodernway'
 
@@ -157,9 +159,14 @@ tasks.withType(FindBugs) {
     }
 }
 
+dependencyCheck {
+    failOnError=false
+    outputDirectory="${buildDir}/reports/cve"
+}
+
 task checkCodeQuality << { println ":checkCodeQuality-done" }
 
-checkCodeQuality.dependsOn codeCoverage,checkstyleMain,pmdMain,findbugsMain
+checkCodeQuality.dependsOn codeCoverage,checkstyleMain,pmdMain,findbugsMain,dependencyCheckAnalyze
 
 tasks.withType(GroovyCompile) {
     groovyOptions.optimizationOptions.indy = true
@@ -231,7 +238,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.20-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.21-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.0')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')
@@ -283,22 +290,19 @@ dependencies {
     compile(group: 'org.springframework.integration', name: 'spring-integration-groovy', version: '4.3.12.RELEASE') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
-    compile(group: 'com.github.groovy-wslite', name: 'groovy-wslite', version: '1.1.3') {
-        exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
-    }
     compile(group: 'com.google.code.gson', name: 'gson', version: '2.8.2')
     compile(group: 'javax.mail', name: 'mail', version: '1.4.7')
     compile(group: 'io.projectreactor', name: 'reactor-core', version: '3.1.2.RELEASE')
     compile(group: 'org.springframework.integration', name: 'spring-integration-java-dsl', version: '1.2.3.RELEASE')
     compile(group: 'org.springframework.session', name: 'spring-session', version: '1.3.1.RELEASE')
     compile(group: 'org.springframework.amqp', name: 'spring-rabbit', version: '1.7.5.RELEASE')
+    compile(group: 'org.springframework.ldap', name: 'spring-ldap-core', version: '2.3.2.RELEASE')
     compile(group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.13', classifier: 'indy')
     compile(group: 'org.codehaus.gpars', name: 'gpars', version: '1.2.1')
     compile(group: 'javax.persistence', name: 'persistence-api', version: '1.0.2')
     compile(group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0')
     compile(group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1')
     compile(group: 'javax.jms', name: 'javax.jms-api', version: '2.0.1')
-    compile(group: 'org.ajoberstar', name: 'grgit', version: '1.7.2')
     testCompile(group: 'log4j', name: 'log4j', version: '1.2.17')
     testCompile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')
     testCompile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')

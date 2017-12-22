@@ -21,8 +21,6 @@ import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.network.PathParameters
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
-import spock.lang.Unroll
-
 public class RESTTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
     def setupSpec()
@@ -36,28 +34,6 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
     def cleanupSpec()
     {
         closeServerCoreDefault()
-    }
-
-    def "SOAP Mothers Day 2017"()
-    {
-        setup:
-        def soap = network().soap('http://www.holidaywebservice.com/Holidays/US/Dates/USHolidayDates.asmx')
-        def resp = soap.send(SOAPAction: 'http://www.27seconds.com/Holidays/US/Dates/GetMothersDay')
-        {
-            body
-            {
-                GetMothersDay(xmlns: 'http://www.27seconds.com/Holidays/US/Dates/') { year(2017) }
-            }
-        }
-        def code = resp.code()
-        def answ = resp.body().GetMothersDayResponse.GetMothersDayResult.text()
-
-        expect:
-        code == 200
-        answ == '2017-05-14T00:00:00'
-
-        cleanup:
-        echo answ
     }
 
     def "REST GET users 7"()
@@ -116,17 +92,5 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
 
         expect:
         list.size() == 100
-    }
-
-    @Unroll
-    def "Math.max(#a and #b) is #c"(int a, int b, int c)
-    {
-        expect:
-        Math.max(a, b) == c
-
-        where:
-        a << [5, 3]
-        b << [1, 9]
-        c << [5, 9]
     }
 }

@@ -109,8 +109,4 @@ public interface ICoreNetworkProvider extends Closeable
     public IRESTResponse delete(String path, PathParameters params, IRestTemplateBuilder builder);
 
     public IRESTResponse delete(String path, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
-
-    public boolean isGoodCode(int code);
-
-    public ISOAPClient soap(String path);
 }

@@ -17,10 +17,9 @@
 package com.themodernway.server.core.support.spring.network;
 
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.DefaultUriTemplateHandler;
 
 @FunctionalInterface
 public interface IRestTemplateBuilder
 {
-    public RestTemplate build(DefaultUriTemplateHandler handler);
+    public RestTemplate build(RestTemplate template);
 }

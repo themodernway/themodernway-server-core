@@ -28,6 +28,8 @@ import com.themodernway.server.core.scripting.ScriptType
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
+import spock.lang.Unroll
+
 public class BasicTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
     def setupSpec()
@@ -462,6 +464,18 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
 
         expect:
         s.length() >= 2048
+    }
+
+    @Unroll
+    def "Math.max(#a and #b) is #c"(int a, int b, int c)
+    {
+        expect:
+        Math.max(a, b) == c
+
+        where:
+        a << [5, 3]
+        b << [1, 9]
+        c << [5, 9]
     }
 
     def "Nano Timer Last"()

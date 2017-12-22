@@ -32,21 +32,19 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
-import wslite.soap.SOAPClient;
-
 public class CoreNetworkProvider implements ICoreNetworkProvider
 {
-    private String                                m_user_agent = HTTPHeaders.DEFAULT_USER_AGENT;
+    private String                          m_user_agent = HTTPHeaders.DEFAULT_USER_AGENT;
 
-    private final HTTPHeaders                     m_no_headers = new HTTPHeaders();
+    private final HTTPHeaders               m_no_headers = new HTTPHeaders();
 
-    private final RestTemplate                    m_rest_execs = new RestTemplate();
+    private final RestTemplate              m_rest_execs = new RestTemplate();
 
-    private final DefaultUriTemplateHandler       m_urlhandler = new DefaultUriTemplateHandler();
+    private final DefaultUriTemplateHandler m_urlhandler = new DefaultUriTemplateHandler();
 
-    private static final PathParameters           EMPTY_PARAMS = new PathParameters();
+    private final PathParameters            EMPTY_PARAMS = new PathParameters();
 
-    private static final CoreResponseErrorHandler NO_ERRORS_CB = new CoreResponseErrorHandler();
+    private final CoreResponseErrorHandler  NO_ERRORS_CB = new CoreResponseErrorHandler();
 
     private static final class CoreResponseErrorHandler implements ResponseErrorHandler
     {
@@ -71,11 +69,6 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
         m_no_headers.doRESTHeaders(getDefaultUserAgent());
     }
 
-    protected IRestTemplateBuilder getDefaultIRestTemplateBuilder()
-    {
-        return (final DefaultUriTemplateHandler handler) -> m_rest_execs;
-    }
-
     public void setParsePath(final boolean parse)
     {
         m_urlhandler.setParsePath(parse);
@@ -90,14 +83,26 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
     {
         if (http)
         {
-            m_rest_execs.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            setClientHttpRequestFactory(new HttpComponentsClientHttpRequestFactory());
         }
     }
 
     @Override
     public void setClientHttpRequestFactory(final ClientHttpRequestFactory factory)
     {
-        m_rest_execs.setRequestFactory(factory);
+        m_rest_execs.setRequestFactory(CommonOps.requireNonNull(factory));
+    }
+
+    @Override
+    public String getDefaultUserAgent()
+    {
+        return m_user_agent;
+    }
+
+    @Override
+    public void setDefaultUserAgent(final String agent)
+    {
+        m_user_agent = StringOps.toTrimOrElse(agent, HTTPHeaders.DEFAULT_USER_AGENT);
     }
 
     @Override
@@ -363,9 +368,11 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
         {
             params = EMPTY_PARAMS;
         }
+        final RestTemplate template = (null == builder) ? m_rest_execs : builder.build(m_rest_execs);
+
         try
         {
-            return new CoreRESTResponse(this, CommonOps.requireNonNullOrElse(builder, getDefaultIRestTemplateBuilder()).build(m_urlhandler).exchange(curl, method, entity, String.class, params));
+            return new CoreRESTResponse(this, template.exchange(curl, method, entity, String.class, params));
         }
         catch (final Exception e)
         {
@@ -373,29 +380,5 @@ public class CoreNetworkProvider implements ICoreNetworkProvider
 
             return new CoreRESTResponse(this, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), () -> keep);
         }
-    }
-
-    @Override
-    public ISOAPClient soap(final String path)
-    {
-        return new CoreSOAPClient(new SOAPClient(StringOps.requireTrimOrNull(path)));
-    }
-
-    @Override
-    public String getDefaultUserAgent()
-    {
-        return m_user_agent;
-    }
-
-    @Override
-    public void setDefaultUserAgent(final String agent)
-    {
-        m_user_agent = agent;
-    }
-
-    @Override
-    public boolean isGoodCode(final int code)
-    {
-        return HttpStatus.valueOf(code).is2xxSuccessful();
     }
 }
