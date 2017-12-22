@@ -47,6 +47,10 @@ FindBugs URL:
 
 http://docs.themodernway.com/documents/reports/themodernway-server-core/findbugs/main.html
 
+CVE Dependency Check URL:
+
+http://docs.themodernway.com/documents/reports/themodernway-server-core/cve/dependency-check-report.html
+
 License:
 
 Copyright (c) 2017, 2018, The Modern Way. All rights reserved.

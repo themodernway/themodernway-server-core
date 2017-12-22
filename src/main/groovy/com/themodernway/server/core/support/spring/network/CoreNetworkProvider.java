@@ -34,17 +34,17 @@ import com.themodernway.server.core.json.JSONObject;
 
 public class CoreNetworkProvider implements ICoreNetworkProvider
 {
-    private String                          m_user_agent = HTTPHeaders.DEFAULT_USER_AGENT;
+    private String                                m_user_agent = HTTPHeaders.DEFAULT_USER_AGENT;
 
-    private final HTTPHeaders               m_no_headers = new HTTPHeaders();
+    private final HTTPHeaders                     m_no_headers = new HTTPHeaders();
 
-    private final RestTemplate              m_rest_execs = new RestTemplate();
+    private final RestTemplate                    m_rest_execs = new RestTemplate();
 
-    private final DefaultUriTemplateHandler m_urlhandler = new DefaultUriTemplateHandler();
+    private final DefaultUriTemplateHandler       m_urlhandler = new DefaultUriTemplateHandler();
 
-    private final PathParameters            EMPTY_PARAMS = new PathParameters();
+    private final static PathParameters           EMPTY_PARAMS = new PathParameters();
 
-    private final CoreResponseErrorHandler  NO_ERRORS_CB = new CoreResponseErrorHandler();
+    private final static CoreResponseErrorHandler NO_ERRORS_CB = new CoreResponseErrorHandler();
 
     private static final class CoreResponseErrorHandler implements ResponseErrorHandler
     {
