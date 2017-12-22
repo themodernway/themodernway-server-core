@@ -160,8 +160,9 @@ tasks.withType(FindBugs) {
 }
 
 dependencyCheck {
-    failOnError=false
-    outputDirectory="${buildDir}/reports/cve"
+    failOnError = false
+    outputDirectory = "${buildDir}/reports/cve"
+    suppressionFile = file("config/cve/suppress.xml")
 }
 
 task checkCodeQuality << { println ":checkCodeQuality-done" }
