@@ -80,6 +80,17 @@ public final class IO
         }
     }
 
+    public static final void close(final Iterable<? extends Closeable> source)
+    {
+        if (null != source)
+        {
+            for (final Closeable c : source)
+            {
+                IO.close(c);
+            }
+        }
+    }
+
     public static final void close(final URLConnection c)
     {
         IOUtils.close(c);
@@ -734,5 +745,15 @@ public final class IO
     public static final String getStringAtMost(final File file, final long leng) throws IOException
     {
         return getStringAtMost(file, leng, MINIMUM_BUFFER_CAPACITY);
+    }
+
+    public static final boolean delete(final File file) throws IOException
+    {
+        return delete(file.toPath());
+    }
+
+    public static final boolean delete(final Path path) throws IOException
+    {
+        return Files.deleteIfExists(path);
     }
 }

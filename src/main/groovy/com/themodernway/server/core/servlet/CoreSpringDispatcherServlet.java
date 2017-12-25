@@ -34,19 +34,21 @@ import com.themodernway.server.core.security.session.IServerSession;
 
 public class CoreSpringDispatcherServlet extends DispatcherServlet implements IRateLimited, IServletCommonOperations
 {
-    private static final long                        serialVersionUID = 1L;
+    private static final long                          serialVersionUID = 1L;
 
-    private transient Logger                         m_logger         = Logger.getLogger(getClass());
+    private transient Logger                           m_logger         = Logger.getLogger(getClass());
 
-    private transient RateLimiter                    m_ratelimit      = null;
+    private transient RateLimiter                      m_ratelimit      = null;
 
-    private boolean                                  m_iscontent      = false;
+    private boolean                                    m_iscontent      = false;
 
-    private int                                      m_contentmx      = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private int                                        m_contentmx      = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    private List<String>                             m_roleslist      = arrayList();
+    private List<String>                               m_roleslist      = arrayList();
 
-    private transient ISessionIDFromRequestExtractor m_extractor      = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
+    private transient ISessionIDFromRequestExtractor   m_extractor      = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
+
+    private transient IServletResponseErrorCodeManager m_errorcode      = CoreServletResponseErrorCodeManager.DEFAULT;
 
     public CoreSpringDispatcherServlet(final WebApplicationContext context)
     {
@@ -107,6 +109,26 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
         m_roleslist = (roles == null ? arrayList() : roles);
     }
 
+    public void setServletResponseErrorCodeManager(final IServletResponseErrorCodeManager manager)
+    {
+        m_errorcode = requireNonNull(manager);
+    }
+
+    public IServletResponseErrorCodeManager getServletResponseErrorCodeManager()
+    {
+        return m_errorcode;
+    }
+
+    protected void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code)
+    {
+        getServletResponseErrorCodeManager().sendErrorCode(request, response, code);
+    }
+
+    protected void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code, final String mess)
+    {
+        getServletResponseErrorCodeManager().sendErrorCode(request, response, code, mess);
+    }
+
     @Override
     protected void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
@@ -116,18 +138,16 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
             {
                 logger().error("server is suspended, refused request.");
 
-                response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+                sendErrorCode(request, response, HttpServletResponse.SC_SERVICE_UNAVAILABLE);
 
                 return;
             }
             if (false == isMaxContentTypeHeaderLengthValid(request, response))
             {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                sendErrorCode(request, response, HttpServletResponse.SC_BAD_REQUEST);
 
                 return;
             }
-            response.setCharacterEncoding(CHARSET_UTF_8);
-
             acquire();
 
             IServerSession session = null;
@@ -144,7 +164,7 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
 
                     response.addHeader(WWW_AUTHENTICATE, "no permission");
 
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
                 }
@@ -154,7 +174,7 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
 
                     response.addHeader(WWW_AUTHENTICATE, "expired session");
 
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
                 }
@@ -169,7 +189,7 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
 
                     response.addHeader(WWW_AUTHENTICATE, "no permission");
 
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
                 }
@@ -181,7 +201,7 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
 
                     response.addHeader(WWW_AUTHENTICATE, "no permission");
 
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
                 }
@@ -191,18 +211,20 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
 
                     response.addHeader(WWW_AUTHENTICATE, "no permission");
 
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
                 }
             }
+            response.setCharacterEncoding(CHARSET_UTF_8);
+
             super.service(request, response);
         }
         catch (final Exception e)
         {
             logger().error("captured overall exception for security.", e);
 
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
             return;
         }

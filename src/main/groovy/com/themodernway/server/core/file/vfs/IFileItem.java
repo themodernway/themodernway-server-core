@@ -83,5 +83,7 @@ public interface IFileItem
 
     public long writeTo(Writer output) throws IOException;
 
+    public IFileItemAttributes getAttributes() throws IOException;
+
     public IFileItemStorage getFileItemStorage();
 }

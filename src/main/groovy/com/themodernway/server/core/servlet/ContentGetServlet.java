@@ -97,7 +97,7 @@ public class ContentGetServlet extends AbstractContentServlet
             {
                 logger().error("Can't find path info.");
 
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
             }
@@ -107,7 +107,7 @@ public class ContentGetServlet extends AbstractContentServlet
             {
                 logger().error("Can't find storage root.");
 
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
             }
@@ -115,7 +115,7 @@ public class ContentGetServlet extends AbstractContentServlet
             {
                 logger().error("Can't read storage root.");
 
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
             }
@@ -130,14 +130,14 @@ public class ContentGetServlet extends AbstractContentServlet
             }
             else
             {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
             }
         }
         catch (final Exception e)
         {
             logger().error("Captured overall exception for security.", e);
 
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -157,7 +157,7 @@ public class ContentGetServlet extends AbstractContentServlet
         else
         {
             response.setDateHeader(DATE_HEADER, ITimeSupplier.now());
-            
+
             return isModifiedSince(request, response, file.getLastModified());
         }
     }

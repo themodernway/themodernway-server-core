@@ -50,7 +50,7 @@ public class ContentUploadServlet extends AbstractContentServlet
             {
                 logger().error("Can't find storage root.");
 
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
             }
@@ -58,7 +58,7 @@ public class ContentUploadServlet extends AbstractContentServlet
             {
                 logger().error("Can't write storage root.");
 
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
             }
@@ -68,7 +68,7 @@ public class ContentUploadServlet extends AbstractContentServlet
             {
                 logger().error("Can't find path info.");
 
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
             }
@@ -86,7 +86,7 @@ public class ContentUploadServlet extends AbstractContentServlet
                     {
                         logger().error("File size exceeds limit.");
 
-                        response.sendError(HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE, "File size exceeds limit.");
+                        sendErrorCode(request, response, HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
 
                         return;
                     }
@@ -100,7 +100,7 @@ public class ContentUploadServlet extends AbstractContentServlet
                             {
                                 logger().error("Can't write storage folder.");
 
-                                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                                 return;
                             }
@@ -131,7 +131,7 @@ public class ContentUploadServlet extends AbstractContentServlet
         {
             logger().error("Captured overall exception for security.", e);
 
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
             return;
         }

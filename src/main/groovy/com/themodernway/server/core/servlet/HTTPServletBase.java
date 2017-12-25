@@ -34,17 +34,19 @@ import com.themodernway.server.core.security.session.IServerSession;
 @SuppressWarnings("serial")
 public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IServletCommonOperations
 {
-    private final Logger                   m_logger    = Logger.getLogger(getClass());
+    private final Logger                     m_logger    = Logger.getLogger(getClass());
 
-    private RateLimiter                    m_ratelimit = null;
+    private RateLimiter                      m_ratelimit = null;
 
-    private boolean                        m_iscontent = false;
+    private boolean                          m_iscontent = false;
 
-    private List<String>                   m_roleslist = arrayList();
+    private List<String>                     m_roleslist = arrayList();
 
-    private int                            m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private int                              m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    private ISessionIDFromRequestExtractor m_extractor = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
+    private ISessionIDFromRequestExtractor   m_extractor = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
+
+    private IServletResponseErrorCodeManager m_errorcode = CoreServletResponseErrorCodeManager.DEFAULT;
 
     protected HTTPServletBase()
     {
@@ -148,15 +150,35 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         m_roleslist = (roles == null ? arrayList() : roles);
     }
 
+    public void setServletResponseErrorCodeManager(final IServletResponseErrorCodeManager manager)
+    {
+        m_errorcode = requireNonNull(manager);
+    }
+
+    public IServletResponseErrorCodeManager getServletResponseErrorCodeManager()
+    {
+        return m_errorcode;
+    }
+
+    protected void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code)
+    {
+        getServletResponseErrorCodeManager().sendErrorCode(request, response, code);
+    }
+
+    protected void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code, final String mess)
+    {
+        getServletResponseErrorCodeManager().sendErrorCode(request, response, code, mess);
+    }
+
     protected void doPatch(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        if (request.getProtocol().endsWith(HTTPUtils.PROTO_1_1_SUFFIX_DEFAULT))
+        if (request.getProtocol().endsWith(PROTO_1_1_SUFFIX_DEFAULT))
         {
-            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, HTTP_METHOD_PATCH);
+            sendErrorCode(request, response, HttpServletResponse.SC_METHOD_NOT_ALLOWED, HTTP_METHOD_PATCH);
         }
         else
         {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, HTTP_METHOD_PATCH);
+            sendErrorCode(request, response, HttpServletResponse.SC_BAD_REQUEST, HTTP_METHOD_PATCH);
         }
     }
 
@@ -169,18 +191,16 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
             {
                 logger().error("server is suspended, refused request.");
 
-                response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+                sendErrorCode(request, response, HttpServletResponse.SC_SERVICE_UNAVAILABLE);
 
                 return;
             }
             if (false == isMaxContentTypeHeaderLengthValid(request, response))
             {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                sendErrorCode(request, response, HttpServletResponse.SC_BAD_REQUEST);
 
                 return;
             }
-            response.setCharacterEncoding(CHARSET_UTF_8);
-
             acquire();
 
             IServerSession session = null;
@@ -197,7 +217,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
                     response.addHeader(WWW_AUTHENTICATE, "no permission");
 
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
                 }
@@ -207,7 +227,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
                     response.addHeader(WWW_AUTHENTICATE, "expired session");
 
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
                 }
@@ -222,7 +242,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
                     response.addHeader(WWW_AUTHENTICATE, "no permission");
 
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
                 }
@@ -234,7 +254,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
                     response.addHeader(WWW_AUTHENTICATE, "no permission");
 
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
                 }
@@ -244,11 +264,13 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
                     response.addHeader(WWW_AUTHENTICATE, "no permission");
 
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
                 }
             }
+            response.setCharacterEncoding(CHARSET_UTF_8);
+
             final String meth = toTrimOrElse(request.getMethod(), EMPTY_STRING).toUpperCase();
 
             if (HTTP_METHOD_GET.equals(meth))
@@ -305,7 +327,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         {
             logger().error("captured overall exception for security.", e);
 
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
             return;
         }

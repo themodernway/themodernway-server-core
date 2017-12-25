@@ -52,6 +52,7 @@ import com.themodernway.server.core.file.ICoreContentTypeMapper;
 import com.themodernway.server.core.file.vfs.FileItemWrapper;
 import com.themodernway.server.core.file.vfs.FolderItemWrapper;
 import com.themodernway.server.core.file.vfs.IFileItem;
+import com.themodernway.server.core.file.vfs.IFileItemAttributes;
 import com.themodernway.server.core.file.vfs.IFileItemMetaDataFactory;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemWrapper;
@@ -202,17 +203,105 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         return m_base;
     }
 
+    protected static class SimpleFileItemAttributes implements IFileItemAttributes
+    {
+        private boolean     m_exts;
+
+        private boolean     m_hide;
+
+        private boolean     m_read;
+
+        private boolean     m_writ;
+
+        private boolean     m_file;
+
+        private boolean     m_fold;
+
+        private IOException m_oops;
+
+        public SimpleFileItemAttributes(final SimpleFileItem item)
+        {
+            try
+            {
+                final File file = item.getFile();
+
+                m_hide = item.isHidden();
+
+                if (m_exts = item.exists(file))
+                {
+                    m_read = item.isReadable(file);
+
+                    m_writ = item.isWritable(file, item.getFileItemStorage());
+
+                    if (false == (m_file = item.isFile(file)))
+                    {
+                        m_fold = item.isFolder(file);
+                    }
+                }
+            }
+            catch (final IOException e)
+            {
+                m_oops = e;
+            }
+        }
+
+        @Override
+        public boolean exists()
+        {
+            return m_exts;
+        }
+
+        @Override
+        public boolean isHidden()
+        {
+            return m_hide;
+        }
+
+        @Override
+        public boolean isReadable()
+        {
+            return m_read;
+        }
+
+        @Override
+        public boolean isWritable()
+        {
+            return m_writ;
+        }
+
+        @Override
+        public boolean isFile()
+        {
+            return m_file;
+        }
+
+        @Override
+        public boolean isFolder()
+        {
+            return m_fold;
+        }
+
+        public IOException getException()
+        {
+            return m_oops;
+        }
+    }
+
     protected static class SimpleFileItem implements IFileItem, ICoreCommon
     {
-        private final File             m_file;
+        private final File                                  m_file;
 
-        private final IFileItemStorage m_stor;
+        private final IFileItemStorage                      m_stor;
+
+        private final ThreadLocal<SimpleFileItemAttributes> m_attr;
 
         public SimpleFileItem(final File file, final IFileItemStorage stor)
         {
             m_file = requireNonNull(file);
 
             m_stor = requireNonNull(stor);
+
+            m_attr = ThreadLocal.withInitial(() -> new SimpleFileItemAttributes(this));
         }
 
         @Override
@@ -482,7 +571,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             {
                 throw new IOException(format("Can't delete hidden (%s).", getPath()));
             }
-            return Files.deleteIfExists(getFile().toPath());
+            return IO.delete(getFile());
         }
 
         @Override
@@ -501,6 +590,18 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         public IFileItemStorage getFileItemStorage()
         {
             return m_stor;
+        }
+
+        @Override
+        public IFileItemAttributes getAttributes() throws IOException
+        {
+            final SimpleFileItemAttributes attr = m_attr.get();
+
+            if (null != attr.getException())
+            {
+                throw attr.getException();
+            }
+            return attr;
         }
 
         protected File getFile()
@@ -911,7 +1012,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             for (int i = 0; i < 50000; i++)
             {
-                s += cat(item, puts);
+                s += cat(item, puts, false);
             }
             System.out.println(t.toString());
             System.out.println("" + s);
@@ -919,11 +1020,26 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             t.reset();
             for (int i = 0; i < 50000; i++)
             {
-                s += cat(stor.getRoot().file("/x/y/z/b.json"), puts);
+                s += cat(item, puts, true);
             }
             System.out.println(t.toString());
             System.out.println("" + s);
-
+            s = 0;
+            t.reset();
+            for (int i = 0; i < 50000; i++)
+            {
+                s += cat(stor.getRoot().file("/x/y/z/b.json"), puts, false);
+            }
+            System.out.println(t.toString());
+            System.out.println("" + s);
+            s = 0;
+            t.reset();
+            for (int i = 0; i < 50000; i++)
+            {
+                s += cat(stor.getRoot().file("/x/y/z/b.json"), puts, true);
+            }
+            System.out.println(t.toString());
+            System.out.println("" + s);
         }
         catch (final IOException e)
         {
@@ -931,11 +1047,18 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
     }
 
-    public static long cat(final IFileItem item, final OutputStream ou)
+    public static long cat(final IFileItem item, final OutputStream ou, final boolean flag)
     {
         try
         {
-            return item.writeTo(ou);
+            if (isFileFoundForReading(item, flag))
+            {
+                return item.writeTo(ou);
+            }
+            else
+            {
+                System.out.println("no");
+            }
         }
         catch (final Exception e)
         {
@@ -956,5 +1079,52 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isFileFoundForReading(final IFileItem file, final boolean flag) throws IOException
+    {
+        if (null == file)
+        {
+            return false;
+        }
+        if (flag)
+        {
+            final IFileItemAttributes attr = file.getAttributes();
+
+            if (false == attr.exists())
+            {
+                return false;
+            }
+            if (false == attr.isReadable())
+            {
+                return false;
+            }
+            if (false == attr.isFile())
+            {
+                return false;
+            }
+            if (attr.isHidden())
+            {
+                return false;
+            }
+            return true;
+        }
+        if (false == file.exists())
+        {
+            return false;
+        }
+        if (false == file.isReadable())
+        {
+            return false;
+        }
+        if (false == file.isFile())
+        {
+            return false;
+        }
+        if (file.isHidden())
+        {
+            return false;
+        }
+        return true;
     }
 }

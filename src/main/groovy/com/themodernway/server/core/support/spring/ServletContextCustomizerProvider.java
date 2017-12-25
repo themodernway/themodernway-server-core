@@ -26,10 +26,11 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.server.core.io.IO;
 
 public class ServletContextCustomizerProvider implements IServletContextCustomizerProvider, BeanFactoryAware
 {
-    final ArrayList<IServletContextCustomizer> m_customizers = new ArrayList<IServletContextCustomizer>();
+    private final ArrayList<IServletContextCustomizer> m_customizers = new ArrayList<IServletContextCustomizer>();
 
     @Override
     public List<IServletContextCustomizer> getServletContextCustomizers()
@@ -40,10 +41,7 @@ public class ServletContextCustomizerProvider implements IServletContextCustomiz
     @Override
     public void close() throws IOException
     {
-        for (final IServletContextCustomizer customizer : getServletContextCustomizers())
-        {
-            customizer.close();
-        }
+        IO.close(getServletContextCustomizers());
     }
 
     @Override

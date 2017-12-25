@@ -51,7 +51,7 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
         m_rsrc = CommonOps.requireNonNull(resource);
     }
 
-    private final MimetypesFileTypeMap iniFileTypeMap() throws IOException
+    private final synchronized MimetypesFileTypeMap iniFileTypeMap() throws IOException
     {
         if (null != m_maps)
         {

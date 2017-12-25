@@ -44,7 +44,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.2.21-RELEASE'
+version = '1.2.22-RELEASE'
 
 group = 'com.themodernway'
 
@@ -239,7 +239,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.21-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.22-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.0')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')
@@ -260,14 +260,12 @@ dependencies {
     compile(group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3')
     compile(group: 'org.opensaml', name: 'opensaml', version: '2.6.4')
     compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4')
-    compile(group: 'com.google.guava', name: 'guava', version: '23.5-jre')
+    compile(group: 'com.google.guava', name: 'guava', version: '23.6-jre')
     compile(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.0')
     compile(group: 'com.github.ben-manes.caffeine', name: 'jcache', version: '2.6.0')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.3')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.3')
-    compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.9.3')
-    compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-guava', version: '2.9.3')    
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.3')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.3')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.9.3')
