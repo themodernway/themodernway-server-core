@@ -18,6 +18,7 @@ package com.themodernway.server.core.support.spring;
 
 import java.util.List;
 
+import com.themodernway.server.core.servlet.IServletResponseErrorCodeManager;
 import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
 public interface IServletFactoryContextCustomizer extends IServletContextCustomizer
@@ -45,4 +46,8 @@ public interface IServletFactoryContextCustomizer extends IServletContextCustomi
     public ISessionIDFromRequestExtractor getSessionIDFromRequestExtractor();
 
     public void setSessionIDFromRequestExtractor(ISessionIDFromRequestExtractor extractor);
+
+    public void setServletResponseErrorCodeManager(IServletResponseErrorCodeManager manager);
+
+    public IServletResponseErrorCodeManager getServletResponseErrorCodeManager();
 }

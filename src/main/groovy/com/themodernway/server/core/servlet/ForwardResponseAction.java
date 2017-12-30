@@ -39,7 +39,7 @@ public class ForwardResponseAction extends AbstractResponseAction
     }
 
     @Override
-    public void call(final HttpServletRequest request, final HttpServletResponse response) throws Exception
+    public void call(final HttpServletRequest request, final HttpServletResponse response, final IServletResponseErrorCodeManager code) throws Exception
     {
         setHeaders(response);
 

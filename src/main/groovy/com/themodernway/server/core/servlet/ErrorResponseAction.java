@@ -22,8 +22,6 @@ import java.util.function.Supplier;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.themodernway.common.api.java.util.StringOps;
-
 public class ErrorResponseAction extends StatusCodeResponseAction
 {
     private final String m_mess;
@@ -51,20 +49,11 @@ public class ErrorResponseAction extends StatusCodeResponseAction
     }
 
     @Override
-    public void call(final HttpServletRequest request, final HttpServletResponse response) throws Exception
+    public void call(final HttpServletRequest request, final HttpServletResponse response, final IServletResponseErrorCodeManager code) throws Exception
     {
-        final String mess = StringOps.toTrimOrNull(getMessage());
-
         setHeaders(response);
 
-        if (null == mess)
-        {
-            response.sendError(getStatusCode());
-        }
-        else
-        {
-            response.sendError(getStatusCode(), mess);
-        }
+        code.sendErrorCode(request, response, getStatusCode(), getMessage());
     }
 
     @Override

@@ -28,6 +28,8 @@ public interface IFileItemStorage extends INamed, Closeable
 
     public boolean isWritable();
 
+    public boolean isAttributesPreferred();
+
     public void validate() throws IOException;
 
     public String getBasePath();

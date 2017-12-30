@@ -30,25 +30,28 @@ import org.springframework.web.context.WebApplicationContext;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.server.core.servlet.IServletResponseErrorCodeManager;
 import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
 public class ServletFactoryContextCustomizer implements IServletContextCustomizer, ICoreCommon, IServletFactoryContextCustomizer
 {
-    private final Logger                   m_logs = Logger.getLogger(getClass());
+    private final Logger                     m_logs = Logger.getLogger(getClass());
 
-    private final String                   m_name;
+    private final String                     m_name;
 
-    private final String[]                 m_maps;
+    private final String[]                   m_maps;
 
-    private int                            m_load = 1;
+    private int                              m_load = 1;
 
-    private double                         m_rate = 0.0;
+    private double                           m_rate = 0.0;
 
-    private List<String>                   m_role = arrayList();
+    private List<String>                     m_role = arrayList();
 
-    private IServletFactory                m_fact;
+    private IServletFactory                  m_fact;
 
-    private ISessionIDFromRequestExtractor m_extr;
+    private ISessionIDFromRequestExtractor   m_extr;
+
+    private IServletResponseErrorCodeManager m_code;
 
     public ServletFactoryContextCustomizer(final String name, final String maps)
     {
@@ -150,6 +153,18 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
     public void setSessionIDFromRequestExtractor(final ISessionIDFromRequestExtractor extractor)
     {
         m_extr = extractor;
+    }
+
+    @Override
+    public void setServletResponseErrorCodeManager(final IServletResponseErrorCodeManager manager)
+    {
+        m_code = requireNonNull(manager);
+    }
+
+    @Override
+    public IServletResponseErrorCodeManager getServletResponseErrorCodeManager()
+    {
+        return m_code;
     }
 
     @Override

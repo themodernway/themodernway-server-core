@@ -24,6 +24,7 @@ import javax.servlet.ServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.servlet.ContentGetServlet;
+import com.themodernway.server.core.servlet.IServletResponseErrorCodeManager;
 import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
 public class ContentGetServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
@@ -82,6 +83,12 @@ public class ContentGetServletContextCustomizer extends ServletFactoryContextCus
         if (null != extr)
         {
             inst.setSessionIDFromRequestExtractor(extr);
+        }
+        final IServletResponseErrorCodeManager code = customizer.getServletResponseErrorCodeManager();
+
+        if (null != code)
+        {
+            inst.setServletResponseErrorCodeManager(code);
         }
         inst.setRateLimit(customizer.getRateLimit());
 

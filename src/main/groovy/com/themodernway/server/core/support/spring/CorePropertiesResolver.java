@@ -94,14 +94,18 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
     {
         return name -> {
 
+            final String expr = "${" + name + "}";
+
             try
             {
-                logger.info("${" + name + "}");
+                logger.info(expr);
 
-                return m_factory.resolveEmbeddedValue("${" + name + "}");
+                return m_factory.resolveEmbeddedValue(expr);
             }
             catch (final Exception e)
             {
+                logger.error(expr, e);
+
                 return null;
             }
         };

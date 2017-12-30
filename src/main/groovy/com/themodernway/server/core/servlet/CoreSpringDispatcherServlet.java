@@ -134,14 +134,6 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
     {
         try
         {
-            if (false == isRunning())
-            {
-                logger().error("server is suspended, refused request.");
-
-                sendErrorCode(request, response, HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-
-                return;
-            }
             if (false == isMaxContentTypeHeaderLengthValid(request, response))
             {
                 sendErrorCode(request, response, HttpServletResponse.SC_BAD_REQUEST);

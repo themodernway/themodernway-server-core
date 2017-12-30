@@ -16,13 +16,10 @@
 
 package com.themodernway.server.core.jmx.management;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
-import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +29,7 @@ import com.themodernway.common.api.java.util.StringOps;
 @Component("CoreServerManager")
 public class CoreServerManager implements ICoreServerManager
 {
-    private static final Logger logger    = Logger.getLogger(CoreServerManager.class);
-
-    private final AtomicBoolean m_running = new AtomicBoolean(true);
+    private static final Logger logger = Logger.getLogger(CoreServerManager.class);
 
     public CoreServerManager()
     {
@@ -86,30 +81,5 @@ public class CoreServerManager implements ICoreServerManager
         {
             logger.error("Error setting log level string to " + level, e);
         }
-    }
-
-    @ManagedOperation(description = "Resume Server.")
-    public void resume()
-    {
-        if (m_running.compareAndSet(false, true))
-        {
-            logger.info("CoreServerManager.resume()");
-        }
-    }
-
-    @ManagedOperation(description = "Suspend Server.")
-    public void suspend()
-    {
-        if (m_running.compareAndSet(true, false))
-        {
-            logger.info("CoreServerManager.suspend()");
-        }
-    }
-
-    @Override
-    @ManagedOperation(description = "Is Server Running.")
-    public boolean isRunning()
-    {
-        return m_running.get();
     }
 }

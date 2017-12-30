@@ -20,5 +20,4 @@ import com.themodernway.server.core.logging.ICoreLoggingOperations;
 
 public interface ICoreServerManager extends ICoreLoggingOperations
 {
-    public boolean isRunning();
 }

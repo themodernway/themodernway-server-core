@@ -99,6 +99,8 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
     private IFileItemMetaDataFactory m_meta = null;
 
+    private final AtomicBoolean      m_attr = new AtomicBoolean(true);
+
     private final AtomicBoolean      m_mods = new AtomicBoolean(true);
 
     private final AtomicBoolean      m_open = new AtomicBoolean(false);
@@ -201,6 +203,17 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     public String getBasePath()
     {
         return m_base;
+    }
+
+    @Override
+    public boolean isAttributesPreferred()
+    {
+        return m_attr.get();
+    }
+
+    public void setAttributesPreferred(final boolean attr)
+    {
+        m_attr.set(attr);
     }
 
     protected static class SimpleFileItemAttributes implements IFileItemAttributes
@@ -611,17 +624,37 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         protected File readtest(final File file) throws IOException
         {
-            if (false == exists(file))
+            if (getFileItemStorage().isAttributesPreferred())
             {
-                throw new IOException(format("Can't read missing (%s).", getPath()));
+                final IFileItemAttributes attr = getAttributes();
+
+                if (false == attr.exists())
+                {
+                    throw new IOException(format("Can't read missing (%s).", getPath()));
+                }
+                if (false == attr.isReadable())
+                {
+                    throw new IOException(format("Can't read (%s).", getPath()));
+                }
+                if (attr.isHidden())
+                {
+                    throw new IOException(format("Can't read hidden (%s).", getPath()));
+                }
             }
-            if (false == isReadable(file))
+            else
             {
-                throw new IOException(format("Can't read (%s).", getPath()));
-            }
-            if (isHidden())
-            {
-                throw new IOException(format("Can't read hidden (%s).", getPath()));
+                if (false == exists(file))
+                {
+                    throw new IOException(format("Can't read missing (%s).", getPath()));
+                }
+                if (false == isReadable(file))
+                {
+                    throw new IOException(format("Can't read (%s).", getPath()));
+                }
+                if (isHidden())
+                {
+                    throw new IOException(format("Can't read hidden (%s).", getPath()));
+                }
             }
             return file;
         }
@@ -740,7 +773,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                             {
                                 return FileVisitResult.CONTINUE;
                             }
-                            if (Files.isHidden(path))
+                            if (IO.isHidden(path))
                             {
                                 return FileVisitResult.SKIP_SUBTREE;
                             }
@@ -754,7 +787,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                         @Override
                         public FileVisitResult visitFile(final Path path, final BasicFileAttributes attr) throws IOException
                         {
-                            if ((node) && (false == Files.isHidden(path)))
+                            if ((node) && (false == IO.isHidden(path)))
                             {
                                 list.add(path);
                             }
@@ -779,11 +812,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                     }
                     if (node)
                     {
-                        return normal(file -> file.isFile());
+                        return normal(file -> IO.isFile(file));
                     }
                     if (fold)
                     {
-                        return normal(file -> file.isDirectory());
+                        return normal(file -> IO.isFolder(file));
                     }
                 }
             }
@@ -794,7 +827,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             final IFileItemStorage stor = getFileItemStorage();
 
-            return Arrays.stream(getFile().listFiles()).filter(test.and(file -> false == file.isHidden())).map(file -> MAKE(file, stor));
+            return Arrays.stream(getFile().listFiles()).filter(test.and(file -> false == IO.isHidden(file))).map(file -> MAKE(file, stor));
         }
 
         @Override

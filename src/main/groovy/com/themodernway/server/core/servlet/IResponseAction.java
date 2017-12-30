@@ -24,9 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface IResponseAction
 {
-    public void call(HttpServletRequest request, HttpServletResponse response) throws Exception;
+    public void call(HttpServletRequest request, HttpServletResponse response, IServletResponseErrorCodeManager code) throws Exception;
 
     public IResponseAction withHeaders(Map<String, ?> headers);
-    
+
     public IResponseAction withHeaders(Supplier<Map<String, ?>> headers);
 }

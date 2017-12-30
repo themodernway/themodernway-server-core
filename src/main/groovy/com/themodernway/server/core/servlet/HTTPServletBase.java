@@ -187,14 +187,6 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
     {
         try
         {
-            if (false == isRunning())
-            {
-                logger().error("server is suspended, refused request.");
-
-                sendErrorCode(request, response, HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-
-                return;
-            }
             if (false == isMaxContentTypeHeaderLengthValid(request, response))
             {
                 sendErrorCode(request, response, HttpServletResponse.SC_BAD_REQUEST);

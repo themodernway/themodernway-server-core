@@ -37,11 +37,11 @@ public class StatusCodeResponseAction extends AbstractResponseAction
     }
 
     @Override
-    public void call(final HttpServletRequest request, final HttpServletResponse response) throws Exception
+    public void call(final HttpServletRequest request, final HttpServletResponse response, final IServletResponseErrorCodeManager code) throws Exception
     {
         setHeaders(response);
 
-        response.setStatus(getStatusCode());
+        code.sendErrorCode(request, response, getStatusCode());
     }
 
     @Override

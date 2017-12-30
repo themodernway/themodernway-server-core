@@ -157,11 +157,6 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return getServerContext().getWebApplicationContext();
     }
 
-    public default boolean isRunning()
-    {
-        return getServerContext().getCoreServerManager().isRunning();
-    }
-
     public default void doNeverCache(final HttpServletRequest request, final HttpServletResponse response)
     {
         final long time = ITimeSupplier.now();

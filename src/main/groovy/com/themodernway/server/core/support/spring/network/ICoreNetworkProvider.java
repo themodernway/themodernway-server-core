@@ -24,9 +24,9 @@ import com.themodernway.server.core.json.JSONObject;
 
 public interface ICoreNetworkProvider extends Closeable
 {
-    public String getDefaultUserAgent();
+    public String getUserAgent();
 
-    public void setDefaultUserAgent(String agent);
+    public void setUserAgent(String agent);
 
     public void setClientHttpRequestFactory(ClientHttpRequestFactory factory);
 
@@ -46,53 +46,53 @@ public interface ICoreNetworkProvider extends Closeable
 
     public IRESTResponse get(String path, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
 
-    public IRESTResponse put(String path, JSONObject body);
+    public IRESTResponse put(String path, JSONObject request);
 
-    public IRESTResponse put(String path, JSONObject body, HTTPHeaders headers);
+    public IRESTResponse put(String path, JSONObject request, HTTPHeaders headers);
 
-    public IRESTResponse put(String path, JSONObject body, PathParameters params);
+    public IRESTResponse put(String path, JSONObject request, PathParameters params);
 
-    public IRESTResponse put(String path, JSONObject body, PathParameters params, HTTPHeaders headers);
+    public IRESTResponse put(String path, JSONObject request, PathParameters params, HTTPHeaders headers);
 
-    public IRESTResponse put(String path, JSONObject body, IRestTemplateBuilder builder);
+    public IRESTResponse put(String path, JSONObject request, IRestTemplateBuilder builder);
 
-    public IRESTResponse put(String path, JSONObject body, HTTPHeaders headers, IRestTemplateBuilder builder);
+    public IRESTResponse put(String path, JSONObject request, HTTPHeaders headers, IRestTemplateBuilder builder);
 
-    public IRESTResponse put(String path, JSONObject body, PathParameters params, IRestTemplateBuilder builder);
+    public IRESTResponse put(String path, JSONObject request, PathParameters params, IRestTemplateBuilder builder);
 
-    public IRESTResponse put(String path, JSONObject body, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
+    public IRESTResponse put(String path, JSONObject request, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
 
-    public IRESTResponse post(String path, JSONObject body);
+    public IRESTResponse post(String path, JSONObject request);
 
-    public IRESTResponse post(String path, JSONObject body, HTTPHeaders headers);
+    public IRESTResponse post(String path, JSONObject request, HTTPHeaders headers);
 
-    public IRESTResponse post(String path, JSONObject body, PathParameters params);
+    public IRESTResponse post(String path, JSONObject request, PathParameters params);
 
-    public IRESTResponse post(String path, JSONObject body, PathParameters params, HTTPHeaders headers);
+    public IRESTResponse post(String path, JSONObject request, PathParameters params, HTTPHeaders headers);
 
-    public IRESTResponse post(String path, JSONObject body, IRestTemplateBuilder builder);
+    public IRESTResponse post(String path, JSONObject request, IRestTemplateBuilder builder);
 
-    public IRESTResponse post(String path, JSONObject body, HTTPHeaders headers, IRestTemplateBuilder builder);
+    public IRESTResponse post(String path, JSONObject request, HTTPHeaders headers, IRestTemplateBuilder builder);
 
-    public IRESTResponse post(String path, JSONObject body, PathParameters params, IRestTemplateBuilder builder);
+    public IRESTResponse post(String path, JSONObject request, PathParameters params, IRestTemplateBuilder builder);
 
-    public IRESTResponse post(String path, JSONObject body, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
+    public IRESTResponse post(String path, JSONObject request, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
 
-    public IRESTResponse patch(String path, JSONObject body);
+    public IRESTResponse patch(String path, JSONObject request);
 
-    public IRESTResponse patch(String path, JSONObject body, HTTPHeaders headers);
+    public IRESTResponse patch(String path, JSONObject request, HTTPHeaders headers);
 
-    public IRESTResponse patch(String path, JSONObject body, PathParameters params);
+    public IRESTResponse patch(String path, JSONObject request, PathParameters params);
 
-    public IRESTResponse patch(String path, JSONObject body, PathParameters params, HTTPHeaders headers);
+    public IRESTResponse patch(String path, JSONObject request, PathParameters params, HTTPHeaders headers);
 
-    public IRESTResponse patch(String path, JSONObject body, IRestTemplateBuilder builder);
+    public IRESTResponse patch(String path, JSONObject request, IRestTemplateBuilder builder);
 
-    public IRESTResponse patch(String path, JSONObject body, HTTPHeaders headers, IRestTemplateBuilder builder);
+    public IRESTResponse patch(String path, JSONObject request, HTTPHeaders headers, IRestTemplateBuilder builder);
 
-    public IRESTResponse patch(String path, JSONObject body, PathParameters params, IRestTemplateBuilder builder);
+    public IRESTResponse patch(String path, JSONObject request, PathParameters params, IRestTemplateBuilder builder);
 
-    public IRESTResponse patch(String path, JSONObject body, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
+    public IRESTResponse patch(String path, JSONObject request, PathParameters params, HTTPHeaders headers, IRestTemplateBuilder builder);
 
     public IRESTResponse delete(String path);
 
