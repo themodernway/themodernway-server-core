@@ -67,22 +67,19 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
     @Override
     public void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code, String mess)
     {
-        if (null != (mess = StringOps.toTrimOrNull(mess)))
+        if ((null != (mess = StringOps.toTrimOrNull(mess))) && (isSendMessage()))
         {
-            if (isSendMessage())
+            try
             {
-                try
-                {
-                    response.sendError(code, mess);
+                response.sendError(code, mess);
 
-                    debug(code, mess);
+                debug(code, mess);
 
-                    return;
-                }
-                catch (final IOException e)
-                {
-                    logger().error(String.format("error sending code (%s) message (%s).", code, mess), e);
-                }
+                return;
+            }
+            catch (final IOException e)
+            {
+                logger().error(String.format("error sending code (%s) message (%s).", code, mess), e);
             }
         }
         debug(code, mess);

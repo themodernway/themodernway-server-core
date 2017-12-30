@@ -23,6 +23,7 @@ import java.nio.file.Path;
 
 import javax.activation.FileTypeMap;
 import javax.activation.MimetypesFileTypeMap;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
@@ -32,6 +33,7 @@ import org.springframework.core.io.Resource;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.io.IO;
 
+@NotThreadSafe
 public class CoreContentTypeMapper implements ICoreContentTypeMapper, InitializingBean
 {
     private final Logger         m_logs = Logger.getLogger(getClass());
