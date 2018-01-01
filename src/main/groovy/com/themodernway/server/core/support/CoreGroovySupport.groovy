@@ -20,13 +20,11 @@ import java.util.concurrent.Future
 import java.util.function.Supplier
 import java.util.stream.Stream
 
-import org.apache.log4j.Level
 import org.apache.log4j.Logger
 import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
-import org.springframework.integration.channel.PublishSubscribeChannel
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.PollableChannel
@@ -36,7 +34,6 @@ import org.springframework.web.context.WebApplicationContext
 import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.server.core.file.vfs.IFileItemStorage
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
-import com.themodernway.server.core.jmx.management.ICoreServerManager
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.binder.IBinder
@@ -134,12 +131,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Memoized
-    public ICoreServerManager getCoreServerManager()
-    {
-        getServerContext().getCoreServerManager()
-    }
-
-    @Memoized
     public IBuildDescriptorProvider getBuildDescriptorProvider()
     {
         getServerContext().getBuildDescriptorProvider()
@@ -233,12 +224,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public MessageChannel getMessageChannel(String name)
     {
         getServerContext().getMessageChannel(requireNonNull(name))
-    }
-
-    @Memoized
-    public PublishSubscribeChannel getPublishSubscribeChannel(String name)
-    {
-        getServerContext().getPublishSubscribeChannel(requireNonNull(name))
     }
 
     @Memoized
@@ -555,17 +540,5 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public JSONObject json(String name, Object value)
     {
         new JSONObject(name, value)
-    }
-
-    @Override
-    public Level getLoggingLevel()
-    {
-        getServerContext().getLoggingLevel()
-    }
-
-    @Override
-    public void setLoggingLevel(Level level)
-    {
-        getServerContext().setLoggingLevel(level)
     }
 }

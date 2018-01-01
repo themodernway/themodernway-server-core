@@ -24,15 +24,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.PollableChannel;
@@ -44,7 +41,6 @@ import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.io.IO;
-import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.CoreJSONOperations;
 import com.themodernway.server.core.mail.IMailSender;
@@ -297,12 +293,6 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public final ICoreServerManager getCoreServerManager()
-    {
-        return requireNonNull(getBeanSafely("CoreServerManager", ICoreServerManager.class), "CoreServerManager is null, initialization error.");
-    }
-
-    @Override
     public final IBuildDescriptorProvider getBuildDescriptorProvider()
     {
         return requireNonNull(getBeanSafely("BuildDescriptorProvider", IBuildDescriptorProvider.class), "BuildDescriptorProvider is null, initialization error.");
@@ -362,21 +352,9 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public final PublishSubscribeChannel getPublishSubscribeChannel(final String name)
-    {
-        return getBeanSafely(requireNonNull(name), PublishSubscribeChannel.class);
-    }
-
-    @Override
     public final SubscribableChannel getSubscribableChannel(final String name)
     {
-        final SubscribableChannel channel = getBeanSafely(requireNonNull(name), SubscribableChannel.class);
-
-        if (null != channel)
-        {
-            return channel;
-        }
-        return getPublishSubscribeChannel(name);
+        return getBeanSafely(requireNonNull(name), SubscribableChannel.class);
     }
 
     @Override
@@ -533,31 +511,5 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     public final CacheManager getCacheManager(final String name)
     {
         return getBeanSafely(requireNonNull(name), CacheManager.class);
-    }
-
-    @Override
-    public final Level getLoggingLevel()
-    {
-        if (isApplicationContextInitialized())
-        {
-            return getCoreServerManager().getLoggingLevel();
-        }
-        return LogManager.getRootLogger().getLevel();
-    }
-
-    @Override
-    public final void setLoggingLevel(final Level level)
-    {
-        if (null != level)
-        {
-            if (isApplicationContextInitialized())
-            {
-                getCoreServerManager().setLoggingLevel(level);
-            }
-            else
-            {
-                LogManager.getRootLogger().setLevel(level);
-            }
-        }
     }
 }

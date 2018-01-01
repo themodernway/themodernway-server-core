@@ -44,7 +44,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.2.22-RELEASE'
+version = '1.2.23-RELEASE'
 
 group = 'com.themodernway'
 
@@ -239,10 +239,9 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.22-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.23-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.0')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
-    compile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'log4j-over-slf4j', version: '1.7.25')
@@ -283,18 +282,10 @@ dependencies {
     springSecurityPackages().each { String name ->
         compile(group: 'org.springframework.security', name: name, version: '4.2.3.RELEASE')
     }
-    springIntegrationPackages().each { String name ->
-        compile(group: 'org.springframework.integration', name: name, version: '4.3.12.RELEASE')
-    }
-    compile(group: 'org.springframework.integration', name: 'spring-integration-groovy', version: '4.3.12.RELEASE') {
-        exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
-    }
     compile(group: 'com.google.code.gson', name: 'gson', version: '2.8.2')
     compile(group: 'javax.mail', name: 'mail', version: '1.4.7')
     compile(group: 'io.projectreactor', name: 'reactor-core', version: '3.1.2.RELEASE')
-    compile(group: 'org.springframework.integration', name: 'spring-integration-java-dsl', version: '1.2.3.RELEASE')
     compile(group: 'org.springframework.session', name: 'spring-session', version: '1.3.1.RELEASE')
-    compile(group: 'org.springframework.amqp', name: 'spring-rabbit', version: '1.7.5.RELEASE')
     compile(group: 'org.springframework.ldap', name: 'spring-ldap-core', version: '2.3.2.RELEASE')
     compile(group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.13', classifier: 'indy')
     compile(group: 'org.codehaus.gpars', name: 'gpars', version: '1.2.1')
@@ -303,7 +294,6 @@ dependencies {
     compile(group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1')
     compile(group: 'javax.jms', name: 'javax.jms-api', version: '2.0.1')
     testCompile(group: 'log4j', name: 'log4j', version: '1.2.17')
-    testCompile(group: 'log4j', name: 'apache-log4j-extras', version: '1.2.17')
     testCompile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
     testCompile(group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.25')
     testCompile(group: 'org.slf4j', name: 'log4j-over-slf4j', version: '1.7.25')
@@ -400,8 +390,6 @@ def List<String> springCorePackages() {
         'spring-expression',
         'spring-aop',
         'spring-aspects',
-        'spring-instrument',
-        'spring-instrument-tomcat',
         'spring-messaging',
         'spring-jdbc',
         'spring-tx',
@@ -425,27 +413,5 @@ def List<String> springSecurityPackages() {
         'spring-security-config',
         'spring-security-aspects',
         'spring-security-messaging'
-    ]
-}
-
-def List<String> springIntegrationPackages() {
-    return [
-        'spring-integration-core',
-        'spring-integration-ip',
-        'spring-integration-ws',
-        'spring-integration-jms',
-        'spring-integration-jpa',
-        'spring-integration-jmx',
-        'spring-integration-xml',
-        'spring-integration-ftp',
-        'spring-integration-sftp',
-        'spring-integration-mail',
-        'spring-integration-file',
-        'spring-integration-http',
-        'spring-integration-amqp',
-        'spring-integration-event',
-        'spring-integration-stream',
-        'spring-integration-security',
-        'spring-integration-scripting'
     ]
 }

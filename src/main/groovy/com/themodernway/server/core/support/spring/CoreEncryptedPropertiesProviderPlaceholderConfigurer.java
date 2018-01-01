@@ -31,10 +31,9 @@ import org.springframework.util.PropertiesPersister;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.logging.ICoreLoggingOperations;
 import com.themodernway.server.core.security.IStringCryptoProvider;
 
-public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends CorePropertiesProviderPlaceholderConfigurer implements ICoreLoggingOperations
+public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends CorePropertiesProviderPlaceholderConfigurer
 {
     private static final Logger logger   = Logger.getLogger(CoreEncryptedPropertiesProviderPlaceholderConfigurer.class);
 
@@ -47,13 +46,11 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
         setPropertiesPersister(new CoreEncryptionPropertiesPersister(CommonOps.requireNonNull(crypto), this, StringOps.requireTrimOrNull(prefix)));
     }
 
-    @Override
     public Level getLoggingLevel()
     {
         return m_levels;
     }
 
-    @Override
     public void setLoggingLevel(final Level level)
     {
         if (null != level)
@@ -66,13 +63,11 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
         }
     }
 
-    @Override
     public String getLoggingLevelAsString()
     {
         return getLoggingLevel().toString();
     }
 
-    @Override
     public void setLoggingLevelAsString(final String level)
     {
         try

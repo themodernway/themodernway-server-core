@@ -22,20 +22,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.EmbeddedValueResolver;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 
 public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryAware, Closeable
 {
-    private static final Logger                     logger    = Logger.getLogger(CorePropertiesResolver.class);
-
-    private ConfigurableBeanFactory                 m_factory;
+    private EmbeddedValueResolver                   m_factory;
 
     private final ConcurrentHashMap<String, String> m_docache = new ConcurrentHashMap<String, String>();
 
@@ -78,7 +76,7 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
     {
         if (factory instanceof ConfigurableBeanFactory)
         {
-            m_factory = ((ConfigurableBeanFactory) factory);
+            m_factory = new EmbeddedValueResolver((ConfigurableBeanFactory) factory);
         }
         m_docache.clear();
     }
@@ -98,14 +96,10 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
 
             try
             {
-                logger.info(expr);
-
-                return m_factory.resolveEmbeddedValue(expr);
+                return m_factory.resolveStringValue(expr);
             }
             catch (final Exception e)
             {
-                logger.error(expr, e);
-
                 return null;
             }
         };

@@ -19,6 +19,7 @@ package com.themodernway.server.core.support.spring.testing.spock
 import static java.lang.System.err
 
 import org.apache.log4j.Level
+import org.apache.log4j.LogManager
 import org.apache.log4j.Logger
 
 import com.themodernway.common.api.json.JSONStringify
@@ -59,9 +60,9 @@ public abstract class ServerCoreSpecification extends Specification implements I
 
     public void level(Level value = Level.INFO)
     {
-        if ((s_context) && (value))
+        if (value)
         {
-            s_context.setLoggingLevel(value)
+            LogManager.getRootLogger().setLevel(value)
         }
     }
 

@@ -45,6 +45,16 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         closeServerCoreDefault()
     }
 
+    def "test 1"()
+    {
+        setup:
+        def valu = getPropertyByName('crypto.provider.pass')
+        echo valu
+
+        expect:
+        "dean" == "dean"
+    }
+
     def "test JSONObject"()
     {
         setup:

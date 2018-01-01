@@ -22,12 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.apache.log4j.Level;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.PollableChannel;
@@ -36,7 +34,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
-import com.themodernway.server.core.jmx.management.ICoreServerManager;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.ICoreJSONOperations;
 import com.themodernway.server.core.logging.IHasLogging;
@@ -85,8 +82,6 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
 
     public IServerSessionRepository getServerSessionRepository(String domain);
 
-    public ICoreServerManager getCoreServerManager();
-
     public IBuildDescriptorProvider getBuildDescriptorProvider();
 
     public IServletContextCustomizerProvider getServletContextCustomizerProvider();
@@ -104,8 +99,6 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public IWebSocketService getWebSocketService(String name);
 
     public MessageChannel getMessageChannel(String name);
-
-    public PublishSubscribeChannel getPublishSubscribeChannel(String name);
 
     public SubscribableChannel getSubscribableChannel(String name);
 
@@ -152,8 +145,4 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public IMailSenderProvider getMailSenderProvider();
 
     public IMailSender getMailSender(String name);
-
-    public Level getLoggingLevel();
-
-    public void setLoggingLevel(Level level);
 }
