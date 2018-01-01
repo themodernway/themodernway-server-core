@@ -33,16 +33,16 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
     @Override
     default public void close() throws IOException
     {
-        logger().info(format("starting close(%s).", getName()));
+        logger().info(format("starting close (%s).", getName()));
 
         for (final T item : items())
         {
-            close(item);
+            destroy(item);
         }
-        logger().info(format("finished close(%s).", getName()));
+        logger().info(format("finished close (%s).", getName()));
     }
 
-    default public void close(final T item) throws IOException
+    default public void destroy(final T item) throws IOException
     {
         if (null != item)
         {
@@ -50,7 +50,7 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
         }
         else
         {
-            logger().error(format("null item close(%s).", getName()));
+            logger().error(format("null item close (%s).", getName()));
         }
     }
 

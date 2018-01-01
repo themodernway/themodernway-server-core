@@ -25,21 +25,21 @@ import com.themodernway.server.core.io.IO;
 public interface IBeanFactoryProviderNamed<T extends Closeable & INamed> extends IBeanFactoryProvider<T>
 {
     @Override
-    default public void close(final T item) throws IOException
+    default public void destroy(final T item) throws IOException
     {
         if (null != item)
         {
             final String name = item.getName();
 
-            logger().info(format("starting close(%s).", name));
+            logger().info(format("starting close (%s).", name));
 
             IO.close(item);
 
-            logger().info(format("finished close(%s).", name));
+            logger().info(format("finished close (%s).", name));
         }
         else
         {
-            logger().info(format("null item close(%s).", getName()));
+            logger().error(format("null item close (%s).", getName()));
         }
     }
 }
