@@ -135,9 +135,25 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
         getServerContext().getPropertyByName(requireNonNull(name), otherwise)
     }
 
+    @Memoized
     public String getPropertyByName(String name, Supplier<String> otherwise)
     {
         getServerContext().getPropertyByName(requireNonNull(name), otherwise)
+    }
+
+    public String getResolvedExpression(final String expr)
+    {
+        getServerContext().getResolvedExpression(requireNonNull(expr))
+    }
+
+    public String getResolvedExpression(final String expr, final String otherwise)
+    {
+        getServerContext().getResolvedExpression(requireNonNull(expr), otherwise)
+    }
+
+    public String getResolvedExpression(final String expr, final Supplier<String> otherwise)
+    {
+        getServerContext().getResolvedExpression(requireNonNull(expr), otherwise)
     }
 
     @Memoized

@@ -44,13 +44,13 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
     @Override
     public String getPropertyByName(final String name)
     {
-        return resolve(name);
+        return property(name);
     }
 
     @Override
     public String getPropertyByName(final String name, final String otherwise)
     {
-        final String valu = resolve(name);
+        final String valu = property(name);
 
         if (null != valu)
         {
@@ -62,7 +62,37 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
     @Override
     public String getPropertyByName(final String name, final Supplier<String> otherwise)
     {
-        final String valu = resolve(name);
+        final String valu = property(name);
+
+        if (null != valu)
+        {
+            return valu;
+        }
+        return otherwise.get();
+    }
+
+    @Override
+    public String getResolvedExpression(final String expr)
+    {
+        return expression(expr);
+    }
+
+    @Override
+    public String getResolvedExpression(final String expr, final String otherwise)
+    {
+        final String valu = expression(expr);
+
+        if (null != valu)
+        {
+            return valu;
+        }
+        return otherwise;
+    }
+
+    @Override
+    public String getResolvedExpression(final String expr, final Supplier<String> otherwise)
+    {
+        final String valu = expression(expr);
 
         if (null != valu)
         {
@@ -81,27 +111,36 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
         m_docache.clear();
     }
 
-    private final String resolve(final String name)
+    private final String property(final String name)
     {
         CommonOps.requireNonNull(m_factory);
 
-        return m_docache.computeIfAbsent(StringOps.requireTrimOrNull(name, "getPropertyByName(null)"), resolve());
+        final String valu = StringOps.requireTrimOrNull(name, "getPropertyByName(null)");
+
+        return m_docache.computeIfAbsent(valu, property());
     }
 
-    private final Function<String, String> resolve()
+    private final String expression(final String expr)
+    {
+        CommonOps.requireNonNull(m_factory);
+
+        final String valu = StringOps.requireTrimOrNull(expr, "getResolvedExpression(null)");
+
+        try
+        {
+            return m_factory.resolveStringValue(valu);
+        }
+        catch (final Exception e)
+        {
+            return null;
+        }
+    }
+
+    private final Function<String, String> property()
     {
         return name -> {
 
-            final String expr = "${" + name + "}";
-
-            try
-            {
-                return m_factory.resolveStringValue(expr);
-            }
-            catch (final Exception e)
-            {
-                return null;
-            }
+            return expression("${" + name + "}");
         };
     }
 

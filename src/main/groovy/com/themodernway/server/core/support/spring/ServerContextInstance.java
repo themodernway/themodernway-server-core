@@ -175,13 +175,13 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public <B> Map<String, B> getBeansOfType(final Class<B> type) throws Exception
+    public final <B> Map<String, B> getBeansOfType(final Class<B> type) throws Exception
     {
         return CommonOps.toUnmodifiableMap(getApplicationContext().getBeansOfType(requireNonNull(type)));
     }
 
     @Override
-    public String getOriginalBeanName(final String name)
+    public final String getOriginalBeanName(final String name)
     {
         return toTrimOrNull(BeanFactoryUtils.originalBeanName(requireNonNull(name)));
     }
@@ -190,6 +190,11 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     public final IPropertiesResolver getPropertiesResolver()
     {
         return this;
+    }
+
+    private final CorePropertiesResolver getCorePropertiesResolver()
+    {
+        return requireNonNull(getBeanSafely("CorePropertiesResolver", CorePropertiesResolver.class), "CorePropertiesResolver is null, initialization error.");
     }
 
     @Override
@@ -217,7 +222,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public String getPropertyByName(final String name, final Supplier<String> otherwise)
+    public final String getPropertyByName(final String name, final Supplier<String> otherwise)
     {
         final String valu = getEnvironment().getProperty(requireNonNull(name));
 
@@ -226,6 +231,24 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
             return valu;
         }
         return getCorePropertiesResolver().getPropertyByName(name, otherwise);
+    }
+
+    @Override
+    public final String getResolvedExpression(final String expr)
+    {
+        return getCorePropertiesResolver().getResolvedExpression(requireNonNull(expr));
+    }
+
+    @Override
+    public final String getResolvedExpression(final String expr, final String otherwise)
+    {
+        return getCorePropertiesResolver().getResolvedExpression(requireNonNull(expr), otherwise);
+    }
+
+    @Override
+    public final String getResolvedExpression(final String expr, final Supplier<String> otherwise)
+    {
+        return getCorePropertiesResolver().getResolvedExpression(requireNonNull(expr), otherwise);
     }
 
     @Override
@@ -275,7 +298,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public IFileItemStorage getFileItemStorage(final String name)
+    public final IFileItemStorage getFileItemStorage(final String name)
     {
         return getFileItemStorageProvider().getItem(requireNonNull(name));
     }
@@ -299,7 +322,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public IServletContextCustomizerProvider getServletContextCustomizerProvider()
+    public final IServletContextCustomizerProvider getServletContextCustomizerProvider()
     {
         return requireNonNull(getBeanSafely("ServletContextCustomizerProvider", IServletContextCustomizerProvider.class), "ServletContextCustomizerProvider is null, initialization error.");
     }
@@ -320,11 +343,6 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     public final ICoreNetworkProvider network()
     {
         return requireNonNull(getBeanSafely("NetworkProvider", ICoreNetworkProvider.class), "NetworkProvider is null, initialization error.");
-    }
-
-    private final CorePropertiesResolver getCorePropertiesResolver()
-    {
-        return requireNonNull(getBeanSafely("CorePropertiesResolver", CorePropertiesResolver.class), "CorePropertiesResolver is null, initialization error.");
     }
 
     @Override
@@ -460,13 +478,13 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public <T> T requireNonNullOrElse(final T object, final T otherwise)
+    public final <T> T requireNonNullOrElse(final T object, final T otherwise)
     {
         return CommonOps.requireNonNullOrElse(object, otherwise);
     }
 
     @Override
-    public <T> T requireNonNullOrElse(final T object, final Supplier<T> otherwise)
+    public final <T> T requireNonNullOrElse(final T object, final Supplier<T> otherwise)
     {
         return CommonOps.requireNonNullOrElse(object, otherwise);
     }

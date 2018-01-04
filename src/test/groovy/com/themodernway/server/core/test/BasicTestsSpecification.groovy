@@ -48,7 +48,17 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     def "test 1"()
     {
         setup:
-        def valu = getPropertyByName('crypto.provider.pass')
+        def valu = getPropertyByName('jmx.init')
+        echo valu
+
+        expect:
+        "dean" == "dean"
+    }
+
+    def "test 2"()
+    {
+        setup:
+        def valu = getResolvedExpression('${dont.know.property:true}')
         echo valu
 
         expect:

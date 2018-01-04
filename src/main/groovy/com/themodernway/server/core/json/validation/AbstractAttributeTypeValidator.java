@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.support.spring;
+package com.themodernway.server.core.json.validation;
 
-import java.util.function.Supplier;
+import com.themodernway.common.api.java.util.StringOps;
 
-public interface IPropertiesResolver
+@SuppressWarnings("serial")
+public abstract class AbstractAttributeTypeValidator implements IAttributeTypeValidator
 {
-    public String getPropertyByName(String name);
+    private final String  m_type;
 
-    public String getPropertyByName(String name, String otherwise);
+    protected AbstractAttributeTypeValidator(final String type)
+    {
+        m_type = StringOps.requireTrimOrNull(type);
+    }
 
-    public String getPropertyByName(String name, Supplier<String> otherwise);
+    @Override
+    public boolean isIgnored()
+    {
+        return false;
+    }
 
-    public String getResolvedExpression(String expr);
-
-    public String getResolvedExpression(String expr, String otherwise);
-
-    public String getResolvedExpression(String expr, Supplier<String> otherwise);
+    @Override
+    public String getType()
+    {
+        return m_type;
+    }
 }

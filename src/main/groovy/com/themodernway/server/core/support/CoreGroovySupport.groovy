@@ -172,10 +172,28 @@ public class CoreGroovySupport implements IServerContext, Closeable
         getServerContext().getPropertyByName(requireNonNull(name), otherwise)
     }
 
-    @Override
+    @Memoized
     public String getPropertyByName(String name, Supplier<String> otherwise)
     {
         getServerContext().getPropertyByName(requireNonNull(name), otherwise)
+    }
+
+    @Override
+    public String getResolvedExpression(final String expr)
+    {
+        getServerContext().getResolvedExpression(requireNonNull(expr))
+    }
+
+    @Override
+    public String getResolvedExpression(final String expr, final String otherwise)
+    {
+        getServerContext().getResolvedExpression(requireNonNull(expr), otherwise)
+    }
+
+    @Override
+    public String getResolvedExpression(final String expr, final Supplier<String> otherwise)
+    {
+        getServerContext().getResolvedExpression(requireNonNull(expr), otherwise)
     }
 
     @Memoized

@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.support.spring;
+package com.themodernway.server.core.json.validation;
 
-import java.util.function.Supplier;
-
-public interface IPropertiesResolver
+public class IgnoreTypeValidator extends AbstractAttributeTypeValidator
 {
-    public String getPropertyByName(String name);
+    private static final long               serialVersionUID = 1L;
 
-    public String getPropertyByName(String name, String otherwise);
+    public static final IgnoreTypeValidator INSTANCE         = new IgnoreTypeValidator();
 
-    public String getPropertyByName(String name, Supplier<String> otherwise);
+    public IgnoreTypeValidator()
+    {
+        super("Ignore");
+    }
 
-    public String getResolvedExpression(String expr);
+    @Override
+    public boolean isIgnored()
+    {
+        return true;
+    }
 
-    public String getResolvedExpression(String expr, String otherwise);
-
-    public String getResolvedExpression(String expr, Supplier<String> otherwise);
+    @Override
+    public void validate(final JSONValue jval, final ValidationContext ctx) throws ValidationException
+    {
+    }
 }
