@@ -21,8 +21,6 @@ import com.themodernway.server.core.json.JSONArray;
 
 public class JSONArrayValidator extends AbstractAttributeTypeValidator
 {
-    private static final long             serialVersionUID = 1L;
-
     private final IAttributeTypeValidator m_validator;
 
     public JSONArrayValidator(final IAttributeTypeValidator validator)
@@ -38,7 +36,7 @@ public class JSONArrayValidator extends AbstractAttributeTypeValidator
     }
 
     @Override
-    public void validate(final JSONValue json, final ValidationContext ctx) throws ValidationException
+    public void validate(final JSONValue json, final ValidationContext ctx)
     {
         if (null == json)
         {

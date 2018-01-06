@@ -16,21 +16,14 @@
 
 package com.themodernway.server.core.json.validation;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidationContext implements Serializable
+public class ValidationContext
 {
-    private static final long           serialVersionUID = 1L;
+    private final List<String>          m_stack  = new ArrayList<String>();
 
-    private boolean                     m_stopOnError;
-
-    private boolean                     m_validate       = true;
-
-    private final List<String>          m_stack          = new ArrayList<String>();
-
-    private final List<ValidationError> m_errors         = new ArrayList<ValidationError>();
+    private final List<ValidationError> m_errors = new ArrayList<ValidationError>();
 
     public void push(final String context)
     {
@@ -47,58 +40,29 @@ public class ValidationContext implements Serializable
         m_stack.remove(m_stack.size() - 1);
     }
 
-    protected void addError(final ValidationError e) throws ValidationException
+    protected void addError(final ValidationError e)
     {
         m_errors.add(e);
-
-        if (m_stopOnError)
-        {
-            throw new ValidationException(this);
-        }
     }
 
-    public void addError(final String msg) throws ValidationException
+    public void addError(final String msg)
     {
         addError(new ValidationError(msg, joinContext(m_stack)));
     }
 
-    public void addRequiredError() throws ValidationException
+    public void addRequiredError()
     {
         addError("attribute is required");
     }
 
-    public void addBadTypeError(final String type) throws ValidationException
+    public void addBadTypeError(final String type)
     {
         addError(String.format("value should be (%s).", type));
     }
 
-    public void addInvalidAttributeError(final String type) throws ValidationException
+    public void addInvalidAttributeError(final String type)
     {
         addError(String.format("attribute is invalid for type (%s).", type));
-    }
-
-    public boolean isStopOnError()
-    {
-        return m_stopOnError;
-    }
-
-    public ValidationContext setStopOnError(final boolean stopOnError)
-    {
-        m_stopOnError = stopOnError;
-
-        return this;
-    }
-
-    public boolean isValidate()
-    {
-        return m_validate;
-    }
-
-    public ValidationContext setValidate(final boolean validate)
-    {
-        m_validate = validate;
-
-        return this;
     }
 
     public int getErrorCount()

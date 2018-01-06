@@ -20,13 +20,11 @@ import com.themodernway.common.api.java.util.StringOps;
 
 public class StringRegexValidator extends AbstractAttributeTypeValidator
 {
-    private static final long serialVersionUID = 1L;
-
-    private final String      m_regex;
+    private final String m_regex;
 
     public StringRegexValidator(final String regex)
     {
-        super("String Regex");
+        super("StringRegex");
 
         m_regex = StringOps.requireTrimOrNull(regex);
     }
@@ -37,7 +35,7 @@ public class StringRegexValidator extends AbstractAttributeTypeValidator
     }
 
     @Override
-    public void validate(final JSONValue json, final ValidationContext ctx) throws ValidationException
+    public void validate(final JSONValue json, final ValidationContext ctx)
     {
         if (null == json)
         {

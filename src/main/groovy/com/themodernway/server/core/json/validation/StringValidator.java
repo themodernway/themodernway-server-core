@@ -18,17 +18,13 @@ package com.themodernway.server.core.json.validation;
 
 public class StringValidator extends AbstractAttributeTypeValidator
 {
-    private static final long           serialVersionUID = 1L;
-
-    public static final StringValidator INSTANCE         = new StringValidator();
-
     public StringValidator()
     {
         super("String");
     }
 
     @Override
-    public void validate(final JSONValue json, final ValidationContext ctx) throws ValidationException
+    public void validate(final JSONValue json, final ValidationContext ctx)
     {
         if (null == json)
         {

@@ -18,10 +18,9 @@ package com.themodernway.server.core.json.validation;
 
 import com.themodernway.common.api.java.util.StringOps;
 
-@SuppressWarnings("serial")
 public abstract class AbstractAttributeTypeValidator implements IAttributeTypeValidator
 {
-    private final String  m_type;
+    private final String m_type;
 
     protected AbstractAttributeTypeValidator(final String type)
     {

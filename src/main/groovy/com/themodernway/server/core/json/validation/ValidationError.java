@@ -16,17 +16,13 @@
 
 package com.themodernway.server.core.json.validation;
 
-import java.io.Serializable;
-
 import com.themodernway.common.api.java.util.CommonOps;
 
-public class ValidationError implements Serializable
+public class ValidationError
 {
-    private static final long serialVersionUID = 1L;
+    private final String m_message;
 
-    private final String      m_message;
-
-    private final String      m_context;
+    private final String m_context;
 
     public ValidationError(final String message, final String context)
     {

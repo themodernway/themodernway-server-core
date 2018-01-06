@@ -18,10 +18,6 @@ package com.themodernway.server.core.json.validation;
 
 public class IgnoreTypeValidator extends AbstractAttributeTypeValidator
 {
-    private static final long               serialVersionUID = 1L;
-
-    public static final IgnoreTypeValidator INSTANCE         = new IgnoreTypeValidator();
-
     public IgnoreTypeValidator()
     {
         super("Ignore");
@@ -34,7 +30,7 @@ public class IgnoreTypeValidator extends AbstractAttributeTypeValidator
     }
 
     @Override
-    public void validate(final JSONValue jval, final ValidationContext ctx) throws ValidationException
+    public void validate(final JSONValue jval, final ValidationContext ctx)
     {
     }
 }

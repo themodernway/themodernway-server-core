@@ -16,13 +16,11 @@
 
 package com.themodernway.server.core.json.validation;
 
-import java.io.Serializable;
-
-public interface IAttributeTypeValidator extends Serializable
+public interface IAttributeTypeValidator
 {
     public String getType();
 
     public boolean isIgnored();
 
-    public void validate(JSONValue json, ValidationContext ctx) throws ValidationException;
+    public void validate(JSONValue json, ValidationContext ctx);
 }

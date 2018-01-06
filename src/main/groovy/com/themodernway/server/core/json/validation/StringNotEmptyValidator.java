@@ -18,19 +18,15 @@ package com.themodernway.server.core.json.validation;
 
 import com.themodernway.common.api.java.util.StringOps;
 
-public class StringEmptyValidator extends AbstractAttributeTypeValidator
+public class StringNotEmptyValidator extends AbstractAttributeTypeValidator
 {
-    private static final long                serialVersionUID = 1L;
-
-    public static final StringEmptyValidator INSTANCE         = new StringEmptyValidator();
-
-    public StringEmptyValidator()
+    public StringNotEmptyValidator()
     {
-        super("String Empty");
+        super("StringNotEmpty");
     }
 
     @Override
-    public void validate(final JSONValue json, final ValidationContext ctx) throws ValidationException
+    public void validate(final JSONValue json, final ValidationContext ctx)
     {
         if (null == json)
         {

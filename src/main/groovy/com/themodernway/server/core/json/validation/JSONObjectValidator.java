@@ -24,11 +24,9 @@ import com.themodernway.server.core.json.JSONObject;
 
 public class JSONObjectValidator extends AbstractAttributeTypeValidator
 {
-    private static final long                              serialVersionUID = 1L;
+    private final ArrayList<String>                        m_required   = new ArrayList<String>();
 
-    private final ArrayList<String>                        m_required       = new ArrayList<String>();
-
-    private final HashMap<String, IAttributeTypeValidator> m_attributes     = new HashMap<String, IAttributeTypeValidator>();
+    private final HashMap<String, IAttributeTypeValidator> m_attributes = new HashMap<String, IAttributeTypeValidator>();
 
     public JSONObjectValidator()
     {
@@ -51,7 +49,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator
     }
 
     @Override
-    public void validate(final JSONValue json, final ValidationContext ctx) throws ValidationException
+    public void validate(final JSONValue json, final ValidationContext ctx)
     {
         if (null == json)
         {
