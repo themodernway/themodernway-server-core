@@ -39,12 +39,12 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
         super(name);
     }
 
-    public void addAttribute(final String name, final IAttributeTypeValidator type)
+    public JSONObjectValidator add(final String name, final IAttributeTypeValidator type)
     {
-        addAttribute(name, type, true);
+        return add(name, type, true);
     }
 
-    public void addAttribute(final String name, final IAttributeTypeValidator type, final boolean required)
+    public JSONObjectValidator add(final String name, final IAttributeTypeValidator type, final boolean required)
     {
         m_attributes.put(CommonOps.requireNonNull(name), CommonOps.requireNonNull(type));
 
@@ -52,6 +52,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
         {
             m_required.add(name);
         }
+        return this;
     }
 
     @Override

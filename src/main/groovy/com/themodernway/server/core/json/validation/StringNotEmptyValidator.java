@@ -34,7 +34,7 @@ public class StringNotEmptyValidator extends AbstractAttributeTypeValidator
 
             return;
         }
-        final String value = StringOps.requireTrimOrNull(json.getAsString());
+        final String value = StringOps.toTrimOrNull(json.getAsString());
 
         if (null == value)
         {

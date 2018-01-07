@@ -100,7 +100,7 @@ public class ValidationContext implements IValidationContext
             }
             else
             {
-                b.append("\n");
+                b.append(", ");
             }
             b.append(e.getContext()).append(" - ").append(e.getMessage());
         }
