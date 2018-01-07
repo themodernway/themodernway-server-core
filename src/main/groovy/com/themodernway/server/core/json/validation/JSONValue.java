@@ -63,6 +63,11 @@ public class JSONValue
         return JSONUtils.asInteger(getValue());
     }
 
+    public Long getAsLong()
+    {
+        return JSONUtils.asLong(getValue());
+    }
+
     public Number getAsNumber()
     {
         return JSONUtils.asNumber(getValue());
