@@ -36,4 +36,10 @@ public abstract class AbstractPredicateAttributeTypeValidator<T> extends Abstrac
     {
         return m_pred;
     }
+
+    @Override
+    public boolean test(final T value)
+    {
+        return getPredicate().test(value);
+    }
 }

@@ -18,9 +18,25 @@ package com.themodernway.server.core.json.validation;
 
 import java.util.function.Predicate;
 
-public interface IPredicateAttributeTypeValidator<T> extends IAttributeTypeValidator
+public class JSONValuePredicateValidator extends AbstractPredicateAttributeTypeValidator<IJSONValue>
 {
-    public boolean test(T value);
+    public JSONValuePredicateValidator(final Predicate<IJSONValue> pred)
+    {
+        super("JSONValuePredicate", pred);
+    }
 
-    public Predicate<T> getPredicate();
+    @Override
+    public void validate(final IJSONValue json, final ValidationContext ctx)
+    {
+        if (null == json)
+        {
+            ctx.addBadTypeError(getType());
+
+            return;
+        }
+        if (false == test(json))
+        {
+            ctx.addBadTypeError(getType());
+        }
+    }
 }
