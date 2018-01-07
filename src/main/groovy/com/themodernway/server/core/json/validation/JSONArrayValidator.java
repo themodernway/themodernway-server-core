@@ -36,7 +36,7 @@ public class JSONArrayValidator extends AbstractAttributeTypeValidator
     }
 
     @Override
-    public void validate(final JSONValue json, final ValidationContext ctx)
+    public void validate(final IJSONValue json, final ValidationContext ctx)
     {
         if (null == json)
         {

@@ -65,7 +65,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
     }
 
     @Override
-    public void validate(final JSONValue json, final ValidationContext ctx)
+    public void validate(final IJSONValue json, final ValidationContext ctx)
     {
         if (null == json)
         {
@@ -93,7 +93,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
             }
             else
             {
-                final JSONValue aval = new JSONValue(jobj.get(name));
+                final IJSONValue aval = new JSONValue(jobj.get(name));
 
                 if (aval.isNull())
                 {

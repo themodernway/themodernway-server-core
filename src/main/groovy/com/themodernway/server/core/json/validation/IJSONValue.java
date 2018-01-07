@@ -16,21 +16,37 @@
 
 package com.themodernway.server.core.json.validation;
 
-public class IgnoreTypeValidator extends AbstractAttributeTypeValidator
+import java.util.Date;
+
+import com.themodernway.common.api.json.JSONType;
+import com.themodernway.server.core.json.JSONArray;
+import com.themodernway.server.core.json.JSONObject;
+
+public interface IJSONValue
 {
-    public IgnoreTypeValidator()
-    {
-        super("Ignore");
-    }
+    public Object getValue();
 
-    @Override
-    public boolean isIgnored()
-    {
-        return true;
-    }
+    public boolean isNull();
 
-    @Override
-    public void validate(final IJSONValue jval, final ValidationContext ctx)
-    {
-    }
+    public JSONArray getAsArray();
+
+    public Boolean getAsBoolean();
+
+    public Double getAsDouble();
+
+    public Integer getAsInteger();
+
+    public Long getAsLong();
+
+    public Number getAsNumber();
+
+    public JSONObject getAsObject();
+
+    public String getAsString();
+
+    public Date getAsDate();
+
+    public JSONType getJSONType();
+
+    public boolean isJSONType(JSONType type);
 }

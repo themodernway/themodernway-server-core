@@ -24,7 +24,7 @@ import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.JSONUtils;
 
-public class JSONValue
+public class JSONValue implements IJSONValue
 {
     private final Object m_valu;
 
@@ -33,66 +33,79 @@ public class JSONValue
         m_valu = valu;
     }
 
+    @Override
     public Object getValue()
     {
         return m_valu;
     }
 
+    @Override
     public boolean isNull()
     {
         return CommonOps.isNull(getValue());
     }
 
+    @Override
     public JSONArray getAsArray()
     {
         return JSONUtils.asArray(getValue());
     }
 
+    @Override
     public Boolean getAsBoolean()
     {
         return JSONUtils.asBoolean(getValue());
     }
 
+    @Override
     public Double getAsDouble()
     {
         return JSONUtils.asDouble(getValue());
     }
 
+    @Override
     public Integer getAsInteger()
     {
         return JSONUtils.asInteger(getValue());
     }
 
+    @Override
     public Long getAsLong()
     {
         return JSONUtils.asLong(getValue());
     }
 
+    @Override
     public Number getAsNumber()
     {
         return JSONUtils.asNumber(getValue());
     }
 
+    @Override
     public JSONObject getAsObject()
     {
         return JSONUtils.asObject(getValue());
     }
 
+    @Override
     public String getAsString()
     {
         return JSONUtils.asString(getValue());
     }
 
+    @Override
     public Date getAsDate()
     {
         return JSONUtils.asDate(getValue());
     }
 
+    @Override
     public JSONType getJSONType()
     {
         return JSONUtils.getJSONType(getValue());
     }
 
+    @Override
     public boolean isJSONType(final JSONType type)
     {
         return (type == getJSONType());

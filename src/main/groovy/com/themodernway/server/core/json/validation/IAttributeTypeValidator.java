@@ -22,5 +22,5 @@ public interface IAttributeTypeValidator
 
     public boolean isIgnored();
 
-    public void validate(JSONValue json, ValidationContext ctx);
+    public void validate(IJSONValue json, ValidationContext ctx);
 }
