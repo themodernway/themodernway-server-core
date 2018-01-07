@@ -16,10 +16,10 @@
 
 package com.themodernway.server.core.json.validation;
 
-public interface IAttributeTypeValidator
-{
-    public String getType();
+import com.themodernway.common.api.types.INamed;
 
+public interface IAttributeTypeValidator extends INamed
+{
     public boolean isIgnored();
 
     public void validate(IJSONValue json, ValidationContext ctx);

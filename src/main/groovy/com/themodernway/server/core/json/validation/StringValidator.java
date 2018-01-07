@@ -28,13 +28,13 @@ public class StringValidator extends AbstractAttributeTypeValidator
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
         if (null == json.getAsString())
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
         }
     }
 }

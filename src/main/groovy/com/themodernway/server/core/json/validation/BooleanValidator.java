@@ -28,13 +28,13 @@ public class BooleanValidator extends AbstractAttributeTypeValidator
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
         if (null == json.getAsBoolean())
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
         }
     }
 }

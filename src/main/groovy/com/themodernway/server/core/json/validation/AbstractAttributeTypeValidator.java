@@ -20,11 +20,11 @@ import com.themodernway.common.api.java.util.StringOps;
 
 public abstract class AbstractAttributeTypeValidator implements IAttributeTypeValidator
 {
-    private final String m_type;
+    private final String m_name;
 
-    protected AbstractAttributeTypeValidator(final String type)
+    protected AbstractAttributeTypeValidator(final String name)
     {
-        m_type = StringOps.requireTrimOrNull(type);
+        m_name = StringOps.requireTrimOrNull(name);
     }
 
     @Override
@@ -34,8 +34,8 @@ public abstract class AbstractAttributeTypeValidator implements IAttributeTypeVa
     }
 
     @Override
-    public String getType()
+    public String getName()
     {
-        return m_type;
+        return m_name;
     }
 }

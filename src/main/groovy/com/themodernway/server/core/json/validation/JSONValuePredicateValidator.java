@@ -30,13 +30,13 @@ public class JSONValuePredicateValidator extends AbstractPredicateAttributeTypeV
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
         if (false == test(json))
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
         }
     }
 }

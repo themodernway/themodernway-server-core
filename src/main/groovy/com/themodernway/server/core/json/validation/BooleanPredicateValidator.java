@@ -16,23 +16,13 @@
 
 package com.themodernway.server.core.json.validation;
 
-import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.server.core.json.JSONArray;
+import java.util.function.Predicate;
 
-public class JSONArrayValidator extends AbstractAttributeTypeValidator
+public class BooleanPredicateValidator extends AbstractPredicateAttributeTypeValidator<Boolean>
 {
-    private final IAttributeTypeValidator m_validator;
-
-    public JSONArrayValidator(final IAttributeTypeValidator validator)
+    public BooleanPredicateValidator(final Predicate<Boolean> pred)
     {
-        this("JSONArray", validator);
-    }
-
-    public JSONArrayValidator(final String type, final IAttributeTypeValidator validator)
-    {
-        super(type);
-
-        m_validator = CommonOps.requireNonNull(validator);
+        super("BooleanPredicate", pred);
     }
 
     @Override
@@ -44,23 +34,17 @@ public class JSONArrayValidator extends AbstractAttributeTypeValidator
 
             return;
         }
-        final JSONArray jarr = json.getAsArray();
+        final Boolean valu = json.getAsBoolean();
 
-        if (null == jarr)
+        if (null == valu)
         {
             ctx.addBadTypeError(getName());
 
             return;
         }
-        final int size = jarr.size();
-
-        for (int i = 0; i < size; i++)
+        if (false == test(valu))
         {
-            ctx.push(i);
-
-            m_validator.validate(new JSONValue(jarr.get(i)), ctx);
-
-            ctx.pop();
+            ctx.addBadTypeError(getName());
         }
     }
 }

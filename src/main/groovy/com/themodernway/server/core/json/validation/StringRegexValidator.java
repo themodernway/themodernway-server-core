@@ -16,22 +16,19 @@
 
 package com.themodernway.server.core.json.validation;
 
+import java.util.regex.Pattern;
+
 import com.themodernway.common.api.java.util.StringOps;
 
 public class StringRegexValidator extends AbstractAttributeTypeValidator
 {
-    private final String m_regex;
+    private final Pattern m_regex;
 
     public StringRegexValidator(final String regex)
     {
         super("StringRegex");
 
-        m_regex = StringOps.requireTrimOrNull(regex);
-    }
-
-    public String getRegex()
-    {
-        return m_regex;
+        m_regex = Pattern.compile(StringOps.requireTrimOrNull(regex));
     }
 
     @Override
@@ -39,7 +36,7 @@ public class StringRegexValidator extends AbstractAttributeTypeValidator
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
@@ -47,11 +44,13 @@ public class StringRegexValidator extends AbstractAttributeTypeValidator
 
         if (null == value)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
+
+            return;
         }
-        if (false == value.matches(getRegex()))
+        if (false == m_regex.matcher(value).matches())
         {
-            ctx.addError(String.format("String doesn't match %s", getRegex()));
+            ctx.addError(String.format("String doesn't match %s", m_regex.pattern()));
         }
     }
 }

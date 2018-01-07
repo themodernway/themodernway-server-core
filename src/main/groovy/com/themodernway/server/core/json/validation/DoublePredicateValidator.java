@@ -30,7 +30,7 @@ public class DoublePredicateValidator extends AbstractPredicateAttributeTypeVali
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
@@ -38,11 +38,13 @@ public class DoublePredicateValidator extends AbstractPredicateAttributeTypeVali
 
         if (null == valu)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
+
+            return;
         }
         if (false == test(valu))
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
         }
     }
 }

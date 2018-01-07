@@ -28,13 +28,13 @@ public class IntegerValidator extends AbstractAttributeTypeValidator
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
         if (null == json.getAsInteger())
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
         }
     }
 }

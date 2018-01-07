@@ -69,7 +69,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
@@ -77,7 +77,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
 
         if (null == jobj)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
@@ -110,7 +110,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
 
             if (null == validator)
             {
-                ctx.addInvalidAttributeError(getType());
+                ctx.addInvalidAttributeError(getName());
             }
             else if (false == validator.isIgnored())
             {

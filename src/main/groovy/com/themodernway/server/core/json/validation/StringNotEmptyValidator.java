@@ -30,7 +30,7 @@ public class StringNotEmptyValidator extends AbstractAttributeTypeValidator
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
@@ -38,7 +38,7 @@ public class StringNotEmptyValidator extends AbstractAttributeTypeValidator
 
         if (null == value)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
         }
     }
 }

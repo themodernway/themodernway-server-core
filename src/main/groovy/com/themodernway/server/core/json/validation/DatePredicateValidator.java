@@ -31,7 +31,7 @@ public class DatePredicateValidator extends AbstractPredicateAttributeTypeValida
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
@@ -39,11 +39,13 @@ public class DatePredicateValidator extends AbstractPredicateAttributeTypeValida
 
         if (null == valu)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
+
+            return;
         }
         if (false == test(valu))
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
         }
     }
 }

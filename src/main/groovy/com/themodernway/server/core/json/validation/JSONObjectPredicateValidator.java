@@ -32,7 +32,7 @@ public class JSONObjectPredicateValidator extends AbstractPredicateAttributeType
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
 
             return;
         }
@@ -40,11 +40,13 @@ public class JSONObjectPredicateValidator extends AbstractPredicateAttributeType
 
         if (null == valu)
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
+
+            return;
         }
         if (false == test(valu))
         {
-            ctx.addBadTypeError(getType());
+            ctx.addBadTypeError(getName());
         }
     }
 }
