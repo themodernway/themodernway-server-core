@@ -26,14 +26,14 @@ public class MultiTypeValidator extends AbstractAttributeTypeValidator
 
     private final List<IAttributeTypeValidator> m_list;
 
-    public MultiTypeValidator(final String type, final boolean flag, final IAttributeTypeValidator... list)
+    public MultiTypeValidator(final String name, final boolean flag, final IAttributeTypeValidator... list)
     {
-        this(type, flag, CommonOps.toList(list));
+        this(name, flag, CommonOps.toList(list));
     }
 
-    public MultiTypeValidator(final String type, final boolean flag, final List<IAttributeTypeValidator> list)
+    public MultiTypeValidator(final String name, final boolean flag, final List<IAttributeTypeValidator> list)
     {
-        super(type);
+        super(name);
 
         m_flag = flag;
 

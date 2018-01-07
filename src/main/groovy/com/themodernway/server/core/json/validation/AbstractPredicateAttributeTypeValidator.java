@@ -24,22 +24,16 @@ public abstract class AbstractPredicateAttributeTypeValidator<T> extends Abstrac
 {
     private final Predicate<T> m_pred;
 
-    protected AbstractPredicateAttributeTypeValidator(final String type, final Predicate<T> pred)
+    protected AbstractPredicateAttributeTypeValidator(final String name, final Predicate<T> pred)
     {
-        super(type);
+        super(name);
 
         m_pred = CommonOps.requireNonNull(pred);
     }
 
     @Override
-    public Predicate<T> getPredicate()
-    {
-        return m_pred;
-    }
-
-    @Override
     public boolean test(final T value)
     {
-        return getPredicate().test(value);
+        return m_pred.test(value);
     }
 }

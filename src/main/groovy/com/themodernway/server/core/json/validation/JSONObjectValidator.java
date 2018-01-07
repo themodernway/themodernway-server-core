@@ -34,9 +34,9 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
         this("JSONObject");
     }
 
-    public JSONObjectValidator(final String type)
+    public JSONObjectValidator(final String name)
     {
-        super(type);
+        super(name);
     }
 
     public void addAttribute(final String name, final IAttributeTypeValidator type)

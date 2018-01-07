@@ -23,14 +23,19 @@ public class JSONArrayValidator extends AbstractAttributeTypeValidator
 {
     private final IAttributeTypeValidator m_validator;
 
+    public JSONArrayValidator()
+    {
+        this(new IgnoreTypeValidator());
+    }
+
     public JSONArrayValidator(final IAttributeTypeValidator validator)
     {
         this("JSONArray", validator);
     }
 
-    public JSONArrayValidator(final String type, final IAttributeTypeValidator validator)
+    public JSONArrayValidator(final String name, final IAttributeTypeValidator validator)
     {
-        super(type);
+        super(name);
 
         m_validator = CommonOps.requireNonNull(validator);
     }
@@ -52,15 +57,18 @@ public class JSONArrayValidator extends AbstractAttributeTypeValidator
 
             return;
         }
-        final int size = jarr.size();
-
-        for (int i = 0; i < size; i++)
+        if (false == m_validator.isIgnored())
         {
-            ctx.push(i);
+            final int size = jarr.size();
 
-            m_validator.validate(new JSONValue(jarr.get(i)), ctx);
+            for (int i = 0; i < size; i++)
+            {
+                ctx.push(i);
 
-            ctx.pop();
+                m_validator.validate(new JSONValue(jarr.get(i)), ctx);
+
+                ctx.pop();
+            }
         }
     }
 }
