@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.json.JSONObject;
 
-public class JSONObjectValidator extends AbstractAttributeTypeValidator
+public class JSONObjectValidator extends AbstractAttributeTypeValidator implements IJSONValidator
 {
     private final ArrayList<String>                        m_required   = new ArrayList<String>();
 
@@ -38,14 +39,29 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator
         super(type);
     }
 
+    public void addAttribute(final String name, final IAttributeTypeValidator type)
+    {
+        addAttribute(name, type, true);
+    }
+
     public void addAttribute(final String name, final IAttributeTypeValidator type, final boolean required)
     {
-        m_attributes.put(name, type);
+        m_attributes.put(CommonOps.requireNonNull(name), CommonOps.requireNonNull(type));
 
         if (required)
         {
             m_required.add(name);
         }
+    }
+
+    @Override
+    public IValidationContext validate(final JSONObject json)
+    {
+        final ValidationContext ctx = new ValidationContext();
+
+        validate(new JSONValue(json), ctx);
+
+        return ctx;
     }
 
     @Override

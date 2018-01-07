@@ -19,7 +19,9 @@ package com.themodernway.server.core.json.validation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidationContext
+import com.themodernway.common.api.java.util.CommonOps;
+
+public class ValidationContext implements IValidationContext
 {
     private final List<String>          m_stack  = new ArrayList<String>();
 
@@ -47,7 +49,13 @@ public class ValidationContext
 
     public void addError(final String msg)
     {
-        addError(new ValidationError(msg, joinContext(m_stack)));
+        final StringBuilder b = new StringBuilder();
+
+        for (final String s : m_stack)
+        {
+            b.append(s);
+        }
+        addError(new ValidationError(msg, b.toString()));
     }
 
     public void addRequiredError()
@@ -65,16 +73,19 @@ public class ValidationContext
         addError(String.format("attribute is invalid for type (%s).", type));
     }
 
-    public int getErrorCount()
+    @Override
+    public boolean isValid()
     {
-        return m_errors.size();
+        return (0 == m_errors.size());
     }
 
+    @Override
     public List<ValidationError> getErrors()
     {
-        return m_errors;
+        return CommonOps.toUnmodifiableList(m_errors);
     }
 
+    @Override
     public String getErrorString()
     {
         final StringBuilder b = new StringBuilder();
@@ -92,17 +103,6 @@ public class ValidationContext
                 b.append("\n");
             }
             b.append(e.getContext()).append(" - ").append(e.getMessage());
-        }
-        return b.toString();
-    }
-
-    private static String joinContext(final List<String> stack)
-    {
-        final StringBuilder b = new StringBuilder();
-
-        for (final String s : stack)
-        {
-            b.append(s);
         }
         return b.toString();
     }
