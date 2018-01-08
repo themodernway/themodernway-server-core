@@ -20,12 +20,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.java.util.StringOps;
 
 public class ValidationContext implements IValidationContext
 {
+    private final String                m_root;
+
     private final List<String>          m_stack  = new ArrayList<String>();
 
     private final List<ValidationError> m_errors = new ArrayList<ValidationError>();
+
+    public ValidationContext()
+    {
+        this("root");
+    }
+
+    public ValidationContext(final String root)
+    {
+        m_root = StringOps.requireTrimOrNull(root);
+    }
 
     public void push(final String context)
     {
@@ -34,7 +47,7 @@ public class ValidationContext implements IValidationContext
 
     public void push(final int index)
     {
-        m_stack.add("[" + index + "]");
+        m_stack.add(StringOps.START_ARRAY_STRING + index + StringOps.CLOSE_ARRAY_STRING);
     }
 
     public void pop()
@@ -49,7 +62,7 @@ public class ValidationContext implements IValidationContext
 
     public void addError(final String msg)
     {
-        final StringBuilder b = new StringBuilder();
+        final StringBuilder b = new StringBuilder(m_root);
 
         for (final String s : m_stack)
         {
@@ -100,7 +113,7 @@ public class ValidationContext implements IValidationContext
             }
             else
             {
-                b.append(", ");
+                b.append(StringOps.COMMA_STRING).append(StringOps.SPACE_STRING);
             }
             b.append(e.getContext()).append(" - ").append(e.getMessage());
         }

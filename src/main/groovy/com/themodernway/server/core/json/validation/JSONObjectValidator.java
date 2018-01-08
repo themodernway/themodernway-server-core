@@ -58,7 +58,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
     @Override
     public IValidationContext validate(final JSONObject json)
     {
-        final ValidationContext ctx = new ValidationContext();
+        final ValidationContext ctx = new ValidationContext(getName());
 
         validate(new JSONValue(json), ctx);
 
