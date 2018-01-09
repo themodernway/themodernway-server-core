@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018, The Modern Way. All rights reserved.
+ * Copyright (c) 2018, The Modern Way. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class HTTPHeaders extends HttpHeaders
 {
     private static final long           serialVersionUID   = 1L;
 
-    public static final String          DEFAULT_USER_AGENT = "The Modern Way/1.2.24 (Language=Java/1.8.0)";
+    public static final String          DEFAULT_USER_AGENT = "The Modern Way/1.2.25 (Language=Java/1.8.0)";
 
     public static final List<MediaType> JSON_MEDIA_TYPE    = CommonOps.toUnmodifiableList(CommonOps.toList(MediaType.APPLICATION_JSON_UTF8));
 
