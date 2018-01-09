@@ -55,6 +55,14 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
         return this;
     }
 
+    public void setValidators(final List<IValidaorShuttle> validators)
+    {
+        for (final IValidaorShuttle shuttle : validators)
+        {
+            add(shuttle.toString(), shuttle.getValidaror(), shuttle.isRequired());
+        }
+    }
+
     @Override
     public IValidationContext validate(final JSONObject json)
     {
