@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.test
 
+import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 import com.themodernway.server.core.test.util.Validators
@@ -63,5 +64,19 @@ public class ValidationTestsSpecification extends ServerCoreSpecification implem
 
         expect:
         false == valu.isValid()
+    }
+
+    def "test 4"()
+    {
+        setup:
+        def json = json(name: "Dean")
+        def test = Validators.getSimpleValidator()
+        def time = new NanoTimer()
+        def good = test.validate(json).isValid()
+
+        echo time
+
+        expect:
+        true == good
     }
 }

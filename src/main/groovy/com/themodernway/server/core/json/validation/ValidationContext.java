@@ -42,7 +42,7 @@ public class ValidationContext implements IValidationContext
 
     public void push(final String context)
     {
-        m_stack.add("." + context);
+        m_stack.add(StringOps.PLACE_STRING + context);
     }
 
     public void push(final int index)
@@ -115,7 +115,7 @@ public class ValidationContext implements IValidationContext
             {
                 b.append(StringOps.COMMA_STRING).append(StringOps.SPACE_STRING);
             }
-            b.append(e.getContext()).append(" - ").append(e.getMessage());
+            b.append(e.getContext()).append(StringOps.SPACE_STRING + StringOps.MINUS_STRING + StringOps.SPACE_STRING).append(e.getMessage());
         }
         return b.toString();
     }
