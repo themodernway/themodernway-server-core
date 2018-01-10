@@ -25,10 +25,6 @@ import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
-import org.springframework.messaging.Message
-import org.springframework.messaging.MessageChannel
-import org.springframework.messaging.PollableChannel
-import org.springframework.messaging.SubscribableChannel
 import org.springframework.web.context.WebApplicationContext
 
 import com.themodernway.common.api.java.util.CommonOps
@@ -39,7 +35,6 @@ import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.binder.IBinder
 import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
-import com.themodernway.server.core.pubsub.JSONMessageBuilder
 import com.themodernway.server.core.scripting.IScriptingProvider
 import com.themodernway.server.core.security.IAuthorizationProvider
 import com.themodernway.server.core.security.IAuthorizationResult
@@ -236,72 +231,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public ICoreNetworkProvider network()
     {
         getServerContext().network()
-    }
-
-    @Memoized
-    public MessageChannel getMessageChannel(String name)
-    {
-        getServerContext().getMessageChannel(requireNonNull(name))
-    }
-
-    @Memoized
-    public SubscribableChannel getSubscribableChannel(String name)
-    {
-        getServerContext().getSubscribableChannel(requireNonNull(name))
-    }
-
-    @Memoized
-    public PollableChannel getPollableChannel(String name)
-    {
-        getServerContext().getPollableChannel(requireNonNull(name))
-    }
-
-    @Override
-    public boolean publish(String name, JSONObject message)
-    {
-        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)))
-    }
-
-    @Override
-    public boolean publish(String name, JSONObject message, long timeout)
-    {
-        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)), timeout)
-    }
-
-    @Override
-    public boolean publish(String name, JSONObject message, Map<String, ?> headers)
-    {
-        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)))
-    }
-
-    @Override
-    public boolean publish(String name, JSONObject message, Map<String, ?> headers, long timeout)
-    {
-        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)), timeout)
-    }
-
-    @Override
-    public <T> boolean publish(String name, Message<T> message)
-    {
-        def channel = getMessageChannel(requireNonNull(name))
-
-        if (channel)
-        {
-            return channel.send(requireNonNull(message))
-        }
-        throw new IllegalArgumentException("MessageChannel ${name} does not exist.")
-    }
-
-    @Override
-    public <T> boolean publish(String name, Message<T> message, long timeout)
-    {
-        def channel = getMessageChannel(requireNonNull(name))
-
-        if (channel)
-        {
-            return channel.send(requireNonNull(message), timeout)
-        }
-        throw new IllegalArgumentException("MessageChannel ${name} does not exist.")
     }
 
     @Override

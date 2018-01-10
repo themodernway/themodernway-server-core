@@ -1,39 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suppressions
-	xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
-	<suppress>
-		<notes><![CDATA[
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+   <suppress>
+      <notes><![CDATA[
       file name: AppleJavaExtensions-1.4.jar
       ]]></notes>
-		<gav regex="true">^com\.apple:AppleJavaExtensions:.*$</gav>
-		<cpe>cpe:/a:apple:java</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: xmltooling-1.4.4.jar
-   ]]></notes>
-		<gav regex="true">^org\.opensaml:xmltooling:.*$</gav>
-		<cpe>cpe:/a:xmltooling_project:xmltooling</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: not-yet-commons-ssl-0.3.9.jar
-   ]]></notes>
-		<gav regex="true">^ca\.juliusdavies:not-yet-commons-ssl:.*$</gav>
-		<cpe>cpe:/a:not_yet_commons_ssl_project:not_yet_commons_ssl</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: commons-httpclient-3.1.jar
-   ]]></notes>
-		<gav regex="true">^commons-httpclient:commons-httpclient:.*$</gav>
-		<cpe>cpe:/a:apache:httpclient</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: esapi-2.0.1.jar
-   ]]></notes>
-		<gav regex="true">^org\.owasp\.esapi:esapi:.*$</gav>
-		<cpe>cpe:/a:owasp:enterprise_security_api</cpe>
-	</suppress>
+      <gav regex="true">^com\.apple:AppleJavaExtensions:.*$</gav>
+      <cpe>cpe:/a:apple:java</cpe>
+   </suppress>
 </suppressions>

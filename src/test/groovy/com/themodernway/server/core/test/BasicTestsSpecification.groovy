@@ -21,8 +21,6 @@ import javax.script.ScriptEngine
 import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.io.IO
 import com.themodernway.server.core.io.NoOpWriter
-import com.themodernway.server.core.json.JSONObject
-import com.themodernway.server.core.json.support.JSONMapToTreeSolver
 import com.themodernway.server.core.logging.MDC
 import com.themodernway.server.core.scripting.ScriptType
 import com.themodernway.server.core.support.CoreGroovyTrait
@@ -129,23 +127,6 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
 
         expect:
         "dean" == "dean"
-    }
-
-    def "test tree"()
-    {
-        setup:
-        JSONMapToTreeSolver tree = new JSONMapToTreeSolver([
-            [linked: 'tree', parent: 'level', column: 'children']
-        ]).setIncluded(['id', 'children'])
-        tree << [id: '1', level: 1, tree: 0]
-        tree << [id: '2', level: 2, tree: 1]
-        tree << [id: '3', level: 3, tree: 2]
-        JSONObject json = tree.solve('tree')
-        String valu = json.toJSONString()
-        echo valu
-
-        expect:
-        valu == valu
     }
 
     def "test MDC"()

@@ -59,7 +59,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
     {
         for (final IValidaorShuttle shuttle : validators)
         {
-            add(shuttle.toString(), shuttle.getValidaror(), shuttle.isRequired());
+            add(shuttle.getName(), shuttle.getValidaror(), shuttle.isRequired());
         }
     }
 

@@ -16,7 +16,7 @@
 
 package com.themodernway.server.core.json;
 
-import static com.themodernway.server.core.ICoreCommon.NULL;
+import static com.themodernway.common.api.java.util.CommonOps.NULL;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -130,13 +130,7 @@ public final class JSONUtils
         {
             return find;
         }
-        final StringBuilder b = new StringBuilder(indent);
-
-        for (int i = 0; i < indent; i++)
-        {
-            b.append("-");
-        }
-        find = b.toString();
+        find = StringOps.repeat(StringOps.MINUS_STRING, indent);
 
         INDENT_CACHE.put(indent, find);
 
@@ -145,7 +139,7 @@ public final class JSONUtils
 
     public static final String getLineNumber(final int lineno)
     {
-        return String.format("%1$-4d", lineno).replaceAll(" ", "-");
+        return String.format("%1$-4d", lineno).replaceAll(StringOps.SPACE_STRING, StringOps.MINUS_STRING);
     }
 
     public static final String dumpClassNamesToString(final Object o)

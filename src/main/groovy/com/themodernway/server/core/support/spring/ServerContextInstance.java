@@ -30,22 +30,15 @@ import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.PollableChannel;
-import org.springframework.messaging.SubscribableChannel;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.io.IO;
-import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.CoreJSONOperations;
 import com.themodernway.server.core.mail.IMailSender;
 import com.themodernway.server.core.mail.IMailSenderProvider;
-import com.themodernway.server.core.pubsub.JSONMessageBuilder;
 import com.themodernway.server.core.scripting.IScriptingProvider;
 import com.themodernway.server.core.security.DefaultAuthorizationProvider;
 import com.themodernway.server.core.security.IAuthorizationProvider;
@@ -147,7 +140,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
                 }
                 catch (final Exception e)
                 {
-                    logger().error("getBeanSafely(" + name + "," + type.getName() + ") error.", e);
+                    logger().error(format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
                 }
                 if (null == bean)
                 {
@@ -162,14 +155,14 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
                     }
                     catch (final Exception e)
                     {
-                        logger().error("getBeanSafely(" + name + "," + type.getName() + ") error.", e);
+                        logger().error(format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
                     }
                 }
             }
         }
         catch (final Exception e)
         {
-            logger().error("getBeanSafely(" + name + "," + type.getName() + ") error.", e);
+            logger().error(format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
         }
         return bean;
     }
@@ -260,7 +253,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
         {
             return auth;
         }
-        logger().trace("Using AuthorizationProvider default " + DEFAULT_AUTH.getClass().getName());
+        logger().info(format("Using AuthorizationProvider default (%s)." , DEFAULT_AUTH.getClass().getName()));
 
         return DEFAULT_AUTH;
     }
@@ -274,7 +267,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
         {
             return keys.getPrincipalsKeys();
         }
-        logger().trace("Using PrincipalsKeysProvider default " + DEFAULT_KEYS.getClass().getName());
+        logger().info(format("Using PrincipalsKeysProvider default (%s)." , DEFAULT_KEYS.getClass().getName()));
 
         return DEFAULT_KEYS.getPrincipalsKeys();
     }
@@ -352,84 +345,6 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public final MessageChannel getMessageChannel(final String name)
-    {
-        MessageChannel channel = getBeanSafely(requireNonNull(name), MessageChannel.class);
-
-        if (null != channel)
-        {
-            return channel;
-        }
-        channel = getSubscribableChannel(name);
-
-        if (null != channel)
-        {
-            return channel;
-        }
-        return getPollableChannel(name);
-    }
-
-    @Override
-    public final SubscribableChannel getSubscribableChannel(final String name)
-    {
-        return getBeanSafely(requireNonNull(name), SubscribableChannel.class);
-    }
-
-    @Override
-    public final PollableChannel getPollableChannel(final String name)
-    {
-        return getBeanSafely(requireNonNull(name), PollableChannel.class);
-    }
-
-    @Override
-    public final boolean publish(final String name, final JSONObject message)
-    {
-        return publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)));
-    }
-
-    @Override
-    public final boolean publish(final String name, final JSONObject message, final long timeout)
-    {
-        return publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)), timeout);
-    }
-
-    @Override
-    public final boolean publish(final String name, final JSONObject message, final Map<String, ?> headers)
-    {
-        return publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)));
-    }
-
-    @Override
-    public final boolean publish(final String name, final JSONObject message, final Map<String, ?> headers, final long timeout)
-    {
-        return publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)), timeout);
-    }
-
-    @Override
-    public final <T> boolean publish(final String name, final Message<T> message)
-    {
-        final MessageChannel channel = getMessageChannel(requireNonNull(name));
-
-        if (null != channel)
-        {
-            return channel.send(requireNonNull(message));
-        }
-        throw new IllegalArgumentException("MessageChannel " + name + " does not exist.");
-    }
-
-    @Override
-    public final <T> boolean publish(final String name, final Message<T> message, final long timeout)
-    {
-        final MessageChannel channel = getMessageChannel(requireNonNull(name));
-
-        if (null != channel)
-        {
-            return channel.send(requireNonNull(message), timeout);
-        }
-        throw new IllegalArgumentException("MessageChannel " + name + " does not exist.");
-    }
-
-    @Override
     public final String uuid()
     {
         return UUID.randomUUID().toString().toUpperCase();
@@ -439,54 +354,6 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     public Logger logger()
     {
         return m_logger;
-    }
-
-    @Override
-    public final String toTrimOrNull(final String string)
-    {
-        return StringOps.toTrimOrNull(string);
-    }
-
-    @Override
-    public final String toTrimOrElse(final String string, final String otherwise)
-    {
-        return StringOps.toTrimOrElse(string, otherwise);
-    }
-
-    @Override
-    public final String toTrimOrElse(final String string, final Supplier<String> otherwise)
-    {
-        return StringOps.toTrimOrElse(string, otherwise);
-    }
-
-    @Override
-    public final <T> T requireNonNull(final T object)
-    {
-        return CommonOps.requireNonNull(object);
-    }
-
-    @Override
-    public final <T> T requireNonNull(final T object, final String message)
-    {
-        return CommonOps.requireNonNull(object, message);
-    }
-
-    @Override
-    public final <T> T requireNonNull(final T object, final Supplier<String> message)
-    {
-        return CommonOps.requireNonNull(object, message);
-    }
-
-    @Override
-    public final <T> T requireNonNullOrElse(final T object, final T otherwise)
-    {
-        return CommonOps.requireNonNullOrElse(object, otherwise);
-    }
-
-    @Override
-    public final <T> T requireNonNullOrElse(final T object, final Supplier<T> otherwise)
-    {
-        return CommonOps.requireNonNullOrElse(object, otherwise);
     }
 
     @Override

@@ -20,21 +20,16 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.PollableChannel;
-import org.springframework.messaging.SubscribableChannel;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.themodernway.server.core.ICoreBase;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
-import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.support.ICoreJSONOperations;
 import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.mail.IMailSender;
@@ -50,7 +45,7 @@ import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider;
 import com.themodernway.server.core.support.spring.network.websocket.IWebSocketService;
 import com.themodernway.server.core.support.spring.network.websocket.IWebSocketServiceProvider;
 
-public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPropertiesResolver, IHasLogging
+public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPropertiesResolver, IHasLogging, ICoreBase
 {
     public boolean isApplicationContextInitialized();
 
@@ -98,41 +93,7 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
 
     public IWebSocketService getWebSocketService(String name);
 
-    public MessageChannel getMessageChannel(String name);
-
-    public SubscribableChannel getSubscribableChannel(String name);
-
-    public PollableChannel getPollableChannel(String name);
-
-    public boolean publish(String name, JSONObject message);
-
-    public boolean publish(String name, JSONObject message, long timeout);
-
-    public boolean publish(String name, JSONObject message, Map<String, ?> headers);
-
-    public boolean publish(String name, JSONObject message, Map<String, ?> headers, long timeout);
-
-    public <T> boolean publish(String name, Message<T> message);
-
-    public <T> boolean publish(String name, Message<T> message, long timeout);
-
     public String uuid();
-
-    public String toTrimOrNull(String string);
-
-    public String toTrimOrElse(String string, String otherwise);
-
-    public String toTrimOrElse(String string, Supplier<String> otherwise);
-
-    public <T> T requireNonNull(T object);
-
-    public <T> T requireNonNull(T object, String message);
-
-    public <T> T requireNonNull(T object, Supplier<String> message);
-
-    public <T> T requireNonNullOrElse(T object, T otherwise);
-
-    public <T> T requireNonNullOrElse(T object, Supplier<T> otherwise);
 
     public IScriptingProvider scripting();
 

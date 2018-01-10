@@ -16,26 +16,26 @@
 
 package com.themodernway.server.core.cache;
 
-import java.io.IOException;
+import java.io.Closeable;
+import java.util.List;
+import java.util.function.Function;
 
-import com.themodernway.common.api.types.ICache;
+import com.themodernway.common.api.types.INamed;
+import com.themodernway.common.api.types.IRefreshable;
 
-public abstract class AbstractConcurrentCache<T> extends AbstractCoreConcurrentCache<String, T> implements ICache<T>
+public interface ICoreCache<K, T> extends INamed, IRefreshable, Closeable
 {
-    protected AbstractConcurrentCache(final String named)
-    {
-        super(named);
-    }
+    public int size();
 
-    @Override
-    public void refresh()
-    {
-        clear();
-    }
+    public void clear();
 
-    @Override
-    public void close() throws IOException
-    {
-        clear();
-    }
+    public T get(K name);
+
+    public void remove(K name);
+
+    public List<K> keys();
+
+    public List<T> values();
+
+    public Function<K, T> getMappingFunction();
 }

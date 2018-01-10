@@ -40,6 +40,11 @@ public class ValidationContext implements IValidationContext
         m_root = StringOps.requireTrimOrNull(root);
     }
 
+    public ValidationContext(final ValidationContext ctx)
+    {
+        this(ctx.m_root);
+    }
+
     public void push(final String context)
     {
         m_stack.add(StringOps.PLACE_STRING + context);

@@ -22,20 +22,14 @@ import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
-import org.springframework.messaging.Message
-import org.springframework.messaging.MessageChannel
-import org.springframework.messaging.PollableChannel
-import org.springframework.messaging.SubscribableChannel
 import org.springframework.web.context.WebApplicationContext
 
 import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.server.core.file.vfs.IFileItemStorage
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
-import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.support.JSONTrait
 import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
-import com.themodernway.server.core.pubsub.JSONMessageBuilder
 import com.themodernway.server.core.scripting.IScriptingProvider
 import com.themodernway.server.core.security.IAuthorizationProvider
 import com.themodernway.server.core.security.IAuthorizationResult
@@ -195,54 +189,6 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     public ICoreNetworkProvider network()
     {
         getServerContext().network()
-    }
-
-    @Memoized
-    public MessageChannel getMessageChannel(String name)
-    {
-        getServerContext().getMessageChannel(requireNonNull(name))
-    }
-
-    @Memoized
-    public SubscribableChannel getSubscribableChannel(String name)
-    {
-        getServerContext().getSubscribableChannel(requireNonNull(name))
-    }
-
-    @Memoized
-    public PollableChannel getPollableChannel(String name)
-    {
-        getServerContext().getPollableChannel(requireNonNull(name))
-    }
-
-    public boolean publish(String name, JSONObject message)
-    {
-        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)))
-    }
-
-    public boolean publish(String name, JSONObject message, long timeout)
-    {
-        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message)), timeout)
-    }
-
-    public boolean publish(String name, JSONObject message, Map<String, ?> headers)
-    {
-        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)))
-    }
-
-    public boolean publish(String name, JSONObject message, Map<String, ?> headers, long timeout)
-    {
-        publish(requireNonNull(name), JSONMessageBuilder.createMessage(requireNonNull(message), requireNonNull(headers)), timeout)
-    }
-
-    public <T> boolean publish(String name, Message<T> message)
-    {
-        getServerContext().publish(requireNonNull(name), requireNonNull(message))
-    }
-
-    public <T> boolean publish(String name, Message<T> message, long timeout)
-    {
-        getServerContext().publish(requireNonNull(name), requireNonNull(message), timeout)
     }
 
     public boolean containsBean(String name)

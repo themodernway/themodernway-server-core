@@ -22,38 +22,46 @@ import com.themodernway.common.api.java.util.CommonOps;
 
 public class MultiTypeValidator extends AbstractAttributeTypeValidator
 {
-    private final boolean                       m_flag;
+    private final boolean                       m_must;
 
     private final List<IAttributeTypeValidator> m_list;
 
-    public MultiTypeValidator(final String name, final boolean flag, final IAttributeTypeValidator... list)
+    public MultiTypeValidator(final String name, final boolean must, final IAttributeTypeValidator... list)
     {
-        this(name, flag, CommonOps.toList(list));
+        this(name, must, CommonOps.toList(list));
     }
 
-    public MultiTypeValidator(final String name, final boolean flag, final List<IAttributeTypeValidator> list)
+    public MultiTypeValidator(final String name, final boolean must, final List<IAttributeTypeValidator> list)
     {
         super(name);
 
-        m_flag = flag;
+        m_must = must;
 
-        m_list = CommonOps.toUnmodifiableList(list);
+        m_list = CommonOps.arrayList(list);
+
+        m_list.removeIf((type) -> null == type);
     }
 
     @Override
     public void validate(final IJSONValue jval, final ValidationContext ctx)
     {
+        if (m_list.isEmpty())
+        {
+            return;
+        }
+        final ValidationContext tmp = new ValidationContext(ctx);
+
         for (final IAttributeTypeValidator type : m_list)
         {
             boolean valid = true;
 
-            type.validate(jval, ctx);
+            type.validate(jval, tmp);
 
-            if (false == ctx.isValid())
+            if (false == tmp.isValid())
             {
                 valid = false;
             }
-            if (m_flag && valid)
+            if (m_must && valid)
             {
                 return;
             }

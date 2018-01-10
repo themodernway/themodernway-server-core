@@ -25,15 +25,17 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import com.themodernway.common.api.java.util.CommonOps;
+
 public class CorsFilterContextCustomizer extends FilterFactoryContextCustomizer implements IFilterFactory
 {
-    private final CorsConfigurationSource m_configuration;
+    private final CorsConfigurationSource m_conf;
 
     public CorsFilterContextCustomizer(final String name, final String maps, final CorsConfigurationSource conf)
     {
         super(name, maps);
 
-        m_configuration = conf;
+        m_conf = CommonOps.requireNonNull(conf);
 
         setFilterFactory(this);
     }
@@ -42,19 +44,14 @@ public class CorsFilterContextCustomizer extends FilterFactoryContextCustomizer 
     {
         super(name, maps);
 
-        m_configuration = conf;
+        m_conf = CommonOps.requireNonNull(conf);
 
         setFilterFactory(this);
-    }
-
-    public CorsConfigurationSource getCorsConfigurationSource()
-    {
-        return m_configuration;
     }
 
     @Override
     public Filter make(final FilterFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        return new CorsFilter(getCorsConfigurationSource());
+        return new CorsFilter(m_conf);
     }
 }
