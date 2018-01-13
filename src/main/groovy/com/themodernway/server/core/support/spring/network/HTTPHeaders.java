@@ -32,16 +32,25 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
 public class HTTPHeaders extends HttpHeaders
 {
-    private static final long           serialVersionUID   = 1L;
+    private static final long           serialVersionUID       = 1L;
 
-    public static final String          DEFAULT_USER_AGENT = "The Modern Way/1.2.25 (Language=Java/1.8.0)";
+    public static final String          DEFAULT_USER_AGENT     = "The Modern Way/1.2.26 (Language=Java/1.8.0)";
 
-    public static final List<MediaType> JSON_MEDIA_TYPE    = CommonOps.toUnmodifiableList(CommonOps.toList(MediaType.APPLICATION_JSON_UTF8));
+    public static final MediaType       XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
+
+    public static final MediaType       JSON_MEDIA_TYPE        = MediaType.APPLICATION_JSON_UTF8;
+
+    public static final MediaType       YAML_MEDIA_TYPE        = MediaType.valueOf(IHTTPConstants.CONTENT_TYPE_APPLICATION_YAML);
+
+    public static final MediaType       PROPERTIES_MEDIA_TYPE  = MediaType.valueOf(IHTTPConstants.CONTENT_TYPE_TEXT_PROPERTIES);
+
+    public static final List<MediaType> JSON_ACCEPT_MEDIA_TYPE = CommonOps.toUnmodifiableList(JSON_MEDIA_TYPE);
 
     HTTPHeaders(final HttpHeaders head)
     {
@@ -162,7 +171,7 @@ public class HTTPHeaders extends HttpHeaders
 
         if ((null == list) || (list.isEmpty()))
         {
-            setAccept(JSON_MEDIA_TYPE);
+            setAccept(JSON_ACCEPT_MEDIA_TYPE);
         }
         return doUserAgent(ua);
     }

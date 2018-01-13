@@ -45,24 +45,23 @@ public class MultiTypeValidator extends AbstractAttributeTypeValidator
     @Override
     public void validate(final IJSONValue jval, final ValidationContext ctx)
     {
-        if (m_list.isEmpty())
-        {
-            return;
-        }
         final ValidationContext tmp = new ValidationContext(ctx);
 
         for (final IAttributeTypeValidator type : m_list)
         {
-            boolean valid = true;
-
             type.validate(jval, tmp);
 
-            if (false == tmp.isValid())
+            if (tmp.isValid())
             {
-                valid = false;
+                if (false == m_must)
+                {
+                    return;
+                }
             }
-            if (m_must && valid)
+            else if (m_must)
             {
+                ctx.addBadTypeError(getName());
+
                 return;
             }
         }

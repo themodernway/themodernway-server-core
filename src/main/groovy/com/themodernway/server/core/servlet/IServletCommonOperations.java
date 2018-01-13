@@ -229,7 +229,7 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
 
     public default String getSessionProviderDomainName()
     {
-        return toTrimOrElse(getConfigurationParameter(SESSION_PROVIDER_DOMAIN_NAME_PARAM), SESSION_PROVIDER_DEFAULT);
+        return toTrimOrElse(getConfigurationParameter(SESSION_PROVIDER_DOMAIN_NAME_PARAM), STRING_DEFAULT);
     }
 
     public default List<String> getConfigurationParameterNames()

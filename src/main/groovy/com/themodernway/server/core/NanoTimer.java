@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core;
 
+import com.themodernway.common.api.java.util.IHTTPConstants;
+
 public class NanoTimer
 {
     private long m_nanos;
@@ -35,13 +37,13 @@ public class NanoTimer
     {
         final long ndiff = System.nanoTime() - m_nanos;
 
-        if (ndiff < 1000000L)
+        if (ndiff < IHTTPConstants.NANOSECONDS_IN_MILLISECOND)
         {
             return String.format("(%s) ns.", ndiff);
         }
         else
         {
-            return String.format("(%.3f) ms.", 1.0E-6 * ndiff);
+            return String.format("(%.3f) ms.", IHTTPConstants.NANOSECONDS_TO_MILLISECOND * ndiff);
         }
     }
 }

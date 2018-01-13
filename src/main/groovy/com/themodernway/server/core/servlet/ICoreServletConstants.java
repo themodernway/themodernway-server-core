@@ -20,7 +20,7 @@ import com.themodernway.common.api.java.util.IHTTPConstants;
 
 public interface ICoreServletConstants extends IHTTPConstants
 {
-    public static final String SESSION_PROVIDER_DEFAULT             = "default";
+    public static final String STRING_DEFAULT                       = "default";
 
     public static final String CONTENT_SERVLET_STORAGE_NAME_DEFAULT = "content";
 

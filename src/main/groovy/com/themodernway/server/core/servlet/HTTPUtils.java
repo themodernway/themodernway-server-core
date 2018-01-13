@@ -102,7 +102,7 @@ public final class HTTPUtils implements ICoreServletConstants
         {
             return null;
         }
-        return getSession(sessid, SESSION_PROVIDER_DEFAULT);
+        return getSession(sessid, STRING_DEFAULT);
     }
 
     public static IServerSession getSession(String sessid, final String domain)
@@ -115,7 +115,7 @@ public final class HTTPUtils implements ICoreServletConstants
 
         if (context.isApplicationContextInitialized())
         {
-            return getSession(sessid, context.getServerSessionRepository(StringOps.toTrimOrElse(domain, SESSION_PROVIDER_DEFAULT)));
+            return getSession(sessid, context.getServerSessionRepository(StringOps.toTrimOrElse(domain, STRING_DEFAULT)));
         }
         return null;
     }

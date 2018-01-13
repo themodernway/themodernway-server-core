@@ -17,6 +17,12 @@
 package com.themodernway.server.core.support
 
 import java.util.concurrent.Future
+import java.util.function.BooleanSupplier
+import java.util.function.Consumer
+import java.util.function.DoubleSupplier
+import java.util.function.IntFunction
+import java.util.function.IntSupplier
+import java.util.function.LongSupplier
 import java.util.function.Supplier
 import java.util.stream.Stream
 
@@ -27,7 +33,9 @@ import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
 import org.springframework.web.context.WebApplicationContext
 
-import com.themodernway.common.api.java.util.CommonOps
+import com.themodernway.common.api.java.util.StringOps
+import com.themodernway.common.api.types.ICursor
+import com.themodernway.common.api.types.IFixedIterable
 import com.themodernway.server.core.file.vfs.IFileItemStorage
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
 import com.themodernway.server.core.json.JSONArray
@@ -57,12 +65,12 @@ import groovy.transform.Memoized
 @CompileStatic
 public class CoreGroovySupport implements IServerContext, Closeable
 {
-    private static final CoreGroovySupport  INSTANCE = new CoreGroovySupport()
+    private final static CoreGroovySupport  INSTANCE = new CoreGroovySupport()
 
     private final Logger                    m_logger = Logger.getLogger(getClass())
 
     @Memoized
-    public static final CoreGroovySupport getCoreGroovySupport()
+    public static CoreGroovySupport getCoreGroovySupport()
     {
         INSTANCE
     }
@@ -83,7 +91,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
         ServerContextInstance.getServerContextInstance()
     }
 
-    @Memoized
+    @Override
     public boolean isApplicationContextInitialized()
     {
         getServerContext().isApplicationContextInitialized()
@@ -122,7 +130,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Memoized
     public IMailSender getMailSender(String name)
     {
-        getMailSenderProvider().getItem(requireNonNull(name))
+        getMailSenderProvider().getItem(name)
     }
 
     @Memoized
@@ -140,7 +148,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Memoized
     public IFileItemStorage getFileItemStorage(String name)
     {
-        getFileItemStorageProvider().getItem(requireNonNull(name))
+        getFileItemStorageProvider().getItem(name)
     }
 
     @Memoized
@@ -153,42 +161,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public IPropertiesResolver getPropertiesResolver()
     {
         getServerContext().getPropertiesResolver()
-    }
-
-    @Memoized
-    public String getPropertyByName(String name)
-    {
-        getServerContext().getPropertyByName(requireNonNull(name))
-    }
-
-    @Memoized
-    public String getPropertyByName(String name, String otherwise)
-    {
-        getServerContext().getPropertyByName(requireNonNull(name), otherwise)
-    }
-
-    @Memoized
-    public String getPropertyByName(String name, Supplier<String> otherwise)
-    {
-        getServerContext().getPropertyByName(requireNonNull(name), otherwise)
-    }
-
-    @Override
-    public String getResolvedExpression(final String expr)
-    {
-        getServerContext().getResolvedExpression(requireNonNull(expr))
-    }
-
-    @Override
-    public String getResolvedExpression(final String expr, final String otherwise)
-    {
-        getServerContext().getResolvedExpression(requireNonNull(expr), otherwise)
-    }
-
-    @Override
-    public String getResolvedExpression(final String expr, final Supplier<String> otherwise)
-    {
-        getServerContext().getResolvedExpression(requireNonNull(expr), otherwise)
     }
 
     @Memoized
@@ -206,13 +178,13 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Memoized
     public IServerSessionRepository getServerSessionRepository(String domain)
     {
-        getServerSessionRepositoryProvider().getServerSessionRepository(requireNonNull(domain))
+        getServerSessionRepositoryProvider().getServerSessionRepository(domain)
     }
 
     @Override
     public IAuthorizationResult isAuthorized(Object target, List<String> roles)
     {
-        getServerContext().isAuthorized(requireNonNull(target), requireNonNull(roles))
+        getServerContext().isAuthorized(target, roles)
     }
 
     @Memoized
@@ -236,31 +208,31 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public boolean containsBean(String name)
     {
-        getServerContext().containsBean(requireNonNull(name))
+        getServerContext().containsBean(name)
     }
 
     @Override
     public <B> B getBean(String name, Class<B> type) throws Exception
     {
-        getServerContext().getBean(requireNonNull(name), requireNonNull(type))
+        getServerContext().getBean(name, type)
     }
 
     @Override
     public <B> B getBeanSafely(String name, Class<B> type)
     {
-        getServerContext().getBeanSafely(requireNonNull(name), requireNonNull(type))
+        getServerContext().getBeanSafely(name, type)
     }
 
     @Override
     public <B> Map<String, B> getBeansOfType(Class<B> type) throws Exception
     {
-        getServerContext().getBeansOfType(requireNonNull(type))
+        getServerContext().getBeansOfType(type)
     }
 
     @Override
     public String getOriginalBeanName(String name)
     {
-        getServerContext().getOriginalBeanName(requireNonNull(name))
+        getServerContext().getOriginalBeanName(name)
     }
 
     @Override
@@ -274,54 +246,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
         getServerContext().uuid()
     }
 
-    @Override
-    public String toTrimOrNull(String string)
-    {
-        getServerContext().toTrimOrNull(string)
-    }
-
-    @Override
-    public String toTrimOrElse(String string, String otherwise)
-    {
-        getServerContext().toTrimOrElse(string, otherwise)
-    }
-
-    @Override
-    public String toTrimOrElse(String string, Supplier<String> otherwise)
-    {
-        getServerContext().toTrimOrElse(string, otherwise)
-    }
-
-    @Override
-    public <T> T requireNonNull(T object)
-    {
-        CommonOps.requireNonNull(object)
-    }
-
-    @Override
-    public <T> T requireNonNull(T object, String message)
-    {
-        CommonOps.requireNonNull(object, message)
-    }
-
-    @Override
-    public <T> T requireNonNull(T object, Supplier<String> message)
-    {
-        CommonOps.requireNonNull(object, message)
-    }
-
-    @Override
-    public <T> T requireNonNullOrElse(T object, T otherwise)
-    {
-        CommonOps.requireNonNullOrElse(object, otherwise)
-    }
-
-    @Override
-    public <T> T requireNonNullOrElse(T object, Supplier<T> otherwise)
-    {
-        CommonOps.requireNonNullOrElse(object, otherwise)
-    }
-
     @Memoized
     public IScriptingProvider scripting()
     {
@@ -331,13 +255,13 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Override
     public Resource resource(String location)
     {
-        getServerContext().resource(requireNonNull(location))
+        getServerContext().resource(location)
     }
 
     @Override
     public Reader reader(String location) throws IOException
     {
-        getServerContext().reader(requireNonNull(location))
+        getServerContext().reader(location)
     }
 
     @Memoized
@@ -349,18 +273,18 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Memoized
     public IWebSocketService getWebSocketService(String name)
     {
-        getWebSocketServiceProvider().getWebSocketService(requireNonNull(name))
+        getWebSocketServiceProvider().getWebSocketService(name)
     }
 
     @Memoized
     public CacheManager getCacheManager(String name)
     {
-        getServerContext().getCacheManager(requireNonNull(name))
+        getServerContext().getCacheManager(name)
     }
 
     public <T> T parallel(T collection)
     {
-        CoreGroovyParallel.parallel(requireNonNull(collection))
+        CoreGroovyParallel.parallel(collection)
     }
 
     @Override
@@ -487,5 +411,571 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public JSONObject json(String name, Object value)
     {
         new JSONObject(name, value)
+    }
+
+    @Memoized
+    public String getPropertyByName(String name)
+    {
+        getServerContext().getPropertyByName(name)
+    }
+
+    @Memoized
+    public String getPropertyByName(String name, String otherwise)
+    {
+        getServerContext().getPropertyByName(name, otherwise)
+    }
+
+    @Override
+    public String getPropertyByName(String name, Supplier<String> otherwise)
+    {
+        getServerContext().getPropertyByName(name, otherwise)
+    }
+
+    @Override
+    public String getResolvedExpression(String expr)
+    {
+        getServerContext().getResolvedExpression(expr)
+    }
+
+    @Override
+    public String getResolvedExpression(String expr, String otherwise)
+    {
+        getServerContext().getResolvedExpression(expr, otherwise)
+    }
+
+    @Override
+    public String getResolvedExpression(String expr, Supplier<String> otherwise)
+    {
+        getServerContext().getResolvedExpression(expr, otherwise)
+    }
+
+    @Override
+    public <T> T NULL()
+    {
+        getServerContext().NULL()
+    }
+
+    @Override
+    public <T> T CAST(Object value)
+    {
+        getServerContext().CAST(value)
+    }
+
+    @Override
+    public boolean isNull(Object value)
+    {
+        getServerContext().isNull(value)
+    }
+
+    @Override
+    public boolean isNonNull(Object value)
+    {
+        getServerContext().isNonNull(value)
+    }
+
+    @Override
+    public <T> T requireNonNullOrElse(T value, T otherwise)
+    {
+        getServerContext().requireNonNullOrElse(value, otherwise)
+    }
+
+    @Override
+    public <T> T requireNonNullOrElse(T value, Supplier<T> otherwise)
+    {
+        getServerContext().requireNonNullOrElse(value, otherwise)
+    }
+
+    @Override
+    public <T> T requireNonNull(T value)
+    {
+        getServerContext().requireNonNull(value)
+    }
+
+    @Override
+    public <T> T requireNonNull(T value, String reason)
+    {
+        getServerContext().requireNonNull(value, reason)
+    }
+
+    @Override
+    public <T> T requireNonNull(T value, Supplier<String> reason)
+    {
+        getServerContext().requireNonNull(value, reason)
+    }
+
+    @Override
+    public <T> Supplier<T> toSupplier(T value)
+    {
+        getServerContext().toSupplier(value)
+    }
+
+    @Override
+    public IntSupplier toSupplier(int value)
+    {
+        getServerContext().toSupplier(value)
+    }
+
+    @Override
+    public LongSupplier toSupplier(long value)
+    {
+        getServerContext().toSupplier(value)
+    }
+
+    @Override
+    public DoubleSupplier toSupplier(double value)
+    {
+        getServerContext().toSupplier(value)
+    }
+
+    @Override
+    public BooleanSupplier toSupplier(boolean value)
+    {
+        getServerContext().toSupplier(value)
+    }
+
+    @Override
+    public <T> Optional<T> toOptional(T value)
+    {
+        getServerContext().toOptional(value)
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> List<T> toList(T... source)
+    {
+        getServerContext().toList(source)
+    }
+
+    @Override
+    public <T> List<T> toList(Enumeration<? extends T> source)
+    {
+        getServerContext().toList(source)
+    }
+
+    @Override
+    public <T> List<T> toList(Collection<? extends T> source)
+    {
+        getServerContext().toList(source)
+    }
+
+    @Override
+    public <T> List<T> toList(ICursor<? extends T> source)
+    {
+        getServerContext().toList(source)
+    }
+
+    @Override
+    public <T> List<T> toList(IFixedIterable<? extends T> source)
+    {
+       getServerContext().toList(source)
+    }
+
+    @Override
+    public <T> List<T> emptyList()
+    {
+        getServerContext().emptyList()
+    }
+
+    @Override
+    public <K, V> Map<K, V> emptyMap()
+    {
+        getServerContext().emptyMap()
+    }
+
+    @Override
+    public <K, V> LinkedHashMap<K, V> linkedMap()
+    {
+        getServerContext().linkedMap()
+    }
+
+    @Override
+    public <K, V> LinkedHashMap<K, V> linkedMap(Map<? extends K, ? extends V> source)
+    {
+        getServerContext().linkedMap(source)
+    }
+
+    @Override
+    public <K, V> Map<K, V> RAWMAP(Map source)
+    {
+       getServerContext().RAWMAP(source)
+    }
+
+    @Override
+    public Map<String, Object> STRMAP(Map<String, ?> source)
+    {
+        getServerContext().STRMAP(source)
+    }
+
+    @Override
+    public <T> List<T> toKeys(Map<? extends T, ?> source)
+    {
+        getServerContext().toKeys(source)
+    }
+
+    @Override
+    public <K, V> Map<K, V> toUnmodifiableMap(Map<? extends K, ? extends V> source)
+    {
+        getServerContext().toUnmodifiableMap(source)
+    }
+
+    @Override
+    public <T> List<T> toUnmodifiableList(Collection<? extends T> source)
+    {
+        getServerContext().toUnmodifiableList(source)
+    }
+
+    @Override
+    public <T> List<T> toUnmodifiableList(Stream<T> source)
+    {
+        getServerContext().toUnmodifiableList(source)
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> List<T> toUnmodifiableList(T... source)
+    {
+        getServerContext().toUnmodifiableList(source)
+    }
+
+    @Override
+    public <T> List<T> toUnmodifiableList(ICursor<? extends T> source)
+    {
+        getServerContext().toUnmodifiableList(source)
+    }
+
+    @Override
+    public <T> List<T> toUnmodifiableList(IFixedIterable<? extends T> source)
+    {
+       getServerContext().toUnmodifiableList(source)
+    }
+
+    @Override
+    public <T> List<T> toUnmodifiableList(Enumeration<? extends T> source)
+    {
+       getServerContext().toUnmodifiableList(source)
+    }
+
+    @Override
+    public <T> ArrayList<T> arrayListOfSize(int size)
+    {
+        getServerContext().arrayListOfSize(size)
+    }
+
+    @Override
+    public <T> ArrayList<T> arrayList()
+    {
+        getServerContext().arrayList()
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> ArrayList<T> arrayList(T... source)
+    {
+        getServerContext().arrayList(source)
+    }
+
+    @Override
+    public <T> ArrayList<T> arrayList(Stream<T> source)
+    {
+        getServerContext().arrayList(source)
+    }
+
+    @Override
+    public <T> ArrayList<T> arrayList(Collection<? extends T> source)
+    {
+        getServerContext().arrayList(source)
+    }
+
+    @Override
+    public <T> ArrayList<T> arrayList(ICursor<? extends T> source)
+    {
+        getServerContext().arrayList(source)
+    }
+
+    @Override
+    public <T> ArrayList<T> arrayList(IFixedIterable<? extends T> source)
+    {
+        getServerContext().arrayList(source)
+    }
+
+    @Override
+    public <T> ArrayList<T> arrayList(Enumeration<? extends T> source)
+    {
+        getServerContext().arrayList(source)
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T[] toArray(Collection<T> source, T[] list)
+    {
+        getServerContext().toArray(source, list)
+    }
+
+    @Override
+    public <T> T[] toArray(Collection<T> source, IntFunction<T[]> generator)
+    {
+        getServerContext().toArray(source, generator)
+    }
+
+    @Override
+    public <T> T[] toArray(Stream<T> source, IntFunction<T[]> generator)
+    {
+       getServerContext().toArray(source, generator)
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> Stream<T> toStream(T... source)
+    {
+         getServerContext().toStream(source)
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T[] toArray(T... source)
+    {
+        getServerContext().toArray(source)
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> List<T> arrayListOfLists(List<T>... lists)
+    {
+        getServerContext().arrayListOfLists(lists)
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> List<T> arrayListOfListsUnique(List<T>... lists)
+    {
+        getServerContext().arrayListOfListsUnique(lists)
+    }
+
+    @Memoized
+    public String getEnvironmentProperty(String name)
+    {
+        getServerContext().getEnvironmentProperty(name)
+    }
+
+    @Memoized
+    public String getEnvironmentProperty(String name, String otherwise)
+    {
+        getServerContext().getEnvironmentProperty(name, otherwise)
+    }
+
+    @Override
+    public String getEnvironmentProperty(String name, Supplier<String> otherwise)
+    {
+        getServerContext().getEnvironmentProperty(name, otherwise)
+    }
+
+    @Memoized
+    public String getSystemProperty(String name)
+    {
+        getServerContext().getSystemProperty(name)
+    }
+
+    @Memoized
+    public String getSystemProperty(String name, String otherwise)
+    {
+        getServerContext().getSystemProperty(name, otherwise)
+    }
+
+    @Override
+    public String getSystemProperty(String name, Supplier<String> otherwise)
+    {
+        getServerContext().getSystemProperty(name, otherwise)
+    }
+
+    @Override
+    public String format(String format, Object... args)
+    {
+        String.format(requireNonNull(format), args)
+    }
+
+    @Memoized
+    public String repeat(String string, int times)
+    {
+        StringOps.repeat(string, times)
+    }
+
+    @Override
+    public void setConsumerUniqueStringArray(String list, Consumer<String[]> prop)
+    {
+        StringOps.setConsumerUniqueStringArray(list, prop)
+    }
+
+    @Override
+    public void setConsumerUniqueStringArray(Collection<String> list, Consumer<String[]> prop)
+    {
+        StringOps.setConsumerUniqueStringArray(list, prop)
+    }
+
+    @Override
+    public List<String> getSupplierUniqueStringArray(Supplier<String[]> prop)
+    {
+        StringOps.getSupplierUniqueStringArray(prop)
+    }
+
+    @Override
+    public String[] toArray(Collection<String> collection)
+    {
+        StringOps.toArray(collection)
+    }
+
+    @Override
+    public String[] toArray(String... collection)
+    {
+        StringOps.toArray(collection)
+    }
+
+    @Override
+    public String[] toArray(Stream<String> stream)
+    {
+        StringOps.toArray(stream)
+    }
+
+    @Override
+    public List<String> toList(Stream<String> stream)
+    {
+        StringOps.toList(stream)
+    }
+
+    @Override
+    public String[] toUniqueArray(Collection<String> collection)
+    {
+        StringOps.toUniqueArray(collection)
+    }
+
+    @Override
+    public String[] toUniqueArray(String... collection)
+    {
+       StringOps.toUniqueArray(collection)
+    }
+
+    @Override
+    public Stream<String> toUnique(Stream<String> stream)
+    {
+        StringOps.toUnique(stream)
+    }
+
+    @Override
+    public List<String> toUnique(String... collection)
+    {
+        StringOps.toUnique(collection)
+    }
+
+    @Override
+    public List<String> toUnique(Collection<String> collection)
+    {
+        StringOps.toUnique(collection)
+    }
+
+    @Override
+    public List<String> toUniqueTokenStringList(String strings)
+    {
+        StringOps.toUniqueTokenStringList(strings)
+    }
+
+    @Override
+    public String toCommaSeparated(Collection<String> collection)
+    {
+        StringOps.toCommaSeparated(collection)
+    }
+
+    @Override
+    public String toCommaSeparated(String... collection)
+    {
+        StringOps.toCommaSeparated(collection)
+    }
+
+    @Override
+    public String toCommaSeparated(Stream<String> stream)
+    {
+        StringOps.toCommaSeparated(stream)
+    }
+
+    @Override
+    public Collection<String> tokenizeToStringCollection(String string)
+    {
+        StringOps.tokenizeToStringCollection(string)
+    }
+
+    @Override
+    public Collection<String> tokenizeToStringCollection(String string, String delimiters)
+    {
+        StringOps.tokenizeToStringCollection(string, delimiters)
+    }
+
+    @Override
+    public Collection<String> tokenizeToStringCollection(String string, boolean trim, boolean ignore)
+    {
+        StringOps.tokenizeToStringCollection(string, trim, ignore)
+    }
+
+    @Override
+    public Collection<String> tokenizeToStringCollection(String string, String delimiters, boolean trim, boolean ignore)
+    {
+        StringOps.tokenizeToStringCollection(string, delimiters, trim, ignore)
+    }
+
+    @Override
+    public String toPrintableString(Collection<String> collection)
+    {
+        StringOps.toPrintableString(collection)
+    }
+
+    @Override
+    public String toPrintableString(String... list)
+    {
+        StringOps.toPrintableString(list)
+    }
+
+    @Memoized
+    public String toTrimOrNull(String string)
+    {
+        StringOps.toTrimOrNull(string)
+    }
+
+    @Memoized
+    public String toTrimOrElse(String string, String otherwise)
+    {
+        StringOps.toTrimOrElse(string, otherwise)
+    }
+
+    @Override
+    public String toTrimOrElse(String string, Supplier<String> otherwise)
+    {
+        StringOps.toTrimOrElse(string, otherwise)
+    }
+
+    @Override
+    public String requireTrimOrNull(String string)
+    {
+        StringOps.requireTrimOrNull(string)
+    }
+
+    @Override
+    public String requireTrimOrNull(String string, String reason)
+    {
+        StringOps.requireTrimOrNull(string, reason)
+    }
+
+    @Override
+    public String requireTrimOrNull(String string, Supplier<String> reason)
+    {
+        StringOps.requireTrimOrNull(string, reason)
+    }
+
+    @Memoized
+    public String reverse(String string)
+    {
+        StringOps.reverse(string)
+    }
+
+    @Override
+    public String failIfNullBytePresent(String string)
+    {
+        StringOps.failIfNullBytePresent(string)
     }
 }

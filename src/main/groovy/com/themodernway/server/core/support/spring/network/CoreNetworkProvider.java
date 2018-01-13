@@ -26,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriTemplateHandler;
@@ -37,6 +38,7 @@ import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.logging.IHasLogging;
+import com.themodernway.server.core.servlet.ICoreServletConstants;
 
 public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, InitializingBean
 {
@@ -87,11 +89,40 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
         m_urlhandler.setStrictEncoding(strict);
     }
 
-    public void setUseHttpComponents(final boolean http)
+    public void setHttpFactoryByName(final String name)
     {
-        if (http)
+        final String impl = StringOps.toTrimOrElse(name, ICoreServletConstants.STRING_DEFAULT);
+
+        switch (impl.toLowerCase())
         {
-            setClientHttpRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            case "apache":
+                setClientHttpRequestFactory(new HttpComponentsClientHttpRequestFactory());
+                break;
+            case "simple":
+                setClientHttpRequestFactory(new SimpleClientHttpRequestFactory());
+                break;
+            case ICoreServletConstants.STRING_DEFAULT:
+                setClientHttpRequestFactory(new CoreClientHttpRequestFactory());
+                break;
+            default:
+                try
+                {
+                    final Class<?> type = Class.forName(impl);
+
+                    if ((null != type) && (ClientHttpRequestFactory.class.isAssignableFrom(type)))
+                    {
+                        setClientHttpRequestFactory(CommonOps.CAST(type.newInstance()));
+                    }
+                    else
+                    {
+                        logger().error(String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", impl));
+                    }
+                }
+                catch (final Exception e)
+                {
+                    logger().error(String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", impl), e);
+                }
+                break;
         }
     }
 
@@ -99,6 +130,8 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
     public void setClientHttpRequestFactory(final ClientHttpRequestFactory factory)
     {
         m_rest_execs.setRequestFactory(CommonOps.requireNonNull(factory));
+
+        logger().info(String.format("setClientHttpRequestFactory (%s).", factory.getClass().getName()));
     }
 
     @Override
@@ -400,6 +433,10 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
         if (null == request)
         {
             return null;
+        }
+        if (null == headers.getContentType())
+        {
+            headers.setContentType(HTTPHeaders.JSON_MEDIA_TYPE);
         }
         try
         {
