@@ -35,6 +35,8 @@ import com.themodernway.common.api.json.JSONObjectDefinition;
 import com.themodernway.common.api.json.JSONType;
 import com.themodernway.server.core.io.OutputStreamProxyWriter;
 import com.themodernway.server.core.json.binder.BinderType;
+import com.themodernway.server.core.json.validation.IJSONValidator;
+import com.themodernway.server.core.json.validation.IValidationContext;
 
 @JacksonXmlRootElement(localName = "result")
 public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
@@ -150,6 +152,11 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         writeJSONString(map, writer, context, strict);
 
         writer.flush();
+    }
+
+    public IValidationContext validate(final IJSONValidator validator)
+    {
+        return validator.validate(this);
     }
 
     @Override

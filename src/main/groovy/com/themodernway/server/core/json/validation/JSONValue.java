@@ -60,19 +60,42 @@ public class JSONValue implements IJSONValue
     @Override
     public Double getAsDouble()
     {
-        return JSONUtils.asDouble(getValue());
+        final Object valu = getValue();
+
+        if (valu instanceof Double)
+        {
+            final Double dval = CommonOps.CAST(valu);
+
+            if (false == (dval.isInfinite() || dval.isNaN()))
+            {
+                return dval;
+            }
+        }
+        return CommonOps.NULL();
     }
 
     @Override
     public Integer getAsInteger()
     {
-        return JSONUtils.asInteger(getValue());
+        final Object valu = getValue();
+
+        if (valu instanceof Integer)
+        {
+            return CommonOps.CAST(valu);
+        }
+        return CommonOps.NULL();
     }
 
     @Override
     public Long getAsLong()
     {
-        return JSONUtils.asLong(getValue());
+        final Object valu = getValue();
+
+        if (valu instanceof Long)
+        {
+            return CommonOps.CAST(valu);
+        }
+        return CommonOps.NULL();
     }
 
     @Override

@@ -22,5 +22,5 @@ public interface IValidaorShuttle extends INamed
 {
     public boolean isRequired();
 
-    public IAttributeTypeValidator getValidaror();
+    public IAttributeTypeValidator getValidator();
 }

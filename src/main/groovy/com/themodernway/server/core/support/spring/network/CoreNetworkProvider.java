@@ -16,9 +16,11 @@
 
 package com.themodernway.server.core.support.spring.network;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -131,7 +133,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
     {
         m_rest_execs.setRequestFactory(CommonOps.requireNonNull(factory));
 
-        logger().info(String.format("setClientHttpRequestFactory (%s).", factory.getClass().getName()));
+        logger().info(String.format("setClientHttpRequestFactory(%s).", factory.getClass().getName()));
     }
 
     @Override
@@ -150,6 +152,35 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
     public void close() throws IOException
     {
         logger().info("close().");
+
+        final ClientHttpRequestFactory factory = m_rest_execs.getRequestFactory();
+
+        if (factory instanceof DisposableBean)
+        {
+            logger().info(String.format("close(%s).", factory.getClass().getName()));
+
+            try
+            {
+                ((DisposableBean) factory).destroy();
+            }
+            catch (final Exception e)
+            {
+                logger().error("close().", e);
+            }
+        }
+        else if (factory instanceof Closeable)
+        {
+            logger().info(String.format("close(%s).", factory.getClass().getName()));
+
+            try
+            {
+                ((Closeable) factory).close();
+            }
+            catch (final Exception e)
+            {
+                logger().error("close().", e);
+            }
+        }
     }
 
     @Override

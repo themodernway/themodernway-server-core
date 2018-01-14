@@ -17,6 +17,7 @@
 package com.themodernway.server.core.json.validation;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.java.util.StringOps;
 
 public class ValidationError
 {
@@ -39,5 +40,11 @@ public class ValidationError
     public String getContext()
     {
         return m_context;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new StringBuilder().append(getContext()).append(StringOps.SPACE_STRING).append(StringOps.MINUS_STRING).append(StringOps.SPACE_STRING).append(getMessage()).toString();
     }
 }

@@ -20,12 +20,8 @@ import com.themodernway.common.api.java.util.CommonOps
 
 import groovyx.gpars.ParallelEnhancer
 
-public final class CoreGroovyParallel
+public class CoreGroovyParallel
 {
-    protected CoreGroovyParallel()
-    {
-    }
-
     public static final <T> T parallel(final T collection)
     {
         ParallelEnhancer.enhanceInstance(CommonOps.requireNonNull(collection)).makeConcurrent()

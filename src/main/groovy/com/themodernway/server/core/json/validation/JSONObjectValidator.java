@@ -16,18 +16,17 @@
 
 package com.themodernway.server.core.json.validation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.json.JSONObject;
 
 public class JSONObjectValidator extends AbstractAttributeTypeValidator implements IJSONValidator
 {
-    private final ArrayList<String>                        m_required   = new ArrayList<String>();
+    private final List<String>                         m_required = CommonOps.arrayList();
 
-    private final HashMap<String, IAttributeTypeValidator> m_attributes = new HashMap<String, IAttributeTypeValidator>();
+    private final Map<String, IAttributeTypeValidator> m_type_map = CommonOps.linkedMap();
 
     public JSONObjectValidator()
     {
@@ -46,7 +45,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
 
     public JSONObjectValidator add(final String name, final IAttributeTypeValidator type, final boolean required)
     {
-        m_attributes.put(CommonOps.requireNonNull(name), CommonOps.requireNonNull(type));
+        m_type_map.put(CommonOps.requireNonNull(name), CommonOps.requireNonNull(type));
 
         if (required)
         {
@@ -59,7 +58,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
     {
         for (final IValidaorShuttle shuttle : validators)
         {
-            add(shuttle.getName(), shuttle.getValidaror(), shuttle.isRequired());
+            add(shuttle.getName(), shuttle.getValidator(), shuttle.isRequired());
         }
     }
 
@@ -98,16 +97,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
 
             if (false == keys.contains(name))
             {
-                ctx.addRequiredError();
-            }
-            else
-            {
-                final IJSONValue aval = new JSONValue(jobj.get(name));
-
-                if (aval.isNull())
-                {
-                    ctx.addRequiredError();
-                }
+                ctx.addRequiredError(name);
             }
             ctx.pop();
         }
@@ -115,11 +105,11 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
         {
             ctx.push(name);
 
-            final IAttributeTypeValidator validator = m_attributes.get(name);
+            final IAttributeTypeValidator validator = m_type_map.get(name);
 
             if (null == validator)
             {
-                ctx.addInvalidAttributeError(getName());
+                ctx.addInvalidAttributeError(name, getName());
             }
             else if (false == validator.isIgnored())
             {

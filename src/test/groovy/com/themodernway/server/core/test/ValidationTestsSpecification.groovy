@@ -69,14 +69,88 @@ public class ValidationTestsSpecification extends ServerCoreSpecification implem
     def "test 4"()
     {
         setup:
+        def good = false
         def json = json(name: "Dean")
         def test = Validators.getSimpleValidator()
         def time = new NanoTimer()
-        def good = test.validate(json).isValid()
-
+        for (int i = 0; i < 1000000; i++) {
+            good = test.validate(json).isValid()
+        }
         echo time
 
         expect:
         true == good
+    }
+
+    def "test 5"()
+    {
+        setup:
+        def good = false
+        def json = json(name: "Dean", list: ["Jones", 2])
+        def test = Validators.getComplexValidator()
+        def time = new NanoTimer()
+        for (int i = 0; i < 1000000; i++) {
+            good = test.validate(json).isValid()
+        }
+        echo time
+
+        expect:
+        true == good
+    }
+
+    def "test 6"()
+    {
+        setup:
+        def good = false
+        def json = json(name: "Dean", list: ["Jones", 2, true, 6d, false])
+        def test = Validators.getComplexAnyMatchMultiValidator()
+        def time = new NanoTimer()
+        for (int i = 0; i < 1000000; i++) {
+            good = test.validate(json).isValid()
+        }
+        echo time
+
+        expect:
+        true == good
+    }
+
+    def "test 7"()
+    {
+        setup:
+        def good = false
+        def json = json(name: "Dean", flag: true, list: ["Jones", 2, true, 0d, false])
+        def test = Validators.getComplexAnyMatchMultiValidator()
+        def time = new NanoTimer()
+        for (int i = 0; i < 1000000; i++) {
+            def valu = test.validate(json)
+            if (false == (good = valu.isValid())) {
+                echo valu.getErrorString()
+                break
+            }
+        }
+        echo time
+
+        expect:
+        false == good
+    }
+
+    def "test 8"()
+    {
+        setup:
+        def good = false
+        def json = json(name: "Dean", flag: true, list: ["", 0d])
+        def test = Validators.getComplexAnyMatchMultiValidator()
+        def time = new NanoTimer()
+        for (int i = 0; i < 1000000; i++) {
+            def valu = test.validate(json)
+            if (false == (good = valu.isValid())) {
+                echo valu.getErrorString()
+                break
+            }
+        }
+        echo time
+
+        expect:
+        false == good
     }
 }

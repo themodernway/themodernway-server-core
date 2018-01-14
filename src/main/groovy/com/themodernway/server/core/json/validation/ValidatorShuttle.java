@@ -53,7 +53,7 @@ public class ValidatorShuttle implements IValidaorShuttle
     }
 
     @Override
-    public IAttributeTypeValidator getValidaror()
+    public IAttributeTypeValidator getValidator()
     {
         return m_type;
     }

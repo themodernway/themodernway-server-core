@@ -67,6 +67,10 @@ public class JSONArrayValidator extends AbstractAttributeTypeValidator
 
                 m_validator.validate(new JSONValue(jarr.get(i)), ctx);
 
+                if (false == ctx.isValid())
+                {
+                    return;
+                }
                 ctx.pop();
             }
         }

@@ -42,7 +42,12 @@ public class ValidationContext implements IValidationContext
 
     public ValidationContext(final ValidationContext ctx)
     {
-        this(ctx.m_root);
+        this(ctx.getRootName());
+    }
+
+    private final String getRootName()
+    {
+        return m_root;
     }
 
     public void push(final String context)
@@ -67,7 +72,7 @@ public class ValidationContext implements IValidationContext
 
     public void addError(final String msg)
     {
-        final StringBuilder b = new StringBuilder(m_root);
+        final StringBuilder b = new StringBuilder(getRootName());
 
         for (final String s : m_stack)
         {
@@ -76,9 +81,9 @@ public class ValidationContext implements IValidationContext
         addError(new ValidationError(msg, b.toString()));
     }
 
-    public void addRequiredError()
+    public void addRequiredError(final String name)
     {
-        addError("attribute is required");
+        addError(String.format("attribute (%s) is required.", name));
     }
 
     public void addBadTypeError(final String type)
@@ -86,9 +91,9 @@ public class ValidationContext implements IValidationContext
         addError(String.format("value should be (%s).", type));
     }
 
-    public void addInvalidAttributeError(final String type)
+    public void addInvalidAttributeError(final String name, final String type)
     {
-        addError(String.format("attribute is invalid for type (%s).", type));
+        addError(String.format("attribute (%s) is invalid for type (%s).", name, type));
     }
 
     @Override
@@ -118,9 +123,9 @@ public class ValidationContext implements IValidationContext
             }
             else
             {
-                b.append(StringOps.COMMA_STRING).append(StringOps.SPACE_STRING);
+                b.append(StringOps.COMMA_LIST_SEPARATOR);
             }
-            b.append(e.getContext()).append(StringOps.SPACE_STRING + StringOps.MINUS_STRING + StringOps.SPACE_STRING).append(e.getMessage());
+            b.append(e.toString());
         }
         return b.toString();
     }

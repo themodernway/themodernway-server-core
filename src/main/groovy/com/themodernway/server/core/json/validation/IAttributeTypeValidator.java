@@ -16,6 +16,10 @@
 
 package com.themodernway.server.core.json.validation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.INamed;
 
 public interface IAttributeTypeValidator extends INamed
@@ -23,4 +27,22 @@ public interface IAttributeTypeValidator extends INamed
     public boolean isIgnored();
 
     public void validate(IJSONValue json, ValidationContext ctx);
+
+    public static List<IAttributeTypeValidator> concat(final IAttributeTypeValidator type, final IAttributeTypeValidator... list)
+    {
+        final ArrayList<IAttributeTypeValidator> temp = CommonOps.arrayList(CommonOps.requireNonNull(list));
+
+        temp.add(0, CommonOps.requireNonNull(type));
+
+        return repair(temp);
+    }
+
+    public static List<IAttributeTypeValidator> repair(final List<IAttributeTypeValidator> list)
+    {
+        final ArrayList<IAttributeTypeValidator> temp = CommonOps.arrayList(CommonOps.requireNonNull(list));
+
+        temp.removeIf((type) -> null == type);
+
+        return CommonOps.toUnmodifiableList(temp);
+    }
 }

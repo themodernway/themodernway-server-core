@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.support.spring.network;
+package com.themodernway.server.core.json.validation;
 
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import java.util.List;
 
-public class CoreClientHttpRequestFactory extends HttpComponentsClientHttpRequestFactory
+public class AllMatchMultiTypeValidator extends AbstractMultiTypeValidator
 {
-    public CoreClientHttpRequestFactory()
+    public AllMatchMultiTypeValidator(final String name, final List<IAttributeTypeValidator> list)
     {
+        super(name, true, list);
     }
 
-    public CoreClientHttpRequestFactory(final int route, final int total)
+    public AllMatchMultiTypeValidator(final String name, final IAttributeTypeValidator type, final IAttributeTypeValidator... list)
     {
-        super(HttpClientBuilder.create().useSystemProperties().setMaxConnPerRoute(route).setMaxConnTotal(total).build());
+        super(name, true, type, list);
     }
 }

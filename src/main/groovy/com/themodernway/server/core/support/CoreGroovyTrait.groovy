@@ -31,6 +31,7 @@ import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
 import org.springframework.web.context.WebApplicationContext
 
+import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.common.api.java.util.StringOps
 import com.themodernway.common.api.types.ICursor
 import com.themodernway.common.api.types.IFixedIterable
@@ -274,243 +275,243 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
 
     public <T> T NULL()
     {
-        getServerContext().NULL()
+        CommonOps.NULL()
     }
 
     public <T> T CAST(Object value)
     {
-        getServerContext().CAST(value)
+        CommonOps.CAST(value)
     }
 
     public boolean isNull(Object value)
     {
-        getServerContext().isNull(value)
+        CommonOps.isNull(value)
     }
 
     public boolean isNonNull(Object value)
     {
-        getServerContext().isNonNull(value)
+        CommonOps.isNonNull(value)
     }
 
     public <T> T requireNonNullOrElse(T value, T otherwise)
     {
-        getServerContext().requireNonNullOrElse(value, otherwise)
+        CommonOps.requireNonNullOrElse(value, otherwise)
     }
 
     public <T> T requireNonNullOrElse(T value, Supplier<T> otherwise)
     {
-        getServerContext().requireNonNullOrElse(value, otherwise)
+        CommonOps.requireNonNullOrElse(value, otherwise)
     }
 
     public <T> T requireNonNull(T value)
     {
-        getServerContext().requireNonNull(value)
+        CommonOps.requireNonNull(value)
     }
 
     public <T> T requireNonNull(T value, String reason)
     {
-        getServerContext().requireNonNull(value, reason)
+        CommonOps.requireNonNull(value, reason)
     }
 
     public <T> T requireNonNull(T value, Supplier<String> reason)
     {
-        getServerContext().requireNonNull(value, reason)
+        CommonOps.requireNonNull(value, reason)
     }
 
     public <T> Supplier<T> toSupplier(T value)
     {
-        getServerContext().toSupplier(value)
+        CommonOps.toSupplier(value)
     }
 
     public IntSupplier toSupplier(int value)
     {
-        getServerContext().toSupplier(value)
+        CommonOps.toSupplier(value)
     }
 
     public LongSupplier toSupplier(long value)
     {
-        getServerContext().toSupplier(value)
+        CommonOps.toSupplier(value)
     }
 
     public DoubleSupplier toSupplier(double value)
     {
-        getServerContext().toSupplier(value)
+        CommonOps.toSupplier(value)
     }
 
     public BooleanSupplier toSupplier(boolean value)
     {
-        getServerContext().toSupplier(value)
+        CommonOps.toSupplier(value)
     }
 
     public <T> Optional<T> toOptional(T value)
     {
-        getServerContext().toOptional(value)
+        CommonOps.toOptional(value)
     }
 
     @SuppressWarnings("unchecked")
     public <T> List<T> toList(T... source)
     {
-        getServerContext().toList(source)
+        CommonOps.toList(source)
     }
 
     public <T> List<T> toList(Enumeration<? extends T> source)
     {
-        getServerContext().toList(source)
+        CommonOps.toList(source)
     }
 
     public <T> List<T> toList(Collection<? extends T> source)
     {
-        getServerContext().toList(source)
+        CommonOps.toList(source)
     }
 
     public <T> List<T> toList(ICursor<? extends T> source)
     {
-        getServerContext().toList(source)
+        CommonOps.toList(source)
     }
 
     public <T> List<T> toList(IFixedIterable<? extends T> source)
     {
-       getServerContext().toList(source)
+       CommonOps.toList(source)
     }
 
     public <T> List<T> emptyList()
     {
-        getServerContext().emptyList()
+        CommonOps.emptyList()
     }
 
     public <K, V> Map<K, V> emptyMap()
     {
-        getServerContext().emptyMap()
+        CommonOps.emptyMap()
     }
 
     public <K, V> LinkedHashMap<K, V> linkedMap()
     {
-        getServerContext().linkedMap()
+        CommonOps.linkedMap()
     }
 
     public <K, V> LinkedHashMap<K, V> linkedMap(Map<? extends K, ? extends V> source)
     {
-        getServerContext().linkedMap(source)
+        CommonOps.linkedMap(source)
     }
 
     public <K, V> Map<K, V> RAWMAP(Map source)
     {
-       getServerContext().RAWMAP(source)
+       CommonOps.RAWMAP(source)
     }
 
     public Map<String, Object> STRMAP(Map<String, ?> source)
     {
-        getServerContext().STRMAP(source)
+        CommonOps.STRMAP(source)
     }
 
     public <T> List<T> toKeys(Map<? extends T, ?> source)
     {
-        getServerContext().toKeys(source)
+        CommonOps.toKeys(source)
     }
 
     public <K, V> Map<K, V> toUnmodifiableMap(Map<? extends K, ? extends V> source)
     {
-        getServerContext().toUnmodifiableMap(source)
+        CommonOps.toUnmodifiableMap(source)
     }
 
     public <T> List<T> toUnmodifiableList(Collection<? extends T> source)
     {
-        getServerContext().toUnmodifiableList(source)
+        CommonOps.toUnmodifiableList(source)
     }
 
     public <T> List<T> toUnmodifiableList(Stream<T> source)
     {
-        getServerContext().toUnmodifiableList(source)
+        CommonOps.toUnmodifiableList(source)
     }
 
     @SuppressWarnings("unchecked")
     public <T> List<T> toUnmodifiableList(T... source)
     {
-        getServerContext().toUnmodifiableList(source)
+        CommonOps.toUnmodifiableList(source)
     }
 
     public <T> List<T> toUnmodifiableList(ICursor<? extends T> source)
     {
-        getServerContext().toUnmodifiableList(source)
+        CommonOps.toUnmodifiableList(source)
     }
 
     public <T> List<T> toUnmodifiableList(IFixedIterable<? extends T> source)
     {
-       getServerContext().toUnmodifiableList(source)
+       CommonOps.toUnmodifiableList(source)
     }
 
     public <T> List<T> toUnmodifiableList(Enumeration<? extends T> source)
     {
-       getServerContext().toUnmodifiableList(source)
+       CommonOps.toUnmodifiableList(source)
     }
 
     public <T> ArrayList<T> arrayListOfSize(int size)
     {
-        getServerContext().arrayListOfSize(size)
+        CommonOps.arrayListOfSize(size)
     }
 
     public <T> ArrayList<T> arrayList()
     {
-        getServerContext().arrayList()
+        CommonOps.arrayList()
     }
 
     @SuppressWarnings("unchecked")
     public <T> ArrayList<T> arrayList(T... source)
     {
-        getServerContext().arrayList(source)
+        CommonOps.arrayList(source)
     }
 
     public <T> ArrayList<T> arrayList(Stream<T> source)
     {
-        getServerContext().arrayList(source)
+        CommonOps.arrayList(source)
     }
 
     public <T> ArrayList<T> arrayList(Collection<? extends T> source)
     {
-        getServerContext().arrayList(source)
+        CommonOps.arrayList(source)
     }
 
     public <T> ArrayList<T> arrayList(ICursor<? extends T> source)
     {
-        getServerContext().arrayList(source)
+        CommonOps.arrayList(source)
     }
 
     public <T> ArrayList<T> arrayList(IFixedIterable<? extends T> source)
     {
-        getServerContext().arrayList(source)
+        CommonOps.arrayList(source)
     }
 
     public <T> ArrayList<T> arrayList(Enumeration<? extends T> source)
     {
-        getServerContext().arrayList(source)
+        CommonOps.arrayList(source)
     }
 
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(Collection<T> source, T[] list)
     {
-        getServerContext().toArray(source, list)
+        CommonOps.toArray(source, list)
     }
 
     public <T> T[] toArray(Collection<T> source, IntFunction<T[]> generator)
     {
-        getServerContext().toArray(source, generator)
+        CommonOps.toArray(source, generator)
     }
 
     public <T> T[] toArray(Stream<T> source, IntFunction<T[]> generator)
     {
-       getServerContext().toArray(source, generator)
+       CommonOps.toArray(source, generator)
     }
 
     @SuppressWarnings("unchecked")
     public <T> Stream<T> toStream(T... source)
     {
-         getServerContext().toStream(source)
+         CommonOps.toStream(source)
     }
 
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(T... source)
     {
-        getServerContext().toArray(source)
+        CommonOps.toArray(source)
     }
 
     @SuppressWarnings("unchecked")
@@ -716,10 +717,5 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     public String reverse(String string)
     {
         StringOps.reverse(string)
-    }
-
-    public <T> T parallel(T collection)
-    {
-        CoreGroovyParallel.parallel(collection)
     }
 }
