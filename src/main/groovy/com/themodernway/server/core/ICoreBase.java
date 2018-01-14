@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
-import java.util.function.IntFunction;
 import java.util.function.IntSupplier;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
@@ -251,21 +250,6 @@ public interface ICoreBase
     default public <T> ArrayList<T> arrayList(final Enumeration<? extends T> source)
     {
         return CommonOps.arrayList(source);
-    }
-
-    default public <T> T[] toArray(final Collection<T> source, final T[] list)
-    {
-        return CommonOps.toArray(source, list);
-    }
-
-    default public <T> T[] toArray(final Collection<T> source, final IntFunction<T[]> generator)
-    {
-        return CommonOps.toArray(source, generator);
-    }
-
-    default public <T> T[] toArray(final Stream<T> source, final IntFunction<T[]> generator)
-    {
-        return CommonOps.toArray(source, generator);
     }
 
     @SuppressWarnings("unchecked")

@@ -19,7 +19,6 @@ package com.themodernway.server.core.support
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 import java.util.function.DoubleSupplier
-import java.util.function.IntFunction
 import java.util.function.IntSupplier
 import java.util.function.LongSupplier
 import java.util.function.Supplier
@@ -484,22 +483,6 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     public <T> ArrayList<T> arrayList(Enumeration<? extends T> source)
     {
         CommonOps.arrayList(source)
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T[] toArray(Collection<T> source, T[] list)
-    {
-        CommonOps.toArray(source, list)
-    }
-
-    public <T> T[] toArray(Collection<T> source, IntFunction<T[]> generator)
-    {
-        CommonOps.toArray(source, generator)
-    }
-
-    public <T> T[] toArray(Stream<T> source, IntFunction<T[]> generator)
-    {
-       CommonOps.toArray(source, generator)
     }
 
     @SuppressWarnings("unchecked")
