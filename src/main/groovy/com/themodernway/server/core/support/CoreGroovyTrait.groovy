@@ -17,7 +17,6 @@
 package com.themodernway.server.core.support
 
 import java.util.function.BooleanSupplier
-import java.util.function.Consumer
 import java.util.function.DoubleSupplier
 import java.util.function.IntSupplier
 import java.util.function.LongSupplier
@@ -552,21 +551,6 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     public String repeat(String string, int times)
     {
         StringOps.repeat(string, times)
-    }
-
-    public void setConsumerUniqueStringArray(String list, Consumer<String[]> prop)
-    {
-        StringOps.setConsumerUniqueStringArray(list, prop)
-    }
-
-    public void setConsumerUniqueStringArray(Collection<String> list, Consumer<String[]> prop)
-    {
-        StringOps.setConsumerUniqueStringArray(list, prop)
-    }
-
-    public List<String> getSupplierUniqueStringArray(Supplier<String[]> prop)
-    {
-        StringOps.getSupplierUniqueStringArray(prop)
     }
 
     public String[] toArray(Collection<String> collection)

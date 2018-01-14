@@ -18,7 +18,6 @@ package com.themodernway.server.core.support
 
 import java.util.concurrent.Future
 import java.util.function.BooleanSupplier
-import java.util.function.Consumer
 import java.util.function.DoubleSupplier
 import java.util.function.IntSupplier
 import java.util.function.LongSupplier
@@ -778,24 +777,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public String repeat(String string, int times)
     {
         StringOps.repeat(string, times)
-    }
-
-    @Override
-    public void setConsumerUniqueStringArray(String list, Consumer<String[]> prop)
-    {
-        StringOps.setConsumerUniqueStringArray(list, prop)
-    }
-
-    @Override
-    public void setConsumerUniqueStringArray(Collection<String> list, Consumer<String[]> prop)
-    {
-        StringOps.setConsumerUniqueStringArray(list, prop)
-    }
-
-    @Override
-    public List<String> getSupplierUniqueStringArray(Supplier<String[]> prop)
-    {
-        StringOps.getSupplierUniqueStringArray(prop)
     }
 
     @Override

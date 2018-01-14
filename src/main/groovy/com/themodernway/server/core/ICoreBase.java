@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 import java.util.function.LongSupplier;
@@ -362,21 +361,6 @@ public interface ICoreBase
     default public String repeat(final String string, final int times)
     {
         return StringOps.repeat(string, times);
-    }
-
-    default public void setConsumerUniqueStringArray(final String list, final Consumer<String[]> prop)
-    {
-        StringOps.setConsumerUniqueStringArray(list, prop);
-    }
-
-    default public void setConsumerUniqueStringArray(final Collection<String> list, final Consumer<String[]> prop)
-    {
-        StringOps.setConsumerUniqueStringArray(list, prop);
-    }
-
-    default public List<String> getSupplierUniqueStringArray(final Supplier<String[]> prop)
-    {
-        return StringOps.getSupplierUniqueStringArray(prop);
     }
 
     default public String[] toArray(final Collection<String> collection)
