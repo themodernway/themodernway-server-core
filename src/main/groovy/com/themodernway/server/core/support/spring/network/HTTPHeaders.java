@@ -40,7 +40,7 @@ public class HTTPHeaders extends HttpHeaders
 {
     private static final long           serialVersionUID       = 1L;
 
-    public static final String          DEFAULT_USER_AGENT     = "The Modern Way/1.2.26 (Language=Java/1.8.0)";
+    public static final String          DEFAULT_USER_AGENT     = String.format("The-Modern-Way/1.2.27 (Language=Java/%s)", System.getProperty("java.version"));
 
     public static final MediaType       XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
 

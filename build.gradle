@@ -17,7 +17,6 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'http://repo.spring.io/plugins-release' }
     }
     dependencies {
         classpath(group: 'org.ajoberstar', name: 'grgit', version: '1.7.2')
@@ -25,7 +24,6 @@ buildscript {
         classpath(group: 'commons-logging', name: 'commons-logging', version: '1.2')
         classpath(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4')
         classpath(group: 'org.owasp', name: 'dependency-check-gradle', version: '3.0.2')
-        classpath(group: 'io.spring.gradle', name: 'propdeps-plugin', version: '0.0.9.RELEASE')
     }
 }
 
@@ -42,16 +40,13 @@ apply plugin: 'signing'
 apply plugin: 'eclipse'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
-apply plugin: 'propdeps'
-apply plugin: 'propdeps-maven'
-apply plugin: 'propdeps-eclipse'
 apply plugin: 'org.owasp.dependencycheck'
 
 sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.2.26-RELEASE'
+version = '1.2.27-RELEASE'
 
 group = 'com.themodernway'
 
@@ -244,7 +239,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.26-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.27-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.0')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')

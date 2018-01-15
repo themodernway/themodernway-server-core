@@ -118,6 +118,11 @@ public interface ICoreBase
         return CommonOps.toList(source);
     }
 
+    default public <T> List<T> toList(final Stream<T> source)
+    {
+        return CommonOps.toList(source);
+    }
+
     default public <T> List<T> toList(final Enumeration<? extends T> source)
     {
         return CommonOps.toList(source);
@@ -376,11 +381,6 @@ public interface ICoreBase
     default public String[] toArray(final Stream<String> stream)
     {
         return StringOps.toArray(stream);
-    }
-
-    default public List<String> toList(final Stream<String> stream)
-    {
-        return StringOps.toList(stream);
     }
 
     default public String[] toUniqueArray(final Collection<String> collection)

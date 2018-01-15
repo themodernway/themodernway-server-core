@@ -546,6 +546,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Override
+    public <T> List<T> toList(final Stream<T> source)
+    {
+        CommonOps.toList(source)
+    }
+
+    @Override
     public <T> List<T> toList(Enumeration<? extends T> source)
     {
         CommonOps.toList(source)
@@ -795,12 +801,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public String[] toArray(Stream<String> stream)
     {
         StringOps.toArray(stream)
-    }
-
-    @Override
-    public List<String> toList(Stream<String> stream)
-    {
-        StringOps.toList(stream)
     }
 
     @Override

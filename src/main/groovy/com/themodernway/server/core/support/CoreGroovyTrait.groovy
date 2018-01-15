@@ -352,6 +352,11 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
         CommonOps.toList(source)
     }
 
+    public <T> List<T> toList(Stream<T> source)
+    {
+        CommonOps.toList(source)
+    }
+
     public <T> List<T> toList(Enumeration<? extends T> source)
     {
         CommonOps.toList(source)
@@ -566,11 +571,6 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     public String[] toArray(Stream<String> stream)
     {
         StringOps.toArray(stream)
-    }
-
-    public List<String> toList(Stream<String> stream)
-    {
-        StringOps.toList(stream)
     }
 
     public String[] toUniqueArray(Collection<String> collection)
