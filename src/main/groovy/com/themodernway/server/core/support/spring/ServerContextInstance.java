@@ -32,7 +32,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.io.IO;
@@ -53,15 +52,13 @@ import com.themodernway.server.core.support.spring.network.websocket.IWebSocketS
 
 public class ServerContextInstance extends CoreJSONOperations implements IServerContext
 {
-    private static ApplicationContext                  APPCONTEXT   = null;
+    private static ApplicationContext                 APPCONTEXT   = null;
 
-    private final static DefaultAuthorizationProvider  DEFAULT_AUTH = new DefaultAuthorizationProvider();
+    private final static DefaultAuthorizationProvider DEFAULT_AUTH = new DefaultAuthorizationProvider();
 
-    private final static DefaultPrincipalsKeysProvider DEFAULT_KEYS = new DefaultPrincipalsKeysProvider();
+    private final static ServerContextInstance        INSTANCE     = new ServerContextInstance();
 
-    private final static ServerContextInstance         INSTANCE     = new ServerContextInstance();
-
-    private final Logger                               m_logger     = Logger.getLogger(getClass());
+    private final Logger                              m_logger     = Logger.getLogger(getClass());
 
     public static final ServerContextInstance getServerContextInstance()
     {
@@ -170,7 +167,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final <B> Map<String, B> getBeansOfType(final Class<B> type) throws Exception
     {
-        return CommonOps.toUnmodifiableMap(getApplicationContext().getBeansOfType(requireNonNull(type)));
+        return toUnmodifiableMap(getApplicationContext().getBeansOfType(requireNonNull(type)));
     }
 
     @Override
@@ -253,23 +250,11 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
         {
             return auth;
         }
-        logger().info(format("Using AuthorizationProvider default (%s)." , DEFAULT_AUTH.getClass().getName()));
-
-        return DEFAULT_AUTH;
-    }
-
-    @Override
-    public final List<String> getPrincipalsKeys()
-    {
-        final IPrincipalsKeysProvider keys = getBeanSafely("PrincipalsKeysProvider", IPrincipalsKeysProvider.class);
-
-        if (null != keys)
+        if (logger().isDebugEnabled())
         {
-            return keys.getPrincipalsKeys();
+            logger().debug(format("Using AuthorizationProvider default (%s).", DEFAULT_AUTH.getClass().getName()));
         }
-        logger().info(format("Using PrincipalsKeysProvider default (%s)." , DEFAULT_KEYS.getClass().getName()));
-
-        return DEFAULT_KEYS.getPrincipalsKeys();
+        return DEFAULT_AUTH;
     }
 
     @Override

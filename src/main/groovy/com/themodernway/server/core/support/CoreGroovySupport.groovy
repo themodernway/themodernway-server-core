@@ -115,12 +115,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Memoized
-    public List<String> getPrincipalsKeys()
-    {
-        getServerContext().getPrincipalsKeys()
-    }
-
-    @Memoized
     public IMailSenderProvider getMailSenderProvider()
     {
         getServerContext().getMailSenderProvider()

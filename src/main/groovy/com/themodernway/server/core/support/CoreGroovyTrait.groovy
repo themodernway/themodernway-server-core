@@ -87,12 +87,6 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     }
 
     @Memoized
-    public List<String> getPrincipalsKeys()
-    {
-        getServerContext().getPrincipalsKeys()
-    }
-
-    @Memoized
     public IMailSenderProvider getMailSenderProvider()
     {
         getServerContext().getMailSenderProvider()

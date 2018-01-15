@@ -18,7 +18,6 @@ package com.themodernway.server.core.support.spring;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.cache.CacheManager;
@@ -66,8 +65,6 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public Environment getEnvironment();
 
     public IAuthorizationProvider getAuthorizationProvider();
-
-    public List<String> getPrincipalsKeys();
 
     public IServerSessionRepositoryProvider getServerSessionRepositoryProvider();
 
