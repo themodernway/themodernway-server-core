@@ -153,4 +153,64 @@ public class ValidationTestsSpecification extends ServerCoreSpecification implem
         expect:
         false == good
     }
+
+    def "test 9"()
+    {
+        setup:
+        def good = false
+        def json = json(name: "Dean", list: [6d, 8d])
+        def test = Validators.getComplexAllMatchMultiValidator()
+        def time = new NanoTimer()
+        for (int i = 0; i < 1000000; i++) {
+            def valu = test.validate(json)
+            if (false == (good = valu.isValid())) {
+                echo valu.getErrorString()
+                break
+            }
+        }
+        echo time
+
+        expect:
+        true == good
+    }
+
+    def "test 10"()
+    {
+        setup:
+        def good = false
+        def json = json(name: "Dean", list: [1d, 8d])
+        def test = Validators.getComplexAllMatchMultiValidator()
+        def time = new NanoTimer()
+        for (int i = 0; i < 1000000; i++) {
+            def valu = test.validate(json)
+            if (false == (good = valu.isValid())) {
+                echo valu.getErrorString()
+                break
+            }
+        }
+        echo time
+
+        expect:
+        false == good
+    }
+
+    def "test 11"()
+    {
+        setup:
+        def good = false
+        def json = json(name: "Dean", list: [6d, 80d])
+        def test = Validators.getComplexAllMatchMultiValidator()
+        def time = new NanoTimer()
+        for (int i = 0; i < 1000000; i++) {
+            def valu = test.validate(json)
+            if (false == (good = valu.isValid())) {
+                echo valu.getErrorString()
+                break
+            }
+        }
+        echo time
+
+        expect:
+        false == good
+    }
 }

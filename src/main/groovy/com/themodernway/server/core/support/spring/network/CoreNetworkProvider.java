@@ -18,6 +18,7 @@ package com.themodernway.server.core.support.spring.network;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.function.Function;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
@@ -28,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -35,28 +37,38 @@ import org.springframework.web.util.DefaultUriTemplateHandler;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.cache.AbstractConcurrentCache;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.logging.IHasLogging;
-import com.themodernway.server.core.servlet.ICoreServletConstants;
 
 public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, InitializingBean
 {
-    private String                          m_user_agent = HTTPHeaders.DEFAULT_USER_AGENT;
+    private String                          m_user_agent        = HTTPHeaders.DEFAULT_USER_AGENT;
 
-    private final Logger                    m_has_logger = Logger.getLogger(getClass());
+    private final Logger                    m_has_logger        = Logger.getLogger(getClass());
 
-    private final HTTPHeaders               m_no_headers = new HTTPHeaders();
+    private final HTTPHeaders               m_no_headers        = new HTTPHeaders();
 
-    private final RestTemplate              m_rest_execs = new RestTemplate();
+    private final RestTemplate              m_rest_execs        = new RestTemplate();
 
-    private final DefaultUriTemplateHandler m_urlhandler = new DefaultUriTemplateHandler();
+    private final CoreFactoryCache          m_fact_cache        = new CoreFactoryCache();
 
-    private static final PathParameters     EMPTY_PARAMS = new PathParameters();
+    private final DefaultUriTemplateHandler m_urlhandler        = new DefaultUriTemplateHandler();
 
-    private static final IBinder            VALUE_MAPPER = BinderType.JSON.getBinder();
+    private static final PathParameters     EMPTY_PARAMS        = new PathParameters();
+
+    private static final IBinder            VALUE_MAPPER        = BinderType.JSON.getBinder();
+
+    private static final String             APACHE_FACTORY_NAME = "apache";
+
+    private static final String             OKHTTP_FACTORY_NAME = "okhttp";
+
+    private static final String             SIMPLE_FACTORY_NAME = "simple";
+
+    private static final String             NATIVE_FACTORY_NAME = "native";
 
     private static final class CoreResponseErrorHandler implements ResponseErrorHandler
     {
@@ -72,6 +84,100 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
         }
     }
 
+    protected static final class CoreFactoryCache extends AbstractConcurrentCache<ClientHttpRequestFactory> implements IHasLogging
+    {
+        private final Logger m_has_logger = Logger.getLogger(getClass());
+
+        public CoreFactoryCache()
+        {
+            super("CoreFactoryCache");
+        }
+
+        public CoreFactoryCache(final String named)
+        {
+            super(named);
+        }
+
+        @Override
+        public Function<String, ClientHttpRequestFactory> getMappingFunction()
+        {
+            return name -> {
+
+                switch (StringOps.toTrimOrElse(name, NATIVE_FACTORY_NAME).toLowerCase())
+                {
+                    case APACHE_FACTORY_NAME:
+                        return new HttpComponentsClientHttpRequestFactory();
+                    case OKHTTP_FACTORY_NAME:
+                        return new OkHttp3ClientHttpRequestFactory();
+                    case SIMPLE_FACTORY_NAME:
+                        return new SimpleClientHttpRequestFactory();
+                    case NATIVE_FACTORY_NAME:
+                        return new CoreClientHttpRequestFactory();
+                    default:
+                        try
+                        {
+                            final Class<?> type = Class.forName(name);
+
+                            if ((null != type) && (ClientHttpRequestFactory.class.isAssignableFrom(type)))
+                            {
+                                return CommonOps.CAST(type.newInstance());
+                            }
+                            else
+                            {
+                                logger().error(String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", name));
+                            }
+                        }
+                        catch (final Exception e)
+                        {
+                            logger().error(String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", name), e);
+                        }
+                        return null;
+                }
+            };
+        }
+
+        @Override
+        public void close() throws IOException
+        {
+            for (final ClientHttpRequestFactory factory : values())
+            {
+                if (factory instanceof DisposableBean)
+                {
+                    logger().info(String.format("close(%s).", factory.getClass().getName()));
+
+                    try
+                    {
+                        ((DisposableBean) factory).destroy();
+                    }
+                    catch (final Exception e)
+                    {
+                        logger().error("close().", e);
+                    }
+                }
+                else if (factory instanceof Closeable)
+                {
+                    logger().info(String.format("close(%s).", factory.getClass().getName()));
+
+                    try
+                    {
+                        ((Closeable) factory).close();
+                    }
+                    catch (final Exception e)
+                    {
+                        logger().error("close().", e);
+                    }
+                }
+            }
+            clear();
+        }
+
+        @Override
+        public Logger logger()
+        {
+            return m_has_logger;
+        }
+    }
+
     public CoreNetworkProvider()
     {
         m_no_headers.doRESTHeaders(getUserAgent());
@@ -81,59 +187,35 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
         m_rest_execs.setErrorHandler(new CoreResponseErrorHandler());
     }
 
+    @Override
     public void setParsePath(final boolean parse)
     {
         m_urlhandler.setParsePath(parse);
     }
 
+    @Override
     public void setStrictEncoding(final boolean strict)
     {
         m_urlhandler.setStrictEncoding(strict);
     }
 
+    @Override
     public void setHttpFactoryByName(final String name)
     {
-        final String impl = StringOps.toTrimOrElse(name, ICoreServletConstants.STRING_DEFAULT);
+        final String impl = StringOps.toTrimOrElse(name, NATIVE_FACTORY_NAME);
 
-        switch (impl.toLowerCase())
+        final ClientHttpRequestFactory factory = m_fact_cache.get(impl);
+
+        if (null != factory)
         {
-            case "apache":
-                setClientHttpRequestFactory(new HttpComponentsClientHttpRequestFactory());
-                break;
-            case "simple":
-                setClientHttpRequestFactory(new SimpleClientHttpRequestFactory());
-                break;
-            case ICoreServletConstants.STRING_DEFAULT:
-                setClientHttpRequestFactory(new CoreClientHttpRequestFactory());
-                break;
-            default:
-                try
-                {
-                    final Class<?> type = Class.forName(impl);
+            m_rest_execs.setRequestFactory(factory);
 
-                    if ((null != type) && (ClientHttpRequestFactory.class.isAssignableFrom(type)))
-                    {
-                        setClientHttpRequestFactory(CommonOps.CAST(type.newInstance()));
-                    }
-                    else
-                    {
-                        logger().error(String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", impl));
-                    }
-                }
-                catch (final Exception e)
-                {
-                    logger().error(String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", impl), e);
-                }
-                break;
+            logger().info(String.format("setHttpFactoryByName(%s).", factory.getClass().getName()));
         }
-    }
-
-    @Override
-    public void setClientHttpRequestFactory(final ClientHttpRequestFactory factory)
-    {
-        m_rest_execs.setRequestFactory(CommonOps.requireNonNull(factory));
-
-        logger().info(String.format("setClientHttpRequestFactory(%s).", factory.getClass().getName()));
+        else
+        {
+            logger().error(String.format("setHttpFactoryByName(%s) not found.", impl));
+        }
     }
 
     @Override
@@ -153,34 +235,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
     {
         logger().info("close().");
 
-        final ClientHttpRequestFactory factory = m_rest_execs.getRequestFactory();
-
-        if (factory instanceof DisposableBean)
-        {
-            logger().info(String.format("close(%s).", factory.getClass().getName()));
-
-            try
-            {
-                ((DisposableBean) factory).destroy();
-            }
-            catch (final Exception e)
-            {
-                logger().error("close().", e);
-            }
-        }
-        else if (factory instanceof Closeable)
-        {
-            logger().info(String.format("close(%s).", factory.getClass().getName()));
-
-            try
-            {
-                ((Closeable) factory).close();
-            }
-            catch (final Exception e)
-            {
-                logger().error("close().", e);
-            }
-        }
+        m_fact_cache.close();
     }
 
     @Override

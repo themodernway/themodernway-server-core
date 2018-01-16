@@ -188,7 +188,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
     {
         setup:
         def t = new NanoTimer()
-        Thread.sleep(500)
+        pause(500)
         echo t
 
         expect:

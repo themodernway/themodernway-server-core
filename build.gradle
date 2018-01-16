@@ -46,7 +46,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.2.28-RELEASE'
+version = '1.2.29-RELEASE'
 
 group = 'com.themodernway'
 
@@ -130,6 +130,9 @@ jacocoTestReport {
 jacocoTestReport.dependsOn test
 
 test {
+    minHeapSize = "2048m"
+    maxHeapSize = "2048m"
+    testLogging.showStandardStreams = true
     jacoco {
         append = false
         destinationFile = file("${buildDir}/jacoco/testing.exec")
@@ -239,7 +242,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.28-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.29-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.0')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
@@ -258,6 +261,7 @@ dependencies {
     compile(group: 'commons-collections', name: 'commons-collections', version: '3.2.2')
     compile(group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3')
     compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4')
+    compile(group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.9.1')
     compile(group: 'com.google.guava', name: 'guava', version: '23.6-jre')
     compile(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.1')
     compile(group: 'com.github.ben-manes.caffeine', name: 'jcache', version: '2.6.1')

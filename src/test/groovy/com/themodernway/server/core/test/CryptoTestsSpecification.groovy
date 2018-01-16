@@ -113,7 +113,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def test = new AdminPOJO('TEST')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['TEST'])
+        def answ = isAuthorized(test, ['TEST'])
 
         expect:
         answ.isAuthorized() == false
@@ -123,7 +123,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def test = new AdminPOJO('USER')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['USER'])
+        def answ = isAuthorized(test, ['USER'])
 
         expect:
         answ.isAuthorized() == false
@@ -133,7 +133,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def test = new AdminPOJO('ADMIN')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN'])
+        def answ = isAuthorized(test, ['ADMIN'])
 
         expect:
         answ.isAuthorized() == true
@@ -143,7 +143,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def test = new AdminPOJO('ADMIN')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER', 'TEST'])
+        def answ = isAuthorized(test, ['ADMIN', 'USER', 'TEST'])
 
         expect:
         answ.isAuthorized() == true
@@ -153,7 +153,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def test = new AdminUserPOJO('TEST')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['TEST'])
+        def answ = isAuthorized(test, ['TEST'])
 
         expect:
         answ.isAuthorized() == false
@@ -163,7 +163,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def test = new AdminUserPOJO('USER')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['USER'])
+        def answ = isAuthorized(test, ['USER'])
 
         expect:
         answ.isAuthorized() == false
@@ -173,7 +173,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def test = new AdminUserPOJO('ADMIN')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN'])
+        def answ = isAuthorized(test, ['ADMIN'])
 
         expect:
         answ.isAuthorized() == false
@@ -184,7 +184,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         level(Level.DEBUG)
         def test = new AdminUserPOJO('ADMIN')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER'])
+        def answ = isAuthorized(test, ['ADMIN', 'USER'])
 
         expect:
         answ.isAuthorized() == true
@@ -198,7 +198,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         level(Level.DEBUG)
         def test = new AuthAllPOJO('ALL')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER'])
+        def answ = isAuthorized(test, ['ADMIN', 'USER'])
 
         expect:
         answ.isAuthorized() == true
@@ -212,7 +212,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         level(Level.DEBUG)
         def test = new AuthAllPOJO('ALL')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN'])
+        def answ = isAuthorized(test, ['ADMIN'])
 
         expect:
         answ.isAuthorized() == false
@@ -226,7 +226,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         level(Level.DEBUG)
         def test = new AuthAllPOJO('ALL')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER', 'ANON'])
+        def answ = isAuthorized(test, ['ADMIN', 'USER', 'ANON'])
 
         expect:
         answ.isAuthorized() == false
@@ -240,7 +240,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         level(Level.DEBUG)
         def test = new AuthAnyPOJO('ANY')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER'])
+        def answ = isAuthorized(test, ['ADMIN', 'USER'])
 
         expect:
         answ.isAuthorized() == true
@@ -254,7 +254,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         level(Level.DEBUG)
         def test = new AuthAnyPOJO('ANY')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN'])
+        def answ = isAuthorized(test, ['ADMIN'])
 
         expect:
         answ.isAuthorized() == true
@@ -268,7 +268,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         level(Level.DEBUG)
         def test = new AuthAnyPOJO('ANY')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['USER'])
+        def answ = isAuthorized(test, ['USER'])
 
         expect:
         answ.isAuthorized() == true
@@ -282,7 +282,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         level(Level.DEBUG)
         def test = new AuthAnyPOJO('ANY')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['USER', 'TEST'])
+        def answ = isAuthorized(test, ['USER', 'TEST'])
 
         expect:
         answ.isAuthorized() == true
@@ -296,7 +296,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         level(Level.DEBUG)
         def test = new AuthAnyPOJO('ANY')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['TEST'])
+        def answ = isAuthorized(test, ['TEST'])
 
         expect:
         answ.isAuthorized() == false
@@ -310,7 +310,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         setup:
         level(Level.DEBUG)
         def test = new AuthAnyPOJO('ANY')
-        def answ = getAuthorizationProvider().isAuthorized(test, ['ADMIN', 'USER', 'ANON'])
+        def answ = isAuthorized(test, ['ADMIN', 'USER', 'ANON'])
 
         expect:
         answ.isAuthorized() == false

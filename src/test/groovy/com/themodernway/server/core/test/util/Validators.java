@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.test.util;
 
+import com.themodernway.server.core.json.validation.AllMatchMultiTypeValidator;
 import com.themodernway.server.core.json.validation.AnyMatchMultiTypeValidator;
 import com.themodernway.server.core.json.validation.BooleanValidator;
 import com.themodernway.server.core.json.validation.DoublePredicateValidator;
@@ -44,6 +45,11 @@ public final class Validators
     public static final IJSONValidator getComplexAnyMatchMultiValidator()
     {
         return make().add("name", new StringNotEmptyValidator()).add("flag", new BooleanValidator(), false).add("list", new JSONArrayValidator(new AnyMatchMultiTypeValidator("ComplexAny", new StringNotEmptyValidator(), new IntegerValidator(), new BooleanValidator(), new DoublePredicateValidator((v) -> v > 2d))));
+    }
+
+    public static final IJSONValidator getComplexAllMatchMultiValidator()
+    {
+        return make().add("name", new StringNotEmptyValidator()).add("flag", new BooleanValidator(), false).add("list", new JSONArrayValidator(new AllMatchMultiTypeValidator("ComplexAll", new DoublePredicateValidator((v) -> v > 2d), new DoublePredicateValidator((v) -> v < 20d))));
     }
 
     public static final JSONObjectValidator make()

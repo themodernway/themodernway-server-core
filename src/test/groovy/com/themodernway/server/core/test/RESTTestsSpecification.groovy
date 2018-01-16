@@ -21,6 +21,8 @@ import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.network.PathParameters
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
+import spock.lang.Unroll
+
 public class RESTTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
     def setupSpec()
@@ -69,8 +71,8 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
     def "test parallel off"()
     {
         setup:
-        def t = new NanoTimer()
         def n = network()
+        def t = new NanoTimer()
         def list = (1..100).collect { int id ->
             n.get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
         }
@@ -83,8 +85,8 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
     def "test parallel on"()
     {
         setup:
-        def t = new NanoTimer()
         def n = network()
+        def t = new NanoTimer()
         def list = parallel(1..100).collect { int id ->
             n.get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
         }
@@ -92,5 +94,43 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
 
         expect:
         list.size() == 100
+    }
+
+    @Unroll
+    def "test parallel off (#name)"(String name)
+    {
+        setup:
+        def n = network()
+        n.setHttpFactoryByName(name)
+        def t = new NanoTimer()
+        def list = (1..100).collect { int id ->
+            n.get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
+        }
+        echo t.toString() + " test parallel off " + name
+
+        expect:
+        list.size() == 100
+
+        where:
+        name << ["simple", "okhttp", "apache"]
+    }
+
+    @Unroll
+    def "test parallel on (#name)"(String name)
+    {
+        setup:
+        def n = network()
+        n.setHttpFactoryByName(name)
+        def t = new NanoTimer()
+        def list = parallel(1..100).collect { int id ->
+            n.get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
+        }
+        echo t.toString() + " test parallel on " + name
+
+        expect:
+        list.size() == 100
+
+        where:
+        name << ["simple", "okhttp", "apache"]
     }
 }

@@ -25,4 +25,14 @@ public trait CoreGroovyParallelTrait
     {
         CoreGroovyParallel.parallel(collection)
     }
+
+    public void pause(long time)
+    {
+        CoreGroovyParallel.pause(time)
+    }
+
+    public void pause(long time, Closure closure)
+    {
+        CoreGroovyParallel.pause(time, closure)
+    }
 }

@@ -18,8 +18,6 @@ package com.themodernway.server.core.support.spring.network;
 
 import java.io.Closeable;
 
-import org.springframework.http.client.ClientHttpRequestFactory;
-
 import com.themodernway.server.core.json.JSONObject;
 
 public interface ICoreNetworkProvider extends Closeable
@@ -28,7 +26,11 @@ public interface ICoreNetworkProvider extends Closeable
 
     public void setUserAgent(String agent);
 
-    public void setClientHttpRequestFactory(ClientHttpRequestFactory factory);
+    public void setParsePath(boolean parse);
+
+    public void setStrictEncoding(boolean strict);
+
+    public void setHttpFactoryByName(String name);
 
     public IRESTResponse get(String path);
 

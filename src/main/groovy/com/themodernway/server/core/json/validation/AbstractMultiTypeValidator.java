@@ -18,17 +18,11 @@ package com.themodernway.server.core.json.validation;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
-import com.themodernway.server.core.logging.IHasLogging;
-
-public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeValidator implements IHasLogging
+public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeValidator
 {
     private final boolean                       m_must;
 
     private final List<IAttributeTypeValidator> m_list;
-
-    private final Logger                        m_logs = Logger.getLogger(getClass());
 
     protected AbstractMultiTypeValidator(final String name, final boolean must, final IAttributeTypeValidator type, final IAttributeTypeValidator... list)
     {
@@ -83,6 +77,10 @@ public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeVa
                 {
                     return;
                 }
+                else if (i == (size - 1))
+                {
+                    return;
+                }
             }
             else if (must)
             {
@@ -94,11 +92,5 @@ public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeVa
             }
         }
         ctx.addBadTypeError(getName());
-    }
-
-    @Override
-    public Logger logger()
-    {
-        return m_logs;
     }
 }

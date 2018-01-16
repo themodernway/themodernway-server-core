@@ -26,4 +26,14 @@ public class CoreGroovyParallel
     {
         ParallelEnhancer.enhanceInstance(CommonOps.requireNonNull(collection)).makeConcurrent()
     }
+
+    public static final void pause(final long time)
+    {
+        sleep(time)
+    }
+
+    public static final void pause(final long time, final Closure closure)
+    {
+        sleep(time, closure)
+    }
 }
