@@ -729,16 +729,16 @@ public class CoreGroovySupport implements IServerContext, Closeable
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> List<T> arrayListOfLists(List<T>... lists)
+    public <T> List<T> toListOfLists(List<T>... lists)
     {
-        getServerContext().arrayListOfLists(lists)
+        CommonOps.toListOfLists(lists)
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> List<T> arrayListOfListsUnique(List<T>... lists)
+    public <T> List<T> toListOfListsUnique(List<T>... lists)
     {
-        getServerContext().arrayListOfListsUnique(lists)
+        CommonOps.toListOfListsUnique(lists)
     }
 
     @Memoized

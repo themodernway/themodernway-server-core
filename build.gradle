@@ -46,7 +46,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.2.29-RELEASE'
+version = '1.2.30-RELEASE'
 
 group = 'com.themodernway'
 
@@ -130,8 +130,8 @@ jacocoTestReport {
 jacocoTestReport.dependsOn test
 
 test {
-    minHeapSize = "2048m"
-    maxHeapSize = "2048m"
+    minHeapSize = '2048m'
+    maxHeapSize = '2048m'
     testLogging.showStandardStreams = true
     jacoco {
         append = false
@@ -242,7 +242,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.29-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.30-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.0')
     compile(group: 'log4j', name: 'log4j', version: '1.2.17')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')

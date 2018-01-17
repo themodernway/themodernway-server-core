@@ -269,39 +269,15 @@ public interface ICoreBase
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> List<T> arrayListOfLists(final List<T>... lists)
+    default public <T> List<T> toListOfLists(final List<T>... lists)
     {
-        final List<T> list = arrayList();
-
-        for (final List<T> adds : lists)
-        {
-            if ((null != adds) && (false == adds.isEmpty()))
-            {
-                list.addAll(adds);
-            }
-        }
-        return list;
+        return CommonOps.toListOfLists(lists);
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> List<T> arrayListOfListsUnique(final List<T>... lists)
+    default public <T> List<T> toListOfListsUnique(final List<T>... lists)
     {
-        final List<T> list = arrayList();
-
-        for (final List<T> adds : lists)
-        {
-            if ((null != adds) && (false == adds.isEmpty()))
-            {
-                for (final T item : adds)
-                {
-                    if (false == list.contains(item))
-                    {
-                        list.add(item);
-                    }
-                }
-            }
-        }
-        return list;
+        return CommonOps.toListOfListsUnique(lists);
     }
 
     default public String getEnvironmentProperty(final String name)

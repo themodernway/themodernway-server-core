@@ -134,7 +134,7 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
     @SuppressWarnings("unchecked")
     public default List<String> getCombinedRoles(final IServerSession sess, final List<String> role)
     {
-        return toUnique(arrayListOfLists(role, (sess == null) ? arrayList() : sess.getRoles()));
+        return toUnique(toListOfLists(role, (sess == null) ? arrayList() : sess.getRoles()));
     }
 
     public default IAuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)
