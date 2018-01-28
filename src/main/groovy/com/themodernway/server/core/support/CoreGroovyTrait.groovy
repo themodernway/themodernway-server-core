@@ -47,7 +47,9 @@ import com.themodernway.server.core.security.session.IServerSessionRepository
 import com.themodernway.server.core.security.session.IServerSessionRepositoryProvider
 import com.themodernway.server.core.support.spring.IBuildDescriptorProvider
 import com.themodernway.server.core.support.spring.IPropertiesResolver
+import com.themodernway.server.core.support.spring.IServerContext
 import com.themodernway.server.core.support.spring.IServletContextCustomizerProvider
+import com.themodernway.server.core.support.spring.ServerContextInstance
 import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider
 import com.themodernway.server.core.support.spring.network.websocket.IWebSocketService
 import com.themodernway.server.core.support.spring.network.websocket.IWebSocketServiceProvider
@@ -58,9 +60,10 @@ import groovy.transform.Memoized
 @CompileStatic
 public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
 {
-    public CoreGroovySupport getServerContext()
+    @Memoized
+    public IServerContext getServerContext()
     {
-        CoreGroovySupport.getCoreGroovySupport()
+        ServerContextInstance.getServerContextInstance()
     }
 
     public boolean isApplicationContextInitialized()
