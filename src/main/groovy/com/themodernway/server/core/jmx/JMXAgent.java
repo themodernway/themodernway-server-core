@@ -30,15 +30,16 @@ import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class JMXAgent implements Closeable
 {
     private static final int    DEFAULT_JMX_PORT = 3000;
 
-    private static final Logger logger           = Logger.getLogger(JMXAgent.class);
+    private static final Logger logger           = LoggingOps.LOGGER(JMXAgent.class);
 
     private JMXConnectorServer  m_cs             = null;
 

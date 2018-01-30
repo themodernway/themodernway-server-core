@@ -19,11 +19,12 @@ package com.themodernway.server.core;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.logging.IHasLogging;
+import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.support.spring.IPropertiesResolver;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
@@ -36,12 +37,12 @@ public interface ICoreCommon extends ICoreBase, IPropertiesResolver, IHasLogging
 
     public static Logger LOGGER(final String name)
     {
-        return Logger.getLogger(CommonOps.requireNonNull(name));
+        return LoggingOps.LOGGER(CommonOps.requireNonNull(name));
     }
 
     public static Logger LOGGER(final Class<?> type)
     {
-        return Logger.getLogger(CommonOps.requireNonNull(type));
+        return LoggingOps.LOGGER(CommonOps.requireNonNull(type));
     }
 
     public static List<String> toTaggingValues(final Object target)

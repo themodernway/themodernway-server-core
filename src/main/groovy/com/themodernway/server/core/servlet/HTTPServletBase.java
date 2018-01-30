@@ -24,17 +24,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.limiting.IRateLimited;
+import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.security.session.IServerSession;
 
 @SuppressWarnings("serial")
 public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IServletCommonOperations
 {
-    private final Logger                     m_logger    = Logger.getLogger(getClass());
+    private final Logger                     m_logger    = LoggingOps.LOGGER(getClass());
 
     private RateLimiter                      m_ratelimit = null;
 

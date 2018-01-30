@@ -25,16 +25,17 @@ import javax.servlet.Filter;
 import javax.servlet.FilterRegistration.Dynamic;
 import javax.servlet.ServletContext;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class FilterFactoryContextCustomizer implements IServletContextCustomizer, ICoreCommon
 {
-    private final Logger   m_logs = Logger.getLogger(getClass());
+    private final Logger   m_logs = LoggingOps.LOGGER(getClass());
 
     private final String   m_name;
 

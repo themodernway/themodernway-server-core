@@ -18,11 +18,10 @@ package com.themodernway.server.core.support.spring.testing.spock
 
 import static java.lang.System.err
 
-import org.apache.log4j.Level
-import org.apache.log4j.LogManager
-import org.apache.log4j.Logger
+import org.slf4j.Logger
 
 import com.themodernway.common.api.json.JSONStringify
+import com.themodernway.server.core.logging.LoggingOps
 import com.themodernway.server.core.logging.MDC
 import com.themodernway.server.core.support.spring.IServerContext
 import com.themodernway.server.core.support.spring.testing.IServerCoreTesting
@@ -58,19 +57,16 @@ public abstract class ServerCoreSpecification extends Specification implements I
         m_logging = true
     }
 
-    public void level(Level value = Level.INFO)
+    def level(String level = "INFO")
     {
-        if (value)
-        {
-            LogManager.getRootLogger().setLevel(value)
-        }
+        LoggingOps.level(level)
     }
 
     public Logger logger()
     {
         if (null == m_logger)
         {
-            m_logger = Logger.getLogger(getClass())
+            m_logger = LoggingOps.LOGGER(getClass())
         }
         m_logger
     }

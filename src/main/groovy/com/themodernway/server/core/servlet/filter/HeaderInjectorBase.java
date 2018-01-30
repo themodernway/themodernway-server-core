@@ -16,7 +16,9 @@
 
 package com.themodernway.server.core.servlet.filter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+
+import com.themodernway.server.core.logging.LoggingOps;
 
 public abstract class HeaderInjectorBase implements IHeaderInjector
 {
@@ -26,7 +28,7 @@ public abstract class HeaderInjectorBase implements IHeaderInjector
 
     private int                   m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    private final Logger          m_logger    = Logger.getLogger(getClass());
+    private final Logger          m_logger    = LoggingOps.LOGGER(getClass());
 
     protected HeaderInjectorBase()
     {

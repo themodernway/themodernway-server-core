@@ -19,13 +19,14 @@ package com.themodernway.server.core.security;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICoreCommon
 {
-    private final Logger m_logger = Logger.getLogger(getClass());
+    private final Logger m_logger = LoggingOps.LOGGER(getClass());
 
     public DefaultAuthorizationProvider()
     {

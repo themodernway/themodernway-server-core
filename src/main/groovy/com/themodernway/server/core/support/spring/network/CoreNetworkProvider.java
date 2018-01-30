@@ -20,7 +20,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.function.Function;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpEntity;
@@ -43,12 +43,13 @@ import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.logging.IHasLogging;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, InitializingBean
 {
     private String                          m_user_agent        = HTTPHeaders.DEFAULT_USER_AGENT;
 
-    private final Logger                    m_has_logger        = Logger.getLogger(getClass());
+    private final Logger                    m_has_logger        = LoggingOps.LOGGER(getClass());
 
     private final HTTPHeaders               m_no_headers        = new HTTPHeaders();
 
@@ -86,7 +87,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
     protected static final class CoreFactoryCache extends AbstractConcurrentCache<ClientHttpRequestFactory> implements IHasLogging
     {
-        private final Logger m_has_logger = Logger.getLogger(getClass());
+        private final Logger m_has_logger = LoggingOps.LOGGER(getClass());
 
         public CoreFactoryCache()
         {

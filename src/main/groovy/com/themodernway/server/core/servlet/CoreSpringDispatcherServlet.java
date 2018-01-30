@@ -23,20 +23,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.limiting.IRateLimited;
+import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.security.session.IServerSession;
 
 public class CoreSpringDispatcherServlet extends DispatcherServlet implements IRateLimited, IServletCommonOperations
 {
     private static final long                          serialVersionUID = 1L;
 
-    private transient Logger                           m_logger         = Logger.getLogger(getClass());
+    private transient Logger                           m_logger         = LoggingOps.LOGGER(getClass());
 
     private transient RateLimiter                      m_ratelimit      = null;
 

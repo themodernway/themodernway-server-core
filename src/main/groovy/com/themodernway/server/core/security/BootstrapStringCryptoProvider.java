@@ -18,7 +18,7 @@ package com.themodernway.server.core.security;
 
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
@@ -26,10 +26,11 @@ import org.springframework.security.crypto.encrypt.TextEncryptor;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public final class BootstrapStringCryptoProvider implements IStringCryptoProvider
 {
-    private static final Logger logger = Logger.getLogger(BootstrapStringCryptoProvider.class);
+    private static final Logger logger = LoggingOps.LOGGER(BootstrapStringCryptoProvider.class);
 
     private final TextEncryptor m_pcrypt;
 

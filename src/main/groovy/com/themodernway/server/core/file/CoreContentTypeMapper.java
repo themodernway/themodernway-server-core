@@ -25,18 +25,19 @@ import javax.activation.FileTypeMap;
 import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.logging.LoggingOps;
 
 @NotThreadSafe
 public class CoreContentTypeMapper implements ICoreContentTypeMapper, InitializingBean
 {
-    private final Logger         m_logs = Logger.getLogger(getClass());
+    private final Logger         m_logs = LoggingOps.LOGGER(getClass());
 
     private String[]             m_type = null;
 

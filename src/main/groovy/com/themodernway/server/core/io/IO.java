@@ -37,16 +37,17 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.file.vfs.IFileItem;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public final class IO
 {
-    private final static Logger logger                  = Logger.getLogger(IO.class);
+    private final static Logger logger                  = LoggingOps.LOGGER(IO.class);
 
     public static final int     EOF                     = CommonOps.IS_NOT_FOUND;
 

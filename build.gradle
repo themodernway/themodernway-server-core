@@ -22,7 +22,7 @@ buildscript {
         classpath(group: 'org.ajoberstar', name: 'grgit', version: '1.7.2')
         classpath(group: 'commons-codec', name: 'commons-codec', version: '1.11')
         classpath(group: 'commons-logging', name: 'commons-logging', version: '1.2')
-        classpath(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4')
+        classpath(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5')
         classpath(group: 'org.owasp', name: 'dependency-check-gradle', version: '3.1.0')
     }
 }
@@ -46,7 +46,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '1.2.33-RELEASE'
+version = '1.3.0-RELEASE'
 
 group = 'com.themodernway'
 
@@ -242,10 +242,11 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.2.33-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '1.3.0-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.0')
-    compile(group: 'log4j', name: 'log4j', version: '1.2.17')
+    compile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
+    compile(group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.25')
     compile(group: 'cglib', name: 'cglib-nodep', version: '3.2.6')
     compile(group: 'org.fusesource.jansi', name: 'jansi', version: '1.16')
@@ -259,7 +260,7 @@ dependencies {
     compile(group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.3')
     compile(group: 'commons-collections', name: 'commons-collections', version: '3.2.2')
     compile(group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3')
-    compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4')
+    compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5')
     compile(group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.9.1')
     compile(group: 'com.google.guava', name: 'guava', version: '23.6-jre')
     compile(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.1')
@@ -273,11 +274,6 @@ dependencies {
     compile(group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
-    compile(group: 'org.gebish', name: 'geb-core', version: '2.0') {
-        exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
-    }
-    compile(group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.8.1')
-    compile(group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.8.1')
     springCorePackages().each { String name ->
         compile(group: 'org.springframework', name: name, version: '4.3.14.RELEASE')
     }
@@ -293,8 +289,9 @@ dependencies {
     compile(group: 'javax.persistence', name: 'persistence-api', version: '1.0.2')
     compile(group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0')
     compile(group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1')
-    testCompile(group: 'log4j', name: 'log4j', version: '1.2.17')
+    testCompile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
     testCompile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
+    testCompile(group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25')
     testCompile(group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.25')
     testCompile(group: 'commons-logging', name: 'commons-logging', version: '1.2')
 }
@@ -393,8 +390,6 @@ def List<String> springCorePackages() {
         'spring-aspects',
         'spring-jdbc',
         'spring-tx',
-        'spring-oxm',
-        'spring-orm',
         'spring-web',
         'spring-webmvc',
         'spring-test'

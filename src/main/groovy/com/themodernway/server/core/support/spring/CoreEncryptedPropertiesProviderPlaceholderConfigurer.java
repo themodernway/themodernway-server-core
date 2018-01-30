@@ -24,8 +24,6 @@ import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.Properties;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.springframework.util.DefaultPropertiesPersister;
 import org.springframework.util.PropertiesPersister;
 
@@ -35,49 +33,11 @@ import com.themodernway.server.core.security.IStringCryptoProvider;
 
 public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends CorePropertiesProviderPlaceholderConfigurer
 {
-    private static final Logger logger   = Logger.getLogger(CoreEncryptedPropertiesProviderPlaceholderConfigurer.class);
-
-    private Level               m_levels = Level.DEBUG;
-
-    private boolean             m_onsave = false;
+    private boolean m_onsave = false;
 
     public CoreEncryptedPropertiesProviderPlaceholderConfigurer(final IStringCryptoProvider crypto, final String prefix)
     {
         setPropertiesPersister(new CoreEncryptionPropertiesPersister(CommonOps.requireNonNull(crypto), this, StringOps.requireTrimOrNull(prefix)));
-    }
-
-    public Level getLoggingLevel()
-    {
-        return m_levels;
-    }
-
-    public void setLoggingLevel(final Level level)
-    {
-        if (null != level)
-        {
-            m_levels = level;
-        }
-        else
-        {
-            logger.error("Error setting log level to null");
-        }
-    }
-
-    public String getLoggingLevelAsString()
-    {
-        return getLoggingLevel().toString();
-    }
-
-    public void setLoggingLevelAsString(final String level)
-    {
-        try
-        {
-            setLoggingLevel(Level.toLevel(StringOps.toTrimOrNull(level), Level.DEBUG));
-        }
-        catch (final Exception e)
-        {
-            logger.error("Error setting log level string to " + level, e);
-        }
     }
 
     public void setEncryptOnSave(final boolean onsave)
@@ -92,8 +52,6 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
     private static final class CoreEncryptionPropertiesPersister extends DefaultPropertiesPersister implements PropertiesPersister
     {
-        private static final Logger                                        logger = Logger.getLogger(CoreEncryptionPropertiesPersister.class);
-
         private final IStringCryptoProvider                                m_crypto;
 
         private final CoreEncryptedPropertiesProviderPlaceholderConfigurer m_parent;
@@ -175,10 +133,6 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
         private final void decrypt(final Properties props)
         {
-            final Level level = m_parent.getLoggingLevel();
-
-            final boolean logson = (false == level.toString().equalsIgnoreCase("OFF"));
-
             final LinkedHashMap<String, String> saved = new LinkedHashMap<String, String>();
 
             props.forEach((e, o) -> {
@@ -195,18 +149,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
                         final String d = (r.isEmpty() ? r : m_crypto.decrypt(r));
 
-                        if (logson)
-                        {
-                            logger.log(level, "decrypt(name: '" + k + "', decrypted length: '" + d.length() + "')");
-                        }
                         saved.put(k, d);
-                    }
-                    else
-                    {
-                        if (logson)
-                        {
-                            logger.log(level, "decrypt(name: '" + k + "', origvalue: '" + v + "')");
-                        }
                     }
                 }
             });
@@ -215,8 +158,6 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
         private final void encrypt(final Properties props)
         {
-            final Level level = m_parent.getLoggingLevel();
-
             final LinkedHashMap<String, String> saved = new LinkedHashMap<String, String>(props.size());
 
             for (final Object o : props.keySet())
@@ -227,11 +168,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
                 if ((null != v) && (false == v.isEmpty()))
                 {
-                    logger.log(level, "encrypt(name:" + k + ",prop-value;" + v + ")");
-
                     final String e = m_prefix + m_crypto.encrypt(v);
-
-                    logger.log(level, "encrypt(name:" + k + ",encrypted:" + e + ")");
 
                     saved.put(k, e);
                 }

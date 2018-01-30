@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -30,10 +30,11 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFactoryAware
 {
-    private static final Logger                           logger        = Logger.getLogger(BuildDescriptorProvider.class);
+    private static final Logger                           logger        = LoggingOps.LOGGER(BuildDescriptorProvider.class);
 
     private final LinkedHashMap<String, IBuildDescriptor> m_descriptors = new LinkedHashMap<String, IBuildDescriptor>();
 

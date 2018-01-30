@@ -18,7 +18,9 @@ package com.themodernway.server.core.servlet.filter;
 
 import javax.servlet.FilterConfig;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+
+import com.themodernway.server.core.logging.LoggingOps;
 
 public abstract class HTTPFilterBase implements IHTTPFilter
 {
@@ -30,7 +32,7 @@ public abstract class HTTPFilterBase implements IHTTPFilter
 
     private FilterConfig m_config    = null;
 
-    private final Logger m_logger    = Logger.getLogger(getClass());
+    private final Logger m_logger    = LoggingOps.LOGGER(getClass());
 
     protected HTTPFilterBase()
     {

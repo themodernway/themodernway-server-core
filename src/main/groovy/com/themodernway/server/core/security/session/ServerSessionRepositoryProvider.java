@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -29,10 +29,11 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.Activatable;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class ServerSessionRepositoryProvider extends Activatable implements IServerSessionRepositoryProvider, BeanFactoryAware
 {
-    private static final Logger                                   logger         = Logger.getLogger(ServerSessionRepositoryProvider.class);
+    private static final Logger                                   logger         = LoggingOps.LOGGER(ServerSessionRepositoryProvider.class);
 
     private final LinkedHashMap<String, IServerSessionRepository> m_repositories = new LinkedHashMap<String, IServerSessionRepository>();
 

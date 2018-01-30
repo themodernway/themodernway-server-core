@@ -16,13 +16,13 @@
 
 package com.themodernway.server.core.logging;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.themodernway.common.api.java.util.StringOps;
 
 public final class MDC
 {
-    private static final Logger logger = Logger.getLogger(MDC.class);
+    private static final Logger logger = LoggingOps.LOGGER(MDC.class);
 
     private MDC()
     {
@@ -32,7 +32,7 @@ public final class MDC
     {
         try
         {
-            org.apache.log4j.MDC.clear();
+            org.slf4j.MDC.clear();
         }
         catch (final Exception e)
         {
@@ -40,13 +40,13 @@ public final class MDC
         }
     }
 
-    public static final void put(final String key, final Object val)
+    public static final void put(final String key, final String val)
     {
         StringOps.requireTrimOrNull(key);
 
         try
         {
-            org.apache.log4j.MDC.put(key, val);
+            org.slf4j.MDC.put(key, val);
         }
         catch (final Exception e)
         {
@@ -60,7 +60,7 @@ public final class MDC
 
         try
         {
-            org.apache.log4j.MDC.remove(key);
+            org.slf4j.MDC.remove(key);
         }
         catch (final Exception e)
         {
@@ -74,7 +74,7 @@ public final class MDC
 
         try
         {
-            return org.apache.log4j.MDC.get(key);
+            return  org.slf4j.MDC.get(key);
         }
         catch (final Exception e)
         {

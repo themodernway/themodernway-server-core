@@ -19,8 +19,6 @@ package com.themodernway.server.core.test
 import java.security.Provider
 import java.security.Security
 
-import org.apache.log4j.Level
-
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 import com.themodernway.server.core.test.util.AdminPOJO
@@ -182,7 +180,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def "Test Authorized AdminUserPOJO [ADMIN,USER]"()
     {
         setup:
-        level(Level.DEBUG)
+        level("DEBUG")
         def test = new AdminUserPOJO('ADMIN')
         def answ = isAuthorized(test, ['ADMIN', 'USER'])
 
@@ -196,7 +194,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def "Test Authorized AuthAllPOJO [ADMIN,USER]"()
     {
         setup:
-        level(Level.DEBUG)
+        level("DEBUG")
         def test = new AuthAllPOJO('ALL')
         def answ = isAuthorized(test, ['ADMIN', 'USER'])
 
@@ -210,7 +208,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def "Test Authorized AuthAllPOJO [ADMIN]"()
     {
         setup:
-        level(Level.DEBUG)
+        level("DEBUG")
         def test = new AuthAllPOJO('ALL')
         def answ = isAuthorized(test, ['ADMIN'])
 
@@ -224,7 +222,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def "Test Authorized AuthAllPOJO [ADMIN,USER] not [ANON]"()
     {
         setup:
-        level(Level.DEBUG)
+        level("DEBUG")
         def test = new AuthAllPOJO('ALL')
         def answ = isAuthorized(test, ['ADMIN', 'USER', 'ANON'])
 
@@ -238,7 +236,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def "Test Authorized AuthAnyPOJO [ADMIN,USER]"()
     {
         setup:
-        level(Level.DEBUG)
+        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['ADMIN', 'USER'])
 
@@ -252,7 +250,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def "Test Authorized AuthAnyPOJO [ADMIN]"()
     {
         setup:
-        level(Level.DEBUG)
+        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['ADMIN'])
 
@@ -266,7 +264,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def "Test Authorized AuthAnyPOJO [USER]"()
     {
         setup:
-        level(Level.DEBUG)
+        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['USER'])
 
@@ -280,7 +278,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def "Test Authorized AuthAnyPOJO [USER,TEST]"()
     {
         setup:
-        level(Level.DEBUG)
+        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['USER', 'TEST'])
 
@@ -294,7 +292,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def "Test Authorized AuthAnyPOJO [TEST]"()
     {
         setup:
-        level(Level.DEBUG)
+        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['TEST'])
 
@@ -308,7 +306,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def "Test Authorized AuthAnyPOJO [ADMIN,USER] not [ANON]"()
     {
         setup:
-        level(Level.DEBUG)
+        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['ADMIN', 'USER', 'ANON'])
 

@@ -18,7 +18,7 @@ package com.themodernway.server.core.support.spring.network;
 
 import java.util.function.Supplier;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -26,10 +26,11 @@ import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreRESTResponse implements IRESTResponse
 {
-    private static final Logger         logger = Logger.getLogger(CoreRESTResponse.class);
+    private static final Logger         logger = LoggingOps.LOGGER(CoreRESTResponse.class);
 
     private static final IBinder        BINDER = BinderType.JSON.getBinder();
 

@@ -24,18 +24,19 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration.Dynamic;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.servlet.IServletResponseErrorCodeManager;
 import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
 public class ServletFactoryContextCustomizer implements IServletContextCustomizer, ICoreCommon, IServletFactoryContextCustomizer
 {
-    private final Logger                     m_logs = Logger.getLogger(getClass());
+    private final Logger                     m_logs = LoggingOps.LOGGER(getClass());
 
     private final String                     m_name;
 

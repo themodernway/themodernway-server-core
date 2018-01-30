@@ -24,7 +24,7 @@ import java.util.function.LongSupplier
 import java.util.function.Supplier
 import java.util.stream.Stream
 
-import org.apache.log4j.Logger
+import org.slf4j.Logger
 import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
@@ -40,6 +40,7 @@ import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.binder.IBinder
+import com.themodernway.server.core.logging.LoggingOps
 import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
 import com.themodernway.server.core.scripting.IScriptingProvider
@@ -66,7 +67,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
 {
     private final static CoreGroovySupport  INSTANCE = new CoreGroovySupport()
 
-    private final Logger                    m_logger = Logger.getLogger(getClass())
+    private final Logger                    m_logger = LoggingOps.LOGGER(getClass())
 
     @Memoized
     public static CoreGroovySupport getCoreGroovySupport()

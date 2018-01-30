@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
@@ -36,6 +36,7 @@ import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.support.CoreJSONOperations;
+import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.mail.IMailSender;
 import com.themodernway.server.core.mail.IMailSenderProvider;
 import com.themodernway.server.core.scripting.IScriptingProvider;
@@ -58,7 +59,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
 
     private final static ServerContextInstance        INSTANCE     = new ServerContextInstance();
 
-    private final Logger                              m_logger     = Logger.getLogger(getClass());
+    private final Logger                              m_logger     = LoggingOps.LOGGER(getClass());
 
     public static final ServerContextInstance getServerContextInstance()
     {

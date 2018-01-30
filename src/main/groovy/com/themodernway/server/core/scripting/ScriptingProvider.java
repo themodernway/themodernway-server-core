@@ -28,16 +28,17 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class ScriptingProvider implements IScriptingProvider
 {
-    private final static Logger                                   logger = Logger.getLogger(ScriptingProvider.class);
+    private final static Logger                                   logger = LoggingOps.LOGGER(ScriptingProvider.class);
 
     private final LinkedHashMap<ScriptType, IScriptingProperties> m_dict = new LinkedHashMap<ScriptType, IScriptingProperties>();
 

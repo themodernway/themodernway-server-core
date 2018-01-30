@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -35,10 +35,11 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.INamedType;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class WebSocketServiceProvider implements IWebSocketServiceProvider, BeanFactoryAware
 {
-    private static final Logger                                   logger     = Logger.getLogger(WebSocketServiceProvider.class);
+    private static final Logger                                   logger     = LoggingOps.LOGGER(WebSocketServiceProvider.class);
 
     private final LinkedHashMap<String, IWebSocketServiceFactory> m_services = new LinkedHashMap<String, IWebSocketServiceFactory>();
 

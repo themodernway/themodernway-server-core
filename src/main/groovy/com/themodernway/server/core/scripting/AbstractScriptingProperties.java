@@ -20,18 +20,19 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.Activatable;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public abstract class AbstractScriptingProperties extends Activatable implements IScriptingProperties
 {
     private final ScriptType m_type;
 
-    private final Logger     m_logger     = Logger.getLogger(getClass());
+    private final Logger     m_logger     = LoggingOps.LOGGER(getClass());
 
     private final Properties m_properties = new Properties();
 

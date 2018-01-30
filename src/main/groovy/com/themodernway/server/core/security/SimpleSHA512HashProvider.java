@@ -18,14 +18,15 @@ package com.themodernway.server.core.security;
 
 import java.security.MessageDigest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.themodernway.common.api.hash.Hasher;
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public final class SimpleSHA512HashProvider implements ISHA512HashProvider
 {
-    private static final Logger logger   = Logger.getLogger(SimpleSHA512HashProvider.class);
+    private static final Logger logger   = LoggingOps.LOGGER(SimpleSHA512HashProvider.class);
 
     private final Hasher        m_hasher = new Hasher(this);
 

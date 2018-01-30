@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.IHTTPConstants;
@@ -42,10 +42,11 @@ import com.themodernway.server.core.io.NoCloseProxyWriter;
 import com.themodernway.server.core.io.NoSyncStringBuilderWriter;
 import com.themodernway.server.core.io.StringBuilderOutputStream;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public final class JSONUtils
 {
-    private static final Logger                         logger          = Logger.getLogger(JSONUtils.class);
+    private static final Logger                         logger          = LoggingOps.LOGGER(JSONUtils.class);
 
     public final static BigDecimal                      BIG_DECIMAL_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
 

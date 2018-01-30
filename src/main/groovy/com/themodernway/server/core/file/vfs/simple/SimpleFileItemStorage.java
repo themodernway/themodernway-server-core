@@ -42,7 +42,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.input.ReaderInputStream;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.server.core.ICoreCommon;
@@ -65,6 +65,7 @@ import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 {
@@ -85,7 +86,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         return MAKE(path.toFile(), stor);
     }
 
-    private static final Logger      logger = Logger.getLogger(SimpleFileItemStorage.class);
+    private static final Logger      logger = LoggingOps.LOGGER(SimpleFileItemStorage.class);
 
     private final File               m_file;
 

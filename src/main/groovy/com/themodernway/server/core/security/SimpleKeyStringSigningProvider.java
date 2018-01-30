@@ -19,13 +19,14 @@ package com.themodernway.server.core.security;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class SimpleKeyStringSigningProvider implements IStringSigningProvider
 {
-    private static final Logger logger = Logger.getLogger(SimpleKeyStringSigningProvider.class);
+    private static final Logger logger = LoggingOps.LOGGER(SimpleKeyStringSigningProvider.class);
 
     private final SecretKeySpec m_secret;
 
