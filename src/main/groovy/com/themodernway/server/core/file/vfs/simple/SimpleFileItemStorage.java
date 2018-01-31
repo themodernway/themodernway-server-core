@@ -39,6 +39,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.input.ReaderInputStream;
@@ -342,6 +343,30 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
                 return maps.getContentType(getFile());
             }
             return FileAndPathUtils.getContentType(getFile());
+        }
+
+        @Override
+        public String getContentAsString() throws IOException
+        {
+            validate();
+
+            final File file = readtest(getFile());
+
+            if (isFolder(file))
+            {
+                return getAsFolderItem().items().map(f -> f.wrap().getName()).collect(Collectors.joining("\n")).concat("\n");
+            }
+            else
+            {
+                if (FileAndPathUtils.isSystemWindows())
+                {
+                    return IO.getStringAtMost(file, file.length()).replace("\r", "");
+                }
+                else
+                {
+                    return IO.getStringAtMost(file, file.length());
+                }
+            }
         }
 
         @Override

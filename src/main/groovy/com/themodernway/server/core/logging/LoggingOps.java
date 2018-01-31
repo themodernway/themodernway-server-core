@@ -20,6 +20,7 @@ import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.SystemPropertyUtils;
 
@@ -33,6 +34,11 @@ import ch.qos.logback.core.util.StatusPrinter;
 
 public final class LoggingOps
 {
+    static
+    {
+        init();
+    }
+
     private LoggingOps()
     {
     }
@@ -79,7 +85,7 @@ public final class LoggingOps
 
     public static final void level(final String level)
     {
-        level(Level.toLevel(level, Level.DEBUG));
+        level(Level.toLevel(level, Level.INFO));
     }
 
     public static final void level(final Level level)
@@ -94,7 +100,7 @@ public final class LoggingOps
 
     public static final void level(final Logger logger, final String level)
     {
-        level(logger, Level.toLevel(level, Level.DEBUG));
+        level(logger, Level.toLevel(level, Level.INFO));
     }
 
     private static final ch.qos.logback.classic.Logger classic(final String name)
@@ -109,5 +115,13 @@ public final class LoggingOps
     private static final LoggerContext context()
     {
         return (LoggerContext) LoggerFactory.getILoggerFactory();
+    }
+
+    private static final void init()
+    {
+        if (false == SLF4JBridgeHandler.isInstalled())
+        {
+            SLF4JBridgeHandler.install();
+        }
     }
 }

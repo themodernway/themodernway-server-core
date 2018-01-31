@@ -61,6 +61,8 @@ public interface IFileItem
 
     public String getContentType() throws IOException;
 
+    public String getContentAsString() throws IOException;
+
     public JSONObject getMetaData() throws IOException;
 
     public IFolderItem getRoot() throws IOException;

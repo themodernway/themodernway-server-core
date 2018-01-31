@@ -228,6 +228,19 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
     }
 
     @Override
+    public String getContentAsString() throws FileStorageException
+    {
+        try
+        {
+            return getWrappedFileItem().getContentAsString();
+        }
+        catch (final IOException e)
+        {
+            throw new FileStorageException(e);
+        }
+    }
+
+    @Override
     public String getContentType() throws FileStorageException
     {
         try

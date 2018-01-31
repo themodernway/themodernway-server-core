@@ -71,6 +71,9 @@ public interface IFileItemWrapper extends IFileItem
     public String getContentType() throws FileStorageException;
 
     @Override
+    public String getContentAsString() throws FileStorageException;
+
+    @Override
     public JSONObject getMetaData() throws FileStorageException;
 
     @Override
