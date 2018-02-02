@@ -33,23 +33,22 @@ import com.themodernway.server.core.limiting.IRateLimited;
 import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.security.session.IServerSession;
 
+@SuppressWarnings("serial")
 public class CoreSpringDispatcherServlet extends DispatcherServlet implements IRateLimited, IServletCommonOperations
 {
-    private static final long                          serialVersionUID = 1L;
+    private final Logger                     m_logger    = LoggingOps.LOGGER(getClass());
 
-    private transient Logger                           m_logger         = LoggingOps.LOGGER(getClass());
+    private RateLimiter                      m_ratelimit = null;
 
-    private transient RateLimiter                      m_ratelimit      = null;
+    private boolean                          m_iscontent = false;
 
-    private boolean                                    m_iscontent      = false;
+    private int                              m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    private int                                        m_contentmx      = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private List<String>                     m_roleslist = arrayList();
 
-    private List<String>                               m_roleslist      = arrayList();
+    private ISessionIDFromRequestExtractor   m_extractor = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
 
-    private transient ISessionIDFromRequestExtractor   m_extractor      = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
-
-    private transient IServletResponseErrorCodeManager m_errorcode      = CoreServletResponseErrorCodeManager.DEFAULT;
+    private IServletResponseErrorCodeManager m_errorcode = CoreServletResponseErrorCodeManager.DEFAULT;
 
     public CoreSpringDispatcherServlet(final WebApplicationContext context)
     {
@@ -155,8 +154,6 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
                 {
                     logger().error(format("invalid session (%s).", sessid));
 
-                    response.addHeader(WWW_AUTHENTICATE, "no permission");
-
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
@@ -164,8 +161,6 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
                 if (session.isExpired())
                 {
                     logger().error(format("expired session (%s).", session.getId()));
-
-                    response.addHeader(WWW_AUTHENTICATE, "expired session");
 
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
@@ -180,8 +175,6 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
                 {
                     logger().error(format("no session with required roles in (%s).", toPrintableString(roles)));
 
-                    response.addHeader(WWW_AUTHENTICATE, "no permission");
-
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
@@ -192,8 +185,6 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
                 {
                     logger().error(format("session (%s) with empty roles in (%s).", session.getId(), toPrintableString(roles)));
 
-                    response.addHeader(WWW_AUTHENTICATE, "no permission");
-
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
@@ -201,8 +192,6 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
                 if (CommonOps.none(roles, perms))
                 {
                     logger().error(format("session (%s) with no matching roles of (%s) in (%s).", session.getId(), toPrintableString(perms), toPrintableString(roles)));
-
-                    response.addHeader(WWW_AUTHENTICATE, "no permission");
 
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 

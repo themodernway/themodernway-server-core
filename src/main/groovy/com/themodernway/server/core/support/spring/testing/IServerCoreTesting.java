@@ -41,7 +41,6 @@ public interface IServerCoreTesting
 
         public static final void closeServerCoreLogging()
         {
-            LoggingOps.stop();
         }
 
         public static final IServerContext setupServerCoreContext(final String... locations)
@@ -94,7 +93,7 @@ public interface IServerCoreTesting
 
             if (null != context)
             {
-                context.destroy();
+                context.close();
             }
             ServerContextInstance.setApplicationContext(null);
         }

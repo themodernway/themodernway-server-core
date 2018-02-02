@@ -208,8 +208,6 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
                 {
                     logger().error(format("invalid session (%s).", sessid));
 
-                    response.addHeader(WWW_AUTHENTICATE, "no permission");
-
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
@@ -217,8 +215,6 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
                 if (session.isExpired())
                 {
                     logger().error(format("expired session (%s).", session.getId()));
-
-                    response.addHeader(WWW_AUTHENTICATE, "expired session");
 
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
@@ -233,8 +229,6 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
                 {
                     logger().error(format("no session with required roles in (%s).", toPrintableString(roles)));
 
-                    response.addHeader(WWW_AUTHENTICATE, "no permission");
-
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
@@ -245,8 +239,6 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
                 {
                     logger().error(format("session (%s) with empty roles in (%s).", session.getId(), toPrintableString(roles)));
 
-                    response.addHeader(WWW_AUTHENTICATE, "no permission");
-
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
                     return;
@@ -254,8 +246,6 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
                 if (CommonOps.none(roles, perms))
                 {
                     logger().error(format("session (%s) with no matching roles of (%s) in (%s).", session.getId(), toPrintableString(perms), toPrintableString(roles)));
-
-                    response.addHeader(WWW_AUTHENTICATE, "no permission");
 
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 

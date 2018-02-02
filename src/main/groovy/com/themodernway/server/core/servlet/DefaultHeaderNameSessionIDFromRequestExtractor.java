@@ -18,7 +18,9 @@ package com.themodernway.server.core.servlet;
 
 public class DefaultHeaderNameSessionIDFromRequestExtractor extends HeaderNameSessionIDFromRequestExtractor
 {
-    public static final DefaultHeaderNameSessionIDFromRequestExtractor DEFAULT = new DefaultHeaderNameSessionIDFromRequestExtractor();
+    private static final long                                          serialVersionUID = 1L;
+
+    public static final DefaultHeaderNameSessionIDFromRequestExtractor DEFAULT          = new DefaultHeaderNameSessionIDFromRequestExtractor();
 
     public DefaultHeaderNameSessionIDFromRequestExtractor()
     {

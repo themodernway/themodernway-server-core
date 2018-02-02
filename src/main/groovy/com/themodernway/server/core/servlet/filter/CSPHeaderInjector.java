@@ -19,22 +19,24 @@ package com.themodernway.server.core.servlet.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class XSSProtectionHeaderInjector extends HeaderInjectorBase
-{
-    public XSSProtectionHeaderInjector()
-    {
-    }
+import com.themodernway.common.api.java.util.StringOps;
 
-    public XSSProtectionHeaderInjector(final IHeaderInjectorFilter filter)
+public class CSPHeaderInjector extends HeaderInjectorBase
+{
+    private final String m_directive;
+
+    public CSPHeaderInjector(final String directive)
     {
-        setHeaderInjectorFilter(filter);
+        m_directive = StringOps.toTrimOrNull(directive);
     }
 
     @Override
     public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
-        response.setHeader(X_XSS_PROTECTION_HEADER, X_XSS_PROTECTION_HEADER_VALUE);
-
+        if (null != m_directive)
+        {
+            response.setHeader(CONTENT_SECURITY_POLICY_HEADER, m_directive);
+        }
         return HttpServletResponse.SC_OK;
     }
 }

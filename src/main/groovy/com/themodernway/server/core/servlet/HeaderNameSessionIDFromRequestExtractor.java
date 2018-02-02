@@ -22,7 +22,9 @@ import com.themodernway.common.api.java.util.StringOps;
 
 public class HeaderNameSessionIDFromRequestExtractor implements ISessionIDFromRequestExtractor
 {
-    private final String m_name;
+    private static final long serialVersionUID = 1L;
+
+    private final String      m_name;
 
     public HeaderNameSessionIDFromRequestExtractor(final String name)
     {

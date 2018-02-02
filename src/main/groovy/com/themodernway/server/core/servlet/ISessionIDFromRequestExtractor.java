@@ -16,10 +16,12 @@
 
 package com.themodernway.server.core.servlet;
 
+import java.io.Serializable;
+
 import javax.servlet.http.HttpServletRequest;
 
 @FunctionalInterface
-public interface ISessionIDFromRequestExtractor
+public interface ISessionIDFromRequestExtractor extends Serializable
 {
     public String getSessionID(HttpServletRequest request);
 }

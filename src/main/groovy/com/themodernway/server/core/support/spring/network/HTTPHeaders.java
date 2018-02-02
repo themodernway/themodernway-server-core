@@ -16,20 +16,17 @@
 
 package com.themodernway.server.core.support.spring.network;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.http.server.ServletServerHttpResponse;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.IHTTPConstants;
@@ -40,7 +37,7 @@ public class HTTPHeaders extends HttpHeaders
 {
     private static final long           serialVersionUID       = 1L;
 
-    public static final String          DEFAULT_USER_AGENT     = String.format("The-Modern-Way/1.3.2 (Language=Java/%s)", System.getProperty("java.version"));
+    public static final String          DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.0.0 (Language=Java/%s)", System.getProperty("java.version"));
 
     public static final MediaType       XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
 
@@ -52,112 +49,27 @@ public class HTTPHeaders extends HttpHeaders
 
     public static final List<MediaType> JSON_ACCEPT_MEDIA_TYPE = CommonOps.toUnmodifiableList(JSON_MEDIA_TYPE);
 
-    HTTPHeaders(final HttpHeaders head)
+    public HTTPHeaders(final HttpHeaders head)
     {
-        addAllHeaders(head);
+        addAll(head);
     }
 
     public HTTPHeaders()
     {
     }
 
-    public HTTPHeaders(final Map<String, List<String>> head)
-    {
-        addAllHeaders(head);
-    }
-
-    public HTTPHeaders addAllHeaders(final Map<String, List<String>> head)
-    {
-        CommonOps.requireNonNull(head);
-
-        if (false == head.isEmpty())
-        {
-            putAll(head);
-        }
-        return this;
-    }
-
     public HTTPHeaders(final HttpServletRequest request)
     {
-        final Enumeration<String> names = request.getHeaderNames();
-
-        final HashMap<String, List<String>> head = new HashMap<String, List<String>>();
-
-        while (names.hasMoreElements())
-        {
-            final String name = names.nextElement();
-
-            if (null != name)
-            {
-                final Enumeration<String> vals = request.getHeaders(name);
-
-                if (null != vals)
-                {
-                    final ArrayList<String> list = new ArrayList<String>(1);
-
-                    while (vals.hasMoreElements())
-                    {
-                        final String valu = vals.nextElement();
-
-                        if (null != valu)
-                        {
-                            list.add(valu);
-                        }
-                    }
-                    if (false == list.isEmpty())
-                    {
-                        head.put(name, list);
-                    }
-                }
-            }
-        }
-        addAllHeaders(head);
+        addAll(new ServletServerHttpRequest(request).getHeaders());
     }
 
-    public HTTPHeaders setHttpServletResponse(final HttpServletResponse response)
+    public void setHttpServletResponse(final HttpServletResponse response)
     {
-        for (final String name : keySet())
-        {
-            for (final String valu : get(name))
-            {
-                response.addHeader(name, valu);
-            }
-        }
-        return this;
-    }
+        final ServletServerHttpResponse resp = new ServletServerHttpResponse(response);
 
-    public HTTPHeaders setHttpServletResponse(final HttpServletResponse response, final Predicate<String> good)
-    {
-        for (final String name : keySet())
-        {
-            if (good.test(name))
-            {
-                for (final String valu : get(name))
-                {
-                    response.addHeader(name, valu);
-                }
-            }
-        }
-        return this;
-    }
+        resp.getHeaders().addAll(this);
 
-    public HTTPHeaders setHttpServletResponse(final HttpServletResponse response, final Collection<String> send, final Collection<String> dont)
-    {
-        for (final String name : keySet())
-        {
-            if ((null != dont) && (dont.contains(name)))
-            {
-                continue;
-            }
-            if ((null == send) || (send.contains(name)))
-            {
-                for (final String valu : get(name))
-                {
-                    response.addHeader(name, valu);
-                }
-            }
-        }
-        return this;
+        resp.close();
     }
 
     public HTTPHeaders doRESTHeaders()

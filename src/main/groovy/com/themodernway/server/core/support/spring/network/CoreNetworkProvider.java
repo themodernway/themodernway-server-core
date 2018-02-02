@@ -33,7 +33,8 @@ import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.DefaultUriTemplateHandler;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.DefaultUriBuilderFactory.EncodingMode;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
@@ -57,7 +58,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
     private final CoreFactoryCache          m_fact_cache        = new CoreFactoryCache();
 
-    private final DefaultUriTemplateHandler m_urlhandler        = new DefaultUriTemplateHandler();
+    private final DefaultUriBuilderFactory m_urlhandler        = new DefaultUriBuilderFactory();
 
     private static final PathParameters     EMPTY_PARAMS        = new PathParameters();
 
@@ -197,7 +198,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
     @Override
     public void setStrictEncoding(final boolean strict)
     {
-        m_urlhandler.setStrictEncoding(strict);
+        m_urlhandler.setEncodingMode(strict ? EncodingMode.URI_COMPONENT : EncodingMode.NONE);
     }
 
     @Override

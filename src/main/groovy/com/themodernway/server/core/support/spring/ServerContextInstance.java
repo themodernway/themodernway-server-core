@@ -359,7 +359,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     {
         final Resource resource = resource(requireNonNull(location));
 
-        if (null != resource)
+        if (isNonNull(resource))
         {
             return new InputStreamReader(resource.getInputStream(), IO.UTF_8_CHARSET);
         }

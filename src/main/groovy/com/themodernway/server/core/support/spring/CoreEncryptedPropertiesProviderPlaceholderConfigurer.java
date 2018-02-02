@@ -141,16 +141,13 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
                 final String v = props.getProperty(k);
 
-                if ((null != v) && (false == v.isEmpty()))
+                if ((null != v) && (false == v.isEmpty()) && (v.startsWith(m_prefix)))
                 {
-                    if (v.startsWith(m_prefix))
-                    {
-                        final String r = v.replace(m_prefix, "");
+                    final String r = v.replace(m_prefix, "");
 
-                        final String d = (r.isEmpty() ? r : m_crypto.decrypt(r));
+                    final String d = (r.isEmpty() ? r : m_crypto.decrypt(r));
 
-                        saved.put(k, d);
-                    }
+                    saved.put(k, d);
                 }
             });
             saved.forEach((k, v) -> props.setProperty(k, v));
