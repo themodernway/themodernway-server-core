@@ -61,7 +61,7 @@ public final class BootstrapStringCryptoProvider implements IStringCryptoProvide
 
             throw new IllegalArgumentException("BootstrapStringCryptoProvider(password is not valid)");
         }
-        m_pcrypt = Encryptors.text(pass, salt);
+        m_pcrypt = Encryptors.delux(pass, salt);
     }
 
     @Override

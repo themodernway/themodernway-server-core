@@ -27,7 +27,7 @@ public final class AESStringCryptoProvider implements IStringCryptoProvider
 
     public AESStringCryptoProvider(final String pass, final String salt)
     {
-        m_pcrypt = Encryptors.text(CommonOps.requireNonNull(pass), CommonOps.requireNonNull(salt));
+        m_pcrypt = Encryptors.delux(CommonOps.requireNonNull(pass), CommonOps.requireNonNull(salt));
     }
 
     @Override
