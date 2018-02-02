@@ -25,27 +25,27 @@ dependencies {
 ```
 Javadoc URL:
 
-http://docs.themodernway.com/documents/javadoc/themodernway-server-core/
+http://docs.themodernway.com/documents/javadoc/themodernway-server-core-v2/
 
 Tests URL:
 
-http://docs.themodernway.com/documents/reports/themodernway-server-core/tests/test/
+http://docs.themodernway.com/documents/reports/themodernway-server-core-v2/tests/test/
 
 Code Coverage URL:
 
-http://docs.themodernway.com/documents/reports/themodernway-server-core/coverage/
+http://docs.themodernway.com/documents/reports/themodernway-server-core-v2/coverage/
 
 Check Style URL:
 
-http://docs.themodernway.com/documents/reports/themodernway-server-core/checkstyle/main.html
+http://docs.themodernway.com/documents/reports/themodernway-server-core-v2/checkstyle/main.html
 
 PMD URL:
 
-http://docs.themodernway.com/documents/reports/themodernway-server-core/pmd/main.html
+http://docs.themodernway.com/documents/reports/themodernway-server-core-v2/pmd/main.html
 
 FindBugs URL:
 
-http://docs.themodernway.com/documents/reports/themodernway-server-core/findbugs/main.html
+http://docs.themodernway.com/documents/reports/themodernway-server-core-v2/findbugs/main.html
 
 CVE Dependency Check URL:
 
