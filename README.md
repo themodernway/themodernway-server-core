@@ -49,7 +49,7 @@ http://docs.themodernway.com/documents/reports/themodernway-server-core-v2/findb
 
 CVE Dependency Check URL:
 
-http://docs.themodernway.com/documents/reports/themodernway-server-core/cve/dependency-check-report.html
+http://docs.themodernway.com/documents/reports/themodernway-server-core-v2/cve/dependency-check-report.html
 
 License:
 
