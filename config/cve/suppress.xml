@@ -1,43 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suppressions
-	xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
-	<suppress>
-		<notes><![CDATA[
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+   <suppress>
+      <notes><![CDATA[
       file name: AppleJavaExtensions-1.4.jar
       ]]></notes>
-		<gav regex="true">^com\.apple:AppleJavaExtensions:.*$</gav>
-		<cpe>cpe:/a:apple:java</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: spring-session-core-2.0.1.RELEASE.jar
-   ]]></notes>
-		<gav regex="true">^org\.springframework\.session:spring-session-core:.*$
-		</gav>
-		<cpe>cpe:/a:pivotal:spring_framework</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: spring-session-core-2.0.1.RELEASE.jar
-   ]]></notes>
-		<gav regex="true">^org\.springframework\.session:spring-session-core:.*$
-		</gav>
-		<cpe>cpe:/a:pivotal_software:spring_framework</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: spring-session-core-2.0.1.RELEASE.jar
-   ]]></notes>
-		<gav regex="true">^org\.springframework\.session:spring-session-core:.*$
-		</gav>
-		<cpe>cpe:/a:pivotal_software:spring_security</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: spring-session-core-2.0.1.RELEASE.jar
-   ]]></notes>
-		<gav regex="true">^org\.springframework\.session:spring-session-core:.*$
-		</gav>
-		<cve>CVE-2016-9878</cve>
-	</suppress>
+      <gav regex="true">^com\.apple:AppleJavaExtensions:.*$</gav>
+      <cpe>cpe:/a:apple:java</cpe>
+   </suppress>
 </suppressions>
