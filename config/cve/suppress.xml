@@ -14,6 +14,6 @@
    ]]></notes>
 		<gav regex="true">^org\.springframework\.session:spring-session-core:.*$
 		</gav>
-		<cve>CVE-2016-9878</cve>
+		<cpe>cpe:/a:pivotal:spring_framework</cpe>
 	</suppress>
 </suppressions>
