@@ -17,14 +17,17 @@
 package com.themodernway.server.core.security.session;
 
 import java.io.Closeable;
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.session.SessionRepository;
 
+import com.themodernway.common.api.types.IActivatable;
 import com.themodernway.server.core.json.JSONObject;
 
-public interface IServerSessionRepository extends SessionRepository<IServerSession>, Closeable
+public interface IServerSessionRepository extends SessionRepository<IServerSession>, IActivatable, Serializable, Closeable
 {
+    @Override
     public boolean isActive();
 
     public String getDomain();
@@ -38,8 +41,6 @@ public interface IServerSessionRepository extends SessionRepository<IServerSessi
     public void cleanExpiredSessions();
 
     public IServerSession createSession(JSONObject keys);
-
-    public int getDefaultMaxInactiveIntervalInSeconds();
 
     public List<String> getDefaultRoles();
 

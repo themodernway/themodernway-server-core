@@ -46,7 +46,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '2.0.0-RC1'
+version = '2.0.0-RC2'
 
 group = 'com.themodernway'
 
@@ -242,14 +242,14 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.0.0-RC1')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.0.0-RC2')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.0')
     compile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.25')
     compile(group: 'cglib', name: 'cglib-nodep', version: '3.2.6')
-    compile(group: 'org.fusesource.jansi', name: 'jansi', version: '1.16')
+    compile(group: 'org.fusesource.jansi', name: 'jansi', version: '1.17')
     compile(group: 'joda-time', name: 'joda-time', version: '2.9.9')
     compile(group: 'commons-io', name: 'commons-io', version: '2.6')
     compile(group: 'commons-net', name: 'commons-net', version: '3.6')
@@ -262,7 +262,7 @@ dependencies {
     compile(group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3')
     compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5')
     compile(group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.9.1')
-    compile(group: 'com.google.guava', name: 'guava', version: '23.6-jre')
+    compile(group: 'com.google.guava', name: 'guava', version: '24.0-jre')
     compile(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.1')
     compile(group: 'com.github.ben-manes.caffeine', name: 'jcache', version: '2.6.1')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.4')
@@ -283,7 +283,7 @@ dependencies {
     compile(group: 'com.google.code.gson', name: 'gson', version: '2.8.2')
     compile(group: 'com.sun.mail', name: 'javax.mail', version: '1.6.0')
     compile(group: 'io.projectreactor', name: 'reactor-core', version: '3.1.3.RELEASE')
-    compile(group: 'org.springframework.session', name: 'spring-session', version: '1.3.1.RELEASE')
+    compile(group: 'org.springframework.session', name: 'spring-session-core', version: '2.0.1.RELEASE')
     compile(group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.13', classifier: 'indy')
     compile(group: 'org.codehaus.gpars', name: 'gpars', version: '1.2.1')
     compile(group: 'javax.persistence', name: 'persistence-api', version: '1.0.2')

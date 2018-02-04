@@ -19,8 +19,10 @@ package com.themodernway.server.core.security.session;
 import java.util.List;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.types.Activatable;
 
-public abstract class AbstractServerSessionRepository implements IServerSessionRepository
+@SuppressWarnings("serial")
+public abstract class AbstractServerSessionRepository extends Activatable implements IServerSessionRepository
 {
     private final IServerSessionHelper m_helper;
 
@@ -35,18 +37,6 @@ public abstract class AbstractServerSessionRepository implements IServerSessionR
     }
 
     @Override
-    public IServerSession createSession()
-    {
-        return null;
-    }
-
-    @Override
-    public boolean isActive()
-    {
-        return true;
-    }
-
-    @Override
     public String getDomain()
     {
         return getHelper().getDefaultDomain();
@@ -55,7 +45,7 @@ public abstract class AbstractServerSessionRepository implements IServerSessionR
     @Override
     public void touch(final String id)
     {
-        final IServerSession session = getSession(id);
+        final IServerSession session = findById(id);
 
         if (null != session)
         {
@@ -72,13 +62,7 @@ public abstract class AbstractServerSessionRepository implements IServerSessionR
     @Override
     public void delete(final IServerSession session)
     {
-        delete(session.getId());
-    }
-
-    @Override
-    public int getDefaultMaxInactiveIntervalInSeconds()
-    {
-        return getHelper().getDefaultMaxInactiveIntervalInSeconds();
+        deleteById(session.getId());
     }
 
     @Override

@@ -32,6 +32,9 @@ public interface IFileItemWrapper extends IFileItem
     public String getExtension() throws FileStorageException;
 
     @Override
+    public long checksum() throws FileStorageException;
+
+    @Override
     public long getSize() throws FileStorageException;
 
     @Override

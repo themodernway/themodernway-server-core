@@ -35,6 +35,8 @@ public interface IFileItem
 
     public String getExtension() throws IOException;
 
+    public long checksum() throws IOException;
+
     public long getSize() throws IOException;
 
     public boolean exists() throws IOException;

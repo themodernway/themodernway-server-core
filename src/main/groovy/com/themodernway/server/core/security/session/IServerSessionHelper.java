@@ -34,7 +34,7 @@ public interface IServerSessionHelper
 
     public final static String               SP_SESSION_ID_KEY                       = "session_id";
 
-    public final static String               SP_EXPIRED_KEY                          = "expired";
+    public final static String               SP_ORIGINAL_SESSION_ID_KEY              = "original_session_id";
 
     public final static String               SP_CREATION_TIME_KEY                    = "creation_time";
 
@@ -44,13 +44,82 @@ public interface IServerSessionHelper
 
     public final static String               SP_DEFAULT_DOMAIN                       = "default";
 
-    public final static Integer              SP_MAX_INACTIVE_INTERVAL_IN_SECONDS     = 30 * 60;
-
     public final static List<String>         SP_DEFAULT_ROLES_LIST                   = CommonOps.toUnmodifiableList("ANONYMOUS");
 
-    public final static IServerSessionHelper SP_DEFAULT_HELPER_INSTANCE              = new IServerSessionHelper()
+    public final static IServerSessionHelper SP_DEFAULT_HELPER_INSTANCE              = new SimpleServerSessionHelper();
+
+    public static class SimpleServerSessionHelper implements IServerSessionHelper
     {
-    };
+    }
+
+    public static class PrefixServerSessionHelper extends SimpleServerSessionHelper
+    {
+        private final String m_prfx;
+
+        public PrefixServerSessionHelper(final String prfx)
+        {
+            m_prfx = StringOps.toTrimOrElse(prfx, StringOps.EMPTY_STRING);
+        }
+
+        protected String getPrefix()
+        {
+            return m_prfx;
+        }
+
+        @Override
+        public String getStatusKey()
+        {
+            return getPrefix() + super.getStatusKey();
+        }
+
+        @Override
+        public String getDomainKey()
+        {
+            return getPrefix() + super.getDomainKey();
+        }
+
+        @Override
+        public String geRolesKey()
+        {
+            return getPrefix() + super.geRolesKey();
+        }
+
+        @Override
+        public String getUserIdKey()
+        {
+            return getPrefix() + super.getUserIdKey();
+        }
+
+        @Override
+        public String getSessionIdKey()
+        {
+            return getPrefix() + super.getSessionIdKey();
+        }
+
+        @Override
+        public String getOriginalSessionIdKey()
+        {
+            return getPrefix() + super.getOriginalSessionIdKey();
+        }
+
+        @Override
+        public String getCreationTimeKey()
+        {
+            return getPrefix() + super.getCreationTimeKey();
+        }
+
+        @Override
+        public String getLastAccessedTimeKey()
+        {
+            return getPrefix() + super.getLastAccessedTimeKey();
+        }
+
+        @Override
+        public String getMaxInactiveIntervalKey()
+        {
+            return getPrefix() + super.getMaxInactiveIntervalKey();
+        }
+    }
 
     default public String getStatusKey()
     {
@@ -77,9 +146,9 @@ public interface IServerSessionHelper
         return SP_SESSION_ID_KEY;
     }
 
-    default public String getExpiredKey()
+    default public String getOriginalSessionIdKey()
     {
-        return SP_EXPIRED_KEY;
+        return SP_ORIGINAL_SESSION_ID_KEY;
     }
 
     default public String getCreationTimeKey()
@@ -92,7 +161,7 @@ public interface IServerSessionHelper
         return SP_LAST_ACCESSED_TIME_KEY;
     }
 
-    default public String getMaxInactiveIntervalInSecondsKey()
+    default public String getMaxInactiveIntervalKey()
     {
         return SP_MAX_INACTIVE_INTERVAL_IN_SECONDS_KEY;
     }
@@ -105,11 +174,6 @@ public interface IServerSessionHelper
     default public List<String> getDefaultRoles()
     {
         return SP_DEFAULT_ROLES_LIST;
-    }
-
-    default public int getDefaultMaxInactiveIntervalInSeconds()
-    {
-        return SP_MAX_INACTIVE_INTERVAL_IN_SECONDS;
     }
 
     default public String getDefaultDomain()

@@ -128,7 +128,7 @@ public final class HTTPUtils implements ICoreServletConstants
         }
         if (null != repository)
         {
-            final IServerSession session = repository.getSession(sessid);
+            final IServerSession session = repository.findById(sessid);
 
             if (null != session)
             {

@@ -72,6 +72,19 @@ public abstract class AbstractFileItemWrapper<T extends IFileItem> extends Abstr
     }
 
     @Override
+    public long checksum() throws FileStorageException
+    {
+        try
+        {
+            return getWrappedFileItem().checksum();
+        }
+        catch (final IOException e)
+        {
+            throw new FileStorageException(e);
+        }
+    }
+
+    @Override
     public long getSize() throws FileStorageException
     {
         try

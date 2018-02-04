@@ -399,6 +399,116 @@ public final class IO
         return length;
     }
 
+    public static final long checksum(final InputStream stream) throws IOException
+    {
+        final CheckSumInputStream is = new CheckSumInputStream(stream);
+
+        IO.copy(is, new NoOpOutputStream());
+
+        return is.getChecksum().getValue();
+    }
+
+    public static final long checksum(final Reader reader) throws IOException
+    {
+        final CheckSumOutputStream ou = new CheckSumOutputStream(new NoOpOutputStream());
+
+        IO.copy(reader, ou);
+
+        return ou.getChecksum().getValue();
+    }
+
+    public static final long checksum(final File file) throws IOException
+    {
+        if (false == IO.exists(file))
+        {
+            throw new IOException("File doesn't exist.");
+        }
+        if (false == IO.isFile(file))
+        {
+            throw new IOException("Can't copy directory.");
+        }
+        if (false == IO.isReadable(file))
+        {
+            throw new IOException("Can't read file.");
+        }
+        InputStream stream = null;
+
+        try
+        {
+            stream = IO.toInputStream(file);
+
+            final CheckSumInputStream is = new CheckSumInputStream(stream);
+
+            IO.copy(is, new NoOpOutputStream());
+
+            return is.getChecksum().getValue();
+        }
+        finally
+        {
+            IO.close(stream);
+        }
+    }
+
+    public static final long checksum(final Path path) throws IOException
+    {
+        InputStream stream = null;
+
+        try
+        {
+            stream = IO.toInputStream(path);
+
+            final CheckSumInputStream is = new CheckSumInputStream(stream);
+
+            IO.copy(is, new NoOpOutputStream());
+
+            return is.getChecksum().getValue();
+        }
+        finally
+        {
+            IO.close(stream);
+        }
+    }
+
+    public static final long checksum(final Resource resource) throws IOException
+    {
+        InputStream stream = null;
+
+        try
+        {
+            stream = resource.getInputStream();
+
+            final CheckSumInputStream is = new CheckSumInputStream(stream);
+
+            IO.copy(is, new NoOpOutputStream());
+
+            return is.getChecksum().getValue();
+        }
+        finally
+        {
+            IO.close(stream);
+        }
+    }
+
+    public static final long checksum(final IFileItem file) throws IOException
+    {
+        InputStream stream = null;
+
+        try
+        {
+            stream = file.getInputStream();
+
+            final CheckSumInputStream is = new CheckSumInputStream(stream);
+
+            IO.copy(is, new NoOpOutputStream());
+
+            return is.getChecksum().getValue();
+        }
+        finally
+        {
+            IO.close(stream);
+        }
+    }
+
     public static final Stream<String> lines(final Path path) throws IOException
     {
         return IO.lines(path, false);

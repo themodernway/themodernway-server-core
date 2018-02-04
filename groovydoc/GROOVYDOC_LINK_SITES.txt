@@ -4,5 +4,5 @@ http://docs.groovy-lang.org/docs/groovy-2.4.13/html/gapi
 http://spockframework.github.io/spock/javadoc/1.0
 https://docs.spring.io/spring/docs/5.0.3.RELEASE/javadoc-api
 https://docs.spring.io/spring-security/site/docs/5.0.1.RELEASE/api
-https://docs.spring.io/spring-session/docs/1.3.1.RELEASE/api
+https://docs.spring.io/spring-session/docs/2.0.1.RELEASE/api
 http://docs.themodernway.com/documents/javadoc/themodernway-common-v2/

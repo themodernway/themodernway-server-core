@@ -332,6 +332,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
+        public long checksum() throws IOException
+        {
+            return IO.checksum(this);
+        }
+
+        @Override
         public String getContentType() throws IOException
         {
             validate();
@@ -1062,6 +1068,8 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             System.out.println(list.toJSONString());
 
             final IFileItem item = stor.getRoot().file("/x/y/z/b.json");
+
+            System.out.println("check " + item.checksum());
 
             final OutputStream puts = new NoOpOutputStream();
 

@@ -16,15 +16,24 @@
 
 package com.themodernway.server.core.security.session;
 
+import java.io.Serializable;
+import java.time.Duration;
 import java.util.List;
 
-import org.springframework.session.ExpiringSession;
+import org.springframework.session.Session;
 
-import com.themodernway.common.api.json.JSONStringify;
-import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.json.IJSONObjectSupplier;
 
-public interface IServerSession extends ExpiringSession, JSONStringify
+public interface IServerSession extends Session, IJSONObjectSupplier, Serializable
 {
+    public static final long     DEFAULT_MAX_INACTIVE_INTERVAL_SECONDS  = 1800L;
+
+    public static final Duration DEFAULT_MAX_INACTIVE_INTERVAL_DURATION = Duration.ofSeconds(DEFAULT_MAX_INACTIVE_INTERVAL_SECONDS);
+
+    public String getOriginalId();
+
+    public void setOriginalId(String id);
+
     public String getUserId();
 
     public String getDomain();
@@ -33,8 +42,6 @@ public interface IServerSession extends ExpiringSession, JSONStringify
 
     public List<String> getRoles();
 
-    public JSONObject toJSONObject();
-
     public boolean isPersisted();
 
     public void setPersisted(boolean persisted);
@@ -42,6 +49,8 @@ public interface IServerSession extends ExpiringSession, JSONStringify
     public void save();
 
     public void touch();
+
+    public IServerSessionRepository getRepository();
 
     public IServerSessionHelper getHelper();
 }

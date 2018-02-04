@@ -54,6 +54,8 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
                 {
                     m_repositories.put(domain, repository);
 
+                    repository.setActive(true);
+
                     logger.info("ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Registered");
                 }
                 else

@@ -22,15 +22,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.themodernway.server.core.json.JSONObject;
 
-public class SimpleMemoryServerSessionRepository extends AbstractServerSessionRepository
+public class SimpleJSONServerSessionRepository extends AbstractServerSessionRepository
 {
-    private final ConcurrentHashMap<String, IServerSession> m_sessions = new ConcurrentHashMap<String, IServerSession>();
+    private static final long                               serialVersionUID = 1L;
 
-    public SimpleMemoryServerSessionRepository()
+    private final ConcurrentHashMap<String, IServerSession> m_sessions       = new ConcurrentHashMap<String, IServerSession>();
+
+    public SimpleJSONServerSessionRepository()
     {
     }
 
-    public SimpleMemoryServerSessionRepository(final IServerSessionHelper helper)
+    public SimpleJSONServerSessionRepository(final IServerSessionHelper helper)
     {
         super(helper);
     }
@@ -38,11 +40,21 @@ public class SimpleMemoryServerSessionRepository extends AbstractServerSessionRe
     @Override
     public void save(final IServerSession session)
     {
-        m_sessions.putIfAbsent(session.getId(), session);
+        final String id = session.getId();
+
+        final String od = session.getOriginalId();
+
+        if (false == id.equals(od))
+        {
+            m_sessions.remove(od);
+
+            session.setOriginalId(id);
+        }
+        m_sessions.put(id, session);
     }
 
     @Override
-    public void delete(final String id)
+    public void deleteById(final String id)
     {
         m_sessions.remove(id);
     }
@@ -61,8 +73,14 @@ public class SimpleMemoryServerSessionRepository extends AbstractServerSessionRe
         }
         for (final String id : dead)
         {
-            delete(id);
+            deleteById(id);
         }
+    }
+
+    @Override
+    public IServerSession createSession()
+    {
+        return createSession(new JSONObject());
     }
 
     @Override
@@ -72,14 +90,27 @@ public class SimpleMemoryServerSessionRepository extends AbstractServerSessionRe
     }
 
     @Override
-    public IServerSession getSession(final String id)
+    public IServerSession findById(final String id)
     {
-        return m_sessions.get(id);
+        final IServerSession sess = m_sessions.get(id);
+
+        if (null != sess)
+        {
+            if (sess.isExpired())
+            {
+                deleteById(sess.getId());
+
+                return null;
+            }
+        }
+        return null;
     }
 
     @Override
     public void close() throws IOException
     {
+        setActive(false);
+
         m_sessions.clear();
     }
 }
