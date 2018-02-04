@@ -94,16 +94,13 @@ public class SimpleJSONServerSessionRepository extends AbstractServerSessionRepo
     {
         final IServerSession sess = m_sessions.get(id);
 
-        if (null != sess)
+        if ((null != sess) && (sess.isExpired()))
         {
-            if (sess.isExpired())
-            {
-                deleteById(sess.getId());
+            deleteById(sess.getId());
 
-                return null;
-            }
+            return null;
         }
-        return null;
+        return sess;
     }
 
     @Override
