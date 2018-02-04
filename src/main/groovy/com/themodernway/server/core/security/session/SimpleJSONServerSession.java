@@ -47,11 +47,6 @@ public class SimpleJSONServerSession implements IServerSession
         m_repo = CommonOps.requireNonNull(repo);
     }
 
-    public SimpleJSONServerSession(final IServerSession sess)
-    {
-        this(sess.toJSONObject(), sess.getRepository());
-    }
-
     public SimpleJSONServerSession(final IServerSessionRepository repo)
     {
         this(generateId(), repo);
@@ -70,6 +65,8 @@ public class SimpleJSONServerSession implements IServerSession
         setCreationTime(now);
 
         setLastAccessedTime(now);
+
+        setDomain(getRepository().getDomain());
 
         setMaxInactiveInterval(DEFAULT_MAX_INACTIVE_INTERVAL_DURATION);
     }
@@ -106,6 +103,7 @@ public class SimpleJSONServerSession implements IServerSession
         {
             setMaxInactiveInterval(DEFAULT_MAX_INACTIVE_INTERVAL_DURATION);
         }
+        setDomain(getRepository().getDomain());
     }
 
     @Override
@@ -308,6 +306,11 @@ public class SimpleJSONServerSession implements IServerSession
             }
         }
         return getRepository().getDomain();
+    }
+
+    protected void setDomain(final String domain)
+    {
+        setAttribute(getHelper().getDomainKey(), domain);
     }
 
     @Override
