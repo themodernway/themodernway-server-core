@@ -20,7 +20,7 @@ import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.zip.CRC32;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import com.themodernway.server.core.io.IO;
 
