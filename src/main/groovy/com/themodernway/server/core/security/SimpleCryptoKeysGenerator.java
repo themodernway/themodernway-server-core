@@ -21,7 +21,7 @@ import java.security.MessageDigest;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.security.tools.Hashing;
 import com.themodernway.server.core.security.tools.ICheckSum;
-import com.themodernway.server.core.security.tools.Randoms;
+import com.themodernway.server.core.security.tools.Randoms.Secure;
 
 public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 {
@@ -45,7 +45,7 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 
         for (int i = 0; i < 11; i++)
         {
-            builder.append(Randoms.Secure.getString(8)).append(StringOps.MINUS_STRING);
+            builder.append(Secure.getString(8)).append(StringOps.MINUS_STRING);
         }
         return builder.append(CRC_HASH.tohex(builder.toString())).toString();
     }
@@ -63,7 +63,7 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
         {
             throw new IllegalArgumentException(e);
         }
-        byte[] bytes = Randoms.Secure.nextBytes(64);
+        byte[] bytes = Secure.nextBytes(64);
 
         for (int i = 0; i < 10000; i++)
         {
