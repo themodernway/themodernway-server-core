@@ -26,8 +26,6 @@ public interface ICheckSum
 
     public String toChars(long valu);
 
-    public String encoder(long valu);
-
     public long decoder(String valu);
 
     public String tohex(String valu);

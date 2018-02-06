@@ -79,12 +79,6 @@ public final class Hashing
         }
 
         @Override
-        public String encoder(final long valu)
-        {
-            return SimpleHexEncoder.get().encode(toBytes(valu));
-        }
-
-        @Override
         public long decoder(final String valu)
         {
             return ByteBuffer.wrap(SimpleHexEncoder.get().decode(valu)).getInt() & 0xffffffffL;
