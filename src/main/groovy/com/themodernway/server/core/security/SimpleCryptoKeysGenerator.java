@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.security;
 
+import java.security.MessageDigest;
+
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.security.tools.Hashing;
 import com.themodernway.server.core.security.tools.ICheckSum;
@@ -23,9 +25,9 @@ import com.themodernway.server.core.security.tools.Randoms;
 
 public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 {
-    private static final SimpleCryptoKeysGenerator INSTANCE = new SimpleCryptoKeysGenerator();
-
     private static final ICheckSum                 CRC_HASH = Hashing.crc32();
+
+    private static final SimpleCryptoKeysGenerator INSTANCE = new SimpleCryptoKeysGenerator();
 
     public static final SimpleCryptoKeysGenerator getCryptoKeysGenerator()
     {
@@ -51,7 +53,23 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
     @Override
     public String getRandomSalt()
     {
-        return SimpleHexEncoder.get().encode(Randoms.Secure.nextBytes(32));
+        MessageDigest md;
+
+        try
+        {
+            md = MessageDigest.getInstance("SHA-512");
+        }
+        catch (final Exception e)
+        {
+            throw new IllegalArgumentException(e);
+        }
+        byte[] bytes = Randoms.Secure.nextBytes(64);
+
+        for (int i = 0; i < 10000; i++)
+        {
+            bytes = md.digest(bytes);
+        }
+        return SimpleHexEncoder.get().encode(bytes);
     }
 
     @Override
