@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.security.hashing;
+package com.themodernway.server.core.security.tools;
 
 import java.nio.ByteBuffer;
+import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
@@ -30,9 +31,14 @@ public final class Hashing
     {
     }
 
-    public static final ICheckSum crc()
+    public static final ICheckSum crc32()
     {
         return new CheckSumBuilder(() -> new CRC32());
+    }
+
+    public static final ICheckSum adl32()
+    {
+        return new CheckSumBuilder(() -> new Adler32());
     }
 
     private static final class CheckSumBuilder implements ICheckSum
@@ -57,11 +63,7 @@ public final class Hashing
         @Override
         public byte[] toBytes(final long valu)
         {
-            final ByteBuffer buffer = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE);
-
-            buffer.putInt(0, ((int) (valu & 0xffffffffL)));
-
-            return buffer.array();
+            return ByteBuffer.allocate(Integer.SIZE / Byte.SIZE).putInt(0, ((int) (valu & 0xffffffffL))).array();
         }
 
         @Override
@@ -74,6 +76,24 @@ public final class Hashing
         public String toChars(final long valu)
         {
             return SimpleHexEncoder.get().encode(toBytes(valu));
+        }
+
+        @Override
+        public String encoder(final long valu)
+        {
+            return SimpleHexEncoder.get().encode(toBytes(valu));
+        }
+
+        @Override
+        public long decoder(final String valu)
+        {
+            return ByteBuffer.wrap(SimpleHexEncoder.get().decode(valu)).getInt() & 0xffffffffL;
+        }
+
+        @Override
+        public String tohex(final String valu)
+        {
+            return toChars(ofChars(valu));
         }
     }
 }

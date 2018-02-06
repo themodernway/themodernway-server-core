@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.security.hashing;
+package com.themodernway.server.core.security.tools;
 
-import java.util.function.Supplier;
-import java.util.zip.Checksum;
-
-@FunctionalInterface
-public interface ICheckSumSupplier extends Supplier<Checksum>
+public interface ICheckSum
 {
+    public long ofBytes(byte[] buff);
+
+    public byte[] toBytes(long valu);
+
+    public long ofChars(String buff);
+
+    public String toChars(long valu);
+
+    public String encoder(long valu);
+
+    public long decoder(String valu);
+
+    public String tohex(String valu);
 }

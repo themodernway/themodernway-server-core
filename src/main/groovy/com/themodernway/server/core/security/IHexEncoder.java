@@ -16,8 +16,9 @@
 
 package com.themodernway.server.core.security;
 
-@FunctionalInterface
 public interface IHexEncoder
 {
     public String encode(byte[] src);
+
+    public byte[] decode(String src);
 }

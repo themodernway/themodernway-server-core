@@ -35,6 +35,7 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.Properties;
 import java.util.stream.Stream;
+import java.util.zip.Checksum;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -408,9 +409,27 @@ public final class IO
         return is.getChecksum().getValue();
     }
 
+    public static final long checksum(final InputStream stream, final Checksum ck) throws IOException
+    {
+        final CheckSumInputStream is = new CheckSumInputStream(stream, ck);
+
+        IO.copy(is, new NoOpOutputStream());
+
+        return is.getChecksum().getValue();
+    }
+
     public static final long checksum(final Reader reader) throws IOException
     {
         final CheckSumOutputStream ou = new CheckSumOutputStream(new NoOpOutputStream());
+
+        IO.copy(reader, ou);
+
+        return ou.getChecksum().getValue();
+    }
+
+    public static final long checksum(final Reader reader, final Checksum ck) throws IOException
+    {
+        final CheckSumOutputStream ou = new CheckSumOutputStream(new NoOpOutputStream(), ck);
 
         IO.copy(reader, ou);
 
@@ -449,6 +468,38 @@ public final class IO
         }
     }
 
+    public static final long checksum(final File file, final Checksum ck) throws IOException
+    {
+        if (false == IO.exists(file))
+        {
+            throw new IOException("File doesn't exist.");
+        }
+        if (false == IO.isFile(file))
+        {
+            throw new IOException("Can't copy directory.");
+        }
+        if (false == IO.isReadable(file))
+        {
+            throw new IOException("Can't read file.");
+        }
+        InputStream stream = null;
+
+        try
+        {
+            stream = IO.toInputStream(file);
+
+            final CheckSumInputStream is = new CheckSumInputStream(stream, ck);
+
+            IO.copy(is, new NoOpOutputStream());
+
+            return is.getChecksum().getValue();
+        }
+        finally
+        {
+            IO.close(stream);
+        }
+    }
+
     public static final long checksum(final Path path) throws IOException
     {
         InputStream stream = null;
@@ -458,6 +509,26 @@ public final class IO
             stream = IO.toInputStream(path);
 
             final CheckSumInputStream is = new CheckSumInputStream(stream);
+
+            IO.copy(is, new NoOpOutputStream());
+
+            return is.getChecksum().getValue();
+        }
+        finally
+        {
+            IO.close(stream);
+        }
+    }
+
+    public static final long checksum(final Path path, final Checksum ck) throws IOException
+    {
+        InputStream stream = null;
+
+        try
+        {
+            stream = IO.toInputStream(path);
+
+            final CheckSumInputStream is = new CheckSumInputStream(stream, ck);
 
             IO.copy(is, new NoOpOutputStream());
 
@@ -489,6 +560,26 @@ public final class IO
         }
     }
 
+    public static final long checksum(final Resource resource, final Checksum ck) throws IOException
+    {
+        InputStream stream = null;
+
+        try
+        {
+            stream = resource.getInputStream();
+
+            final CheckSumInputStream is = new CheckSumInputStream(stream, ck);
+
+            IO.copy(is, new NoOpOutputStream());
+
+            return is.getChecksum().getValue();
+        }
+        finally
+        {
+            IO.close(stream);
+        }
+    }
+
     public static final long checksum(final IFileItem file) throws IOException
     {
         InputStream stream = null;
@@ -498,6 +589,26 @@ public final class IO
             stream = file.getInputStream();
 
             final CheckSumInputStream is = new CheckSumInputStream(stream);
+
+            IO.copy(is, new NoOpOutputStream());
+
+            return is.getChecksum().getValue();
+        }
+        finally
+        {
+            IO.close(stream);
+        }
+    }
+
+    public static final long checksum(final IFileItem file, final Checksum ck) throws IOException
+    {
+        InputStream stream = null;
+
+        try
+        {
+            stream = file.getInputStream();
+
+            final CheckSumInputStream is = new CheckSumInputStream(stream, ck);
 
             IO.copy(is, new NoOpOutputStream());
 

@@ -28,19 +28,19 @@ public interface IWebSocketServiceProvider extends Closeable
 
     public IWebSocketService getWebSocketService(String name);
 
-    public IWebSocketServiceSession getWebSocketServiceSession(String id);
-
     public List<IWebSocketServiceSession> getWebSocketServiceSessions();
 
-    public boolean addWebSocketServiceSession(IWebSocketServiceSession session);
+    public IWebSocketServiceSession getWebSocketServiceSession(String iden);
 
-    public boolean removeWebSocketServiceSession(IWebSocketServiceSession session);
+    public boolean addWebSocketServiceSession(IWebSocketServiceSession sess);
 
-    public List<IWebSocketServiceSession> findSessions(Predicate<IWebSocketServiceSession> predicate);
+    public boolean removeWebSocketServiceSession(IWebSocketServiceSession sess);
 
-    public List<IWebSocketServiceSession> findSessionsByIdentifiers(Collection<String> want);
+    public List<IWebSocketServiceSession> findSessions(Predicate<IWebSocketServiceSession> pred);
 
-    public List<IWebSocketServiceSession> findSessionsByServiceNames(Collection<String> want);
+    public List<IWebSocketServiceSession> findSessionsById(Collection<String> want);
+
+    public List<IWebSocketServiceSession> findSessionsByServiceName(Collection<String> want);
 
     public List<IWebSocketServiceSession> findSessionsByPathParameters(Map<String, String> want);
 

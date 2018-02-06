@@ -16,17 +16,16 @@
 
 package com.themodernway.server.core.security;
 
-import java.nio.ByteBuffer;
-import java.security.SecureRandom;
-import java.util.zip.CRC32;
-
-import org.apache.commons.lang3.RandomStringUtils;
-
-import com.themodernway.server.core.io.IO;
+import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.security.tools.Hashing;
+import com.themodernway.server.core.security.tools.ICheckSum;
+import com.themodernway.server.core.security.tools.Randoms;
 
 public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 {
     private static final SimpleCryptoKeysGenerator INSTANCE = new SimpleCryptoKeysGenerator();
+
+    private static final ICheckSum                 CRC_HASH = Hashing.crc32();
 
     public static final SimpleCryptoKeysGenerator getCryptoKeysGenerator()
     {
@@ -44,72 +43,26 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 
         for (int i = 0; i < 11; i++)
         {
-            builder.append(Tools.randomString(8)).append("-");
+            builder.append(Randoms.Secure.getString(8)).append(StringOps.MINUS_STRING);
         }
-        return builder.append(Tools.checksumOfChars(builder)).toString();
+        return builder.append(CRC_HASH.tohex(builder.toString())).toString();
     }
 
     @Override
     public String getRandomSalt()
     {
-        return SimpleHexEncoder.get().encode(Tools.randomBytes(32));
+        return SimpleHexEncoder.get().encode(Randoms.Secure.nextBytes(32));
     }
 
     @Override
     public boolean isPassValid(final String pass)
     {
-        final int last = pass.lastIndexOf("-");
+        final int last = pass.lastIndexOf(StringOps.MINUS_STRING);
 
         if (last <= 0)
         {
             return false;
         }
-        return pass.endsWith(Tools.checksumOfChars(pass.substring(0, last + 1)));
-    }
-
-    private static final class Tools
-    {
-        // In separate class because it defers the initialization till used, SecureRandom is expensive.
-
-        private static final SecureRandom RAND = new SecureRandom();
-
-        private static final char[]       CHRS = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
-
-        static final String randomString(final int leng)
-        {
-            return RandomStringUtils.random(leng, 0, CHRS.length, false, false, CHRS, RAND);
-        }
-
-        static final byte[] randomBytes(final int leng)
-        {
-            final byte[] data = new byte[leng];
-
-            RAND.nextBytes(data);
-
-            return data;
-        }
-
-        static final long checksumOfBytes(final byte[] data)
-        {
-            final CRC32 check = new CRC32();
-
-            check.update(data);
-
-            return check.getValue();
-        }
-
-        static final byte[] checksumToBytes(final long valu)
-        {
-            final ByteBuffer buffer = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE);
-
-            buffer.putInt(0, ((int) (valu & 0xffffffffL)));
-
-            return buffer.array();
-        }
-
-        static final String checksumOfChars(final CharSequence valu)
-        {
-            return SimpleHexEncoder.get().encode(Tools.checksumToBytes(Tools.checksumOfBytes(valu.toString().getBytes(IO.UTF_8_CHARSET))));
-        }
+        return pass.endsWith(CRC_HASH.tohex(pass.substring(0, last + 1)));
     }
 }

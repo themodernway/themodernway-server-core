@@ -17,6 +17,7 @@
 package com.themodernway.server.core.support.spring.network.websocket;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.Map;
 
 import javax.websocket.Session;
@@ -33,21 +34,19 @@ public interface IWebSocketServiceSession extends IIdentified, Closeable
 
     public String getPathParameter(String name);
 
-    public boolean isStrict();
-
     public JSONObject getAttributes();
 
     public Map<String, String> getPathParameters();
 
     public IWebSocketService getService();
 
-    public void reply(String text) throws Exception;
+    public void reply(String text) throws IOException;
 
-    public void reply(String text, boolean last) throws Exception;
+    public void reply(String text, boolean last) throws IOException;
 
-    public void reply(JSONObject json) throws Exception;
+    public void reply(JSONObject json) throws IOException;
 
-    public void reply(JSONArray batch) throws Exception;
+    public void reply(JSONArray batch) throws IOException;
 
-    public void batch(JSONObject json) throws Exception;
+    public void batch(JSONObject json) throws IOException;
 }

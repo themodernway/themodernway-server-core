@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.security;
 
-@FunctionalInterface
 public interface ISignatoryEncoder extends IHexEncoder
 {
 }

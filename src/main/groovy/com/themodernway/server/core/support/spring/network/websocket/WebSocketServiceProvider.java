@@ -19,12 +19,13 @@ package com.themodernway.server.core.support.spring.network.websocket;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
@@ -35,15 +36,16 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.INamedType;
+import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.logging.LoggingOps;
 
 public class WebSocketServiceProvider implements IWebSocketServiceProvider, BeanFactoryAware
 {
-    private static final Logger                                   logger     = LoggingOps.LOGGER(WebSocketServiceProvider.class);
+    private static final Logger                                       logger     = LoggingOps.LOGGER(WebSocketServiceProvider.class);
 
-    private final LinkedHashMap<String, IWebSocketServiceFactory> m_services = new LinkedHashMap<String, IWebSocketServiceFactory>();
+    private final LinkedHashMap<String, IWebSocketServiceFactory>     m_services = new LinkedHashMap<String, IWebSocketServiceFactory>();
 
-    private final LinkedHashMap<String, IWebSocketServiceSession> m_sessions = new LinkedHashMap<String, IWebSocketServiceSession>();
+    private final ConcurrentHashMap<String, IWebSocketServiceSession> m_sessions = new ConcurrentHashMap<String, IWebSocketServiceSession>();
 
     public WebSocketServiceProvider()
     {
@@ -151,54 +153,25 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
     @Override
     public void close() throws IOException
     {
-        for (final IWebSocketServiceSession sock : m_sessions.values())
-        {
-            if (null != sock)
-            {
-                try
-                {
-                    sock.close();
-                }
-                catch (final Exception e)
-                {
-                    logger.error(sock.getId(), e);
-                }
-            }
-        }
+        IO.close(m_sessions.values());
     }
 
     @Override
-    public boolean addWebSocketServiceSession(final IWebSocketServiceSession session)
+    public boolean addWebSocketServiceSession(final IWebSocketServiceSession sess)
     {
-        final String iden = session.getId();
-
-        if (null == m_sessions.get(iden))
-        {
-            m_sessions.put(iden, session);
-
-            return true;
-        }
-        return false;
+        return CommonOps.isNull(m_sessions.putIfAbsent(sess.getId(), sess));
     }
 
     @Override
-    public boolean removeWebSocketServiceSession(final IWebSocketServiceSession session)
+    public boolean removeWebSocketServiceSession(final IWebSocketServiceSession sess)
     {
-        final String iden = session.getId();
-
-        if (null != m_sessions.get(iden))
-        {
-            m_sessions.remove(iden);
-
-            return true;
-        }
-        return false;
+        return m_sessions.remove(sess.getId(), sess);
     }
 
     @Override
     public IWebSocketServiceSession getWebSocketServiceSession(final String iden)
     {
-        return m_sessions.get(iden);
+        return m_sessions.get(CommonOps.requireNonNull(iden));
     }
 
     @Override
@@ -208,21 +181,35 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
     }
 
     @Override
-    public List<IWebSocketServiceSession> findSessions(final Predicate<IWebSocketServiceSession> predicate)
+    public List<IWebSocketServiceSession> findSessions(final Predicate<IWebSocketServiceSession> pred)
     {
-        return CommonOps.toUnmodifiableList(getWebSocketServiceSessions().stream().filter(predicate).collect(Collectors.toList()));
+        CommonOps.requireNonNull(pred);
+
+        return CommonOps.toUnmodifiableList(m_sessions.values().stream().filter(pred));
     }
 
     @Override
-    public List<IWebSocketServiceSession> findSessionsByIdentifiers(final Collection<String> want)
+    public List<IWebSocketServiceSession> findSessionsById(final Collection<String> want)
     {
-        return findSessions(session -> want.contains(session.getId()));
+        final LinkedHashSet<String> look = CommonOps.linkedSet(want);
+
+        if (look.isEmpty())
+        {
+            return CommonOps.emptyList();
+        }
+        return findSessions(session -> look.contains(session.getId()));
     }
 
     @Override
-    public List<IWebSocketServiceSession> findSessionsByServiceNames(final Collection<String> want)
+    public List<IWebSocketServiceSession> findSessionsByServiceName(final Collection<String> want)
     {
-        return findSessions(session -> want.contains(session.getService().getName()));
+        final LinkedHashSet<String> look = CommonOps.linkedSet(want);
+
+        if (look.isEmpty())
+        {
+            return CommonOps.emptyList();
+        }
+        return findSessions(session -> look.contains(session.getService().getName()));
     }
 
     @Override
@@ -239,15 +226,15 @@ public class WebSocketServiceProvider implements IWebSocketServiceProvider, Bean
 
     private static class PathPredicate implements Predicate<IWebSocketServiceSession>
     {
-        private final Map<String, String> m_want;
-
         private final boolean             m_some;
+
+        private final Map<String, String> m_want;
 
         public PathPredicate(final Map<String, String> want, final boolean some)
         {
-            m_want = want;
-
             m_some = some;
+
+            m_want = CommonOps.requireNonNull(want);
         }
 
         @Override
