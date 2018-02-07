@@ -27,6 +27,11 @@ public final class Digests
     {
     }
 
+    public static final MessageDigest sha512()
+    {
+        return getMessageDigest("SHA-512");
+    }
+
     public static final MessageDigest getMessageDigest(final String algorithm)
     {
         try

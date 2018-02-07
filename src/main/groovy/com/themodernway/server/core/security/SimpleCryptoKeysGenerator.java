@@ -54,7 +54,7 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
     @Override
     public String getRandomSalt()
     {
-        final MessageDigest md = Digests.getMessageDigest("SHA-512");
+        final MessageDigest md = Digests.sha512();
 
         byte[] bytes = Secure.nextBytes(64);
 

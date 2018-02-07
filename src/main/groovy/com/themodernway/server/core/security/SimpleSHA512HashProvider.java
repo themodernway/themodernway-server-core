@@ -16,19 +16,13 @@
 
 package com.themodernway.server.core.security;
 
-import java.security.MessageDigest;
-
-import org.slf4j.Logger;
-
 import com.themodernway.common.api.hash.Hasher;
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.server.core.logging.LoggingOps;
+import com.themodernway.server.core.security.tools.Digests;
 
 public final class SimpleSHA512HashProvider implements ISHA512HashProvider
 {
-    private static final Logger logger   = LoggingOps.LOGGER(SimpleSHA512HashProvider.class);
-
-    private final Hasher        m_hasher = new Hasher(this);
+    private final Hasher m_hasher = new Hasher(this);
 
     public SimpleSHA512HashProvider()
     {
@@ -37,33 +31,7 @@ public final class SimpleSHA512HashProvider implements ISHA512HashProvider
     @Override
     public String sha512(final String text)
     {
-        CommonOps.requireNonNull(text);
-
-        MessageDigest md;
-
-        try
-        {
-            md = MessageDigest.getInstance("SHA-512");
-        }
-        catch (final Exception e)
-        {
-            logger.error("No SHA-512 Algorithm ", e);
-
-            throw new IllegalArgumentException(e);
-        }
-        byte[] bytes;
-
-        try
-        {
-            bytes = text.getBytes(CommonOps.CHARSET_UTF_8);
-        }
-        catch (final Exception e)
-        {
-            logger.error("No " + CommonOps.CHARSET_UTF_8 + " encoding ", e);
-
-            throw new IllegalArgumentException(e);
-        }
-        return SimpleHexEncoder.get().encode(md.digest(bytes));
+        return SimpleHexEncoder.get().encode(Digests.sha512().digest(text.getBytes()));
     }
 
     @Override
