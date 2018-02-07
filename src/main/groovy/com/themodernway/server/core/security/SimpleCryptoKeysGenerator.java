@@ -19,6 +19,7 @@ package com.themodernway.server.core.security;
 import java.security.MessageDigest;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.security.tools.Digests;
 import com.themodernway.server.core.security.tools.Hashing;
 import com.themodernway.server.core.security.tools.ICheckSum;
 import com.themodernway.server.core.security.tools.Randoms.Secure;
@@ -53,19 +54,11 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
     @Override
     public String getRandomSalt()
     {
-        MessageDigest md;
+        final MessageDigest md = Digests.getMessageDigest("SHA-512");
 
-        try
-        {
-            md = MessageDigest.getInstance("SHA-512");
-        }
-        catch (final Exception e)
-        {
-            throw new IllegalArgumentException(e);
-        }
         byte[] bytes = Secure.nextBytes(64);
 
-        for (int i = 0; i < 10000; i++)
+        for (int i = 0; i < 20000; i++)
         {
             bytes = md.digest(bytes);
         }
