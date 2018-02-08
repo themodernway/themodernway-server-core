@@ -61,6 +61,8 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
         for (int i = 0; i < 20000; i++)
         {
             bytes = md.digest(bytes);
+
+            md.reset();
         }
         return SimpleHexEncoder.get().encode(bytes);
     }
