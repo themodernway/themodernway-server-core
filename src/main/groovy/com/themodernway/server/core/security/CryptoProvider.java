@@ -101,13 +101,19 @@ public final class CryptoProvider implements ICryptoProvider
     @Override
     public String sha512(final String text, final String salt)
     {
-        return m_hasher.sha512(CommonOps.requireNonNull(text), CommonOps.requireNonNull(salt));
+        return m_hasher.sha512(CommonOps.requireNonNull(text), salt);
     }
 
     @Override
     public String sha512(final String text, final String salt, final int iter)
     {
-        return m_hasher.sha512(CommonOps.requireNonNull(text), CommonOps.requireNonNull(salt), iter);
+        return m_hasher.sha512(CommonOps.requireNonNull(text), salt, iter);
+    }
+
+    @Override
+    public String sha512(final String text, final int iter)
+    {
+        return m_hasher.sha512(CommonOps.requireNonNull(text), null, iter);
     }
 
     @Override

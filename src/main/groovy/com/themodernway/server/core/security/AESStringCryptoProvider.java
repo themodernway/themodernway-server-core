@@ -27,6 +27,10 @@ public final class AESStringCryptoProvider implements IStringCryptoProvider
 
     public AESStringCryptoProvider(final String pass, final String salt)
     {
+        if (false == SimpleCryptoKeysGenerator.getCryptoKeysGenerator().isPassValid(pass))
+        {
+            throw new IllegalArgumentException("BootstrapStringCryptoProvider(password is not valid) " + pass);
+        }
         m_pcrypt = Encryptors.delux(CommonOps.requireNonNull(pass), CommonOps.requireNonNull(salt));
     }
 
