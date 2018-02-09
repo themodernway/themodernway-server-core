@@ -75,7 +75,7 @@ task filterConfigs(dependsOn: deleteConfigs, type: Copy) {
 
 task doJavaDocs(type: Groovydoc) {
     source = sourceSets.main.allSource
-    classpath = sourceSets.main.runtimeClasspath
+    classpath = sourceSets.main.compileClasspath
     destinationDir = file("${buildDir}/docs/javadoc")
     docTitle = "${getProjectCommonName()}"
     footer = "<small><a href=\"${getBuildGITHomeURL()}\" target=\"_blank\">${getProjectCommonName()} - &copy; 2018</a> - <a href=\"${getBuildGITCommitHash()}\" target=\"_blank\">${getBuildModuleVersion()}</a> - <a href=\"mailto:deansjones@gmail.com\">Author: Dean S. Jones</a></small>"
