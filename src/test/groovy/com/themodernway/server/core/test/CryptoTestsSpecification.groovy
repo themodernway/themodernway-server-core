@@ -91,22 +91,6 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         text << ['test', ' ', '', '1234', uuid()]
     }
 
-    @Unroll
-    def "Test Signature of ('#text')"(String text)
-    {
-        setup:
-        def sign = getCryptoProvider().makeSignature(text)
-        echo "signed ('${text}') as ('${sign}')"
-
-        expect:
-        getCryptoProvider().testSignature(text, sign) == true
-        getCryptoProvider().testSignature(text, text) == false
-        getCryptoProvider().testSignature(sign, sign) == false
-
-        where:
-        text << ['test', ' ', '', '1234', uuid()]
-    }
-
     def "Test Authorized AdminPOJO [TEST]"()
     {
         setup:

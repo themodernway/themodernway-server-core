@@ -22,15 +22,13 @@ import com.themodernway.common.api.java.util.CommonOps;
 
 public final class CryptoProvider implements ICryptoProvider
 {
-    private final AESStringCryptoProvider        m_pcrypt;
+    private final AESStringCryptoProvider   m_pcrypt;
 
-    private final SimpleBCryptHashProvider       m_bcrypt;
+    private final SimpleBCryptHashProvider  m_bcrypt;
 
-    private final SimpleSHA512HashProvider       m_hasher;
+    private final SimpleSHA512HashProvider  m_hasher;
 
-    private final SimpleKeyStringSigningProvider m_secret;
-
-    private final SimpleCryptoKeysGenerator      m_keygen;
+    private final SimpleCryptoKeysGenerator m_keygen;
 
     public CryptoProvider(final String pass, final String salt)
     {
@@ -53,8 +51,6 @@ public final class CryptoProvider implements ICryptoProvider
 
         m_bcrypt = new SimpleBCryptHashProvider(strength);
 
-        m_secret = new SimpleKeyStringSigningProvider(CommonOps.requireNonNull(sign));
-
         m_pcrypt = new AESStringCryptoProvider(CommonOps.requireNonNull(pass), CommonOps.requireNonNull(salt));
 
         m_keygen = SimpleCryptoKeysGenerator.getCryptoKeysGenerator();
@@ -76,18 +72,6 @@ public final class CryptoProvider implements ICryptoProvider
     public boolean isPassValid(final String pass)
     {
         return m_keygen.isPassValid(pass);
-    }
-
-    @Override
-    public final String makeSignature(final String text)
-    {
-        return m_secret.makeSignature(CommonOps.requireNonNull(text));
-    }
-
-    @Override
-    public final boolean testSignature(final String text, final String value)
-    {
-        return m_secret.testSignature(CommonOps.requireNonNull(text), CommonOps.requireNonNull(value));
     }
 
     @Override

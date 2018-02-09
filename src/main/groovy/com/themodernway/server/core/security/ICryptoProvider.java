@@ -18,6 +18,6 @@ package com.themodernway.server.core.security;
 
 import java.io.Closeable;
 
-public interface ICryptoProvider extends ICryptoKeysGenerator, IStringSigningProvider, IStringCryptoProvider, IBCryptHashProvider, ISHA512HashProvider, Closeable
+public interface ICryptoProvider extends ICryptoKeysGenerator, IStringCryptoProvider, IBCryptHashProvider, ISHA512HashProvider, Closeable
 {
 }

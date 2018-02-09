@@ -47,7 +47,6 @@ import com.themodernway.server.core.scripting.IScriptingProvider
 import com.themodernway.server.core.security.IAuthorizationProvider
 import com.themodernway.server.core.security.IAuthorizationResult
 import com.themodernway.server.core.security.ICryptoProvider
-import com.themodernway.server.core.security.ISignatoryProvider
 import com.themodernway.server.core.security.session.IServerSessionRepository
 import com.themodernway.server.core.security.session.IServerSessionRepositoryProvider
 import com.themodernway.server.core.support.spring.IBuildDescriptorProvider
@@ -56,8 +55,6 @@ import com.themodernway.server.core.support.spring.IServerContext
 import com.themodernway.server.core.support.spring.IServletContextCustomizerProvider
 import com.themodernway.server.core.support.spring.ServerContextInstance
 import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider
-import com.themodernway.server.core.support.spring.network.websocket.IWebSocketService
-import com.themodernway.server.core.support.spring.network.websocket.IWebSocketServiceProvider
 
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
@@ -188,12 +185,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Memoized
-    public ISignatoryProvider getSignatoryProvider()
-    {
-        getServerContext().getSignatoryProvider()
-    }
-
-    @Memoized
     public ICoreNetworkProvider network()
     {
         getServerContext().network()
@@ -256,18 +247,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public Reader reader(String location) throws IOException
     {
         getServerContext().reader(location)
-    }
-
-    @Memoized
-    public IWebSocketServiceProvider getWebSocketServiceProvider()
-    {
-        getServerContext().getWebSocketServiceProvider()
-    }
-
-    @Memoized
-    public IWebSocketService getWebSocketService(String name)
-    {
-        getWebSocketServiceProvider().getWebSocketService(name)
     }
 
     @Memoized
