@@ -25,10 +25,8 @@ import org.springframework.beans.factory.BeanNameAware;
 
 import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.io.IO;
-import com.themodernway.server.core.json.IJSONObjectSupplier;
-import com.themodernway.server.core.json.JSONObject;
 
-public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, BeanNameAware, Closeable, ICoreCommon, IJSONObjectSupplier, INamed
+public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, BeanNameAware, Closeable, ICoreCommon, INamed
 {
     @Override
     default public void close() throws IOException
@@ -52,12 +50,6 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
         {
             logger().error(format("null item close (%s).", getName()));
         }
-    }
-
-    @Override
-    default public JSONObject toJSONObject()
-    {
-        return new JSONObject();
     }
 
     public List<T> items();

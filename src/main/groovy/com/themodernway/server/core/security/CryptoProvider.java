@@ -69,7 +69,7 @@ public final class CryptoProvider implements ICryptoProvider
     }
 
     @Override
-    public boolean isPassValid(final String pass)
+    public final boolean isPassValid(final String pass)
     {
         return m_keygen.isPassValid(pass);
     }
@@ -99,31 +99,31 @@ public final class CryptoProvider implements ICryptoProvider
     }
 
     @Override
-    public String sha512(final String text, final String salt)
+    public final String sha512(final String text, final String salt)
     {
         return m_hasher.sha512(CommonOps.requireNonNull(text), salt);
     }
 
     @Override
-    public String sha512(final String text, final String salt, final int iter)
+    public final String sha512(final String text, final String salt, final int iter)
     {
         return m_hasher.sha512(CommonOps.requireNonNull(text), salt, iter);
     }
 
     @Override
-    public String sha512(final String text, final int iter)
+    public final String sha512(final String text, final int iter)
     {
         return m_hasher.sha512(CommonOps.requireNonNull(text), null, iter);
     }
 
     @Override
-    public String sha512(final String text)
+    public final String sha512(final String text)
     {
         return m_hasher.sha512(CommonOps.requireNonNull(text));
     }
 
     @Override
-    public void close() throws IOException
+    public final void close() throws IOException
     {
     }
 }

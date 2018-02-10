@@ -1,7 +1,7 @@
 The Modern Way Server Core
 ======
 
-The Modern Way Server Core is a package containing Spring Integration and Server Framework support.
+The Modern Way Server Core is a package containing Spring Server Framework support.
 
 https://github.com/themodernway/themodernway-server-core
 
@@ -14,13 +14,13 @@ Maven:
 <dependency>
   <groupId>com.themodernway</groupId>
   <artifactId>themodernway-server-core</artifactId>
-  <version>2.0.1-RELEASE</version>
+  <version>2.0.2-RELEASE</version>
 </dependency>
 ```
 Gradle:
 ```
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-server-core', version: '2.0.1-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-server-core', version: '2.0.2-RELEASE')
 }
 ```
 Javadoc URL:

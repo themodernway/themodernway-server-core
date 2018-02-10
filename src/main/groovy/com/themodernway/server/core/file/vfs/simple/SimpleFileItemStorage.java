@@ -220,19 +220,31 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
     protected static class SimpleFileItemAttributes implements IFileItemAttributes
     {
-        private boolean     m_exts;
+        protected static final int FLAG_H = 1;
 
-        private boolean     m_hide;
+        protected static final int FLAG_E = 2;
 
-        private boolean     m_read;
+        protected static final int FLAG_R = 4;
 
-        private boolean     m_writ;
+        protected static final int FLAG_W = 8;
 
-        private boolean     m_file;
+        protected static final int FLAG_F = 16;
 
-        private boolean     m_fold;
+        protected static final int FLAG_D = 32;
 
-        private IOException m_oops;
+        private int                m_bits = 0;
+
+        private IOException        m_oops;
+
+        protected static final boolean IS_SET(final int bits, final int flag)
+        {
+            return ((bits & flag) == flag);
+        }
+
+        protected static final int DO_SET(final int bits, final int flag)
+        {
+            return (bits | flag);
+        }
 
         public SimpleFileItemAttributes(final SimpleFileItem item)
         {
@@ -240,17 +252,29 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             {
                 final File file = item.getFile();
 
-                m_hide = item.isHidden();
-
-                if (m_exts = item.exists(file))
+                if (item.isHidden())
                 {
-                    m_read = item.isReadable(file);
+                    m_bits = DO_SET(m_bits, FLAG_H);
+                }
+                if (item.exists(file))
+                {
+                    m_bits = DO_SET(m_bits, FLAG_E);
 
-                    m_writ = item.isWritable(file, item.getFileItemStorage());
-
-                    if (false == (m_file = item.isFile(file)))
+                    if (item.isReadable(file))
                     {
-                        m_fold = item.isFolder(file);
+                        m_bits = DO_SET(m_bits, FLAG_R);
+                    }
+                    if (item.isWritable(file, item.getFileItemStorage()))
+                    {
+                        m_bits = DO_SET(m_bits, FLAG_W);
+                    }
+                    if (item.isFile(file))
+                    {
+                        m_bits = DO_SET(m_bits, FLAG_F);
+                    }
+                    else if (item.isFolder(file))
+                    {
+                        m_bits = DO_SET(m_bits, FLAG_D);
                     }
                 }
             }
@@ -263,37 +287,37 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public boolean exists()
         {
-            return m_exts;
+            return IS_SET(m_bits, FLAG_E);
         }
 
         @Override
         public boolean isHidden()
         {
-            return m_hide;
+            return IS_SET(m_bits, FLAG_H);
         }
 
         @Override
         public boolean isReadable()
         {
-            return m_read;
+            return IS_SET(m_bits, FLAG_R);
         }
 
         @Override
         public boolean isWritable()
         {
-            return m_writ;
+            return IS_SET(m_bits, FLAG_W);
         }
 
         @Override
         public boolean isFile()
         {
-            return m_file;
+            return IS_SET(m_bits, FLAG_F);
         }
 
         @Override
         public boolean isFolder()
         {
-            return m_fold;
+            return IS_SET(m_bits, FLAG_D);
         }
 
         public IOException getException()

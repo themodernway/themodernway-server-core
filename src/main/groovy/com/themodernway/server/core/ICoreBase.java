@@ -27,6 +27,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 import java.util.function.LongSupplier;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -123,6 +124,11 @@ public interface ICoreBase
         return CommonOps.toList(source);
     }
 
+    default public <T> List<T> toList(final Stream<T> source, final Predicate<? super T> predicate)
+    {
+        return CommonOps.toList(source, predicate);
+    }
+
     default public <T> List<T> toList(final Enumeration<? extends T> source)
     {
         return CommonOps.toList(source);
@@ -131,6 +137,11 @@ public interface ICoreBase
     default public <T> List<T> toList(final Collection<? extends T> source)
     {
         return CommonOps.toList(source);
+    }
+
+    default public <T> List<T> toList(final Collection<? extends T> source, final Predicate<? super T> predicate)
+    {
+        return CommonOps.CAST(CommonOps.toList(source.stream(), predicate));
     }
 
     default public <T> List<T> toList(final ICursor<? extends T> source)
@@ -194,6 +205,11 @@ public interface ICoreBase
         return CommonOps.toUnmodifiableList(source);
     }
 
+    default public <T> List<T> toUnmodifiableList(final Stream<T> source, final Predicate<? super T> predicate)
+    {
+        return CommonOps.toUnmodifiableList(source, predicate);
+    }
+
     @SuppressWarnings("unchecked")
     default public <T> List<T> toUnmodifiableList(final T... source)
     {
@@ -234,6 +250,11 @@ public interface ICoreBase
     default public <T> ArrayList<T> arrayList(final Stream<T> source)
     {
         return CommonOps.arrayList(source);
+    }
+
+    default public <T> ArrayList<T> arrayList(final Stream<T> source, final Predicate<? super T> predicate)
+    {
+        return CommonOps.arrayList(source, predicate);
     }
 
     default public <T> ArrayList<T> arrayList(final Collection<? extends T> source)
@@ -349,6 +370,11 @@ public interface ICoreBase
         return StringOps.toArray(collection);
     }
 
+    default public String[] toArray(final Collection<String> collection, final Predicate<String> predicate)
+    {
+        return StringOps.toArray(collection, predicate);
+    }
+
     default public String[] toArray(final String... collection)
     {
         return StringOps.toArray(collection);
@@ -359,9 +385,19 @@ public interface ICoreBase
         return StringOps.toArray(stream);
     }
 
+    default public String[] toArray(final Stream<String> stream, final Predicate<String> predicate)
+    {
+        return StringOps.toArray(stream, predicate);
+    }
+
     default public String[] toUniqueArray(final Collection<String> collection)
     {
         return StringOps.toUniqueArray(collection);
+    }
+
+    default public String[] toUniqueArray(final Collection<String> collection, final Predicate<String> predicate)
+    {
+        return StringOps.toUniqueArray(collection, predicate);
     }
 
     default public String[] toUniqueArray(final String... collection)
@@ -374,6 +410,11 @@ public interface ICoreBase
         return StringOps.toUnique(stream);
     }
 
+    default public Stream<String> toUnique(final Stream<String> stream, final Predicate<String> predicate)
+    {
+        return StringOps.toUnique(stream, predicate);
+    }
+
     default public List<String> toUnique(final String... collection)
     {
         return StringOps.toUnique(collection);
@@ -382,6 +423,11 @@ public interface ICoreBase
     default public List<String> toUnique(final Collection<String> collection)
     {
         return StringOps.toUnique(collection);
+    }
+
+    default public List<String> toUnique(final Collection<String> collection, final Predicate<String> predicate)
+    {
+        return StringOps.toUnique(collection, predicate);
     }
 
     default public List<String> toUniqueTokenStringList(final String strings)

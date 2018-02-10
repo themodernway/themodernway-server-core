@@ -27,9 +27,6 @@ import com.themodernway.server.core.json.JSONObject;
 
 public interface IServerSessionRepository extends SessionRepository<IServerSession>, IActivatable, Serializable, Closeable
 {
-    @Override
-    public boolean isActive();
-
     public String getDomain();
 
     public void touch(String id);

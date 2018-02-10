@@ -76,10 +76,6 @@
 		
 	<bean id="ServletContextCustomizerProvider" class="com.themodernway.server.core.support.spring.ServletContextCustomizerProvider" destroy-method="close"/>
 	
-	<context:component-scan base-package="com.themodernway.server.core.jmx"/>
-
-	<context:mbean-export default-domain="${jmx.default.domain}" registration="replaceExisting"/>
-	
 	<context:annotation-config/>
 	
 </beans>

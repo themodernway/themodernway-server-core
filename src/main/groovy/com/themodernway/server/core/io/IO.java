@@ -27,7 +27,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -91,11 +90,6 @@ public final class IO
                 IO.close(c);
             }
         }
-    }
-
-    public static final void close(final URLConnection c)
-    {
-        IOUtils.close(c);
     }
 
     public static final Runnable onClose(final Closeable c)
