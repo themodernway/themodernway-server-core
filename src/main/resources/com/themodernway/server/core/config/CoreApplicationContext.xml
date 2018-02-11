@@ -47,18 +47,9 @@
 
 	<bean id="BuildDescriptorProvider" class="com.themodernway.server.core.support.spring.BuildDescriptorProvider" destroy-method="close"/>
 
-	<bean id="JMXAgent" class="com.themodernway.server.core.jmx.JMXAgent" destroy-method="close">
-		<constructor-arg value="${jmx.init}"/>
-		<constructor-arg value="${jmx.port}"/>
-		<constructor-arg value="${jmx.host}"/>
-		<constructor-arg value="${jmx.pass}"/>
-		<constructor-arg value="${jmx.role}"/>
-	</bean>
-
 	<bean id="CryptoProvider" class="com.themodernway.server.core.security.CryptoProvider" destroy-method="close">
 		<constructor-arg value="${crypto.provider.pass}"/>
 		<constructor-arg value="${crypto.provider.salt}"/>
-		<constructor-arg value="${crypto.provider.signing.pass}"/>
 		<constructor-arg value="${crypto.provider.bcrypt.iters}"/>
 	</bean>
 	

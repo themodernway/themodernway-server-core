@@ -32,20 +32,10 @@ public final class CryptoProvider implements ICryptoProvider
 
     public CryptoProvider(final String pass, final String salt)
     {
-        this(pass, salt, pass, DEFAULT_STRENGTH);
+        this(pass, salt, DEFAULT_STRENGTH);
     }
 
     public CryptoProvider(final String pass, final String salt, final int strength)
-    {
-        this(pass, salt, pass, strength);
-    }
-
-    public CryptoProvider(final String pass, final String salt, final String sign)
-    {
-        this(pass, salt, sign, DEFAULT_STRENGTH);
-    }
-
-    public CryptoProvider(final String pass, final String salt, final String sign, final int strength)
     {
         m_hasher = new SimpleSHA512HashProvider();
 
