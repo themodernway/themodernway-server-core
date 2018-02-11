@@ -250,7 +250,6 @@ dependencies {
     compile(group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.25')
     compile(group: 'cglib', name: 'cglib-nodep', version: '3.2.6')
     compile(group: 'org.fusesource.jansi', name: 'jansi', version: '1.17')
-    compile(group: 'joda-time', name: 'joda-time', version: '2.9.9')
     compile(group: 'commons-io', name: 'commons-io', version: '2.6')
     compile(group: 'commons-net', name: 'commons-net', version: '3.6')
     compile(group: 'org.apache.commons', name: 'commons-lang3', version: '3.7')
@@ -265,9 +264,12 @@ dependencies {
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.4')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.4')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.4')
+    compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.9.4')
+    compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.4')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.4')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.4')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.9.4')
+    compile(group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.4')
     compile(group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }

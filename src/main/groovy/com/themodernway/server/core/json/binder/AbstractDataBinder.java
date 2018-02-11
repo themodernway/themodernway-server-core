@@ -32,6 +32,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.io.NoCloseProxyInputStream;
@@ -60,6 +63,8 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     protected AbstractDataBinder(final M mapper)
     {
         m_mapper = mapper;
+
+        m_mapper.registerModule(new ParameterNamesModule()).registerModule(new Jdk8Module()).registerModule(new JavaTimeModule());
     }
 
     @Override
