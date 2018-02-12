@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.json.binder;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.themodernway.server.core.json.binder.YAMLBinder.CoreYAMLMapper;
 
@@ -32,17 +33,20 @@ public class YAMLBinder extends AbstractDataBinder<CoreYAMLMapper>
         return BinderType.YAML;
     }
 
-    public static class CoreYAMLMapper extends YAMLMapper
+    public static class CoreYAMLMapper extends YAMLMapper implements ICoreObjectMapper
     {
         private static final long serialVersionUID = 1L;
 
         public CoreYAMLMapper()
         {
+            withExtendedModules(this).enable(JsonParser.Feature.ALLOW_YAML_COMMENTS);
         }
 
         public CoreYAMLMapper(final CoreYAMLMapper parent)
         {
             super(parent);
+
+            withExtendedModules(this).enable(JsonParser.Feature.ALLOW_YAML_COMMENTS);
         }
 
         @Override

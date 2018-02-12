@@ -16,12 +16,14 @@
 
 package com.themodernway.server.core.json.binder;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -32,16 +34,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.io.NoCloseProxyInputStream;
 import com.themodernway.server.core.io.NoCloseProxyOutputStream;
 import com.themodernway.server.core.io.NoCloseProxyReader;
 import com.themodernway.server.core.io.NoCloseProxyWriter;
-import com.themodernway.server.core.json.IJSONEnabled;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
@@ -63,8 +62,6 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     protected AbstractDataBinder(final M mapper)
     {
         m_mapper = mapper;
-
-        m_mapper.registerModule(new ParameterNamesModule()).registerModule(new Jdk8Module()).registerModule(new JavaTimeModule());
     }
 
     @Override
@@ -198,15 +195,65 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     }
 
     @Override
-    public <T> T bind(final File file, final Class<T> claz) throws ParserException
+    public <T> T bind(final Path path, final Class<T> claz) throws ParserException
     {
+        BufferedReader reader = null;
+
         try
         {
-            return m_mapper.readValue(file, claz);
+            reader = IO.toBufferedReader(path);
+
+            return m_mapper.readValue(reader, claz);
         }
         catch (final Exception e)
         {
             throw new ParserException(e);
+        }
+        finally
+        {
+            IO.close(reader);
+        }
+    }
+
+    @Override
+    public <T> T bind(final File file, final Class<T> claz) throws ParserException
+    {
+        BufferedReader reader = null;
+
+        try
+        {
+            reader = IO.toBufferedReader(file);
+
+            return m_mapper.readValue(reader, claz);
+        }
+        catch (final Exception e)
+        {
+            throw new ParserException(e);
+        }
+        finally
+        {
+            IO.close(reader);
+        }
+    }
+
+    @Override
+    public <T> T bind(final IFileItem file, final Class<T> claz) throws ParserException
+    {
+        BufferedReader reader = null;
+
+        try
+        {
+            reader = file.getBufferedReader();
+
+            return m_mapper.readValue(reader, claz);
+        }
+        catch (final Exception e)
+        {
+            throw new ParserException(e);
+        }
+        finally
+        {
+            IO.close(reader);
         }
     }
 
@@ -271,22 +318,16 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     }
 
     @Override
-    public <T> T bind(final String text, final Class<T> claz) throws ParserException
+    public <T> T bind(final CharSequence text, final Class<T> claz) throws ParserException
     {
         try
         {
-            return m_mapper.readValue(text, claz);
+            return m_mapper.readValue(text.toString(), claz);
         }
         catch (final Exception e)
         {
             throw new ParserException(e);
         }
-    }
-
-    @Override
-    public <T> T bind(final IJSONEnabled json, final Class<T> claz) throws ParserException
-    {
-        return bind(json.toJSONString(isStrict()), claz);
     }
 
     @Override
@@ -303,7 +344,40 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     }
 
     @Override
+    public <T> T convert(final Object object, final Class<T> claz) throws ParserException
+    {
+        if (claz.isAssignableFrom(object.getClass()))
+        {
+            return claz.cast(object);
+        }
+        if (String.class.equals(claz))
+        {
+            return CommonOps.CAST(toString(object));
+        }
+        try
+        {
+            return getMapperForJSON().convertValue(object, claz);
+        }
+        catch (final IllegalArgumentException e)
+        {
+            throw new ParserException(e);
+        }
+    }
+
+    @Override
+    public JSONObject bindJSON(final Path path) throws ParserException
+    {
+        return MAKE(bind(path, LinkedHashMap.class));
+    }
+
+    @Override
     public JSONObject bindJSON(final File file) throws ParserException
+    {
+        return MAKE(bind(file, LinkedHashMap.class));
+    }
+
+    @Override
+    public JSONObject bindJSON(final IFileItem file) throws ParserException
     {
         return MAKE(bind(file, LinkedHashMap.class));
     }
@@ -333,7 +407,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     }
 
     @Override
-    public JSONObject bindJSON(final String text) throws ParserException
+    public JSONObject bindJSON(final CharSequence text) throws ParserException
     {
         return MAKE(bind(text, LinkedHashMap.class));
     }

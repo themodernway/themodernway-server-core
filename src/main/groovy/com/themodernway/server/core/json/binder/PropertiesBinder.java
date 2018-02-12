@@ -48,17 +48,20 @@ public class PropertiesBinder extends AbstractDataBinder<CorePropertiesMapper>
         return BinderType.PROPERTIES;
     }
 
-    public static class CorePropertiesMapper extends JavaPropsMapper
+    public static class CorePropertiesMapper extends JavaPropsMapper implements ICoreObjectMapper
     {
         private static final long serialVersionUID = 1L;
 
         public CorePropertiesMapper()
         {
+            withExtendedModules(this);
         }
 
         public CorePropertiesMapper(final CorePropertiesMapper parent)
         {
             super(parent);
+
+            withExtendedModules(this);
         }
 
         @Override

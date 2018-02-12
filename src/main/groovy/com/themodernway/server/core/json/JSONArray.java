@@ -34,6 +34,7 @@ import com.themodernway.common.api.json.JSONArrayDefinition;
 import com.themodernway.common.api.json.JSONType;
 import com.themodernway.server.core.io.OutputStreamProxyWriter;
 import com.themodernway.server.core.json.binder.BinderType;
+import com.themodernway.server.core.json.binder.IBinder;
 
 @JacksonXmlRootElement(localName = "results")
 public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
@@ -389,26 +390,28 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         return JSONUtils.asDate(get(index));
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T asType(final Class<T> type)
     {
-        CommonOps.requireNonNull(type);
-
-        if (String.class.equals(type))
-        {
-            return (T) toJSONString();
-        }
         if (type.isAssignableFrom(getClass()))
         {
-            return (T) this;
+            return type.cast(this);
         }
         try
         {
-            final T valu = BinderType.JSON.getBinder().bind(this, type);
+            final IBinder bind = BinderType.JSON.getBinder();
 
-            if (null != valu)
+            if (String.class.equals(type))
             {
-                return valu;
+                return CommonOps.CAST(bind.toString(this));
+            }
+            if (bind.canSerializeType(type))
+            {
+                final T valu = bind.convert(this, type);
+
+                if (valu != null)
+                {
+                    return valu;
+                }
             }
         }
         catch (final ParserException e)

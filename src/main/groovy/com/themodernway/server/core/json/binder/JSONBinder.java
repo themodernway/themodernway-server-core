@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.Writer;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +37,39 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
     public JSONBinder()
     {
         super(new CoreObjectMapper());
+    }
+
+    @Override
+    public <T> T convert(final Object object, final Class<T> claz) throws ParserException
+    {
+        if (claz.isAssignableFrom(object.getClass()))
+        {
+            return claz.cast(object);
+        }
+        if (String.class.equals(claz))
+        {
+            return CommonOps.CAST(toJSONString(object));
+        }
+        try
+        {
+            return getMapper().convertValue(object, claz);
+        }
+        catch (final IllegalArgumentException e)
+        {
+            throw new ParserException(e);
+        }
+    }
+
+    @Override
+    public String toJSONString(final Object object) throws ParserException
+    {
+        CommonOps.requireNonNull(object);
+
+        if (isStrict())
+        {
+            return toJSONObject(object).toJSONString(isStrict());
+        }
+        return toString(object);
     }
 
     @Override
@@ -118,7 +153,7 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
         return BinderType.JSON;
     }
 
-    public static class CoreObjectMapper extends ObjectMapper
+    public static class CoreObjectMapper extends ObjectMapper implements ICoreObjectMapper
     {
         private static final long                serialVersionUID = 1L;
 
@@ -136,14 +171,14 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 
         public CoreObjectMapper()
         {
-            setDefaultPrettyPrinter(PRETTY);
+            withExtendedModules(this).enable(JsonParser.Feature.ALLOW_COMMENTS).enable(JsonGenerator.Feature.ESCAPE_NON_ASCII).setDefaultPrettyPrinter(PRETTY);
         }
 
         public CoreObjectMapper(final CoreObjectMapper parent)
         {
             super(parent);
 
-            setDefaultPrettyPrinter(PRETTY);
+            withExtendedModules(this).enable(JsonParser.Feature.ALLOW_COMMENTS).enable(JsonGenerator.Feature.ESCAPE_NON_ASCII).setDefaultPrettyPrinter(PRETTY);
         }
 
         @Override

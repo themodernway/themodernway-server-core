@@ -33,7 +33,7 @@ public class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
         return BinderType.XML;
     }
 
-    public static class CoreXMLMapper extends XmlMapper
+    public static class CoreXMLMapper extends XmlMapper implements ICoreObjectMapper
     {
         private static final long                   serialVersionUID = 1L;
 
@@ -41,14 +41,14 @@ public class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
 
         public CoreXMLMapper()
         {
-            setDefaultPrettyPrinter(PRETTY);
+            withExtendedModules(this).setDefaultPrettyPrinter(PRETTY);
         }
 
         public CoreXMLMapper(final CoreXMLMapper parent)
         {
             super(parent);
 
-            setDefaultPrettyPrinter(PRETTY);
+            withExtendedModules(this).setDefaultPrettyPrinter(PRETTY);
         }
 
         @Override
