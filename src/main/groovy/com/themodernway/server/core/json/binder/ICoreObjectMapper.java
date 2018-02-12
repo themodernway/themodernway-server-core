@@ -38,16 +38,20 @@ public interface ICoreObjectMapper
         return Modules.withExtendedModules(mapper, list);
     }
 
-    public static class Modules
+    public static final class Modules
     {
-        public static List<Supplier<Module>> EXTENDED_MODULES_LIST = CommonOps.toList(ParameterNamesModule::new, Jdk8Module::new, JavaTimeModule::new);
+        public static final List<Supplier<Module>> EXTENDED_MODULES_LIST = CommonOps.toList(ParameterNamesModule::new, Jdk8Module::new, JavaTimeModule::new);
 
-        public static <M extends ObjectMapper> M withExtendedModules(final M mapper)
+        private Modules()
+        {
+        }
+
+        public static final <M extends ObjectMapper> M withExtendedModules(final M mapper)
         {
             return withExtendedModules(mapper, EXTENDED_MODULES_LIST);
         }
 
-        public static <M extends ObjectMapper> M withExtendedModules(final M mapper, final List<Supplier<Module>> list)
+        public static final <M extends ObjectMapper> M withExtendedModules(final M mapper, final List<Supplier<Module>> list)
         {
             list.forEach((final Supplier<Module> fact) -> mapper.registerModule(fact.get()));
 
