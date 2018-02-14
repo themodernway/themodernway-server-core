@@ -53,11 +53,6 @@ public class ContentGetServlet extends AbstractContentServlet
         content(request, response, true);
     }
 
-    public boolean isRedirectOn()
-    {
-        return true;
-    }
-
     public boolean isNeverCache()
     {
         return m_nocache;
@@ -72,26 +67,7 @@ public class ContentGetServlet extends AbstractContentServlet
     {
         try
         {
-            String path = toTrimOrElse(request.getPathInfo(), FileAndPathUtils.SINGLE_SLASH);
-
-            if (isRedirectOn())
-            {
-                final String redi = toTrimOrNull(getRedirect(request, response, path));
-
-                if (null != redi)
-                {
-                    response.sendRedirect(redi);
-
-                    return;
-                }
-                if (path.endsWith(FileAndPathUtils.SINGLE_SLASH))
-                {
-                    response.sendRedirect(FileAndPathUtils.POINT_SLASHY + getHomePage());
-
-                    return;
-                }
-            }
-            path = getPathNormalized(path);
+            final String path = getPathNormalized(toTrimOrElse(request.getPathInfo(), FileAndPathUtils.SINGLE_SLASH));
 
             if (null == path)
             {

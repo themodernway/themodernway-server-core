@@ -17,6 +17,7 @@
 package com.themodernway.server.core.security;
 
 import java.nio.ByteBuffer;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.zip.CRC32;
 
@@ -52,7 +53,25 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
     @Override
     public String getRandomSalt()
     {
-        return SimpleHexEncoder.get().encode(Tools.randomBytes(32));
+        MessageDigest md;
+
+        try
+        {
+            md = MessageDigest.getInstance("SHA-512");
+        }
+        catch (final Exception e)
+        {
+            throw new IllegalArgumentException(e);
+        }
+        byte[] bytes = Tools.randomBytes(64);
+
+        for (int i = 0; i < 20000; i++)
+        {
+            bytes = md.digest(bytes);
+
+            md.reset();
+        }
+        return SimpleHexEncoder.get().encode(bytes);
     }
 
     @Override

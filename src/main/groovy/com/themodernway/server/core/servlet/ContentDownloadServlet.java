@@ -34,12 +34,6 @@ public class ContentDownloadServlet extends ContentGetServlet
     }
 
     @Override
-    public boolean isRedirectOn()
-    {
-        return false;
-    }
-
-    @Override
     protected boolean head(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
     {
         doNeverCache(request, response);
