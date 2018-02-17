@@ -69,4 +69,52 @@ public class BinderJava8TestsSpecification extends ServerCoreSpecification imple
         expect:
         text == valu
     }
+
+    def "test binder 3"()
+    {
+        setup:
+        def bind = BinderType.JSON.getBinder().setStrict()
+        def text = bind.toString(json(name: 'Dean', value: new BigInteger(3)))
+
+        echo text
+
+        expect:
+        text == text
+    }
+
+    def "test binder 4"()
+    {
+        setup:
+        def bind = BinderType.JSON.getBinder().setStrict()
+        def text = bind.toString(json(name: 'Dean', value: BigInteger.valueOf(Long.MAX_VALUE)))
+
+        echo text
+
+        expect:
+        text == text
+    }
+
+    def "test binder 5"()
+    {
+        setup:
+        def bind = BinderType.JSON.getBinder().setStrict()
+        def text = bind.toString(json(name: 'Dean', value: 5L))
+
+        echo text
+
+        expect:
+        text == text
+    }
+
+    def "test binder 6"()
+    {
+        setup:
+        def bind = BinderType.JSON.getBinder().setStrict()
+        def text = bind.toString(json(name: 'Dean', value: Long.MAX_VALUE))
+
+        echo text
+
+        expect:
+        text == text
+    }
 }

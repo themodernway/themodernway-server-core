@@ -18,22 +18,16 @@ package com.themodernway.server.core.json;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.io.Writer;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.json.JSONObjectDefinition;
 import com.themodernway.common.api.json.JSONType;
-import com.themodernway.server.core.io.OutputStreamProxyWriter;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.json.validation.IJSONValidator;
@@ -42,9 +36,7 @@ import com.themodernway.server.core.json.validation.IValidationContext;
 @JacksonXmlRootElement(localName = "result")
 public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
 {
-    private static final long   serialVersionUID = 1L;
-
-    private static final char[] FLUSH_KEY_ARRAY  = { '"', ':' };
+    private static final long serialVersionUID = 1L;
 
     public JSONObject()
     {
@@ -65,96 +57,6 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         put(CommonOps.requireNonNull(name), value);
     }
 
-    public String dumpClassNamesToString()
-    {
-        return JSONUtils.dumpClassNamesToString(this);
-    }
-
-    public void dumpClassNames()
-    {
-        dumpClassNames(System.out);
-    }
-
-    public void dumpClassNames(final PrintStream out)
-    {
-        JSONUtils.dumpClassNames(this, out);
-    }
-
-    public JSONObject asClassNames()
-    {
-        final JSONObject json = new JSONObject();
-
-        for (final String name : keys())
-        {
-            final Object object = get(name);
-
-            json.put(name, (null == object) ? StringOps.NULL_AS_STRING : object.getClass().getName());
-        }
-        return json;
-    }
-
-    static final void writeJSONString(final Map<?, ?> map, final Writer out, final IJSONContext context, final boolean strict) throws IOException
-    {
-        if (null == map)
-        {
-            out.write(StringOps.NULL_AS_STRING);
-
-            return;
-        }
-        synchronized (map)
-        {
-            // Caution - DO NOT make the mistake that this would be faster iterating through the keys - keys is twice as slow!  DSJ
-
-            boolean first = true;
-
-            @SuppressWarnings("unchecked")
-            final Iterator<Entry<String, Object>> iter = ((Map<String, Object>) map).entrySet().iterator();
-
-            out.write('{');
-
-            while (iter.hasNext())
-            {
-                final Entry<String, Object> entry = iter.next();
-
-                final String name = entry.getKey();
-
-                final Object valu = entry.getValue();
-
-                if (first)
-                {
-                    first = false;
-                }
-                else
-                {
-                    out.write(',');
-                }
-                out.write('\"');
-
-                JSONUtils.escape(name, out);
-
-                out.write(FLUSH_KEY_ARRAY, 0, 2);
-
-                if (null == valu)
-                {
-                    out.write(StringOps.NULL_AS_STRING);
-
-                    continue;
-                }
-                JSONUtils.writeJSONString(valu, out, context, strict);
-            }
-            out.write('}');
-        }
-    }
-
-    static final void writeJSONString(final Map<?, ?> map, final OutputStream out, final IJSONContext context, final boolean strict) throws IOException
-    {
-        final OutputStreamProxyWriter writer = new OutputStreamProxyWriter(out);
-
-        writeJSONString(map, writer, context, strict);
-
-        writer.flush();
-    }
-
     public IValidationContext validate(final IJSONValidator validator)
     {
         return validator.validate(this);
@@ -171,48 +73,18 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         if (false == strict)
         {
-            writeJSONString(out);
+            JSONUtils.writeObjectAsJSON(out, this);
         }
         else
         {
-            writeJSONString(this, out, null, strict);
-        }
-    }
-
-    @Override
-    public void writeJSONString(final Writer out, final IJSONContext context) throws IOException
-    {
-        if (null == context)
-        {
-            writeJSONString(out);
-        }
-        else
-        {
-            writeJSONString(this, out, context, false);
-        }
-    }
-
-    @Override
-    public void writeJSONString(final Writer out, final IJSONContext context, final boolean strict) throws IOException
-    {
-        if ((false == strict) && (null == context))
-        {
-            writeJSONString(out);
-        }
-        else
-        {
-            writeJSONString(this, out, context, strict);
+            JSONUtils.writeObjectAsJSON(out, this, true);
         }
     }
 
     @Override
     public void writeJSONString(final OutputStream out) throws IOException
     {
-        final OutputStreamWriter writer = new OutputStreamWriter(out, StringOps.CHARSET_UTF_8);
-
-        writeJSONString(writer);
-
-        writer.flush();
+        JSONUtils.writeObjectAsJSON(out, this);
     }
 
     @Override
@@ -220,37 +92,11 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     {
         if (false == strict)
         {
-            writeJSONString(out);
+            JSONUtils.writeObjectAsJSON(out, this);
         }
         else
         {
-            writeJSONString(this, out, null, strict);
-        }
-    }
-
-    @Override
-    public void writeJSONString(final OutputStream out, final IJSONContext context) throws IOException
-    {
-        if (null == context)
-        {
-            writeJSONString(out);
-        }
-        else
-        {
-            writeJSONString(this, out, context, false);
-        }
-    }
-
-    @Override
-    public void writeJSONString(final OutputStream out, final IJSONContext context, final boolean strict) throws IOException
-    {
-        if ((false == strict) && (null == context))
-        {
-            writeJSONString(out);
-        }
-        else
-        {
-            writeJSONString(this, out, context, strict);
+            JSONUtils.writeObjectAsJSON(out, this, true);
         }
     }
 

@@ -54,14 +54,12 @@ public class PropertiesBinder extends AbstractDataBinder<CorePropertiesMapper>
 
         public CorePropertiesMapper()
         {
-            withExtendedModules(this);
+            withDefaults(this);
         }
 
-        public CorePropertiesMapper(final CorePropertiesMapper parent)
+        protected CorePropertiesMapper(final CorePropertiesMapper parent)
         {
             super(parent);
-
-            withExtendedModules(this);
         }
 
         @Override

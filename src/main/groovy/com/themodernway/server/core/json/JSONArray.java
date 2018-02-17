@@ -18,21 +18,15 @@ package com.themodernway.server.core.json;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.json.JSONArrayDefinition;
 import com.themodernway.common.api.json.JSONType;
-import com.themodernway.server.core.io.OutputStreamProxyWriter;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
 
@@ -69,125 +63,6 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         return this;
     }
 
-    public String dumpClassNamesToString()
-    {
-        return JSONUtils.dumpClassNamesToString(this);
-    }
-
-    public void dumpClassNames()
-    {
-        dumpClassNames(System.out);
-    }
-
-    public void dumpClassNames(final PrintStream out)
-    {
-        JSONUtils.dumpClassNames(this, out);
-    }
-
-    public JSONArray asClassNames()
-    {
-        final int size = size();
-
-        final JSONArray jarr = new JSONArray(size);
-
-        for (int i = 0; i < size; i++)
-        {
-            final Object object = get(i);
-
-            jarr.add((null == object) ? StringOps.NULL_AS_STRING : object.getClass().getName());
-        }
-        return jarr;
-    }
-
-    static final void writeJSONString(final List<?> list, final Writer out, final IJSONContext context, final boolean strict) throws IOException
-    {
-        if (null == list)
-        {
-            out.write(StringOps.NULL_AS_STRING);
-
-            return;
-        }
-        synchronized (list)
-        {
-            boolean first = true;
-
-            final int size = list.size();
-
-            out.write('[');
-
-            for (int i = 0; i < size; i++)
-            {
-                final Object valu = list.get(i);
-
-                if (first)
-                {
-                    first = false;
-                }
-                else
-                {
-                    out.write(',');
-                }
-                if (null == valu)
-                {
-                    out.write(StringOps.NULL_AS_STRING);
-
-                    continue;
-                }
-                JSONUtils.writeJSONString(valu, out, context, strict);
-            }
-            out.write(']');
-        }
-    }
-
-    static final void writeJSONString(final Collection<?> list, final Writer out, final IJSONContext context, final boolean strict) throws IOException
-    {
-        if (null == list)
-        {
-            out.write(StringOps.NULL_AS_STRING);
-
-            return;
-        }
-        synchronized (list)
-        {
-            boolean first = true;
-
-            final Iterator<?> iter = list.iterator();
-
-            out.write('[');
-
-            while (iter.hasNext())
-            {
-                final Object valu = iter.next();
-
-                if (first)
-                {
-                    first = false;
-                }
-                else
-                {
-                    out.write(',');
-                }
-                if (null == valu)
-                {
-                    out.write(StringOps.NULL_AS_STRING);
-
-                    continue;
-                }
-                JSONUtils.writeJSONString(valu, out, context, strict);
-            }
-            out.write(']');
-        }
-    }
-
-    static final void writeJSONString(final List<?> list, final OutputStream out, final IJSONContext context, final boolean strict) throws IOException
-    {
-        final OutputStreamProxyWriter writer = new OutputStreamProxyWriter(out);
-
-        writeJSONString(list, writer, context, strict);
-
-        writer.flush();
-    }
-
     @Override
     public void writeJSONString(final Writer out) throws IOException
     {
@@ -199,48 +74,18 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     {
         if (false == strict)
         {
-            writeJSONString(out);
+            JSONUtils.writeObjectAsJSON(out, this);
         }
         else
         {
-            writeJSONString(this, out, null, strict);
-        }
-    }
-
-    @Override
-    public void writeJSONString(final Writer out, final IJSONContext context) throws IOException
-    {
-        if (null == context)
-        {
-            writeJSONString(out);
-        }
-        else
-        {
-            writeJSONString(this, out, context, false);
-        }
-    }
-
-    @Override
-    public void writeJSONString(final Writer out, final IJSONContext context, final boolean strict) throws IOException
-    {
-        if ((false == strict) && (null == context))
-        {
-            writeJSONString(out);
-        }
-        else
-        {
-            writeJSONString(this, out, context, strict);
+            JSONUtils.writeObjectAsJSON(out, this, true);
         }
     }
 
     @Override
     public void writeJSONString(final OutputStream out) throws IOException
     {
-        final OutputStreamWriter writer = new OutputStreamWriter(out, StringOps.CHARSET_UTF_8);
-
-        writeJSONString(writer);
-
-        writer.flush();
+        JSONUtils.writeObjectAsJSON(out, this);
     }
 
     @Override
@@ -248,37 +93,11 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     {
         if (false == strict)
         {
-            writeJSONString(out);
+            JSONUtils.writeObjectAsJSON(out, this);
         }
         else
         {
-            writeJSONString(this, out, null, strict);
-        }
-    }
-
-    @Override
-    public void writeJSONString(final OutputStream out, final IJSONContext context) throws IOException
-    {
-        if (null == context)
-        {
-            writeJSONString(out);
-        }
-        else
-        {
-            writeJSONString(this, out, context, false);
-        }
-    }
-
-    @Override
-    public void writeJSONString(final OutputStream out, final IJSONContext context, final boolean strict) throws IOException
-    {
-        if ((false == strict) && (null == context))
-        {
-            writeJSONString(out);
-        }
-        else
-        {
-            writeJSONString(this, out, context, strict);
+            JSONUtils.writeObjectAsJSON(out, this, true);
         }
     }
 

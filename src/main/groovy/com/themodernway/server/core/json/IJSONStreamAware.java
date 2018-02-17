@@ -26,15 +26,7 @@ public interface IJSONStreamAware
 
     public void writeJSONString(Writer out, boolean strict) throws IOException;
 
-    public void writeJSONString(Writer out, IJSONContext context) throws IOException;
-
-    public void writeJSONString(Writer out, IJSONContext context, boolean strict) throws IOException;
-
     public void writeJSONString(OutputStream out) throws IOException;
 
     public void writeJSONString(OutputStream out, boolean strict) throws IOException;
-
-    public void writeJSONString(OutputStream out, IJSONContext context) throws IOException;
-
-    public void writeJSONString(OutputStream out, IJSONContext context, boolean strict) throws IOException;
 }

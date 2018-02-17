@@ -105,7 +105,7 @@ public interface IBinder
 
     public boolean isEnabled(DeserializationFeature feature);
 
-    public boolean isStrict();
+    public void send(Path path, Object object) throws ParserException;
 
     public void send(File file, Object object) throws ParserException;
 
@@ -113,7 +113,7 @@ public interface IBinder
 
     public void send(Writer writer, Object object) throws ParserException;
 
-    public IBinder setStrict(boolean strict);
+    public IBinder setStrict();
 
     public String toString(Object object) throws ParserException;
 

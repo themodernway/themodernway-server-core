@@ -17,7 +17,6 @@
 package com.themodernway.server.core.json.binder;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,32 +27,44 @@ import com.themodernway.common.api.java.util.CommonOps;
 
 public interface ICoreObjectMapper
 {
+    default public <M extends ObjectMapper> M withDefaults(final M mapper)
+    {
+        return withExtendedModules(mapper);
+    }
+
     default public <M extends ObjectMapper> M withExtendedModules(final M mapper)
     {
         return Modules.withExtendedModules(mapper);
     }
 
-    default public <M extends ObjectMapper> M withExtendedModules(final M mapper, final List<Supplier<Module>> list)
+    default public <M extends ObjectMapper> M withExtendedModules(final M mapper, final List<Module> list)
     {
-        return Modules.withExtendedModules(mapper, list);
+        return Modules.withModules(mapper, list);
     }
 
     public static final class Modules
     {
-        public static final List<Supplier<Module>> EXTENDED_MODULES_LIST = CommonOps.toList(ParameterNamesModule::new, Jdk8Module::new, JavaTimeModule::new);
+        private static final List<Module> STRICT_BINDER_MODULES = CommonOps.toList(new CoreStrictBinderModule());
+
+        private static final List<Module> EXTENDED_MODULES_LIST = CommonOps.toList(new ParameterNamesModule(), new Jdk8Module(), new JavaTimeModule());
 
         private Modules()
         {
         }
 
-        public static final <M extends ObjectMapper> M withExtendedModules(final M mapper)
+        public static final <M extends ObjectMapper> M withStrict(final M mapper)
         {
-            return withExtendedModules(mapper, EXTENDED_MODULES_LIST);
+            return withModules(mapper, STRICT_BINDER_MODULES);
         }
 
-        public static final <M extends ObjectMapper> M withExtendedModules(final M mapper, final List<Supplier<Module>> list)
+        public static final <M extends ObjectMapper> M withExtendedModules(final M mapper)
         {
-            list.forEach((final Supplier<Module> fact) -> mapper.registerModule(fact.get()));
+            return withModules(mapper, EXTENDED_MODULES_LIST);
+        }
+
+        public static final <M extends ObjectMapper> M withModules(final M mapper, final List<Module> list)
+        {
+            mapper.registerModules(list);
 
             return mapper;
         }

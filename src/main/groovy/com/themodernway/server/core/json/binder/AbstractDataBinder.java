@@ -17,6 +17,7 @@
 package com.themodernway.server.core.json.binder;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,9 +51,7 @@ import com.themodernway.server.core.json.binder.YAMLBinder.CoreYAMLMapper;
 
 public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBinder
 {
-    private final M m_mapper;
-
-    private boolean m_strict = false;
+    private M m_mapper;
 
     protected final static JSONObject MAKE(final Map<?, ?> make)
     {
@@ -64,24 +63,21 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         m_mapper = mapper;
     }
 
-    @Override
-    public IBinder setStrict(final boolean strict)
+    protected M copy()
     {
-        m_strict = strict;
-
-        return this;
+        return m_mapper = CommonOps.CAST(m_mapper.copy());
     }
 
     @Override
-    public boolean isStrict()
+    public IBinder setStrict()
     {
-        return m_strict;
+        return this;
     }
 
     @Override
     public IBinder configure(final MapperFeature feature, final boolean state)
     {
-        m_mapper.configure(feature, state);
+        copy().configure(feature, state);
 
         return this;
     }
@@ -89,7 +85,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder configure(final SerializationFeature feature, final boolean state)
     {
-        m_mapper.configure(feature, state);
+        copy().configure(feature, state);
 
         return this;
     }
@@ -97,7 +93,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder configure(final DeserializationFeature feature, final boolean state)
     {
-        m_mapper.configure(feature, state);
+        copy().configure(feature, state);
 
         return this;
     }
@@ -105,7 +101,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder enable(final MapperFeature... features)
     {
-        m_mapper.enable(features);
+        copy().enable(features);
 
         return this;
     }
@@ -113,9 +109,11 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder enable(final SerializationFeature... features)
     {
+        copy();
+
         for (final SerializationFeature feature : features)
         {
-            configure(feature, true);
+            m_mapper.enable(feature);
         }
         return this;
     }
@@ -123,9 +121,11 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder enable(final DeserializationFeature... features)
     {
+        copy();
+
         for (final DeserializationFeature feature : features)
         {
-            configure(feature, true);
+            m_mapper.enable(feature);
         }
         return this;
     }
@@ -133,7 +133,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder disable(final MapperFeature... features)
     {
-        m_mapper.disable(features);
+        copy().disable(features);
 
         return this;
     }
@@ -141,9 +141,11 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder disable(final SerializationFeature... features)
     {
+        copy();
+
         for (final SerializationFeature feature : features)
         {
-            configure(feature, false);
+            m_mapper.disable(feature);
         }
         return this;
     }
@@ -151,9 +153,11 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder disable(final DeserializationFeature... features)
     {
+        copy();
+
         for (final DeserializationFeature feature : features)
         {
-            configure(feature, false);
+            m_mapper.disable(feature);
         }
         return this;
     }
@@ -167,7 +171,11 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder pretty(final boolean enabled)
     {
-        return configure(SerializationFeature.INDENT_OUTPUT, enabled);
+        if (enabled != isPretty())
+        {
+            return configure(SerializationFeature.INDENT_OUTPUT, enabled);
+        }
+        return this;
     }
 
     @Override
@@ -419,6 +427,31 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     }
 
     @Override
+    public void send(final Path path, final Object object) throws ParserException
+    {
+        CommonOps.requireNonNull(object);
+
+        BufferedWriter buff = null;
+
+        try
+        {
+            buff = IO.toBufferedWriter(path);
+
+            m_mapper.writeValue(buff, object);
+
+            buff.flush();
+        }
+        catch (final Exception e)
+        {
+            throw new ParserException(e);
+        }
+        finally
+        {
+            IO.close(buff);
+        }
+    }
+
+    @Override
     public void send(final File file, final Object object) throws ParserException
     {
         CommonOps.requireNonNull(object);
@@ -511,13 +544,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public String toJSONString(final Object object) throws ParserException
     {
-        final JSONObject json = toJSONObject(object);
-
-        if (isStrict())
-        {
-            return json.toJSONString(isStrict());
-        }
-        return toString(json);
+        return toString(toJSONObject(object));
     }
 
     @Override

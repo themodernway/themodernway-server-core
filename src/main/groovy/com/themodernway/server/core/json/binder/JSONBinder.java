@@ -16,9 +16,7 @@
 
 package com.themodernway.server.core.json.binder;
 
-import java.io.File;
-import java.io.OutputStream;
-import java.io.Writer;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -27,16 +25,27 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.io.IO;
-import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
+import com.themodernway.server.core.json.binder.ICoreObjectMapper.Modules;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
 
 public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 {
+    private final AtomicBoolean m_strict = new AtomicBoolean(false);
+
     public JSONBinder()
     {
         super(new CoreObjectMapper());
+    }
+
+    @Override
+    public IBinder setStrict()
+    {
+        if (m_strict.compareAndSet(false, true))
+        {
+            Modules.withStrict(copy());
+        }
+        return this;
     }
 
     @Override
@@ -55,93 +64,6 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
             return getMapper().convertValue(object, claz);
         }
         catch (final IllegalArgumentException e)
-        {
-            throw new ParserException(e);
-        }
-    }
-
-    @Override
-    public String toJSONString(final Object object) throws ParserException
-    {
-        CommonOps.requireNonNull(object);
-
-        if (isStrict())
-        {
-            return toJSONObject(object).toJSONString(isStrict());
-        }
-        return toString(object);
-    }
-
-    @Override
-    public void send(final File file, final Object object) throws ParserException
-    {
-        CommonOps.requireNonNull(object);
-
-        try
-        {
-            if ((isStrict()) && (object instanceof JSONObject))
-            {
-                final OutputStream stream = IO.toOutputStream(file);
-
-                try
-                {
-                    ((JSONObject) object).writeJSONString(stream, isStrict());
-                }
-                finally
-                {
-                    IO.close(stream);
-                }
-            }
-            else
-            {
-                super.send(file, object);
-            }
-        }
-        catch (final Exception e)
-        {
-            throw new ParserException(e);
-        }
-    }
-
-    @Override
-    public void send(final OutputStream stream, final Object object) throws ParserException
-    {
-        CommonOps.requireNonNull(object);
-
-        try
-        {
-            if ((isStrict()) && (object instanceof JSONObject))
-            {
-                ((JSONObject) object).writeJSONString(stream, isStrict());
-            }
-            else
-            {
-                super.send(stream, object);
-            }
-        }
-        catch (final Exception e)
-        {
-            throw new ParserException(e);
-        }
-    }
-
-    @Override
-    public void send(final Writer writer, final Object object) throws ParserException
-    {
-        CommonOps.requireNonNull(object);
-
-        try
-        {
-            if ((isStrict()) && (object instanceof JSONObject))
-            {
-                ((JSONObject) object).writeJSONString(writer, isStrict());
-            }
-            else
-            {
-                super.send(writer, object);
-            }
-        }
-        catch (final Exception e)
         {
             throw new ParserException(e);
         }
@@ -171,14 +93,20 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 
         public CoreObjectMapper()
         {
-            withExtendedModules(this).enable(JsonParser.Feature.ALLOW_COMMENTS).enable(JsonGenerator.Feature.ESCAPE_NON_ASCII).setDefaultPrettyPrinter(PRETTY);
+            withDefaults(this);
         }
 
-        public CoreObjectMapper(final CoreObjectMapper parent)
+        protected CoreObjectMapper(final CoreObjectMapper parent)
         {
             super(parent);
+        }
 
-            withExtendedModules(this).enable(JsonParser.Feature.ALLOW_COMMENTS).enable(JsonGenerator.Feature.ESCAPE_NON_ASCII).setDefaultPrettyPrinter(PRETTY);
+        @Override
+        public <M extends ObjectMapper> M withDefaults(final M mapper)
+        {
+            withExtendedModules(this).enable(JsonParser.Feature.ALLOW_COMMENTS).enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES).enable(JsonGenerator.Feature.ESCAPE_NON_ASCII).setDefaultPrettyPrinter(PRETTY);
+
+            return mapper;
         }
 
         @Override
