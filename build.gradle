@@ -46,7 +46,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '2.0.2-RELEASE'
+version = '2.0.3-RELEASE'
 
 group = 'com.themodernway'
 
@@ -242,7 +242,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.0.2-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.0.3-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.0')
     compile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
@@ -274,7 +274,7 @@ dependencies {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
     springCorePackages().each { String name ->
-        compile(group: 'org.springframework', name: name, version: '5.0.3.RELEASE')
+        compile(group: 'org.springframework', name: name, version: '5.0.4.RELEASE')
     }
     springSecurityPackages().each { String name ->
         compile(group: 'org.springframework.security', name: name, version: '5.0.1.RELEASE')
