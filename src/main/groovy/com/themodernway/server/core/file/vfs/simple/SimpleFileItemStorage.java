@@ -46,6 +46,7 @@ import org.apache.commons.io.input.ReaderInputStream;
 import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.NanoTimer;
 import com.themodernway.server.core.file.FileAndPathUtils;
@@ -54,6 +55,7 @@ import com.themodernway.server.core.file.vfs.FileItemWrapper;
 import com.themodernway.server.core.file.vfs.FolderItemWrapper;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFileItemAttributes;
+import com.themodernway.server.core.file.vfs.IFileItemCache;
 import com.themodernway.server.core.file.vfs.IFileItemMetaDataFactory;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemWrapper;
@@ -96,6 +98,8 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     private final String             m_base;
 
     private final IFolderItem        m_root;
+
+    private IFileItemCache           m_keep = null;
 
     private ICoreContentTypeMapper   m_maps = null;
 
@@ -174,6 +178,18 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     }
 
     @Override
+    public IFileItemCache getFileItemCache()
+    {
+        return m_keep;
+    }
+
+    @Override
+    public void setFileItemCache(final IFileItemCache keep)
+    {
+        m_keep = keep;
+    }
+
+    @Override
     public boolean isOpen()
     {
         return m_open.get();
@@ -234,7 +250,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         private int                m_bits = 0;
 
-        private IOException        m_oops;
+        private IOException        m_oops = CommonOps.NULL();
 
         protected static final boolean IS_SET(final int bits, final int flag)
         {
@@ -280,6 +296,8 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             }
             catch (final IOException e)
             {
+                m_bits = 0;
+
                 m_oops = e;
             }
         }

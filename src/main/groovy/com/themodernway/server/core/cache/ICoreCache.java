@@ -21,15 +21,16 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.themodernway.common.api.types.INamed;
-import com.themodernway.common.api.types.IRefreshable;
 
-public interface ICoreCache<K, T> extends INamed, IRefreshable, Closeable
+public interface ICoreCache<K, T> extends INamed, Closeable
 {
     public int size();
 
     public void clear();
 
     public T get(K name);
+
+    public boolean isDefined(K name);
 
     public void remove(K name);
 

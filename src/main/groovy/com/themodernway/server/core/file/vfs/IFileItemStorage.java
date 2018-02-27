@@ -43,4 +43,8 @@ public interface IFileItemStorage extends INamed, Closeable
     public ICoreContentTypeMapper getContentTypeMapper();
 
     public void setContentTypeMapper(ICoreContentTypeMapper maps);
+
+    public IFileItemCache getFileItemCache();
+
+    public void setFileItemCache(IFileItemCache keep);
 }

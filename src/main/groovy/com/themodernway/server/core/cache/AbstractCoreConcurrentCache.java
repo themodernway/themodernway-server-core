@@ -57,6 +57,12 @@ public abstract class AbstractCoreConcurrentCache<K, T> implements ICoreCache<K,
     }
 
     @Override
+    public boolean isDefined(final K name)
+    {
+        return m_cache.containsKey(CommonOps.requireNonNull(name));
+    }
+
+    @Override
     public void remove(final K name)
     {
         m_cache.remove(CommonOps.requireNonNull(name));

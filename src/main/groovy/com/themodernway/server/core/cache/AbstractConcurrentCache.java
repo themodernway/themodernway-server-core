@@ -28,12 +28,6 @@ public abstract class AbstractConcurrentCache<T> extends AbstractCoreConcurrentC
     }
 
     @Override
-    public void refresh()
-    {
-        clear();
-    }
-
-    @Override
     public void close() throws IOException
     {
         clear();
