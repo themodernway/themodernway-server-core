@@ -250,7 +250,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         private int                m_bits = 0;
 
-        private IOException        m_oops = CommonOps.NULL();
+        private IOException        m_oops = CommonOps.nulled();
 
         protected static final boolean IS_SET(final int bits, final int flag)
         {

@@ -247,14 +247,14 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
         getServerContext().getResolvedExpression(expr, otherwise)
     }
 
-    public <T> T NULL()
+    public <T> T nulled()
     {
-        CommonOps.NULL()
+        CommonOps.nulled()
     }
 
-    public <T> T CAST(Object value)
+    public <T> T cast(Object value)
     {
-        CommonOps.CAST(value)
+        CommonOps.cast(value)
     }
 
     public boolean isNull(Object value)
@@ -373,14 +373,14 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
         CommonOps.linkedMap(source)
     }
 
-    public <K, V> Map<K, V> RAWMAP(Map source)
+    public <K, V> Map<K, V> rawmap(Map source)
     {
-       CommonOps.RAWMAP(source)
+       CommonOps.rawmap(source)
     }
 
-    public Map<String, Object> STRMAP(Map<String, ?> source)
+    public Map<String, Object> strmap(Map<String, ?> source)
     {
-        CommonOps.STRMAP(source)
+        CommonOps.strmap(source)
     }
 
     public <T> List<T> toKeys(Map<? extends T, ?> source)

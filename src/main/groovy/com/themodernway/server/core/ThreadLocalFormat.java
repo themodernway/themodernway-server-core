@@ -43,7 +43,7 @@ public abstract class ThreadLocalFormat<T, F extends Format> extends ThreadLocal
     @Override
     public T parse(final String source) throws Exception
     {
-        return CommonOps.CAST(getValue().parseObject(CommonOps.requireNonNull(source)));
+        return CommonOps.cast(getValue().parseObject(CommonOps.requireNonNull(source)));
     }
 
     @Override

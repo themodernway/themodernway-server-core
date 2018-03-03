@@ -64,14 +64,14 @@ public class JSONValue implements IJSONValue
 
         if (valu instanceof Double)
         {
-            final Double dval = CommonOps.CAST(valu);
+            final Double dval = CommonOps.cast(valu);
 
             if (false == (dval.isInfinite() || dval.isNaN()))
             {
                 return dval;
             }
         }
-        return CommonOps.NULL();
+        return CommonOps.nulled();
     }
 
     @Override
@@ -81,9 +81,9 @@ public class JSONValue implements IJSONValue
 
         if (valu instanceof Integer)
         {
-            return CommonOps.CAST(valu);
+            return CommonOps.cast(valu);
         }
-        return CommonOps.NULL();
+        return CommonOps.nulled();
     }
 
     @Override
@@ -93,9 +93,9 @@ public class JSONValue implements IJSONValue
 
         if (valu instanceof Long)
         {
-            return CommonOps.CAST(valu);
+            return CommonOps.cast(valu);
         }
-        return CommonOps.NULL();
+        return CommonOps.nulled();
     }
 
     @Override

@@ -27,17 +27,17 @@ import com.themodernway.common.api.java.util.CommonOps;
 
 public interface ICoreObjectMapper
 {
-    default public <M extends ObjectMapper> M withDefaults(final M mapper)
+    default <M extends ObjectMapper> M withDefaults(final M mapper)
     {
         return withExtendedModules(mapper);
     }
 
-    default public <M extends ObjectMapper> M withExtendedModules(final M mapper)
+    default <M extends ObjectMapper> M withExtendedModules(final M mapper)
     {
         return Modules.withExtendedModules(mapper);
     }
 
-    default public <M extends ObjectMapper> M withExtendedModules(final M mapper, final List<Module> list)
+    default <M extends ObjectMapper> M withExtendedModules(final M mapper, final List<Module> list)
     {
         return Modules.withModules(mapper, list);
     }

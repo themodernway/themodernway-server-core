@@ -38,275 +38,275 @@ import com.themodernway.common.api.types.IFixedIterable;
 
 public interface ICoreBase
 {
-    default public <T> T NULL()
+    default <T> T nulled()
     {
-        return CommonOps.NULL();
+        return CommonOps.nulled();
     }
 
-    default public <T> T CAST(final Object value)
+    default <T> T cast(final Object value)
     {
-        return CommonOps.CAST(value);
+        return CommonOps.cast(value);
     }
 
-    default public boolean isNull(final Object value)
+    default boolean isNull(final Object value)
     {
         return CommonOps.isNull(value);
     }
 
-    default public boolean isNonNull(final Object value)
+    default boolean isNonNull(final Object value)
     {
         return CommonOps.isNonNull(value);
     }
 
-    default public <T> T requireNonNullOrElse(final T value, final T otherwise)
+    default <T> T requireNonNullOrElse(final T value, final T otherwise)
     {
         return CommonOps.requireNonNullOrElse(value, otherwise);
     }
 
-    default public <T> T requireNonNullOrElse(final T value, final Supplier<T> otherwise)
+    default <T> T requireNonNullOrElse(final T value, final Supplier<T> otherwise)
     {
         return CommonOps.requireNonNullOrElse(value, otherwise);
     }
 
-    default public <T> T requireNonNull(final T value)
+    default <T> T requireNonNull(final T value)
     {
         return CommonOps.requireNonNull(value);
     }
 
-    default public <T> T requireNonNull(final T value, final String reason)
+    default <T> T requireNonNull(final T value, final String reason)
     {
         return CommonOps.requireNonNull(value, reason);
     }
 
-    default public <T> T requireNonNull(final T value, final Supplier<String> reason)
+    default <T> T requireNonNull(final T value, final Supplier<String> reason)
     {
         return CommonOps.requireNonNull(value, reason);
     }
 
-    default public <T> Supplier<T> toSupplier(final T value)
+    default <T> Supplier<T> toSupplier(final T value)
     {
         return () -> value;
     }
 
-    default public IntSupplier toSupplier(final int value)
+    default IntSupplier toSupplier(final int value)
     {
         return () -> value;
     }
 
-    default public LongSupplier toSupplier(final long value)
+    default LongSupplier toSupplier(final long value)
     {
         return () -> value;
     }
 
-    default public DoubleSupplier toSupplier(final double value)
+    default DoubleSupplier toSupplier(final double value)
     {
         return () -> value;
     }
 
-    default public BooleanSupplier toSupplier(final boolean value)
+    default BooleanSupplier toSupplier(final boolean value)
     {
         return () -> value;
     }
 
-    default public <T> Optional<T> toOptional(final T value)
+    default <T> Optional<T> toOptional(final T value)
     {
         return CommonOps.toOptional(value);
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> List<T> toList(final T... source)
+    default <T> List<T> toList(final T... source)
     {
         return CommonOps.toList(source);
     }
 
-    default public <T> List<T> toList(final Stream<T> source)
+    default <T> List<T> toList(final Stream<T> source)
     {
         return CommonOps.toList(source);
     }
 
-    default public <T> List<T> toList(final Stream<T> source, final Predicate<? super T> predicate)
+    default <T> List<T> toList(final Stream<T> source, final Predicate<? super T> predicate)
     {
         return CommonOps.toList(source, predicate);
     }
 
-    default public <T> List<T> toList(final Enumeration<? extends T> source)
+    default <T> List<T> toList(final Enumeration<? extends T> source)
     {
         return CommonOps.toList(source);
     }
 
-    default public <T> List<T> toList(final Collection<? extends T> source)
+    default <T> List<T> toList(final Collection<? extends T> source)
     {
         return CommonOps.toList(source);
     }
 
-    default public <T> List<T> toList(final Collection<? extends T> source, final Predicate<? super T> predicate)
+    default <T> List<T> toList(final Collection<? extends T> source, final Predicate<? super T> predicate)
     {
-        return CommonOps.CAST(CommonOps.toList(source.stream(), predicate));
+        return CommonOps.cast(CommonOps.toList(source.stream(), predicate));
     }
 
-    default public <T> List<T> toList(final ICursor<? extends T> source)
-    {
-        return CommonOps.toList(source);
-    }
-
-    default public <T> List<T> toList(final IFixedIterable<? extends T> source)
+    default <T> List<T> toList(final ICursor<? extends T> source)
     {
         return CommonOps.toList(source);
     }
 
-    default public <T> List<T> emptyList()
+    default <T> List<T> toList(final IFixedIterable<? extends T> source)
+    {
+        return CommonOps.toList(source);
+    }
+
+    default <T> List<T> emptyList()
     {
         return CommonOps.emptyList();
     }
 
-    default public <K, V> Map<K, V> emptyMap()
+    default <K, V> Map<K, V> emptyMap()
     {
         return CommonOps.emptyMap();
     }
 
-    default public <K, V> LinkedHashMap<K, V> linkedMap()
+    default <K, V> LinkedHashMap<K, V> linkedMap()
     {
         return CommonOps.linkedMap();
     }
 
-    default public <K, V> LinkedHashMap<K, V> linkedMap(final Map<? extends K, ? extends V> source)
+    default <K, V> LinkedHashMap<K, V> linkedMap(final Map<? extends K, ? extends V> source)
     {
         return CommonOps.linkedMap(source);
     }
 
     @SuppressWarnings("rawtypes")
-    default public <K, V> Map<K, V> RAWMAP(final Map source)
+    default <K, V> Map<K, V> rawmap(final Map source)
     {
-        return CommonOps.RAWMAP(source);
+        return CommonOps.rawmap(source);
     }
 
-    default public Map<String, Object> STRMAP(final Map<String, ?> source)
+    default Map<String, Object> strmap(final Map<String, ?> source)
     {
-        return CommonOps.STRMAP(source);
+        return CommonOps.strmap(source);
     }
 
-    default public <T> List<T> toKeys(final Map<? extends T, ?> source)
+    default <T> List<T> toKeys(final Map<? extends T, ?> source)
     {
         return CommonOps.toKeys(source);
     }
 
-    default public <K, V> Map<K, V> toUnmodifiableMap(final Map<? extends K, ? extends V> source)
+    default <K, V> Map<K, V> toUnmodifiableMap(final Map<? extends K, ? extends V> source)
     {
         return CommonOps.toUnmodifiableMap(source);
     }
 
-    default public <T> List<T> toUnmodifiableList(final Collection<? extends T> source)
+    default <T> List<T> toUnmodifiableList(final Collection<? extends T> source)
     {
         return CommonOps.toUnmodifiableList(source);
     }
 
-    default public <T> List<T> toUnmodifiableList(final Stream<T> source)
+    default <T> List<T> toUnmodifiableList(final Stream<T> source)
     {
         return CommonOps.toUnmodifiableList(source);
     }
 
-    default public <T> List<T> toUnmodifiableList(final Stream<T> source, final Predicate<? super T> predicate)
+    default <T> List<T> toUnmodifiableList(final Stream<T> source, final Predicate<? super T> predicate)
     {
         return CommonOps.toUnmodifiableList(source, predicate);
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> List<T> toUnmodifiableList(final T... source)
+    default <T> List<T> toUnmodifiableList(final T... source)
     {
         return CommonOps.toUnmodifiableList(source);
     }
 
-    default public <T> List<T> toUnmodifiableList(final ICursor<? extends T> source)
+    default <T> List<T> toUnmodifiableList(final ICursor<? extends T> source)
     {
         return CommonOps.toUnmodifiableList(source);
     }
 
-    default public <T> List<T> toUnmodifiableList(final IFixedIterable<? extends T> source)
+    default <T> List<T> toUnmodifiableList(final IFixedIterable<? extends T> source)
     {
         return CommonOps.toUnmodifiableList(source);
     }
 
-    default public <T> List<T> toUnmodifiableList(final Enumeration<? extends T> source)
+    default <T> List<T> toUnmodifiableList(final Enumeration<? extends T> source)
     {
         return CommonOps.toUnmodifiableList(source);
     }
 
-    default public <T> ArrayList<T> arrayListOfSize(final int size)
+    default <T> ArrayList<T> arrayListOfSize(final int size)
     {
         return CommonOps.arrayListOfSize(size);
     }
 
-    default public <T> ArrayList<T> arrayList()
+    default <T> ArrayList<T> arrayList()
     {
         return CommonOps.arrayList();
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> ArrayList<T> arrayList(final T... source)
+    default <T> ArrayList<T> arrayList(final T... source)
     {
         return CommonOps.arrayList(source);
     }
 
-    default public <T> ArrayList<T> arrayList(final Stream<T> source)
+    default <T> ArrayList<T> arrayList(final Stream<T> source)
     {
         return CommonOps.arrayList(source);
     }
 
-    default public <T> ArrayList<T> arrayList(final Stream<T> source, final Predicate<? super T> predicate)
+    default <T> ArrayList<T> arrayList(final Stream<T> source, final Predicate<? super T> predicate)
     {
         return CommonOps.arrayList(source, predicate);
     }
 
-    default public <T> ArrayList<T> arrayList(final Collection<? extends T> source)
+    default <T> ArrayList<T> arrayList(final Collection<? extends T> source)
     {
         return CommonOps.arrayList(source);
     }
 
-    default public <T> ArrayList<T> arrayList(final ICursor<? extends T> source)
+    default <T> ArrayList<T> arrayList(final ICursor<? extends T> source)
     {
         return CommonOps.arrayList(source);
     }
 
-    default public <T> ArrayList<T> arrayList(final IFixedIterable<? extends T> source)
+    default <T> ArrayList<T> arrayList(final IFixedIterable<? extends T> source)
     {
         return CommonOps.arrayList(source);
     }
 
-    default public <T> ArrayList<T> arrayList(final Enumeration<? extends T> source)
+    default <T> ArrayList<T> arrayList(final Enumeration<? extends T> source)
     {
         return CommonOps.arrayList(source);
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> Stream<T> toStream(final T... source)
+    default <T> Stream<T> toStream(final T... source)
     {
         return CommonOps.toStream(source);
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> T[] toArray(final T... source)
+    default <T> T[] toArray(final T... source)
     {
         return CommonOps.toArray(source);
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> List<T> toListOfLists(final List<T>... lists)
+    default <T> List<T> toListOfLists(final List<T>... lists)
     {
         return CommonOps.toListOfLists(lists);
     }
 
     @SuppressWarnings("unchecked")
-    default public <T> List<T> toListOfListsUnique(final List<T>... lists)
+    default <T> List<T> toListOfListsUnique(final List<T>... lists)
     {
         return CommonOps.toListOfListsUnique(lists);
     }
 
-    default public String getEnvironmentProperty(final String name)
+    default String getEnvironmentProperty(final String name)
     {
         return System.getenv(requireNonNull(name));
     }
 
-    default public String getEnvironmentProperty(final String name, final String otherwise)
+    default String getEnvironmentProperty(final String name, final String otherwise)
     {
         final String prop = getEnvironmentProperty(name);
 
@@ -317,7 +317,7 @@ public interface ICoreBase
         return otherwise;
     }
 
-    default public String getEnvironmentProperty(final String name, final Supplier<String> otherwise)
+    default String getEnvironmentProperty(final String name, final Supplier<String> otherwise)
     {
         final String prop = getEnvironmentProperty(name);
 
@@ -328,12 +328,12 @@ public interface ICoreBase
         return otherwise.get();
     }
 
-    default public String getSystemProperty(final String name)
+    default String getSystemProperty(final String name)
     {
         return System.getProperty(requireNonNull(name));
     }
 
-    default public String getSystemProperty(final String name, final String otherwise)
+    default String getSystemProperty(final String name, final String otherwise)
     {
         final String prop = getSystemProperty(name);
 
@@ -344,7 +344,7 @@ public interface ICoreBase
         return otherwise;
     }
 
-    default public String getSystemProperty(final String name, final Supplier<String> otherwise)
+    default String getSystemProperty(final String name, final Supplier<String> otherwise)
     {
         final String prop = getSystemProperty(name);
 
@@ -355,167 +355,167 @@ public interface ICoreBase
         return otherwise.get();
     }
 
-    default public String format(final String format, final Object... args)
+    default String format(final String format, final Object... args)
     {
         return String.format(requireNonNull(format), args);
     }
 
-    default public String repeat(final String string, final int times)
+    default String repeat(final String string, final int times)
     {
         return StringOps.repeat(string, times);
     }
 
-    default public String[] toArray(final Collection<String> collection)
+    default String[] toArray(final Collection<String> collection)
     {
         return StringOps.toArray(collection);
     }
 
-    default public String[] toArray(final Collection<String> collection, final Predicate<String> predicate)
+    default String[] toArray(final Collection<String> collection, final Predicate<String> predicate)
     {
         return StringOps.toArray(collection, predicate);
     }
 
-    default public String[] toArray(final String... collection)
+    default String[] toArray(final String... collection)
     {
         return StringOps.toArray(collection);
     }
 
-    default public String[] toArray(final Stream<String> stream)
+    default String[] toArray(final Stream<String> stream)
     {
         return StringOps.toArray(stream);
     }
 
-    default public String[] toArray(final Stream<String> stream, final Predicate<String> predicate)
+    default String[] toArray(final Stream<String> stream, final Predicate<String> predicate)
     {
         return StringOps.toArray(stream, predicate);
     }
 
-    default public String[] toUniqueArray(final Collection<String> collection)
+    default String[] toUniqueArray(final Collection<String> collection)
     {
         return StringOps.toUniqueArray(collection);
     }
 
-    default public String[] toUniqueArray(final Collection<String> collection, final Predicate<String> predicate)
+    default String[] toUniqueArray(final Collection<String> collection, final Predicate<String> predicate)
     {
         return StringOps.toUniqueArray(collection, predicate);
     }
 
-    default public String[] toUniqueArray(final String... collection)
+    default String[] toUniqueArray(final String... collection)
     {
         return StringOps.toUniqueArray(collection);
     }
 
-    default public Stream<String> toUnique(final Stream<String> stream)
+    default Stream<String> toUnique(final Stream<String> stream)
     {
         return StringOps.toUnique(stream);
     }
 
-    default public Stream<String> toUnique(final Stream<String> stream, final Predicate<String> predicate)
+    default Stream<String> toUnique(final Stream<String> stream, final Predicate<String> predicate)
     {
         return StringOps.toUnique(stream, predicate);
     }
 
-    default public List<String> toUnique(final String... collection)
+    default List<String> toUnique(final String... collection)
     {
         return StringOps.toUnique(collection);
     }
 
-    default public List<String> toUnique(final Collection<String> collection)
+    default List<String> toUnique(final Collection<String> collection)
     {
         return StringOps.toUnique(collection);
     }
 
-    default public List<String> toUnique(final Collection<String> collection, final Predicate<String> predicate)
+    default List<String> toUnique(final Collection<String> collection, final Predicate<String> predicate)
     {
         return StringOps.toUnique(collection, predicate);
     }
 
-    default public List<String> toUniqueTokenStringList(final String strings)
+    default List<String> toUniqueTokenStringList(final String strings)
     {
         return StringOps.toUniqueTokenStringList(strings);
     }
 
-    default public String toCommaSeparated(final Collection<String> collection)
+    default String toCommaSeparated(final Collection<String> collection)
     {
         return StringOps.toCommaSeparated(collection);
     }
 
-    default public String toCommaSeparated(final String... collection)
+    default String toCommaSeparated(final String... collection)
     {
         return StringOps.toCommaSeparated(collection);
     }
 
-    default public String toCommaSeparated(final Stream<String> stream)
+    default String toCommaSeparated(final Stream<String> stream)
     {
         return StringOps.toCommaSeparated(stream);
     }
 
-    default public Collection<String> tokenizeToStringCollection(final String string)
+    default Collection<String> tokenizeToStringCollection(final String string)
     {
         return StringOps.tokenizeToStringCollection(string);
     }
 
-    default public Collection<String> tokenizeToStringCollection(final String string, final String delimiters)
+    default Collection<String> tokenizeToStringCollection(final String string, final String delimiters)
     {
         return StringOps.tokenizeToStringCollection(string, delimiters);
     }
 
-    default public Collection<String> tokenizeToStringCollection(final String string, final boolean trim, final boolean ignore)
+    default Collection<String> tokenizeToStringCollection(final String string, final boolean trim, final boolean ignore)
     {
         return StringOps.tokenizeToStringCollection(string, trim, ignore);
     }
 
-    default public Collection<String> tokenizeToStringCollection(final String string, final String delimiters, final boolean trim, final boolean ignore)
+    default Collection<String> tokenizeToStringCollection(final String string, final String delimiters, final boolean trim, final boolean ignore)
     {
         return StringOps.tokenizeToStringCollection(string, delimiters, trim, ignore);
     }
 
-    default public String toPrintableString(final Collection<String> collection)
+    default String toPrintableString(final Collection<String> collection)
     {
         return StringOps.toPrintableString(collection);
     }
 
-    default public String toPrintableString(final String... list)
+    default String toPrintableString(final String... list)
     {
         return StringOps.toPrintableString(list);
     }
 
-    default public String toTrimOrNull(final String string)
+    default String toTrimOrNull(final String string)
     {
         return StringOps.toTrimOrNull(string);
     }
 
-    default public String toTrimOrElse(final String string, final String otherwise)
+    default String toTrimOrElse(final String string, final String otherwise)
     {
         return StringOps.toTrimOrElse(string, otherwise);
     }
 
-    default public String toTrimOrElse(final String string, final Supplier<String> otherwise)
+    default String toTrimOrElse(final String string, final Supplier<String> otherwise)
     {
         return StringOps.toTrimOrElse(string, otherwise);
     }
 
-    default public String requireTrimOrNull(final String string)
+    default String requireTrimOrNull(final String string)
     {
         return StringOps.requireTrimOrNull(string);
     }
 
-    default public String requireTrimOrNull(final String string, final String reason)
+    default String requireTrimOrNull(final String string, final String reason)
     {
         return StringOps.requireTrimOrNull(string, reason);
     }
 
-    default public String requireTrimOrNull(final String string, final Supplier<String> reason)
+    default String requireTrimOrNull(final String string, final Supplier<String> reason)
     {
         return StringOps.requireTrimOrNull(string, reason);
     }
 
-    default public String reverse(final String string)
+    default String reverse(final String string)
     {
         return StringOps.reverse(string);
     }
 
-    default public String failIfNullBytePresent(final String string)
+    default String failIfNullBytePresent(final String string)
     {
         return StringOps.failIfNullBytePresent(string);
     }

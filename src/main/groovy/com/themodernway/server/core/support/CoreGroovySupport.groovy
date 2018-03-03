@@ -433,15 +433,15 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Override
-    public <T> T NULL()
+    public <T> T nulled()
     {
-        CommonOps.NULL()
+        CommonOps.nulled()
     }
 
     @Override
-    public <T> T CAST(Object value)
+    public <T> T cast(Object value)
     {
-        CommonOps.CAST(value)
+        CommonOps.cast(value)
     }
 
     @Override
@@ -584,15 +584,15 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Override
-    public <K, V> Map<K, V> RAWMAP(Map source)
+    public <K, V> Map<K, V> rawmap(Map source)
     {
-       CommonOps.RAWMAP(source)
+       CommonOps.rawmap(source)
     }
 
     @Override
-    public Map<String, Object> STRMAP(Map<String, ?> source)
+    public Map<String, Object> strmap(Map<String, ?> source)
     {
-        CommonOps.STRMAP(source)
+        CommonOps.strmap(source)
     }
 
     @Override

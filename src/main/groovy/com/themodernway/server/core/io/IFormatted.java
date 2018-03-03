@@ -22,17 +22,17 @@ import java.util.Locale;
 @SuppressWarnings("unchecked")
 public interface IFormatted<T extends IFormatted<T>>
 {
-    default public T printf(final String format, final Object... args)
+    default T printf(final String format, final Object... args)
     {
         return format(format, args);
     }
 
-    default public T printf(final Locale locale, final String format, final Object... args)
+    default T printf(final Locale locale, final String format, final Object... args)
     {
         return format(locale, format, args);
     }
 
-    default public T format(final String format, final Object... args)
+    default T format(final String format, final Object... args)
     {
         try
         {
@@ -44,7 +44,7 @@ public interface IFormatted<T extends IFormatted<T>>
         return (T) this;
     }
 
-    default public T format(final Locale locale, final String format, final Object... args)
+    default T format(final Locale locale, final String format, final Object... args)
     {
         try
         {
@@ -56,17 +56,17 @@ public interface IFormatted<T extends IFormatted<T>>
         return (T) this;
     }
 
-    default public void write(final String valu) throws IOException
+    default void write(final String valu) throws IOException
     {
         write(valu.getBytes(IO.UTF_8_CHARSET));
     }
 
-    default public void write(final byte[] buff) throws IOException
+    default void write(final byte[] buff) throws IOException
     {
         write(buff, 0, buff.length);
     }
 
-    default public void write(final byte b[], final int off, final int len) throws IOException
+    default void write(final byte b[], final int off, final int len) throws IOException
     {
         if ((off | len | (b.length - (len + off)) | (off + len)) < 0)
         {

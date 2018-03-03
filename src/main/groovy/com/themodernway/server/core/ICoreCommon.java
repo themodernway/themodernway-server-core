@@ -60,64 +60,64 @@ public interface ICoreCommon extends ICoreBase, IPropertiesResolver, IHasLogging
         return StringOps.toUnique(tagging.value());
     }
 
-    default public String uuid()
+    default String uuid()
     {
         return getServerContext().uuid();
     }
 
     @Override
-    default public Logger logger()
+    default Logger logger()
     {
         return getServerContext().logger();
     }
 
-    default public Logger logger(final Class<?> type)
+    default Logger logger(final Class<?> type)
     {
         return LOGGER(type);
     }
 
-    default public String getOriginalBeanName(final String name)
+    default String getOriginalBeanName(final String name)
     {
         return getServerContext().getOriginalBeanName(name);
     }
 
     @Override
-    default public String getPropertyByName(final String name)
+    default String getPropertyByName(final String name)
     {
         return getServerContext().getPropertyByName(name);
     }
 
     @Override
-    default public String getPropertyByName(final String name, final String otherwise)
+    default String getPropertyByName(final String name, final String otherwise)
     {
         return getServerContext().getPropertyByName(name, otherwise);
     }
 
     @Override
-    default public String getPropertyByName(final String name, final Supplier<String> otherwise)
+    default String getPropertyByName(final String name, final Supplier<String> otherwise)
     {
         return getServerContext().getPropertyByName(name, otherwise);
     }
 
     @Override
-    default public String getResolvedExpression(final String expr)
+    default String getResolvedExpression(final String expr)
     {
         return getServerContext().getResolvedExpression(expr);
     }
 
     @Override
-    default public String getResolvedExpression(final String expr, final String otherwise)
+    default String getResolvedExpression(final String expr, final String otherwise)
     {
         return getServerContext().getResolvedExpression(expr, otherwise);
     }
 
     @Override
-    default public String getResolvedExpression(final String expr, final Supplier<String> otherwise)
+    default String getResolvedExpression(final String expr, final Supplier<String> otherwise)
     {
         return getServerContext().getResolvedExpression(expr, otherwise);
     }
 
-    default public IServerContext getServerContext()
+    default IServerContext getServerContext()
     {
         return ServerContextInstance.getServerContextInstance();
     }

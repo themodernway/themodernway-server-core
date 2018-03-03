@@ -16,7 +16,7 @@
 
 package com.themodernway.server.core.json;
 
-import static com.themodernway.common.api.java.util.CommonOps.NULL;
+import static com.themodernway.common.api.java.util.CommonOps.nulled;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -249,7 +249,7 @@ public final class JSONUtils
     {
         if (null == object)
         {
-            return NULL();
+            return nulled();
         }
         if (object instanceof Integer)
         {
@@ -261,7 +261,7 @@ public final class JSONUtils
 
             if ((value > Integer.MAX_VALUE) || (value < Integer.MIN_VALUE))
             {
-                return NULL();
+                return nulled();
             }
             return value.intValue();
         }
@@ -275,7 +275,7 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_INTEGER_MAX) > 0) || (value.compareTo(BIG_INTEGER_MIN) < 0))
             {
-                return NULL();
+                return nulled();
             }
             return value.intValue();
         }
@@ -285,7 +285,7 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_DEC_INT_MAX) > 0) || (value.compareTo(BIG_DEC_INT_MIN) < 0))
             {
-                return NULL();
+                return nulled();
             }
             return value.intValue();
         }
@@ -295,18 +295,18 @@ public final class JSONUtils
 
             if ((lval > Integer.MAX_VALUE) || (lval < Integer.MIN_VALUE))
             {
-                return NULL();
+                return nulled();
             }
             return ((int) lval);
         }
-        return NULL();
+        return nulled();
     }
 
     public static final Long asLong(final Object object)
     {
         if (null == object)
         {
-            return NULL();
+            return nulled();
         }
         if (object instanceof Long)
         {
@@ -322,11 +322,11 @@ public final class JSONUtils
 
             if (isDoubleInfiniteOrNan(dval))
             {
-                return NULL();
+                return nulled();
             }
             if ((dval.doubleValue() > Long.MAX_VALUE) || (dval.doubleValue() < Long.MIN_VALUE))
             {
-                return NULL();
+                return nulled();
             }
             return dval.longValue();
         }
@@ -336,7 +336,7 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_INTLONG_MAX) > 0) || (value.compareTo(BIG_INTLONG_MIN) < 0))
             {
-                return NULL();
+                return nulled();
             }
             return value.longValue();
         }
@@ -346,7 +346,7 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_DEC_LONGMAX) > 0) || (value.compareTo(BIG_DEC_LONGMIN) < 0))
             {
-                return NULL();
+                return nulled();
             }
             return value.longValue();
         }
@@ -354,14 +354,14 @@ public final class JSONUtils
         {
             return ((Number) object).longValue();
         }
-        return NULL();
+        return nulled();
     }
 
     public static final Double asDouble(final Object object)
     {
         if (null == object)
         {
-            return NULL();
+            return nulled();
         }
         if (object instanceof Double)
         {
@@ -369,7 +369,7 @@ public final class JSONUtils
 
             if (isDoubleInfiniteOrNan(dval))
             {
-                return NULL();
+                return nulled();
             }
             return dval;
         }
@@ -379,7 +379,7 @@ public final class JSONUtils
 
             if (isDoubleInfiniteOrNan(dval))
             {
-                return NULL();
+                return nulled();
             }
             return dval;
         }
@@ -389,11 +389,11 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_DECIMAL_MAX) > 0) || (value.compareTo(BIG_DECIMAL_MIN) < 0))
             {
-                return NULL();
+                return nulled();
             }
             if (isDoubleInfiniteOrNan(value.doubleValue()))
             {
-                return NULL();
+                return nulled();
             }
             return value.doubleValue();
         }
@@ -403,7 +403,7 @@ public final class JSONUtils
 
             if ((value.compareTo(BIG_INT_DEC_MAX) > 0) || (value.compareTo(BIG_INT_DEC_MIN) < 0))
             {
-                return NULL();
+                return nulled();
             }
             return value.doubleValue();
         }
@@ -413,11 +413,11 @@ public final class JSONUtils
 
             if (isDoubleInfiniteOrNan(dval))
             {
-                return NULL();
+                return nulled();
             }
             return dval;
         }
-        return NULL();
+        return nulled();
     }
 
     public static final Number asNumber(final Object object)
@@ -434,14 +434,14 @@ public final class JSONUtils
             }
             return asLong(object);
         }
-        return NULL();
+        return nulled();
     }
 
     public static final JSONArray asArray(final Object object)
     {
         if (null == object)
         {
-            return NULL();
+            return nulled();
         }
         if (object instanceof JSONArray)
         {
@@ -451,7 +451,7 @@ public final class JSONUtils
         {
             return new JSONArray((List<?>) object);
         }
-        return NULL();
+        return nulled();
     }
 
     @SuppressWarnings("unchecked")
@@ -459,7 +459,7 @@ public final class JSONUtils
     {
         if (null == object)
         {
-            return NULL();
+            return nulled();
         }
         if (object instanceof JSONObject)
         {
@@ -469,46 +469,46 @@ public final class JSONUtils
         {
             return new JSONObject((Map<String, ?>) object);
         }
-        return NULL();
+        return nulled();
     }
 
     public static final String asString(final Object object)
     {
         if (null == object)
         {
-            return NULL();
+            return nulled();
         }
         if (object instanceof CharSequence)
         {
             return ((CharSequence) object).toString();
         }
-        return NULL();
+        return nulled();
     }
 
     public static final Boolean asBoolean(final Object object)
     {
         if (null == object)
         {
-            return NULL();
+            return nulled();
         }
         if (object instanceof Boolean)
         {
             return ((Boolean) object);
         }
-        return NULL();
+        return nulled();
     }
 
     public static final Date asDate(final Object object)
     {
         if (null == object)
         {
-            return NULL();
+            return nulled();
         }
         if (object instanceof Date)
         {
             return new Date(((Date) object).getTime());
         }
-        return NULL();
+        return nulled();
     }
 
     public static final JSONType getJSONType(final Object object)

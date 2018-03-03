@@ -29,7 +29,7 @@ public class ParserException extends Exception
 
     private int             m_errorType                = ERROR_UNEXPECTED_EXCEPTION;
 
-    private Object          m_unexpectedObject         = CommonOps.NULL();
+    private Object          m_unexpectedObject         = CommonOps.nulled();
 
     private int             m_position                 = CommonOps.IS_NOT_FOUND;
 
@@ -42,7 +42,7 @@ public class ParserException extends Exception
 
     public ParserException(final int errorType)
     {
-        this(CommonOps.IS_NOT_FOUND, errorType, CommonOps.NULL());
+        this(CommonOps.IS_NOT_FOUND, errorType, CommonOps.nulled());
     }
 
     public ParserException(final int errorType, final Object unexpectedObject)

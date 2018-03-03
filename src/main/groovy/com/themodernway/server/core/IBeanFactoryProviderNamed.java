@@ -25,7 +25,7 @@ import com.themodernway.server.core.io.IO;
 public interface IBeanFactoryProviderNamed<T extends Closeable & INamed> extends IBeanFactoryProvider<T>
 {
     @Override
-    default public void destroy(final T item) throws IOException
+    default void destroy(final T item) throws IOException
     {
         if (null != item)
         {

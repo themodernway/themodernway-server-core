@@ -55,7 +55,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
     protected final static JSONObject MAKE(final Map<?, ?> make)
     {
-        return new JSONObject(CommonOps.RAWMAP(make));
+        return new JSONObject(CommonOps.rawmap(make));
     }
 
     protected AbstractDataBinder(final M mapper)
@@ -65,7 +65,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
     protected M copy()
     {
-        return m_mapper = CommonOps.CAST(m_mapper.copy());
+        return m_mapper = CommonOps.cast(m_mapper.copy());
     }
 
     @Override
@@ -360,7 +360,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         }
         if (String.class.equals(claz))
         {
-            return CommonOps.CAST(toString(object));
+            return CommonOps.cast(toString(object));
         }
         try
         {

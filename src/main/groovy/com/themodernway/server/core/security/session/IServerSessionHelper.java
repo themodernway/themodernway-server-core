@@ -121,67 +121,67 @@ public interface IServerSessionHelper
         }
     }
 
-    default public String getStatusKey()
+    default String getStatusKey()
     {
         return SP_STATUS_KEY;
     }
 
-    default public String getDomainKey()
+    default String getDomainKey()
     {
         return SP_DOMAIN_KEY;
     }
 
-    default public String geRolesKey()
+    default String geRolesKey()
     {
         return SP_ROLES_KEY;
     }
 
-    default public String getUserIdKey()
+    default String getUserIdKey()
     {
         return SP_USER_ID_KEY;
     }
 
-    default public String getSessionIdKey()
+    default String getSessionIdKey()
     {
         return SP_SESSION_ID_KEY;
     }
 
-    default public String getOriginalSessionIdKey()
+    default String getOriginalSessionIdKey()
     {
         return SP_ORIGINAL_SESSION_ID_KEY;
     }
 
-    default public String getCreationTimeKey()
+    default String getCreationTimeKey()
     {
         return SP_CREATION_TIME_KEY;
     }
 
-    default public String getLastAccessedTimeKey()
+    default String getLastAccessedTimeKey()
     {
         return SP_LAST_ACCESSED_TIME_KEY;
     }
 
-    default public String getMaxInactiveIntervalKey()
+    default String getMaxInactiveIntervalKey()
     {
         return SP_MAX_INACTIVE_INTERVAL_IN_SECONDS_KEY;
     }
 
-    default public IServerSessionHelper getHelperInstance()
+    default IServerSessionHelper getHelperInstance()
     {
         return SP_DEFAULT_HELPER_INSTANCE;
     }
 
-    default public List<String> getDefaultRoles()
+    default List<String> getDefaultRoles()
     {
         return SP_DEFAULT_ROLES_LIST;
     }
 
-    default public String getDefaultDomain()
+    default String getDefaultDomain()
     {
         return SP_DEFAULT_DOMAIN;
     }
 
-    default public List<String> toRolesList(final List<?> list)
+    default List<String> toRolesList(final List<?> list)
     {
         if ((null != list) && (false == list.isEmpty()))
         {

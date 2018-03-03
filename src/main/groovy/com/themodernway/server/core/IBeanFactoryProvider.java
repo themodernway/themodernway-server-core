@@ -29,7 +29,7 @@ import com.themodernway.server.core.io.IO;
 public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, BeanNameAware, Closeable, ICoreCommon, INamed
 {
     @Override
-    default public void close() throws IOException
+    default void close() throws IOException
     {
         logger().info(format("starting close (%s).", getName()));
 
@@ -40,7 +40,7 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
         logger().info(format("finished close (%s).", getName()));
     }
 
-    default public void destroy(final T item) throws IOException
+    default void destroy(final T item) throws IOException
     {
         if (null != item)
         {

@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface IServletResponseErrorCodeManager
 {
-    default public void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code)
+    default void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code)
     {
         sendErrorCode(request, response, code, null);
     }

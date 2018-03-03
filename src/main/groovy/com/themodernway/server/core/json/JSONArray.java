@@ -221,7 +221,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
 
             if (String.class.equals(type))
             {
-                return CommonOps.CAST(bind.toString(this));
+                return CommonOps.cast(bind.toString(this));
             }
             if (bind.canSerializeType(type))
             {

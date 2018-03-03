@@ -281,7 +281,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
             if (String.class.equals(type))
             {
-                return CommonOps.CAST(bind.toString(this));
+                return CommonOps.cast(bind.toString(this));
             }
             final T valu = bind.convert(this, type);
 
