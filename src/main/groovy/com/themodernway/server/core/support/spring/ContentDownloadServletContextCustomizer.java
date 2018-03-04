@@ -58,7 +58,7 @@ public class ContentDownloadServletContextCustomizer extends ServletFactoryConte
     @Override
     public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        final ContentDownloadServlet inst = new ContentDownloadServlet(getFileItemStorageName());
+        final ContentDownloadServlet inst = new ContentDownloadServlet(getFileItemStorageName(), true, customizer.getRateLimit());
 
         final ISessionIDFromRequestExtractor extr = customizer.getSessionIDFromRequestExtractor();
 
@@ -72,8 +72,6 @@ public class ContentDownloadServletContextCustomizer extends ServletFactoryConte
         {
             inst.setServletResponseErrorCodeManager(code);
         }
-        inst.setRateLimit(customizer.getRateLimit());
-
         inst.setRequiredRoles(customizer.getRequiredRoles());
 
         return inst;

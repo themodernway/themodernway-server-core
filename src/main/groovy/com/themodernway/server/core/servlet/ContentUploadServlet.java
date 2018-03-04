@@ -38,11 +38,20 @@ public class ContentUploadServlet extends AbstractContentServlet
 {
     private static final long serialVersionUID = 1L;
 
-    private long              m_limit          = CommonOps.IS_NOT_FOUND;
+    private final long        m_limit;
 
-    public ContentUploadServlet(final String name)
+    public ContentUploadServlet(final String name, final long limit)
     {
         super(name);
+
+        m_limit = Math.max(CommonOps.IS_NOT_FOUND, limit);
+    }
+
+    public ContentUploadServlet(final String name, final long limit, final double rate)
+    {
+        super(name, rate);
+
+        m_limit = Math.max(CommonOps.IS_NOT_FOUND, limit);
     }
 
     @Override
@@ -146,11 +155,6 @@ public class ContentUploadServlet extends AbstractContentServlet
     public DiskFileItemFactory getDiskFileItemFactory()
     {
         return new DiskFileItemFactory();
-    }
-
-    public void setFileSizeLimit(final long limit)
-    {
-        m_limit = Math.max(CommonOps.IS_NOT_FOUND, limit);
     }
 
     public long getFileSizeLimit()

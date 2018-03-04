@@ -31,16 +31,20 @@ public class ContentGetServlet extends AbstractContentServlet
 {
     private static final long serialVersionUID = 1L;
 
-    private boolean           m_nocache        = false;
+    private final boolean     m_nocache;
 
-    public ContentGetServlet(final String name)
+    public ContentGetServlet(final String name, final boolean nocache)
     {
         super(name);
+
+        m_nocache = nocache;
     }
 
-    public ContentGetServlet(final String name, final double rate)
+    public ContentGetServlet(final String name, final boolean nocache, final double rate)
     {
         super(name, rate);
+
+        m_nocache = nocache;
     }
 
     @Override
@@ -85,11 +89,6 @@ public class ContentGetServlet extends AbstractContentServlet
     public boolean isNeverCache()
     {
         return m_nocache;
-    }
-
-    public void setNeverCache(final boolean nocache)
-    {
-        m_nocache = nocache;
     }
 
     protected void content(final HttpServletRequest request, final HttpServletResponse response, final boolean send) throws ServletException, IOException
