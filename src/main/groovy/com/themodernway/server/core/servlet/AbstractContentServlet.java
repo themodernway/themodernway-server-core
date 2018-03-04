@@ -27,14 +27,15 @@ import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 
-@SuppressWarnings("serial")
 public abstract class AbstractContentServlet extends HTTPServletBase
 {
-    private String                                            m_storage_name = null;
+    private static final long                                 serialVersionUID = 1L;
 
-    private final Object                                      m_storage_lock = new Object();
+    private transient String                                  m_storage_name   = null;
 
-    private final ConcurrentHashMap<String, IFileItemStorage> m_storage_save = new ConcurrentHashMap<String, IFileItemStorage>();
+    private final Object                                      m_storage_lock   = new Object();
+
+    private final ConcurrentHashMap<String, IFileItemStorage> m_storage_save   = new ConcurrentHashMap<String, IFileItemStorage>();
 
     protected AbstractContentServlet()
     {
