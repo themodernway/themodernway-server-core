@@ -44,13 +44,35 @@ public class ContentGetServlet extends AbstractContentServlet
     @Override
     protected void doHead(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        content(request, response, false);
+        try
+        {
+            content(request, response, false);
+        }
+        catch (ServletException | IOException e)
+        {
+            logger().error("captured overall exception for security.", e);
+
+            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+            return;
+        }
     }
 
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        content(request, response, true);
+        try
+        {
+            content(request, response, true);
+        }
+        catch (ServletException | IOException e)
+        {
+            logger().error("captured overall exception for security.", e);
+
+            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+            return;
+        }
     }
 
     public boolean isRedirectOn()
