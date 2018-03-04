@@ -27,10 +27,11 @@ import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 
-@SuppressWarnings("serial")
 public class ContentGetServlet extends AbstractContentServlet
 {
-    private boolean m_nocache = false;
+    private static final long serialVersionUID = 1L;
+
+    private boolean           m_nocache        = false;
 
     public ContentGetServlet()
     {

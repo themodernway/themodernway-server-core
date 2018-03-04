@@ -34,10 +34,11 @@ import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 import com.themodernway.server.core.io.IO;
 
-@SuppressWarnings("serial")
 public class ContentUploadServlet extends AbstractContentServlet
 {
-    private long m_limit = CommonOps.IS_NOT_FOUND;
+    private static final long serialVersionUID = 1L;
+
+    private long              m_limit          = CommonOps.IS_NOT_FOUND;
 
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException

@@ -33,22 +33,23 @@ import com.themodernway.server.core.limiting.IRateLimited;
 import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.security.session.IServerSession;
 
-@SuppressWarnings("serial")
 public class CoreSpringDispatcherServlet extends DispatcherServlet implements IRateLimited, IServletCommonOperations
 {
-    private final Logger                     m_logger    = LoggingOps.LOGGER(getClass());
+    private static final long                serialVersionUID = 1L;
 
-    private RateLimiter                      m_ratelimit = null;
+    private final Logger                     m_logger         = LoggingOps.LOGGER(getClass());
 
-    private boolean                          m_iscontent = false;
+    private RateLimiter                      m_ratelimit      = null;
 
-    private int                              m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private boolean                          m_iscontent      = false;
 
-    private List<String>                     m_roleslist = arrayList();
+    private int                              m_contentmx      = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    private ISessionIDFromRequestExtractor   m_extractor = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
+    private List<String>                     m_roleslist      = arrayList();
 
-    private IServletResponseErrorCodeManager m_errorcode = CoreServletResponseErrorCodeManager.DEFAULT;
+    private ISessionIDFromRequestExtractor   m_extractor      = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
+
+    private IServletResponseErrorCodeManager m_errorcode      = CoreServletResponseErrorCodeManager.DEFAULT;
 
     public CoreSpringDispatcherServlet(final WebApplicationContext context)
     {

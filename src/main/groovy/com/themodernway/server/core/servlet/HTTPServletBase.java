@@ -32,22 +32,23 @@ import com.themodernway.server.core.limiting.IRateLimited;
 import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.security.session.IServerSession;
 
-@SuppressWarnings("serial")
 public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IServletCommonOperations
 {
-    private final Logger                     m_logger    = LoggingOps.LOGGER(getClass());
+    private static final long                serialVersionUID = 1L;
 
-    private RateLimiter                      m_ratelimit = null;
+    private final Logger                     m_logger         = LoggingOps.LOGGER(getClass());
 
-    private boolean                          m_iscontent = false;
+    private RateLimiter                      m_ratelimit      = null;
 
-    private List<String>                     m_roleslist = arrayList();
+    private boolean                          m_iscontent      = false;
 
-    private int                              m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private List<String>                     m_roleslist      = arrayList();
 
-    private ISessionIDFromRequestExtractor   m_extractor = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
+    private int                              m_contentmx      = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
 
-    private IServletResponseErrorCodeManager m_errorcode = CoreServletResponseErrorCodeManager.DEFAULT;
+    private ISessionIDFromRequestExtractor   m_extractor      = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
+
+    private IServletResponseErrorCodeManager m_errorcode      = CoreServletResponseErrorCodeManager.DEFAULT;
 
     protected HTTPServletBase()
     {
