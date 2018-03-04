@@ -25,11 +25,6 @@ public class ContentDownloadServlet extends ContentGetServlet
 {
     private static final long serialVersionUID = 1L;
 
-    public ContentDownloadServlet(final String name, final boolean nocache)
-    {
-        super(name, nocache);
-    }
-
     public ContentDownloadServlet(final String name, final boolean nocache, final double rate)
     {
         super(name, nocache, rate);

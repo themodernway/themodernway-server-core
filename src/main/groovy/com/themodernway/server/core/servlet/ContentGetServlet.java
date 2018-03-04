@@ -33,13 +33,6 @@ public class ContentGetServlet extends AbstractContentServlet
 
     private final boolean     m_nocache;
 
-    public ContentGetServlet(final String name, final boolean nocache)
-    {
-        super(name);
-
-        m_nocache = nocache;
-    }
-
     public ContentGetServlet(final String name, final boolean nocache, final double rate)
     {
         super(name, rate);

@@ -38,7 +38,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
     private final Logger                     m_logger         = LoggingOps.LOGGER(getClass());
 
-    private RateLimiter                      m_ratelimit      = null;
+    private final RateLimiter                m_ratelimit;
 
     private boolean                          m_iscontent      = false;
 
@@ -50,14 +50,9 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
     private IServletResponseErrorCodeManager m_errorcode      = CoreServletResponseErrorCodeManager.DEFAULT;
 
-    protected HTTPServletBase()
-    {
-        setRateLimiter(RateLimiterFactory.create(getClass()));
-    }
-
     protected HTTPServletBase(final double rate)
     {
-        setRateLimit(rate);
+        m_ratelimit = RateLimiterFactory.create(rate);
     }
 
     @Override
@@ -72,19 +67,9 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         return m_logger;
     }
 
-    public RateLimiter getRateLimiter()
+    protected final RateLimiter getRateLimiter()
     {
         return m_ratelimit;
-    }
-
-    public void setRateLimiter(final RateLimiter rate)
-    {
-        m_ratelimit = rate;
-    }
-
-    public void setRateLimit(final double rate)
-    {
-        setRateLimiter(RateLimiterFactory.create(rate));
     }
 
     @Override
