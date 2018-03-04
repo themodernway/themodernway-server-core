@@ -204,8 +204,9 @@ public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
                             {
                                 m_base.getUnit().sleep(wait);
                             }
-                            catch (final InterruptedException e)
+                            catch (final Exception e)
                             {
+                                // do nothing, still loop
                             }
                         }
                     }
