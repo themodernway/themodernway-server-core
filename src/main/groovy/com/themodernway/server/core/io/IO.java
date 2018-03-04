@@ -444,21 +444,11 @@ public final class IO
         {
             throw new IOException("Can't read file.");
         }
-        InputStream stream = null;
-
-        try
+        try (CheckSumInputStream check = new CheckSumInputStream(IO.toInputStream(file)))
         {
-            stream = IO.toInputStream(file);
+            IO.copy(check, new NoOpOutputStream());
 
-            final CheckSumInputStream is = new CheckSumInputStream(stream);
-
-            IO.copy(is, new NoOpOutputStream());
-
-            return is.getChecksum().getValue();
-        }
-        finally
-        {
-            IO.close(stream);
+            return check.getChecksum().getValue();
         }
     }
 
@@ -476,141 +466,71 @@ public final class IO
         {
             throw new IOException("Can't read file.");
         }
-        InputStream stream = null;
-
-        try
+        try (CheckSumInputStream check = new CheckSumInputStream(IO.toInputStream(file), ck))
         {
-            stream = IO.toInputStream(file);
+            IO.copy(check, new NoOpOutputStream());
 
-            final CheckSumInputStream is = new CheckSumInputStream(stream, ck);
-
-            IO.copy(is, new NoOpOutputStream());
-
-            return is.getChecksum().getValue();
-        }
-        finally
-        {
-            IO.close(stream);
+            return check.getChecksum().getValue();
         }
     }
 
     public static final long checksum(final Path path) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (CheckSumInputStream check = new CheckSumInputStream(IO.toInputStream(path)))
         {
-            stream = IO.toInputStream(path);
+            IO.copy(check, new NoOpOutputStream());
 
-            final CheckSumInputStream is = new CheckSumInputStream(stream);
-
-            IO.copy(is, new NoOpOutputStream());
-
-            return is.getChecksum().getValue();
-        }
-        finally
-        {
-            IO.close(stream);
+            return check.getChecksum().getValue();
         }
     }
 
     public static final long checksum(final Path path, final Checksum ck) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (CheckSumInputStream check = new CheckSumInputStream(IO.toInputStream(path), ck))
         {
-            stream = IO.toInputStream(path);
+            IO.copy(check, new NoOpOutputStream());
 
-            final CheckSumInputStream is = new CheckSumInputStream(stream, ck);
-
-            IO.copy(is, new NoOpOutputStream());
-
-            return is.getChecksum().getValue();
-        }
-        finally
-        {
-            IO.close(stream);
+            return check.getChecksum().getValue();
         }
     }
 
     public static final long checksum(final Resource resource) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (CheckSumInputStream check = new CheckSumInputStream(resource.getInputStream()))
         {
-            stream = resource.getInputStream();
+            IO.copy(check, new NoOpOutputStream());
 
-            final CheckSumInputStream is = new CheckSumInputStream(stream);
-
-            IO.copy(is, new NoOpOutputStream());
-
-            return is.getChecksum().getValue();
-        }
-        finally
-        {
-            IO.close(stream);
+            return check.getChecksum().getValue();
         }
     }
 
     public static final long checksum(final Resource resource, final Checksum ck) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (CheckSumInputStream check = new CheckSumInputStream(resource.getInputStream(), ck))
         {
-            stream = resource.getInputStream();
+            IO.copy(check, new NoOpOutputStream());
 
-            final CheckSumInputStream is = new CheckSumInputStream(stream, ck);
-
-            IO.copy(is, new NoOpOutputStream());
-
-            return is.getChecksum().getValue();
-        }
-        finally
-        {
-            IO.close(stream);
+            return check.getChecksum().getValue();
         }
     }
 
     public static final long checksum(final IFileItem file) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (CheckSumInputStream check = new CheckSumInputStream(file.getInputStream()))
         {
-            stream = file.getInputStream();
+            IO.copy(check, new NoOpOutputStream());
 
-            final CheckSumInputStream is = new CheckSumInputStream(stream);
-
-            IO.copy(is, new NoOpOutputStream());
-
-            return is.getChecksum().getValue();
-        }
-        finally
-        {
-            IO.close(stream);
+            return check.getChecksum().getValue();
         }
     }
 
     public static final long checksum(final IFileItem file, final Checksum ck) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (CheckSumInputStream check = new CheckSumInputStream(file.getInputStream(), ck))
         {
-            stream = file.getInputStream();
+            IO.copy(check, new NoOpOutputStream());
 
-            final CheckSumInputStream is = new CheckSumInputStream(stream, ck);
-
-            IO.copy(is, new NoOpOutputStream());
-
-            return is.getChecksum().getValue();
-        }
-        finally
-        {
-            IO.close(stream);
+            return check.getChecksum().getValue();
         }
     }
 

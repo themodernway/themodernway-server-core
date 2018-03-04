@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.io;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
@@ -25,13 +26,36 @@ import com.themodernway.common.api.java.util.CommonOps;
 
 public class CheckSumInputStream extends CheckedInputStream
 {
+    private final boolean m_close;
+
     public CheckSumInputStream(final InputStream in)
     {
-        this(in, new CRC32());
+        this(in, new CRC32(), true);
+    }
+
+    public CheckSumInputStream(final InputStream in, final boolean close)
+    {
+        this(in, new CRC32(), close);
     }
 
     public CheckSumInputStream(final InputStream in, final Checksum ck)
     {
+        this(CommonOps.requireNonNull(in), CommonOps.requireNonNull(ck), true);
+    }
+
+    public CheckSumInputStream(final InputStream in, final Checksum ck, final boolean close)
+    {
         super(CommonOps.requireNonNull(in), CommonOps.requireNonNull(ck));
+
+        m_close = close;
+    }
+
+    @Override
+    public void close() throws IOException
+    {
+        if (m_close)
+        {
+            super.close();
+        }
     }
 }
