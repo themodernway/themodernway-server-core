@@ -44,8 +44,6 @@ public interface IServerSessionHelper
 
     public final static String               SP_DEFAULT_DOMAIN                       = "default";
 
-    public final static List<String>         SP_DEFAULT_ROLES_LIST                   = CommonOps.toUnmodifiableList("ANONYMOUS");
-
     public final static IServerSessionHelper SP_DEFAULT_HELPER_INSTANCE              = new SimpleServerSessionHelper();
 
     public static class SimpleServerSessionHelper implements IServerSessionHelper
@@ -173,7 +171,7 @@ public interface IServerSessionHelper
 
     default List<String> getDefaultRoles()
     {
-        return SP_DEFAULT_ROLES_LIST;
+        return CommonOps.toUnmodifiableList("ANONYMOUS");
     }
 
     default String getDefaultDomain()

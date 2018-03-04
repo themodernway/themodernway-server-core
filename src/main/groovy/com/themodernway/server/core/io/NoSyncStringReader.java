@@ -93,7 +93,7 @@ public class NoSyncStringReader extends Reader
         {
             return 0;
         }
-        long siz = Math.min(m_size - m_next, skip);
+        long siz = Math.min((long) m_size - m_next, skip);
 
         siz = Math.max(-m_next, siz);
 

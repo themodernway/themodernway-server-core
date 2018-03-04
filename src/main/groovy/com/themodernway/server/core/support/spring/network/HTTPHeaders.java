@@ -35,19 +35,19 @@ import com.themodernway.server.core.json.JSONObject;
 
 public class HTTPHeaders extends HttpHeaders
 {
-    private static final long           serialVersionUID       = 1L;
+    private static final long            serialVersionUID       = 1L;
 
-    public static final String          DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.0.8 (Language=Java/%s)", System.getProperty("java.version"));
+    public static final String           DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.0.8 (Language=Java/%s)", System.getProperty("java.version"));
 
-    public static final MediaType       XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
+    public static final MediaType        XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
 
-    public static final MediaType       JSON_MEDIA_TYPE        = MediaType.APPLICATION_JSON_UTF8;
+    public static final MediaType        JSON_MEDIA_TYPE        = MediaType.APPLICATION_JSON_UTF8;
 
-    public static final MediaType       YAML_MEDIA_TYPE        = MediaType.valueOf(IHTTPConstants.CONTENT_TYPE_APPLICATION_YAML);
+    public static final MediaType        YAML_MEDIA_TYPE        = MediaType.valueOf(IHTTPConstants.CONTENT_TYPE_APPLICATION_YAML);
 
-    public static final MediaType       PROPERTIES_MEDIA_TYPE  = MediaType.valueOf(IHTTPConstants.CONTENT_TYPE_TEXT_PROPERTIES);
+    public static final MediaType        PROPERTIES_MEDIA_TYPE  = MediaType.valueOf(IHTTPConstants.CONTENT_TYPE_TEXT_PROPERTIES);
 
-    public static final List<MediaType> JSON_ACCEPT_MEDIA_TYPE = CommonOps.toUnmodifiableList(JSON_MEDIA_TYPE);
+    private static final List<MediaType> JSON_ACCEPT_MEDIA_TYPE = CommonOps.toUnmodifiableList(JSON_MEDIA_TYPE);
 
     public HTTPHeaders(final HttpHeaders head)
     {

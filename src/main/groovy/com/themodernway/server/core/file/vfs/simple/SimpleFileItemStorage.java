@@ -48,7 +48,6 @@ import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.ICoreCommon;
-import com.themodernway.server.core.NanoTimer;
 import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.ICoreContentTypeMapper;
 import com.themodernway.server.core.file.vfs.FileItemWrapper;
@@ -63,11 +62,7 @@ import com.themodernway.server.core.file.vfs.IFolderItem;
 import com.themodernway.server.core.file.vfs.IFolderItemWrapper;
 import com.themodernway.server.core.file.vfs.ItemsOptions;
 import com.themodernway.server.core.io.IO;
-import com.themodernway.server.core.io.NoOpOutputStream;
-import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.binder.BinderType;
-import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.logging.LoggingOps;
 
 public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
@@ -1093,147 +1088,5 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             throw new IOException(format("Can't stream folder (%s).", getPath()));
         }
-    }
-
-    public static void main(final String... strings)
-    {
-        try (final SimpleFileItemStorage stor = new SimpleFileItemStorage("content", "/content"))
-        {
-            stor.getRoot().wrap().items(ItemsOptions.RECURSIVE).forEach(item -> System.out.format("file (%s) type (%s) base(%s).\n", item.getPath(), item.getContentType(), item.getBaseName()));
-
-            stor.getRoot().wrap().items(ItemsOptions.FILE).filter(item -> item.getPath().endsWith(".json")).map(item -> item.lines()).flatMap(lines -> lines).forEach(line -> System.out.println(line));
-
-            final JSONArray list = new JSONArray();
-
-            stor.getRoot().wrap().items(ItemsOptions.FILE).filter(item -> item.getExtension().equals("json")).forEach(item -> cat(item, list));
-
-            System.out.println(list.toJSONString());
-
-            final IFileItem item = stor.getRoot().file("/x/y/z/b.json");
-
-            System.out.println("check " + item.checksum());
-
-            final OutputStream puts = new NoOpOutputStream();
-
-            final NanoTimer t = new NanoTimer();
-
-            long s = 0;
-
-            for (int i = 0; i < 50000; i++)
-            {
-                s += cat(item, puts, false);
-            }
-            System.out.println(t.toString());
-            System.out.println("" + s);
-            s = 0;
-            t.reset();
-            for (int i = 0; i < 50000; i++)
-            {
-                s += cat(item, puts, true);
-            }
-            System.out.println(t.toString());
-            System.out.println("" + s);
-            s = 0;
-            t.reset();
-            for (int i = 0; i < 50000; i++)
-            {
-                s += cat(stor.getRoot().file("/x/y/z/b.json"), puts, false);
-            }
-            System.out.println(t.toString());
-            System.out.println("" + s);
-            s = 0;
-            t.reset();
-            for (int i = 0; i < 50000; i++)
-            {
-                s += cat(stor.getRoot().file("/x/y/z/b.json"), puts, true);
-            }
-            System.out.println(t.toString());
-            System.out.println("" + s);
-        }
-        catch (final IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public static long cat(final IFileItem item, final OutputStream ou, final boolean flag)
-    {
-        try
-        {
-            if (isFileFoundForReading(item, flag))
-            {
-                return item.writeTo(ou);
-            }
-            else
-            {
-                System.out.println("no");
-            }
-        }
-        catch (final Exception e)
-        {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    public static void cat(final IFileItem item, final JSONArray list)
-    {
-        final IBinder binder = BinderType.JSON.getBinder();
-
-        try (InputStream is = item.getInputStream())
-        {
-            list.add(binder.bindJSON(is));
-        }
-        catch (final Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public static boolean isFileFoundForReading(final IFileItem file, final boolean flag) throws IOException
-    {
-        if (null == file)
-        {
-            return false;
-        }
-        if (flag)
-        {
-            final IFileItemAttributes attr = file.getAttributes();
-
-            if (false == attr.exists())
-            {
-                return false;
-            }
-            if (false == attr.isReadable())
-            {
-                return false;
-            }
-            if (false == attr.isFile())
-            {
-                return false;
-            }
-            if (attr.isHidden())
-            {
-                return false;
-            }
-            return true;
-        }
-        if (false == file.exists())
-        {
-            return false;
-        }
-        if (false == file.isReadable())
-        {
-            return false;
-        }
-        if (false == file.isFile())
-        {
-            return false;
-        }
-        if (file.isHidden())
-        {
-            return false;
-        }
-        return true;
     }
 }
