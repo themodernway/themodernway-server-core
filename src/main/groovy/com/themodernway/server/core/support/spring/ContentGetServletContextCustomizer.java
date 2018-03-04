@@ -70,14 +70,8 @@ public class ContentGetServletContextCustomizer extends ServletFactoryContextCus
     @Override
     public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        final ContentGetServlet inst = new ContentGetServlet();
+        final ContentGetServlet inst = new ContentGetServlet(getFileItemStorageName());
 
-        final String name = toTrimOrNull(getFileItemStorageName());
-
-        if (null != name)
-        {
-            inst.setFileItemStorageName(name);
-        }
         final ISessionIDFromRequestExtractor extr = customizer.getSessionIDFromRequestExtractor();
 
         if (null != extr)

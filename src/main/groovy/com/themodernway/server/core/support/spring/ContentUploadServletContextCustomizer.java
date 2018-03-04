@@ -71,14 +71,8 @@ public class ContentUploadServletContextCustomizer extends ServletFactoryContext
     @Override
     public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        final ContentUploadServlet inst = new ContentUploadServlet();
+        final ContentUploadServlet inst = new ContentUploadServlet(getFileItemStorageName());
 
-        final String name = toTrimOrNull(getFileItemStorageName());
-
-        if (null != name)
-        {
-            inst.setFileItemStorageName(name);
-        }
         final ISessionIDFromRequestExtractor extr = customizer.getSessionIDFromRequestExtractor();
 
         if (null != extr)

@@ -21,16 +21,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.themodernway.server.core.file.vfs.IFileItem;
 
-@SuppressWarnings("serial")
 public class ContentDownloadServlet extends ContentGetServlet
 {
-    public ContentDownloadServlet()
+    private static final long serialVersionUID = 1L;
+
+    public ContentDownloadServlet(final String name)
     {
+        super(name);
     }
 
-    public ContentDownloadServlet(final double rate)
+    public ContentDownloadServlet(final String name, final double rate)
     {
-        super(rate);
+        super(name, rate);
     }
 
     @Override

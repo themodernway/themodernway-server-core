@@ -40,6 +40,11 @@ public class ContentUploadServlet extends AbstractContentServlet
 
     private long              m_limit          = CommonOps.IS_NOT_FOUND;
 
+    public ContentUploadServlet(final String name)
+    {
+        super(name);
+    }
+
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {

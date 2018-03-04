@@ -31,19 +31,20 @@ public abstract class AbstractContentServlet extends HTTPServletBase
 {
     private static final long                                 serialVersionUID = 1L;
 
-    private transient String                                  m_storage_name   = null;
-
-    private final Object                                      m_storage_lock   = new Object();
+    private final String                                      m_storage_name;
 
     private final ConcurrentHashMap<String, IFileItemStorage> m_storage_save   = new ConcurrentHashMap<String, IFileItemStorage>();
 
-    protected AbstractContentServlet()
+    protected AbstractContentServlet(final String name)
     {
+        m_storage_name = toTrimOrElse(name, CONTENT_SERVLET_STORAGE_NAME_DEFAULT);
     }
 
-    protected AbstractContentServlet(final double rate)
+    protected AbstractContentServlet(final String name, final double rate)
     {
         super(rate);
+
+        m_storage_name = toTrimOrElse(name, CONTENT_SERVLET_STORAGE_NAME_DEFAULT);
     }
 
     public String getPathNormalized(final String path)
@@ -51,34 +52,9 @@ public abstract class AbstractContentServlet extends HTTPServletBase
         return FileAndPathUtils.normalize(path);
     }
 
-    public String getContentServletStorageNameParam()
-    {
-        return CONTENT_SERVLET_STORAGE_NAME_PARAM;
-    }
-
-    public String getContentServletStorageNameDefault()
-    {
-        return CONTENT_SERVLET_STORAGE_NAME_DEFAULT;
-    }
-
     public String getFileItemStorageName()
     {
-        if (null == m_storage_name)
-        {
-            synchronized (m_storage_lock)
-            {
-                if (null == m_storage_name)
-                {
-                    setFileItemStorageName(getConfigurationParameterOrPropertyOtherwise(toTrimOrElse(getContentServletStorageNameParam(), CONTENT_SERVLET_STORAGE_NAME_PARAM), toTrimOrElse(getContentServletStorageNameDefault(), CONTENT_SERVLET_STORAGE_NAME_DEFAULT)));
-                }
-            }
-        }
         return m_storage_name;
-    }
-
-    public void setFileItemStorageName(final String name)
-    {
-        m_storage_name = toTrimOrNull(name);
     }
 
     public IFolderItem getRoot() throws IOException

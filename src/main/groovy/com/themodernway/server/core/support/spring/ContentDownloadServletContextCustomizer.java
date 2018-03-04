@@ -58,14 +58,8 @@ public class ContentDownloadServletContextCustomizer extends ServletFactoryConte
     @Override
     public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        final ContentDownloadServlet inst = new ContentDownloadServlet();
+        final ContentDownloadServlet inst = new ContentDownloadServlet(getFileItemStorageName());
 
-        final String name = toTrimOrNull(getFileItemStorageName());
-
-        if (null != name)
-        {
-            inst.setFileItemStorageName(name);
-        }
         final ISessionIDFromRequestExtractor extr = customizer.getSessionIDFromRequestExtractor();
 
         if (null != extr)
