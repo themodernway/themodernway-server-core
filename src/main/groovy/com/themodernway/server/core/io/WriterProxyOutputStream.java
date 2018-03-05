@@ -23,7 +23,7 @@ public class WriterProxyOutputStream extends AbstractWriterProxyOutputStream<Wri
 {
     public WriterProxyOutputStream(final Writer writer)
     {
-        super(writer);
+        super(writer, IO.UTF_8_CHARSET);
     }
 
     public WriterProxyOutputStream(final Writer writer, final Charset charset)

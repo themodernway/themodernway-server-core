@@ -33,35 +33,35 @@ import com.themodernway.server.core.json.binder.IBinder;
 
 public final class JSONUtils
 {
-    public final static BigDecimal BIG_DECIMAL_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
+    public static final BigDecimal BIG_DECIMAL_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
 
-    public final static BigDecimal BIG_DECIMAL_MIN = BigDecimal.valueOf(-Double.MAX_VALUE);
+    public static final BigDecimal BIG_DECIMAL_MIN = BigDecimal.valueOf(-Double.MAX_VALUE);
 
-    public final static BigInteger BIG_INTEGER_MAX = BigInteger.valueOf(Integer.MAX_VALUE);
+    public static final BigInteger BIG_INTEGER_MAX = BigInteger.valueOf(Integer.MAX_VALUE);
 
-    public final static BigInteger BIG_INTEGER_MIN = BigInteger.valueOf(Integer.MIN_VALUE);
+    public static final BigInteger BIG_INTEGER_MIN = BigInteger.valueOf(Integer.MIN_VALUE);
 
-    public final static BigInteger BIG_INTLONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);
+    public static final BigInteger BIG_INTLONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);
 
-    public final static BigInteger BIG_INTLONG_MIN = BigInteger.valueOf(Long.MIN_VALUE);
+    public static final BigInteger BIG_INTLONG_MIN = BigInteger.valueOf(Long.MIN_VALUE);
 
-    public final static BigDecimal BIG_DEC_INT_MAX = BigDecimal.valueOf(Integer.MAX_VALUE);
+    public static final BigDecimal BIG_DEC_INT_MAX = BigDecimal.valueOf(Integer.MAX_VALUE);
 
-    public final static BigDecimal BIG_DEC_INT_MIN = BigDecimal.valueOf(Integer.MIN_VALUE);
+    public static final BigDecimal BIG_DEC_INT_MIN = BigDecimal.valueOf(Integer.MIN_VALUE);
 
-    public final static BigDecimal BIG_DEC_LONGMAX = BigDecimal.valueOf(Long.MAX_VALUE);
+    public static final BigDecimal BIG_DEC_LONGMAX = BigDecimal.valueOf(Long.MAX_VALUE);
 
-    public final static BigDecimal BIG_DEC_LONGMIN = BigDecimal.valueOf(Long.MIN_VALUE);
+    public static final BigDecimal BIG_DEC_LONGMIN = BigDecimal.valueOf(Long.MIN_VALUE);
 
-    public final static BigInteger BIG_INT_DEC_MAX = BIG_DECIMAL_MAX.toBigInteger();
+    public static final BigInteger BIG_INT_DEC_MAX = BIG_DECIMAL_MAX.toBigInteger();
 
-    public final static BigInteger BIG_INT_DEC_MIN = BIG_DECIMAL_MIN.toBigInteger();
+    public static final BigInteger BIG_INT_DEC_MIN = BIG_DECIMAL_MIN.toBigInteger();
 
     private static final IBinder   OBJECT_BINDER   = BinderType.JSON.getBinder();
 
     private static final IBinder   STRICT_BINDER   = BinderType.JSON.getBinder().setStrict();
 
-    protected JSONUtils()
+    private JSONUtils()
     {
     }
 
@@ -139,21 +139,13 @@ public final class JSONUtils
         {
             final long value = ((Long) object);
 
-            if ((value > Integer.MAX_VALUE) || (value < Integer.MIN_VALUE))
-            {
-                return false;
-            }
-            return true;
+            return (false == ((value > Integer.MAX_VALUE) || (value < Integer.MIN_VALUE)));
         }
         if (object instanceof BigInteger)
         {
             final BigInteger value = ((BigInteger) object);
 
-            if ((value.compareTo(BIG_INTEGER_MAX) > 0) || (value.compareTo(BIG_INTEGER_MIN) < 0))
-            {
-                return false;
-            }
-            return true;
+            return (false == ((value.compareTo(BIG_INTEGER_MAX) > 0) || (value.compareTo(BIG_INTEGER_MIN) < 0)));
         }
         if (object instanceof Short)
         {
@@ -180,19 +172,11 @@ public final class JSONUtils
         }
         if (object instanceof Double)
         {
-            if (isDoubleInfiniteOrNan(((Double) object)))
-            {
-                return false;
-            }
-            return true;
+            return (false == (isDoubleInfiniteOrNan(((Double) object))));
         }
         if (object instanceof Float)
         {
-            if (isFloatInfiniteOrNan((Float) object))
-            {
-                return false;
-            }
-            return true;
+            return (false == (isFloatInfiniteOrNan(((Float) object))));
         }
         if (object instanceof BigDecimal)
         {
@@ -213,11 +197,7 @@ public final class JSONUtils
 
     public static final boolean isNumber(final Object object)
     {
-        if (object instanceof Number)
-        {
-            return (isInteger(object) || isDouble(object));
-        }
-        return false;
+        return (object instanceof Number) ? (isInteger(object) || isDouble(object)) : false;
     }
 
     public static final boolean isObject(final Object object)
@@ -375,13 +355,13 @@ public final class JSONUtils
         }
         if (object instanceof Float)
         {
-            final Double dval = new Double(((Float) object).doubleValue());
+            final Float fval = ((Float) object);
 
-            if (isDoubleInfiniteOrNan(dval))
+            if (isFloatInfiniteOrNan(fval))
             {
                 return nulled();
             }
-            return dval;
+            return fval.doubleValue();
         }
         if (object instanceof BigDecimal)
         {
@@ -409,7 +389,7 @@ public final class JSONUtils
         }
         if (object instanceof Number)
         {
-            final Double dval = new Double(((Number) object).doubleValue());
+            final Double dval = ((Number) object).doubleValue();
 
             if (isDoubleInfiniteOrNan(dval))
             {

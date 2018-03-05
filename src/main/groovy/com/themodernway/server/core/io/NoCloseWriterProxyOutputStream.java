@@ -23,7 +23,7 @@ public class NoCloseWriterProxyOutputStream extends AbstractWriterProxyOutputStr
 {
     public NoCloseWriterProxyOutputStream(final Writer writer)
     {
-        super(new NoCloseProxyWriter(writer));
+        super(new NoCloseProxyWriter(writer), IO.UTF_8_CHARSET);
     }
 
     public NoCloseWriterProxyOutputStream(final Writer writer, final Charset charset)

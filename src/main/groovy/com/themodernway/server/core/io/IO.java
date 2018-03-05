@@ -46,7 +46,7 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public final class IO
 {
-    private final static Logger logger                  = LoggingOps.LOGGER(IO.class);
+    private static final Logger logger                  = LoggingOps.LOGGER(IO.class);
 
     public static final int     EOF                     = CommonOps.IS_NOT_FOUND;
 
