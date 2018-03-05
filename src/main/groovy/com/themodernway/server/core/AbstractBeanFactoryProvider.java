@@ -79,7 +79,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
     {
         if (null == valu)
         {
-            if (logger().isErrorEnabled(LoggingOps.TMW_MARKER))
+            if (logger().isErrorEnabled())
             {
                 logger().error(LoggingOps.TMW_MARKER, format(NULL_VALUE_E, getName()));
             }
@@ -89,7 +89,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
 
         if (null == name)
         {
-            if (logger().isErrorEnabled(LoggingOps.TMW_MARKER))
+            if (logger().isErrorEnabled())
             {
                 logger().error(LoggingOps.TMW_MARKER, format(NULL_VALUE_E, getName()));
             }
@@ -97,13 +97,13 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         }
         if (null != m_storage.putIfAbsent(name, valu))
         {
-            if (logger().isWarnEnabled(LoggingOps.TMW_MARKER))
+            if (logger().isWarnEnabled())
             {
                 logger().warn(LoggingOps.TMW_MARKER, format("duplicate name (%s) ignored in (%s).", name, getName()));
             }
             return false;
         }
-        if (logger().isInfoEnabled(LoggingOps.TMW_MARKER))
+        if (logger().isInfoEnabled())
         {
             logger().info(LoggingOps.TMW_MARKER, format("stored name(%s) in (%s).", name, getName()));
         }

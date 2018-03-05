@@ -207,7 +207,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     {
         m_open.set(false);
 
-        if (logger.isInfoEnabled(LoggingOps.TMW_MARKER))
+        if (logger.isInfoEnabled())
         {
             logger.info(LoggingOps.TMW_MARKER, format("SimpleFileItemStorage(%s,%s).close().", getName(), getBasePath()));
         }
@@ -254,12 +254,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         private IOException        m_oops = CommonOps.nulled();
 
-        protected static final boolean IS_SET(final int bits, final int flag)
+        protected static final boolean isSet(final int bits, final int flag)
         {
             return ((bits & flag) == flag);
         }
 
-        protected static final int DO_SET(final int bits, final int flag)
+        protected static final int doSet(final int bits, final int flag)
         {
             return (bits | flag);
         }
@@ -272,27 +272,27 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
                 if (item.isHidden())
                 {
-                    m_bits = DO_SET(m_bits, FLAG_H);
+                    m_bits = doSet(m_bits, FLAG_H);
                 }
                 if (item.exists(file))
                 {
-                    m_bits = DO_SET(m_bits, FLAG_E);
+                    m_bits = doSet(m_bits, FLAG_E);
 
                     if (item.isReadable(file))
                     {
-                        m_bits = DO_SET(m_bits, FLAG_R);
+                        m_bits = doSet(m_bits, FLAG_R);
                     }
                     if (item.isWritable(file, item.getFileItemStorage()))
                     {
-                        m_bits = DO_SET(m_bits, FLAG_W);
+                        m_bits = doSet(m_bits, FLAG_W);
                     }
                     if (item.isFile(file))
                     {
-                        m_bits = DO_SET(m_bits, FLAG_F);
+                        m_bits = doSet(m_bits, FLAG_F);
                     }
                     else if (item.isFolder(file))
                     {
-                        m_bits = DO_SET(m_bits, FLAG_D);
+                        m_bits = doSet(m_bits, FLAG_D);
                     }
                 }
             }
@@ -307,37 +307,37 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public boolean exists()
         {
-            return IS_SET(m_bits, FLAG_E);
+            return isSet(m_bits, FLAG_E);
         }
 
         @Override
         public boolean isHidden()
         {
-            return IS_SET(m_bits, FLAG_H);
+            return isSet(m_bits, FLAG_H);
         }
 
         @Override
         public boolean isReadable()
         {
-            return IS_SET(m_bits, FLAG_R);
+            return isSet(m_bits, FLAG_R);
         }
 
         @Override
         public boolean isWritable()
         {
-            return IS_SET(m_bits, FLAG_W);
+            return isSet(m_bits, FLAG_W);
         }
 
         @Override
         public boolean isFile()
         {
-            return IS_SET(m_bits, FLAG_F);
+            return isSet(m_bits, FLAG_F);
         }
 
         @Override
         public boolean isFolder()
         {
-            return IS_SET(m_bits, FLAG_D);
+            return isSet(m_bits, FLAG_D);
         }
 
         public IOException getException()
@@ -816,7 +816,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public Stream<IFileItem> items(EnumSet<ItemsOptions> options) throws IOException
         {
-            validate();
+            super.validate();
 
             final File self = readtest(getFile());
 
@@ -836,7 +836,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
                     final boolean fold = options.contains(ItemsOptions.FOLDER);
 
-                    final ArrayList<Path> list = new ArrayList<Path>();
+                    final List<Path> list = new ArrayList<>();
 
                     final Path root = self.toPath();
 
@@ -1059,7 +1059,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public IFolderItem getAsFolderItem() throws IOException
         {
-            validate();
+            super.validate();
 
             return this;
         }
@@ -1067,7 +1067,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public InputStream getInputStream() throws IOException
         {
-            validate();
+            super.validate();
 
             throw new IOException(format("Can't stream folder (%s).", getPath()));
         }
@@ -1075,7 +1075,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public BufferedReader getBufferedReader() throws IOException
         {
-            validate();
+            super.validate();
 
             throw new IOException(format("Can't read folder (%s).", getPath()));
         }
@@ -1083,7 +1083,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public long writeTo(final OutputStream output) throws IOException
         {
-            validate();
+            super.validate();
 
             throw new IOException(format("Can't stream folder (%s).", getPath()));
         }
@@ -1091,7 +1091,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public long writeTo(final Writer output) throws IOException
         {
-            validate();
+            super.validate();
 
             throw new IOException(format("Can't stream folder (%s).", getPath()));
         }
