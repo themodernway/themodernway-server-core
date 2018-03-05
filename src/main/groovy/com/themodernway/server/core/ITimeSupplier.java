@@ -16,9 +16,7 @@
 
 package com.themodernway.server.core;
 
-import java.util.Date;
 import java.util.function.LongSupplier;
-import java.util.function.Supplier;
 
 @FunctionalInterface
 public interface ITimeSupplier
@@ -40,28 +38,8 @@ public interface ITimeSupplier
         return System::nanoTime;
     }
 
-    public static ITimeSupplier ofLong(final Long time)
+    public static ITimeSupplier of(final LongSupplier time)
     {
-        return () -> time;
-    }
-
-    public static ITimeSupplier ofLong(final Supplier<Long> time)
-    {
-        return () -> time.get();
-    }
-
-    public static ITimeSupplier ofLong(final LongSupplier time)
-    {
-        return () -> time.getAsLong();
-    }
-
-    public static ITimeSupplier ofDate(final Date date)
-    {
-        return () -> date.getTime();
-    }
-
-    public static ITimeSupplier ofDate(final Supplier<Date> date)
-    {
-        return () -> date.get().getTime();
+        return time::getAsLong;
     }
 }

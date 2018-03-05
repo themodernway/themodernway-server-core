@@ -68,6 +68,8 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
 
     protected String name(final String name, final T valu)
     {
+        requireNonNull(valu, () -> format("null valu in (%s).", getName()));
+
         return getOriginalBeanName(name);
     }
 
@@ -75,24 +77,34 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
     {
         if (null == valu)
         {
-            logger().error(format("null valu in (%s).", getName()));
-
+            if (logger().isErrorEnabled())
+            {
+                logger().error(format("null valu in (%s).", getName()));
+            }
             return false;
         }
-        if (null == (name = name(name, valu)))
-        {
-            logger().error(format("null valu in (%s).", getName()));
+        name = name(name, valu);
 
+        if (null == name)
+        {
+            if (logger().isErrorEnabled())
+            {
+                logger().error(format("null valu in (%s).", getName()));
+            }
             return false;
         }
         if (null != m_storage.putIfAbsent(name, valu))
         {
-            logger().error(format("duplicate name (%s) ignored in (%s).", name, getName()));
-
+            if (logger().isWarnEnabled())
+            {
+                logger().warn(format("duplicate name (%s) ignored in (%s).", name, getName()));
+            }
             return false;
         }
-        logger().info(format("stored name(%s) in (%s).", name, getName()));
-
+        if (logger().isInfoEnabled())
+        {
+            logger().info(format("stored name(%s) in (%s).", name, getName()));
+        }
         return true;
     }
 
@@ -105,7 +117,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
     @Override
     public void setBeanFactory(final BeanFactory beanFactory) throws BeansException
     {
-        getBeansOfType(beanFactory).forEach((name, valu) -> store(name, valu));
+        getBeansOfType(beanFactory).forEach(this::store);
     }
 
     @Override
@@ -138,8 +150,10 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             return toUnmodifiableMap(((DefaultListableBeanFactory) factory).getBeansOfType(getClassOf()));
         }
-        logger().error(format("not DefaultListableBeanFactory (%s).", getName()));
-
+        if (logger().isErrorEnabled())
+        {
+            logger().error(format("not DefaultListableBeanFactory (%s).", getName()));
+        }
         return toUnmodifiableMap(emptyMap());
     }
 }

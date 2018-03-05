@@ -31,13 +31,18 @@ public interface IBeanFactoryProviderNamed<T extends Closeable & INamed> extends
         {
             final String name = item.getName();
 
-            logger().info(format("starting close (%s).", name));
-
+            if (logger().isInfoEnabled())
+            {
+                logger().info(format("starting close (%s).", name));
+            }
             IO.close(item);
 
-            logger().info(format("finished close (%s).", name));
+            if (logger().isInfoEnabled())
+            {
+                logger().info(format("finished close (%s).", name));
+            }
         }
-        else
+        else if (logger().isErrorEnabled())
         {
             logger().error(format("null item close (%s).", getName()));
         }
