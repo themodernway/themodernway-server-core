@@ -73,11 +73,7 @@ public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeVa
 
             if (tmp.isValid())
             {
-                if (false == must)
-                {
-                    return;
-                }
-                else if (i == (size - 1))
+                if ((false == must) || (i == (size - 1)))
                 {
                     return;
                 }
