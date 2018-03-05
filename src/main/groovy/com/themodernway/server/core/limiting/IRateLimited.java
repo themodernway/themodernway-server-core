@@ -29,6 +29,10 @@ public interface IRateLimited
 
     public static final class RateLimiterFactory
     {
+        private RateLimiterFactory()
+        {
+        }
+
         public static final RateLimiter create(final double rate)
         {
             if (rate <= 0.0)

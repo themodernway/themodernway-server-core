@@ -80,7 +80,7 @@ public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeVa
             }
             else if (must)
             {
-                tmp.getErrors().forEach((e) -> ctx.addError(e));
+                tmp.getErrors().forEach(e -> ctx.addError(e));
 
                 ctx.addBadTypeError(getName());
 

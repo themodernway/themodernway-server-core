@@ -24,27 +24,27 @@ import com.themodernway.common.api.java.util.StringOps;
 
 public interface IServerSessionHelper
 {
-    public final static String               SP_STATUS_KEY                           = "status";
+    public static final String               SP_STATUS_KEY                           = "status";
 
-    public final static String               SP_DOMAIN_KEY                           = "domain";
+    public static final String               SP_DOMAIN_KEY                           = "domain";
 
-    public final static String               SP_ROLES_KEY                            = "roles";
+    public static final String               SP_ROLES_KEY                            = "roles";
 
-    public final static String               SP_USER_ID_KEY                          = "user_id";
+    public static final String               SP_USER_ID_KEY                          = "user_id";
 
-    public final static String               SP_SESSION_ID_KEY                       = "session_id";
+    public static final String               SP_SESSION_ID_KEY                       = "session_id";
 
-    public final static String               SP_ORIGINAL_SESSION_ID_KEY              = "original_session_id";
+    public static final String               SP_ORIGINAL_SESSION_ID_KEY              = "original_session_id";
 
-    public final static String               SP_CREATION_TIME_KEY                    = "creation_time";
+    public static final String               SP_CREATION_TIME_KEY                    = "creation_time";
 
-    public final static String               SP_LAST_ACCESSED_TIME_KEY               = "last_accessed_time";
+    public static final String               SP_LAST_ACCESSED_TIME_KEY               = "last_accessed_time";
 
-    public final static String               SP_MAX_INACTIVE_INTERVAL_IN_SECONDS_KEY = "max_inactive_interval_in_seconds";
+    public static final String               SP_MAX_INACTIVE_INTERVAL_IN_SECONDS_KEY = "max_inactive_interval_in_seconds";
 
-    public final static String               SP_DEFAULT_DOMAIN                       = "default";
+    public static final String               SP_DEFAULT_DOMAIN                       = "default";
 
-    public final static IServerSessionHelper SP_DEFAULT_HELPER_INSTANCE              = new SimpleServerSessionHelper();
+    public static final IServerSessionHelper SP_DEFAULT_HELPER_INSTANCE              = new SimpleServerSessionHelper();
 
     public static class SimpleServerSessionHelper implements IServerSessionHelper
     {
@@ -183,7 +183,7 @@ public interface IServerSessionHelper
     {
         if ((null != list) && (false == list.isEmpty()))
         {
-            final HashSet<String> send = new HashSet<String>(list.size());
+            final HashSet<String> send = new HashSet<>(list.size());
 
             for (final Object elem : list)
             {

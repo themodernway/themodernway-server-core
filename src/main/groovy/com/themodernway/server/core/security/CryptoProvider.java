@@ -115,5 +115,6 @@ public final class CryptoProvider implements ICryptoProvider
     @Override
     public final void close() throws IOException
     {
+        // empty by design.
     }
 }

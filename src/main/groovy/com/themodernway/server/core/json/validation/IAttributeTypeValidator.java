@@ -41,7 +41,7 @@ public interface IAttributeTypeValidator extends INamed
     {
         final ArrayList<IAttributeTypeValidator> temp = CommonOps.arrayList(CommonOps.requireNonNull(list));
 
-        temp.removeIf((type) -> null == type);
+        temp.removeIf(type -> null == type);
 
         return CommonOps.toUnmodifiableList(temp);
     }

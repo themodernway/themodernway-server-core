@@ -32,5 +32,6 @@ public class IgnoreTypeValidator extends AbstractAttributeTypeValidator
     @Override
     public void validate(final IJSONValue jval, final ValidationContext ctx)
     {
+        // empty by design.
     }
 }

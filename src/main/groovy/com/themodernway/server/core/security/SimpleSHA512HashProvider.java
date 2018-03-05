@@ -27,6 +27,7 @@ public final class SimpleSHA512HashProvider implements ISHA512HashProvider
 
     public SimpleSHA512HashProvider()
     {
+        // empty by design.
     }
 
     @Override

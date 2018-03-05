@@ -26,7 +26,7 @@ public class SimpleJSONServerSessionRepository extends AbstractServerSessionRepo
 {
     private static final long                               serialVersionUID = 1L;
 
-    private final ConcurrentHashMap<String, IServerSession> m_sessions       = new ConcurrentHashMap<String, IServerSession>();
+    private final ConcurrentHashMap<String, IServerSession> m_sessions       = new ConcurrentHashMap<>();
 
     public SimpleJSONServerSessionRepository()
     {
@@ -62,7 +62,7 @@ public class SimpleJSONServerSessionRepository extends AbstractServerSessionRepo
     @Override
     public void cleanExpiredSessions()
     {
-        final HashSet<String> dead = new HashSet<String>();
+        final HashSet<String> dead = new HashSet<>();
 
         for (final IServerSession session : m_sessions.values())
         {

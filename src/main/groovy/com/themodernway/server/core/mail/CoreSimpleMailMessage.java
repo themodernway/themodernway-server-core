@@ -26,10 +26,11 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
 
-@SuppressWarnings("serial")
 public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSimpleMailMessage
 {
-    private final IMailSender m_send;
+    private static final long serialVersionUID = 1L;
+
+    private transient IMailSender m_send;
 
     public CoreSimpleMailMessage()
     {

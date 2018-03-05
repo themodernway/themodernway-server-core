@@ -35,7 +35,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
 {
     private static final Logger                                   logger         = LoggingOps.LOGGER(ServerSessionRepositoryProvider.class);
 
-    private final LinkedHashMap<String, IServerSessionRepository> m_repositories = new LinkedHashMap<String, IServerSessionRepository>();
+    private final LinkedHashMap<String, IServerSessionRepository> m_repositories = new LinkedHashMap<>();
 
     public ServerSessionRepositoryProvider()
     {

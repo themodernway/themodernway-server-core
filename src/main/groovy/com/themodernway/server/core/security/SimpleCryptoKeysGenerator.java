@@ -37,6 +37,7 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 
     public SimpleCryptoKeysGenerator()
     {
+        // empty by design.
     }
 
     @Override

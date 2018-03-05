@@ -28,10 +28,6 @@ public interface ITimeWindowMovingAverage extends IAverageWindow
 
     public TimeUnit getUnit();
 
-    public void tick(long duration, TimeUnit unit);
-
-    public String toPlaces(int places);
-
     public ITimerHandle getTimerHandle();
 
     public ITimerHandle getTimerHandle(boolean wait);

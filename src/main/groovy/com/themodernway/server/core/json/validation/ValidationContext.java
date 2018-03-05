@@ -99,7 +99,7 @@ public class ValidationContext implements IValidationContext
     @Override
     public boolean isValid()
     {
-        return (0 == m_errors.size());
+        return m_errors.isEmpty();
     }
 
     @Override

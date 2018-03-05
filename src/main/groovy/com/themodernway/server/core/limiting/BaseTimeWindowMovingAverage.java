@@ -98,24 +98,9 @@ public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
     }
 
     @Override
-    public synchronized void tick(final long duration, final TimeUnit unit)
-    {
-        if (m_moment != 0)
-        {
-            m_moment -= getUnitOf(validate(duration, 1, 1), CommonOps.requireNonNull(unit));
-        }
-    }
-
-    @Override
-    public String toPlaces(final int places)
-    {
-        return String.format("%." + Math.min(Math.max(places, 0), 8) + "f", getAverage());
-    }
-
-    @Override
     public String toString()
     {
-        return toPlaces(3);
+        return String.format("%.3f", getAverage());
     }
 
     protected long getUnitOf(final long duration, final TimeUnit unit)

@@ -108,6 +108,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, I
     @Override
     public void close() throws IOException
     {
+        // empty by design.
     }
 
     protected static class SimpleMailMessageBuilderDefault implements ISimpleMailMessageBuilder
