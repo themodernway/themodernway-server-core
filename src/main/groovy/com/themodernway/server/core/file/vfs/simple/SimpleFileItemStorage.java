@@ -121,12 +121,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             m_open.set(true);
 
-            if (logger.isInfoEnabled(LoggingOps.TMW_MARKER))
+            if (logger.isInfoEnabled())
             {
                 logger.info(LoggingOps.TMW_MARKER, format("SimpleFileItemStorage(%s,%s) open.", m_name, m_base));
             }
         }
-        else if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
+        else if (logger.isErrorEnabled())
         {
             logger.error(LoggingOps.TMW_MARKER, format("SimpleFileItemStorage(%s,%s) can't access.", m_name, m_base));
         }

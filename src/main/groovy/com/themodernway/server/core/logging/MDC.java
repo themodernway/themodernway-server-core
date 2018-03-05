@@ -36,7 +36,7 @@ public final class MDC
         }
         catch (final Exception e)
         {
-            if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
+            if (logger.isErrorEnabled())
             {
                 logger.error(LoggingOps.TMW_MARKER, "clear()", e);
             }
@@ -53,7 +53,7 @@ public final class MDC
         }
         catch (final Exception e)
         {
-            if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
+            if (logger.isErrorEnabled())
             {
                 logger.error(LoggingOps.TMW_MARKER, "put()", e);
             }
@@ -70,7 +70,7 @@ public final class MDC
         }
         catch (final Exception e)
         {
-            if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
+            if (logger.isErrorEnabled())
             {
                 logger.error(LoggingOps.TMW_MARKER, "remove()", e);
             }
@@ -87,7 +87,7 @@ public final class MDC
         }
         catch (final Exception e)
         {
-            if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
+            if (logger.isErrorEnabled())
             {
                 logger.error(LoggingOps.TMW_MARKER, "get()", e);
             }

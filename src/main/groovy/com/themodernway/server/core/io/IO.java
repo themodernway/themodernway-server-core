@@ -74,7 +74,7 @@ public final class IO
         }
         catch (final IOException e)
         {
-            if (logger.isDebugEnabled(LoggingOps.TMW_MARKER))
+            if (logger.isDebugEnabled())
             {
                 logger.debug(LoggingOps.TMW_MARKER, "close()", e);
             }

@@ -32,7 +32,7 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
     @Override
     default void close() throws IOException
     {
-        if (logger().isInfoEnabled(LoggingOps.TMW_MARKER))
+        if (logger().isInfoEnabled())
         {
             logger().info(LoggingOps.TMW_MARKER, format("starting close (%s).", getName()));
         }
@@ -40,7 +40,7 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
         {
             destroy(item);
         }
-        if (logger().isInfoEnabled(LoggingOps.TMW_MARKER))
+        if (logger().isInfoEnabled())
         {
             logger().info(LoggingOps.TMW_MARKER, format("finished close (%s).", getName()));
         }
@@ -52,7 +52,7 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
         {
             IO.close(item);
         }
-        else if (logger().isErrorEnabled(LoggingOps.TMW_MARKER))
+        else if (logger().isErrorEnabled())
         {
             logger().error(LoggingOps.TMW_MARKER, format("null item close (%s).", getName()));
         }
