@@ -27,7 +27,7 @@ public abstract class AbstractNoSyncBufferedWriter<T extends AbstractNoSyncBuffe
 
     private int    m_nextch;
 
-    private char   m_charbf[];
+    private char[] m_charbf;
 
     public AbstractNoSyncBufferedWriter(final Writer writer)
     {
@@ -99,19 +99,19 @@ public abstract class AbstractNoSyncBufferedWriter<T extends AbstractNoSyncBuffe
 
             return;
         }
-        int off_sets = off;
+        int loffsets = off;
 
-        final int total_sz = (off + len);
+        final int ltotalsz = (off + len);
 
-        while (off_sets < total_sz)
+        while (loffsets < ltotalsz)
         {
-            final int put_size = Math.min(m_sizeof - m_nextch, total_sz - off_sets);
+            final int lputsize = Math.min(m_sizeof - m_nextch, ltotalsz - loffsets);
 
-            System.arraycopy(buf, off_sets, m_charbf, m_nextch, put_size);
+            System.arraycopy(buf, loffsets, m_charbf, m_nextch, lputsize);
 
-            off_sets = off_sets + put_size;
+            loffsets = loffsets + lputsize;
 
-            m_nextch = m_nextch + put_size;
+            m_nextch = m_nextch + lputsize;
 
             if (m_nextch >= m_sizeof)
             {
@@ -125,31 +125,25 @@ public abstract class AbstractNoSyncBufferedWriter<T extends AbstractNoSyncBuffe
     {
         doEnsuredOpen();
 
-        int off_sets = off;
+        int loffsets = off;
 
-        final int total_sz = (off + len);
+        final int ltotalsz = (off + len);
 
-        while (off_sets < total_sz)
+        while (loffsets < ltotalsz)
         {
-            final int put_size = Math.min(m_sizeof - m_nextch, total_sz - off_sets);
+            final int lputsize = Math.min(m_sizeof - m_nextch, ltotalsz - loffsets);
 
-            s.getChars(off_sets, off_sets + put_size, m_charbf, m_nextch);
+            s.getChars(loffsets, loffsets + lputsize, m_charbf, m_nextch);
 
-            off_sets = off_sets + put_size;
+            loffsets = loffsets + lputsize;
 
-            m_nextch = m_nextch + put_size;
+            m_nextch = m_nextch + lputsize;
 
             if (m_nextch >= m_sizeof)
             {
                 doFlushBuffer();
             }
         }
-    }
-
-    @Override
-    public void newLine() throws IOException
-    {
-        super.newLine();
     }
 
     @Override

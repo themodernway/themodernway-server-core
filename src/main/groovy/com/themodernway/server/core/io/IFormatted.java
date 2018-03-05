@@ -19,6 +19,8 @@ package com.themodernway.server.core.io;
 import java.io.IOException;
 import java.util.Locale;
 
+import com.themodernway.server.core.CoreOps;
+
 @SuppressWarnings("unchecked")
 public interface IFormatted<T extends IFormatted<T>>
 {
@@ -40,6 +42,7 @@ public interface IFormatted<T extends IFormatted<T>>
         }
         catch (final IOException e)
         {
+            CoreOps.handle(e);
         }
         return (T) this;
     }
@@ -52,6 +55,7 @@ public interface IFormatted<T extends IFormatted<T>>
         }
         catch (final IOException e)
         {
+            CoreOps.handle(e);
         }
         return (T) this;
     }
@@ -66,7 +70,7 @@ public interface IFormatted<T extends IFormatted<T>>
         write(buff, 0, buff.length);
     }
 
-    default void write(final byte b[], final int off, final int len) throws IOException
+    default void write(final byte[] b, final int off, final int len) throws IOException
     {
         if ((off | len | (b.length - (len + off)) | (off + len)) < 0)
         {
@@ -78,5 +82,5 @@ public interface IFormatted<T extends IFormatted<T>>
         }
     }
 
-    abstract public void write(int b) throws IOException;
+    abstract void write(int b) throws IOException;
 }
