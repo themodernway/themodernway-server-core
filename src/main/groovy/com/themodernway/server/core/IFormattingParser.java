@@ -16,15 +16,16 @@
 
 package com.themodernway.server.core;
 
+import java.text.ParseException;
 import java.util.function.Supplier;
 
 public interface IFormattingParser<T>
 {
-    public String format(T value) throws Exception;
+    public String format(T value);
 
-    public String format(Supplier<T> value) throws Exception;
+    public String format(Supplier<T> value);
 
-    public T parse(String string) throws Exception;
+    public T parse(String string) throws ParseException;
 
-    public T parse(Supplier<String> string) throws Exception;
+    public T parse(Supplier<String> string) throws ParseException;
 }

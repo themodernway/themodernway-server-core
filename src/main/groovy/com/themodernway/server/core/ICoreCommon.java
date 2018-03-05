@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.logging.IHasLogging;
-import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.support.spring.IPropertiesResolver;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
@@ -35,15 +34,7 @@ public interface ICoreCommon extends ICoreBase, IPropertiesResolver, IHasLogging
 
     public static final String EMPTY_STRING = StringOps.EMPTY_STRING;
 
-    public static Logger LOGGER(final String name)
-    {
-        return LoggingOps.LOGGER(CommonOps.requireNonNull(name));
-    }
-
-    public static Logger LOGGER(final Class<?> type)
-    {
-        return LoggingOps.LOGGER(CommonOps.requireNonNull(type));
-    }
+    public static final String NULL_VALUE_E = "null valu in (%s).";
 
     public static List<String> toTaggingValues(final Object target)
     {
@@ -69,11 +60,6 @@ public interface ICoreCommon extends ICoreBase, IPropertiesResolver, IHasLogging
     default Logger logger()
     {
         return getServerContext().logger();
-    }
-
-    default Logger logger(final Class<?> type)
-    {
-        return LOGGER(type);
     }
 
     default String getOriginalBeanName(final String name)

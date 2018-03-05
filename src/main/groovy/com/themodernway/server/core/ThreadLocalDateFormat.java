@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 public final class ThreadLocalDateFormat extends ThreadLocalFormat<Date, DateFormat>
 {
-    public final static ThreadLocalDateFormat withInitial(final Supplier<DateFormat> supplier)
+    public static final ThreadLocalDateFormat withInitial(final Supplier<DateFormat> supplier)
     {
         return new ThreadLocalDateFormat(supplier);
     }

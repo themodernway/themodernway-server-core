@@ -26,6 +26,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
+import com.themodernway.server.core.logging.LoggingOps;
+
 public abstract class AbstractBeanFactoryProvider<T extends Closeable> implements IBeanFactoryProvider<T>
 {
     private String                         m_beansid;
@@ -34,7 +36,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
 
     private final LinkedHashMap<String, T> m_storage = linkedMap();
 
-    private final Logger                   m_logging = logger(getClass());
+    private final Logger                   m_logging = LoggingOps.LOGGER(getClass());
 
     protected AbstractBeanFactoryProvider(final Class<T> classof)
     {
@@ -68,7 +70,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
 
     protected String name(final String name, final T valu)
     {
-        requireNonNull(valu, () -> format("null valu in (%s).", getName()));
+        requireNonNull(valu, () -> format(NULL_VALUE_E, getName()));
 
         return getOriginalBeanName(name);
     }
@@ -79,7 +81,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             if (logger().isErrorEnabled())
             {
-                logger().error(format("null valu in (%s).", getName()));
+                logger().error(format(NULL_VALUE_E, getName()));
             }
             return false;
         }
@@ -89,7 +91,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             if (logger().isErrorEnabled())
             {
-                logger().error(format("null valu in (%s).", getName()));
+                logger().error(format(NULL_VALUE_E, getName()));
             }
             return false;
         }

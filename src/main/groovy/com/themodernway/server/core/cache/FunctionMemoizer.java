@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 public final class FunctionMemoizer<T, R>
 {
-    private final ConcurrentHashMap<T, R> m_cache = new ConcurrentHashMap<T, R>();
+    private final ConcurrentHashMap<T, R> m_cache = new ConcurrentHashMap<>();
 
     private FunctionMemoizer()
     {

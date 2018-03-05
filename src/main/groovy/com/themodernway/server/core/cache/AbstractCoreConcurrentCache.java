@@ -25,7 +25,7 @@ public abstract class AbstractCoreConcurrentCache<K, T> implements ICoreCache<K,
 {
     private final String                  m_named;
 
-    private final ConcurrentHashMap<K, T> m_cache = new ConcurrentHashMap<K, T>();
+    private final ConcurrentHashMap<K, T> m_cache = new ConcurrentHashMap<>();
 
     protected AbstractCoreConcurrentCache(final String named)
     {

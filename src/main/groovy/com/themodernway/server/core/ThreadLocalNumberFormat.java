@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 public final class ThreadLocalNumberFormat extends ThreadLocalFormat<Number, NumberFormat>
 {
-    public final static ThreadLocalNumberFormat withInitial(final Supplier<NumberFormat> supplier)
+    public static final ThreadLocalNumberFormat withInitial(final Supplier<NumberFormat> supplier)
     {
         return new ThreadLocalNumberFormat(supplier);
     }

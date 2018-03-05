@@ -17,6 +17,7 @@
 package com.themodernway.server.core;
 
 import java.text.Format;
+import java.text.ParseException;
 import java.util.function.Supplier;
 
 import com.themodernway.common.api.java.util.CommonOps;
@@ -29,25 +30,25 @@ public abstract class ThreadLocalFormat<T, F extends Format> extends ThreadLocal
     }
 
     @Override
-    public String format(final T object) throws Exception
+    public String format(final T object)
     {
         return getValue().format(CommonOps.requireNonNull(object));
     }
 
     @Override
-    public String format(final Supplier<T> supplier) throws Exception
+    public String format(final Supplier<T> supplier)
     {
         return format(supplier.get());
     }
 
     @Override
-    public T parse(final String source) throws Exception
+    public T parse(final String source) throws ParseException
     {
         return CommonOps.cast(getValue().parseObject(CommonOps.requireNonNull(source)));
     }
 
     @Override
-    public T parse(final Supplier<String> supplier) throws Exception
+    public T parse(final Supplier<String> supplier) throws ParseException
     {
         return parse(supplier.get());
     }
