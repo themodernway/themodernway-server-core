@@ -80,7 +80,7 @@ public enum ItemsOptions implements IStringValued
         {
             return EnumSet.noneOf(ItemsOptions.class);
         }
-        final ArrayList<ItemsOptions> list = new ArrayList<ItemsOptions>();
+        final ArrayList<ItemsOptions> list = new ArrayList<>();
 
         for (final String option : options)
         {
@@ -88,7 +88,7 @@ public enum ItemsOptions implements IStringValued
             {
                 for (final ItemsOptions item : ItemsOptions.values())
                 {
-                    if ((false == list.contains(item)) && (item.getValue().equals(option.trim().toUpperCase())))
+                    if ((false == list.contains(item)) && (item.getValue().equalsIgnoreCase(option.trim())))
                     {
                         list.add(item);
                     }

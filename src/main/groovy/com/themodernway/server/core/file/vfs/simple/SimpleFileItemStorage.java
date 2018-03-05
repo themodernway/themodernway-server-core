@@ -68,7 +68,7 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 {
-    protected static final IFileItem MAKE(final File file, final IFileItemStorage stor)
+    protected static final IFileItem make(final File file, final IFileItemStorage stor)
     {
         if (IO.isFolder(file))
         {
@@ -80,9 +80,9 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
     }
 
-    protected static final IFileItem MAKE(final Path path, final IFileItemStorage stor)
+    protected static final IFileItem make(final Path path, final IFileItemStorage stor)
     {
-        return MAKE(path.toFile(), stor);
+        return make(path.toFile(), stor);
     }
 
     private static final Logger      logger = LoggingOps.LOGGER(SimpleFileItemStorage.class);
@@ -874,7 +874,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
                     final IFileItemStorage stor = getFileItemStorage();
 
-                    return list.stream().map(file -> MAKE(file, stor));
+                    return list.stream().map(file -> make(file, stor));
                 }
                 else
                 {
@@ -903,7 +903,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             final IFileItemStorage stor = getFileItemStorage();
 
-            return Arrays.stream(getFile().listFiles()).filter(test.and(file -> false == IO.isHidden(file))).map(file -> MAKE(file, stor));
+            return Arrays.stream(getFile().listFiles()).filter(test.and(file -> false == IO.isHidden(file))).map(file -> make(file, stor));
         }
 
         @Override
@@ -933,7 +933,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             if (null != path)
             {
-                return MAKE(new File(path), stor);
+                return make(new File(path), stor);
             }
             return null;
         }
@@ -1046,7 +1046,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
                     fios.flush();
 
-                    return MAKE(file, getFileItemStorage());
+                    return make(file, getFileItemStorage());
                 }
                 finally
                 {
