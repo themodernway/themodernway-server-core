@@ -25,8 +25,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.servlet.ContentUploadServlet;
-import com.themodernway.server.core.servlet.IServletResponseErrorCodeManager;
-import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
 public class ContentUploadServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
 {
@@ -71,22 +69,6 @@ public class ContentUploadServletContextCustomizer extends ServletFactoryContext
     @Override
     public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        final ContentUploadServlet inst = new ContentUploadServlet(getFileItemStorageName(), getFileSizeLimit(), customizer.getRateLimit());
-
-        final ISessionIDFromRequestExtractor extr = customizer.getSessionIDFromRequestExtractor();
-
-        if (null != extr)
-        {
-            inst.setSessionIDFromRequestExtractor(extr);
-        }
-        final IServletResponseErrorCodeManager code = customizer.getServletResponseErrorCodeManager();
-
-        if (null != code)
-        {
-            inst.setServletResponseErrorCodeManager(code);
-        }
-        inst.setRequiredRoles(customizer.getRequiredRoles());
-
-        return inst;
+        return new ContentUploadServlet(getFileItemStorageName(), getFileSizeLimit(), customizer.getRateLimit(), customizer.getRequiredRoles(), customizer.getServletResponseErrorCodeManager(), customizer.getSessionIDFromRequestExtractor());
     }
 }

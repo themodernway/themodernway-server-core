@@ -34,25 +34,27 @@ import com.themodernway.server.core.security.session.IServerSession;
 
 public abstract class HTTPServletBase extends HttpServlet implements IRateLimited, IServletCommonOperations
 {
-    private static final long                serialVersionUID = 1L;
+    private static final long                      serialVersionUID = 1L;
 
-    private final Logger                     m_logger         = LoggingOps.LOGGER(getClass());
+    private final Logger                           m_logger         = LoggingOps.LOGGER(getClass());
 
-    private final RateLimiter                m_ratelimit;
+    private final RateLimiter                      m_ratelimit;
 
-    private boolean                          m_iscontent      = false;
+    private final List<String>                     m_roleslist;
 
-    private List<String>                     m_roleslist      = arrayList();
+    private final ISessionIDFromRequestExtractor   m_extractor;
 
-    private int                              m_contentmx      = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private final IServletResponseErrorCodeManager m_errorcode;
 
-    private ISessionIDFromRequestExtractor   m_extractor      = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
-
-    private IServletResponseErrorCodeManager m_errorcode      = CoreServletResponseErrorCodeManager.DEFAULT;
-
-    protected HTTPServletBase(final double rate)
+    protected HTTPServletBase(final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
     {
         m_ratelimit = RateLimiterFactory.create(rate);
+
+        m_roleslist = requireNonNullOrElse(role, () -> arrayList());
+
+        m_errorcode = requireNonNullOrElse(code, CoreServletResponseErrorCodeManager.DEFAULT);
+
+        m_extractor = requireNonNullOrElse(extr, DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT);
     }
 
     @Override
@@ -84,26 +86,6 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
     }
 
     @Override
-    public boolean isMaxContentTypeLengthInitialized()
-    {
-        return m_iscontent;
-    }
-
-    @Override
-    public int getMaxContentTypeLength()
-    {
-        return m_contentmx;
-    }
-
-    @Override
-    public void setMaxContentTypeLength(final int contentmx)
-    {
-        m_iscontent = true;
-
-        m_contentmx = Math.min(Math.max(0, contentmx), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH);
-    }
-
-    @Override
     public String getConfigurationParameter(final String name)
     {
         return getInitParameter(name);
@@ -118,28 +100,6 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
     public List<String> getRequiredRoles()
     {
         return toUnmodifiableList(m_roleslist);
-    }
-
-    public void setRequiredRoles(String roles)
-    {
-        if (null == (roles = toTrimOrNull(roles)))
-        {
-            setRequiredRoles(arrayList());
-        }
-        else
-        {
-            setRequiredRoles(toUniqueTokenStringList(roles));
-        }
-    }
-
-    public void setRequiredRoles(final List<String> roles)
-    {
-        m_roleslist = (roles == null ? arrayList() : roles);
-    }
-
-    public void setServletResponseErrorCodeManager(final IServletResponseErrorCodeManager manager)
-    {
-        m_errorcode = requireNonNull(manager);
     }
 
     public IServletResponseErrorCodeManager getServletResponseErrorCodeManager()
@@ -305,16 +265,5 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
     public ISessionIDFromRequestExtractor getSessionIDFromRequestExtractor()
     {
         return m_extractor;
-    }
-
-    public void setSessionIDFromRequestExtractor(final ISessionIDFromRequestExtractor extractor)
-    {
-        m_extractor = extractor;
-    }
-
-    @Override
-    public void init()
-    {
-        doInitializeMaxContentTypeLength();
     }
 }

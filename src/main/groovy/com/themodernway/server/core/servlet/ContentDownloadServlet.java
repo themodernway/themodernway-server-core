@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.servlet;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,9 +27,9 @@ public class ContentDownloadServlet extends ContentGetServlet
 {
     private static final long serialVersionUID = 1L;
 
-    public ContentDownloadServlet(final String name, final boolean nocache, final double rate)
+    public ContentDownloadServlet(final String name, final boolean nocache, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
     {
-        super(name, nocache, rate);
+        super(name, nocache, rate, role, code, extr);
     }
 
     @Override

@@ -17,6 +17,7 @@
 package com.themodernway.server.core.servlet;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,9 +34,9 @@ public class ContentGetServlet extends AbstractContentServlet
 
     private final boolean     m_nocache;
 
-    public ContentGetServlet(final String name, final boolean nocache, final double rate)
+    public ContentGetServlet(final String name, final boolean nocache, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
     {
-        super(name, rate);
+        super(name, rate, role, code, extr);
 
         m_nocache = nocache;
     }

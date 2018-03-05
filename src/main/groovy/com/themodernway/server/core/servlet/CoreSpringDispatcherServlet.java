@@ -35,25 +35,29 @@ import com.themodernway.server.core.security.session.IServerSession;
 
 public class CoreSpringDispatcherServlet extends DispatcherServlet implements IRateLimited, IServletCommonOperations
 {
-    private static final long                serialVersionUID = 1L;
+    private static final long                      serialVersionUID = 1L;
 
-    private final Logger                     m_logger         = LoggingOps.LOGGER(getClass());
+    private final Logger                           m_logger         = LoggingOps.LOGGER(getClass());
 
-    private RateLimiter                      m_ratelimit      = null;
+    private final RateLimiter                      m_ratelimit;
 
-    private boolean                          m_iscontent      = false;
+    private final List<String>                     m_roleslist;
 
-    private int                              m_contentmx      = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
+    private final ISessionIDFromRequestExtractor   m_extractor;
 
-    private List<String>                     m_roleslist      = arrayList();
+    private final IServletResponseErrorCodeManager m_errorcode;
 
-    private ISessionIDFromRequestExtractor   m_extractor      = DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT;
-
-    private IServletResponseErrorCodeManager m_errorcode      = CoreServletResponseErrorCodeManager.DEFAULT;
-
-    public CoreSpringDispatcherServlet(final WebApplicationContext context)
+    public CoreSpringDispatcherServlet(final WebApplicationContext context, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
     {
         super(context);
+
+        m_ratelimit = RateLimiterFactory.create(rate);
+
+        m_roleslist = requireNonNullOrElse(role, () -> arrayList());
+
+        m_errorcode = requireNonNullOrElse(code, CoreServletResponseErrorCodeManager.DEFAULT);
+
+        m_extractor = requireNonNullOrElse(extr, DefaultHeaderNameSessionIDFromRequestExtractor.DEFAULT);
     }
 
     @Override
@@ -78,41 +82,9 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
         return m_ratelimit;
     }
 
-    public void setRateLimiter(final RateLimiter rate)
-    {
-        m_ratelimit = rate;
-    }
-
-    public void setRateLimit(final double rate)
-    {
-        setRateLimiter(RateLimiterFactory.create(rate));
-    }
-
     public List<String> getRequiredRoles()
     {
         return toUnmodifiableList(m_roleslist);
-    }
-
-    public void setRequiredRoles(String roles)
-    {
-        if (null == (roles = toTrimOrNull(roles)))
-        {
-            setRequiredRoles(arrayList());
-        }
-        else
-        {
-            setRequiredRoles(toUniqueTokenStringList(roles));
-        }
-    }
-
-    public void setRequiredRoles(final List<String> roles)
-    {
-        m_roleslist = (roles == null ? arrayList() : roles);
-    }
-
-    public void setServletResponseErrorCodeManager(final IServletResponseErrorCodeManager manager)
-    {
-        m_errorcode = requireNonNull(manager);
     }
 
     public IServletResponseErrorCodeManager getServletResponseErrorCodeManager()
@@ -219,39 +191,8 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
         return getServletConfig().getServletName();
     }
 
-    @Override
-    public boolean isMaxContentTypeLengthInitialized()
-    {
-        return m_iscontent;
-    }
-
-    @Override
-    public int getMaxContentTypeLength()
-    {
-        return m_contentmx;
-    }
-
-    @Override
-    public void setMaxContentTypeLength(final int contentmx)
-    {
-        m_iscontent = true;
-
-        m_contentmx = Math.min(Math.max(0, contentmx), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH);
-    }
-
     public ISessionIDFromRequestExtractor getSessionIDFromRequestExtractor()
     {
         return m_extractor;
-    }
-
-    public void setSessionIDFromRequestExtractor(final ISessionIDFromRequestExtractor extractor)
-    {
-        m_extractor = extractor;
-    }
-
-    @Override
-    protected void initFrameworkServlet() throws ServletException
-    {
-        doInitializeMaxContentTypeLength();
     }
 }

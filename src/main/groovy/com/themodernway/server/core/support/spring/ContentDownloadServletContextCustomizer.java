@@ -24,8 +24,6 @@ import javax.servlet.ServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.servlet.ContentDownloadServlet;
-import com.themodernway.server.core.servlet.IServletResponseErrorCodeManager;
-import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
 public class ContentDownloadServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
 {
@@ -58,22 +56,6 @@ public class ContentDownloadServletContextCustomizer extends ServletFactoryConte
     @Override
     public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        final ContentDownloadServlet inst = new ContentDownloadServlet(getFileItemStorageName(), true, customizer.getRateLimit());
-
-        final ISessionIDFromRequestExtractor extr = customizer.getSessionIDFromRequestExtractor();
-
-        if (null != extr)
-        {
-            inst.setSessionIDFromRequestExtractor(extr);
-        }
-        final IServletResponseErrorCodeManager code = customizer.getServletResponseErrorCodeManager();
-
-        if (null != code)
-        {
-            inst.setServletResponseErrorCodeManager(code);
-        }
-        inst.setRequiredRoles(customizer.getRequiredRoles());
-
-        return inst;
+        return new ContentDownloadServlet(getFileItemStorageName(), true, customizer.getRateLimit(), customizer.getRequiredRoles(), customizer.getServletResponseErrorCodeManager(), customizer.getSessionIDFromRequestExtractor());
     }
 }

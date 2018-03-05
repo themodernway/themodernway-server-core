@@ -115,7 +115,5 @@ public interface IHTTPFilter extends Filter, IServletCommonOperations
         setFilterConfig(fc);
 
         initialize();
-
-        doInitializeMaxContentTypeLength();
     }
 }

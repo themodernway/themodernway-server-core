@@ -40,9 +40,9 @@ public class ContentUploadServlet extends AbstractContentServlet
 
     private final long        m_limit;
 
-    public ContentUploadServlet(final String name, final long limit, final double rate)
+    public ContentUploadServlet(final String name, final long limit, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
     {
-        super(name, rate);
+        super(name, rate, role, code, extr);
 
         m_limit = Math.max(CommonOps.IS_NOT_FOUND, limit);
     }

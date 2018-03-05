@@ -195,13 +195,6 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
     }
 
-    public default boolean isMaxContentTypeLengthInitialized()
-    {
-        return false;
-    }
-
-    public void setMaxContentTypeLength(int max);
-
     public default boolean isMaxContentTypeHeaderLengthValid(final HttpServletRequest request, final HttpServletResponse response)
     {
         return isMaxHeaderLengthValid(request, response, CONTENT_TYPE_HEADER, Math.min(Math.max(0, getMaxContentTypeLength()), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH));
@@ -240,26 +233,6 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
     public default String getConfigurationParameter(final String name)
     {
         return null;
-    }
-
-    public default void doInitializeMaxContentTypeLength()
-    {
-        if (false == isMaxContentTypeLengthInitialized())
-        {
-            final String size = toTrimOrNull(getConfigurationParameter(CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM));
-
-            if (null != size)
-            {
-                try
-                {
-                    setMaxContentTypeLength(Math.min(Math.max(0, Integer.parseInt(size)), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH));
-                }
-                catch (final Exception e)
-                {
-                    logger().error(format("error parsing parameter (%s), value (%s).", CONTENT_TYPE_MAX_HEADER_LENGTH_PARAM, size), e);
-                }
-            }
-        }
     }
 
     public default Map<String, String> getConfigurationParameters()

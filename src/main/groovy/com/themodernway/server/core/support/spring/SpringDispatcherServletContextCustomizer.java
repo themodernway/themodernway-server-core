@@ -24,8 +24,6 @@ import javax.servlet.ServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.servlet.CoreSpringDispatcherServlet;
-import com.themodernway.server.core.servlet.IServletResponseErrorCodeManager;
-import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
 public class SpringDispatcherServletContextCustomizer extends ServletFactoryContextCustomizer implements IServletFactory
 {
@@ -46,24 +44,6 @@ public class SpringDispatcherServletContextCustomizer extends ServletFactoryCont
     @Override
     public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        final CoreSpringDispatcherServlet inst = new CoreSpringDispatcherServlet(context);
-
-        final ISessionIDFromRequestExtractor extr = customizer.getSessionIDFromRequestExtractor();
-
-        if (null != extr)
-        {
-            inst.setSessionIDFromRequestExtractor(extr);
-        }
-        final IServletResponseErrorCodeManager code = customizer.getServletResponseErrorCodeManager();
-
-        if (null != code)
-        {
-            inst.setServletResponseErrorCodeManager(code);
-        }
-        inst.setRateLimit(customizer.getRateLimit());
-
-        inst.setRequiredRoles(customizer.getRequiredRoles());
-
-        return inst;
+        return new CoreSpringDispatcherServlet(context, customizer.getRateLimit(), customizer.getRequiredRoles(), customizer.getServletResponseErrorCodeManager(), customizer.getSessionIDFromRequestExtractor());
     }
 }

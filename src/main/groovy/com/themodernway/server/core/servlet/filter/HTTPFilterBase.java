@@ -26,10 +26,6 @@ public abstract class HTTPFilterBase implements IHTTPFilter
 {
     private boolean      m_isonceper = false;
 
-    private boolean      m_iscontent = false;
-
-    private int          m_contentmx = DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
-
     private FilterConfig m_config    = null;
 
     private final Logger m_logger    = LoggingOps.LOGGER(getClass());
@@ -53,26 +49,6 @@ public abstract class HTTPFilterBase implements IHTTPFilter
     public Logger logger()
     {
         return m_logger;
-    }
-
-    @Override
-    public boolean isMaxContentTypeLengthInitialized()
-    {
-        return m_iscontent;
-    }
-
-    @Override
-    public int getMaxContentTypeLength()
-    {
-        return m_contentmx;
-    }
-
-    @Override
-    public void setMaxContentTypeLength(final int contentmx)
-    {
-        m_iscontent = true;
-
-        m_contentmx = Math.min(Math.max(0, contentmx), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH);
     }
 
     @Override

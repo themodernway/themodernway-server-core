@@ -17,6 +17,7 @@
 package com.themodernway.server.core.servlet;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -35,9 +36,9 @@ public abstract class AbstractContentServlet extends HTTPServletBase
 
     private final ConcurrentHashMap<String, IFileItemStorage> m_storage_save   = new ConcurrentHashMap<String, IFileItemStorage>();
 
-    protected AbstractContentServlet(final String name, final double rate)
+    protected AbstractContentServlet(final String name, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
     {
-        super(rate);
+        super(rate, role, code, extr);
 
         m_storage_name = toTrimOrElse(name, CONTENT_SERVLET_STORAGE_NAME_DEFAULT);
     }
