@@ -26,9 +26,9 @@ public class ValidationContext implements IValidationContext
 {
     private final String                m_root;
 
-    private final List<String>          m_stack  = new ArrayList<String>();
+    private final List<String>          m_stack  = new ArrayList<>();
 
-    private final List<ValidationError> m_errors = new ArrayList<ValidationError>();
+    private final List<ValidationError> m_errors = new ArrayList<>();
 
     public ValidationContext()
     {

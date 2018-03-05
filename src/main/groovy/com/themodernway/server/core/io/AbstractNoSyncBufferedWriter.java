@@ -79,7 +79,7 @@ public abstract class AbstractNoSyncBufferedWriter<T extends AbstractNoSyncBuffe
     }
 
     @Override
-    public void write(final char buf[], final int off, final int len) throws IOException
+    public void write(final char[] buf, final int off, final int len) throws IOException
     {
         doEnsuredOpen();
 

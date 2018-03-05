@@ -19,7 +19,7 @@ package com.themodernway.server.core.io;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class NoOpOutputStream extends OutputStream implements IFormatted<NoOpOutputStream>
+public class NoOpOutputStream extends OutputStream
 {
     public NoOpOutputStream()
     {
@@ -31,12 +31,12 @@ public class NoOpOutputStream extends OutputStream implements IFormatted<NoOpOut
     }
 
     @Override
-    public void write(final byte b[]) throws IOException
+    public void write(final byte[] b) throws IOException
     {
     }
 
     @Override
-    public void write(final byte b[], final int off, final int len) throws IOException
+    public void write(final byte[] b, final int off, final int len) throws IOException
     {
     }
 

@@ -26,13 +26,7 @@ public class DoubleValidator extends AbstractAttributeTypeValidator
     @Override
     public void validate(final IJSONValue json, final ValidationContext ctx)
     {
-        if (null == json)
-        {
-            ctx.addBadTypeError(getName());
-
-            return;
-        }
-        if (null == json.getAsDouble())
+        if ((null == json) || (null == json.getAsDouble()))
         {
             ctx.addBadTypeError(getName());
         }

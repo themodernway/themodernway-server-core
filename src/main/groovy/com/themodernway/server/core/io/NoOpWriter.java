@@ -19,7 +19,7 @@ package com.themodernway.server.core.io;
 import java.io.IOException;
 import java.io.Writer;
 
-public class NoOpWriter extends Writer implements IFormatted<NoOpWriter>
+public class NoOpWriter extends Writer
 {
     public NoOpWriter()
     {
@@ -31,12 +31,12 @@ public class NoOpWriter extends Writer implements IFormatted<NoOpWriter>
     }
 
     @Override
-    public void write(final char cbuf[]) throws IOException
+    public void write(final char[] cbuf) throws IOException
     {
     }
 
     @Override
-    public void write(final char cbuf[], final int off, final int len) throws IOException
+    public void write(final char[] cbuf, final int off, final int len) throws IOException
     {
     }
 

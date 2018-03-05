@@ -59,7 +59,7 @@ public class NoSyncStringReader extends Reader
     }
 
     @Override
-    public int read(final char chr[], final int off, final int len) throws IOException
+    public int read(final char[] chr, final int off, final int len) throws IOException
     {
         ensureOpen();
 

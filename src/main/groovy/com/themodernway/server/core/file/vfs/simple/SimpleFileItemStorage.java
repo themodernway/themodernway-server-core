@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.ICoreContentTypeMapper;
@@ -120,11 +121,14 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             m_open.set(true);
 
-            logger.info(format("SimpleFileItemStorage(%s,%s) open.", m_name, m_base));
+            if (logger.isInfoEnabled(LoggingOps.TMW_MARKER))
+            {
+                logger.info(LoggingOps.TMW_MARKER, format("SimpleFileItemStorage(%s,%s) open.", m_name, m_base));
+            }
         }
-        else
+        else if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
         {
-            logger.error(format("SimpleFileItemStorage(%s,%s) can't access.", m_name, m_base));
+            logger.error(LoggingOps.TMW_MARKER, format("SimpleFileItemStorage(%s,%s) can't access.", m_name, m_base));
         }
     }
 
@@ -203,7 +207,10 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     {
         m_open.set(false);
 
-        logger.info(format("SimpleFileItemStorage(%s,%s).close().", getName(), getBasePath()));
+        if (logger.isInfoEnabled(LoggingOps.TMW_MARKER))
+        {
+            logger.info(LoggingOps.TMW_MARKER, format("SimpleFileItemStorage(%s,%s).close().", getName(), getBasePath()));
+        }
     }
 
     @Override
@@ -397,13 +404,13 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             if (isFolder(file))
             {
-                return getAsFolderItem().items().map(f -> f.wrap().getName()).collect(Collectors.joining("\n")).concat("\n");
+                return getAsFolderItem().items().map(f -> f.wrap().getName()).collect(Collectors.joining(FileAndPathUtils.SYS_JOIN_NL_STRING)).concat(FileAndPathUtils.SYS_JOIN_NL_STRING);
             }
             else
             {
                 if (FileAndPathUtils.isSystemWindows())
                 {
-                    return IO.getStringAtMost(file, file.length()).replace("\r", "");
+                    return IO.getStringAtMost(file, file.length()).replace(FileAndPathUtils.SYS_JOIN_CR_STRING, StringOps.EMPTY_STRING);
                 }
                 else
                 {

@@ -79,9 +79,9 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
     {
         if (null == valu)
         {
-            if (logger().isErrorEnabled())
+            if (logger().isErrorEnabled(LoggingOps.TMW_MARKER))
             {
-                logger().error(format(NULL_VALUE_E, getName()));
+                logger().error(LoggingOps.TMW_MARKER, format(NULL_VALUE_E, getName()));
             }
             return false;
         }
@@ -89,23 +89,23 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
 
         if (null == name)
         {
-            if (logger().isErrorEnabled())
+            if (logger().isErrorEnabled(LoggingOps.TMW_MARKER))
             {
-                logger().error(format(NULL_VALUE_E, getName()));
+                logger().error(LoggingOps.TMW_MARKER, format(NULL_VALUE_E, getName()));
             }
             return false;
         }
         if (null != m_storage.putIfAbsent(name, valu))
         {
-            if (logger().isWarnEnabled())
+            if (logger().isWarnEnabled(LoggingOps.TMW_MARKER))
             {
-                logger().warn(format("duplicate name (%s) ignored in (%s).", name, getName()));
+                logger().warn(LoggingOps.TMW_MARKER, format("duplicate name (%s) ignored in (%s).", name, getName()));
             }
             return false;
         }
-        if (logger().isInfoEnabled())
+        if (logger().isInfoEnabled(LoggingOps.TMW_MARKER))
         {
-            logger().info(format("stored name(%s) in (%s).", name, getName()));
+            logger().info(LoggingOps.TMW_MARKER, format("stored name(%s) in (%s).", name, getName()));
         }
         return true;
     }
@@ -152,9 +152,9 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             return toUnmodifiableMap(((DefaultListableBeanFactory) factory).getBeansOfType(getClassOf()));
         }
-        if (logger().isErrorEnabled())
+        if (logger().isErrorEnabled(LoggingOps.TMW_MARKER))
         {
-            logger().error(format("not DefaultListableBeanFactory (%s).", getName()));
+            logger().error(LoggingOps.TMW_MARKER, format("not DefaultListableBeanFactory (%s).", getName()));
         }
         return toUnmodifiableMap(emptyMap());
     }

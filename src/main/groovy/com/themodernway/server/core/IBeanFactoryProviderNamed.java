@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public interface IBeanFactoryProviderNamed<T extends Closeable & INamed> extends IBeanFactoryProvider<T>
 {
@@ -31,20 +32,20 @@ public interface IBeanFactoryProviderNamed<T extends Closeable & INamed> extends
         {
             final String name = item.getName();
 
-            if (logger().isInfoEnabled())
+            if (logger().isInfoEnabled(LoggingOps.TMW_MARKER))
             {
-                logger().info(format("starting close (%s).", name));
+                logger().info(LoggingOps.TMW_MARKER, format("starting close (%s).", name));
             }
             IO.close(item);
 
-            if (logger().isInfoEnabled())
+            if (logger().isInfoEnabled(LoggingOps.TMW_MARKER))
             {
-                logger().info(format("finished close (%s).", name));
+                logger().info(LoggingOps.TMW_MARKER, format("finished close (%s).", name));
             }
         }
-        else if (logger().isErrorEnabled())
+        else if (logger().isErrorEnabled(LoggingOps.TMW_MARKER))
         {
-            logger().error(format("null item close (%s).", getName()));
+            logger().error(LoggingOps.TMW_MARKER, format("null item close (%s).", getName()));
         }
     }
 }

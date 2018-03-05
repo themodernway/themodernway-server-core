@@ -26,13 +26,7 @@ public class LongValidator extends AbstractAttributeTypeValidator
     @Override
     public void validate(final IJSONValue json, final ValidationContext ctx)
     {
-        if (null == json)
-        {
-            ctx.addBadTypeError(getName());
-
-            return;
-        }
-        if (null == json.getAsLong())
+        if ((null == json) || (null == json.getAsLong()))
         {
             ctx.addBadTypeError(getName());
         }

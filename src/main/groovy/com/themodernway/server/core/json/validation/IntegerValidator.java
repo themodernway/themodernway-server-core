@@ -26,13 +26,7 @@ public class IntegerValidator extends AbstractAttributeTypeValidator
     @Override
     public void validate(final IJSONValue json, final ValidationContext ctx)
     {
-        if (null == json)
-        {
-            ctx.addBadTypeError(getName());
-
-            return;
-        }
-        if (null == json.getAsInteger())
+        if ((null == json) || (null == json.getAsInteger()))
         {
             ctx.addBadTypeError(getName());
         }

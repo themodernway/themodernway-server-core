@@ -105,8 +105,8 @@ public class CoreJSONOperations implements ICoreJSONOperations
         return jarr(json(CommonOps.requireNonNull(map)));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public final JSONArray jarr(final Object object)
     {
         CommonOps.requireNonNull(object);

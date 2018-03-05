@@ -54,7 +54,7 @@ public class NoSyncStringBuilderWriter extends Writer implements CharSequence, I
     }
 
     @Override
-    public void write(final char chr[], final int off, final int len) throws IOException
+    public void write(final char[] chr, final int off, final int len) throws IOException
     {
         if (null != chr)
         {

@@ -20,6 +20,8 @@ import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.SystemPropertyUtils;
@@ -37,7 +39,11 @@ public final class LoggingOps
     static
     {
         init();
+
+        TMW_MARKER = MarkerFactory.getMarker("com.themodernway.server.core.logging.MARKER");
     }
+
+    public static final Marker TMW_MARKER;
 
     private LoggingOps()
     {

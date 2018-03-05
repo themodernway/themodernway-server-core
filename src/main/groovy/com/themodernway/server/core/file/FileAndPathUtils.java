@@ -37,6 +37,10 @@ public final class FileAndPathUtils
 
     public static final char                   SYS_SEPARATOR_CHAR   = File.separatorChar;
 
+    public static final String                 SYS_JOIN_NL_STRING   = "\n";
+
+    public static final String                 SYS_JOIN_CR_STRING   = "\r";
+
     public static final String                 EXT_SEPARATOR_STRING = Character.toString(EXT_SEPARATOR_CHAR);
 
     public static final String                 UNX_SEPARATOR_STRING = Character.toString(UNX_SEPARATOR_CHAR);
@@ -92,7 +96,7 @@ public final class FileAndPathUtils
         return SYS_SEPARATOR_CHAR == WIN_SEPARATOR_CHAR;
     }
 
-    public final static String extn(String path)
+    public static final String extn(String path)
     {
         if (null != (path = normalize(path)))
         {

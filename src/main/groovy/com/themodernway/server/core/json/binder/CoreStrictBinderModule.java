@@ -175,8 +175,10 @@ public class CoreStrictBinderModule extends SimpleModule
             }
             catch (final IOException e)
             {
-                logger.error("strictbinder.properties", e);
-
+                if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
+                {
+                    logger.error(LoggingOps.TMW_MARKER, "strictbinder.properties", e);
+                }
                 return Version.unknownVersion();
             }
         }

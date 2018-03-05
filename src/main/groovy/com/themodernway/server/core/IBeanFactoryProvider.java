@@ -25,23 +25,24 @@ import org.springframework.beans.factory.BeanNameAware;
 
 import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, BeanNameAware, Closeable, ICoreCommon, INamed
 {
     @Override
     default void close() throws IOException
     {
-        if (logger().isInfoEnabled())
+        if (logger().isInfoEnabled(LoggingOps.TMW_MARKER))
         {
-            logger().info(format("starting close (%s).", getName()));
+            logger().info(LoggingOps.TMW_MARKER, format("starting close (%s).", getName()));
         }
         for (final T item : items())
         {
             destroy(item);
         }
-        if (logger().isInfoEnabled())
+        if (logger().isInfoEnabled(LoggingOps.TMW_MARKER))
         {
-            logger().info(format("finished close (%s).", getName()));
+            logger().info(LoggingOps.TMW_MARKER, format("finished close (%s).", getName()));
         }
     }
 
@@ -51,9 +52,9 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
         {
             IO.close(item);
         }
-        else if (logger().isErrorEnabled())
+        else if (logger().isErrorEnabled(LoggingOps.TMW_MARKER))
         {
-            logger().error(format("null item close (%s).", getName()));
+            logger().error(LoggingOps.TMW_MARKER, format("null item close (%s).", getName()));
         }
     }
 

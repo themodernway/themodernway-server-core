@@ -36,7 +36,10 @@ public final class MDC
         }
         catch (final Exception e)
         {
-            logger.error("clear()", e);
+            if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
+            {
+                logger.error(LoggingOps.TMW_MARKER, "clear()", e);
+            }
         }
     }
 
@@ -50,7 +53,10 @@ public final class MDC
         }
         catch (final Exception e)
         {
-            logger.error("put()", e);
+            if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
+            {
+                logger.error(LoggingOps.TMW_MARKER, "put()", e);
+            }
         }
     }
 
@@ -64,7 +70,10 @@ public final class MDC
         }
         catch (final Exception e)
         {
-            logger.error("remove()", e);
+            if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
+            {
+                logger.error(LoggingOps.TMW_MARKER, "remove()", e);
+            }
         }
     }
 
@@ -74,11 +83,14 @@ public final class MDC
 
         try
         {
-            return  org.slf4j.MDC.get(key);
+            return org.slf4j.MDC.get(key);
         }
         catch (final Exception e)
         {
-            logger.error("get()", e);
+            if (logger.isErrorEnabled(LoggingOps.TMW_MARKER))
+            {
+                logger.error(LoggingOps.TMW_MARKER, "get()", e);
+            }
         }
         return null;
     }

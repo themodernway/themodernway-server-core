@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.io;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
@@ -25,13 +26,40 @@ import com.themodernway.common.api.java.util.CommonOps;
 
 public class CheckSumOutputStream extends CheckedOutputStream implements IFormatted<CheckSumOutputStream>
 {
+    private final boolean m_close;
+
     public CheckSumOutputStream(final OutputStream os)
     {
-        this(os, new CRC32());
+        this(os, new CRC32(), true);
+    }
+
+    public CheckSumOutputStream(final OutputStream os, final boolean close)
+    {
+        this(os, new CRC32(), close);
     }
 
     public CheckSumOutputStream(final OutputStream os, final Checksum ck)
     {
+        this(CommonOps.requireNonNull(os), CommonOps.requireNonNull(ck), true);
+    }
+
+    public CheckSumOutputStream(final OutputStream os, final Checksum ck, final boolean close)
+    {
         super(CommonOps.requireNonNull(os), CommonOps.requireNonNull(ck));
+
+        m_close = close;
+    }
+
+    @Override
+    public void close() throws IOException
+    {
+        if (m_close)
+        {
+            super.close();
+        }
+        else
+        {
+            flush();
+        }
     }
 }
