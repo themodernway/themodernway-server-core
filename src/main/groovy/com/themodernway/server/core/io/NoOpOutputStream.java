@@ -23,30 +23,36 @@ public class NoOpOutputStream extends OutputStream
 {
     public NoOpOutputStream()
     {
+        // empty by design.
     }
 
     @Override
     public void write(final int b) throws IOException
     {
+        // empty by design.
     }
 
     @Override
     public void write(final byte[] b) throws IOException
     {
+        // empty by design.
     }
 
     @Override
     public void write(final byte[] b, final int off, final int len) throws IOException
     {
+        // empty by design.
     }
 
     @Override
     public void flush() throws IOException
     {
+        // empty by design.
     }
 
     @Override
     public void close() throws IOException
     {
+        // empty by design.
     }
 }

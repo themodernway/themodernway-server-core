@@ -23,58 +23,72 @@ public class NoOpWriter extends Writer
 {
     public NoOpWriter()
     {
+        // empty by design.
     }
 
     @Override
     public void write(final int c) throws IOException
     {
+        // empty by design.
     }
 
     @Override
     public void write(final char[] cbuf) throws IOException
     {
+        // empty by design.
     }
 
     @Override
     public void write(final char[] cbuf, final int off, final int len) throws IOException
     {
+        // empty by design.
     }
 
     @Override
     public void write(final String str) throws IOException
     {
+        // empty by design.
     }
 
     @Override
     public void write(final String str, final int off, final int len) throws IOException
     {
+        // empty by design.
     }
 
     @Override
     public NoOpWriter append(final CharSequence csq) throws IOException
     {
+        // empty by design.
+
         return this;
     }
 
     @Override
     public NoOpWriter append(final CharSequence csq, final int start, final int end) throws IOException
     {
+        // empty by design.
+
         return this;
     }
 
     @Override
     public NoOpWriter append(final char c) throws IOException
     {
+        // empty by design.
+
         return this;
     }
 
     @Override
     public void flush() throws IOException
     {
+        // empty by design.
     }
 
     @Override
     public void close() throws IOException
     {
+        // empty by design.
     }
 }

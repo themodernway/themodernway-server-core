@@ -117,11 +117,13 @@ public class NoSyncStringBuilderWriter extends Writer implements CharSequence, I
     @Override
     public void flush()
     {
+        // empty by design.
     }
 
     @Override
     public void close() throws IOException
     {
+        // empty by design.
     }
 
     public NoSyncStringBuilderWriter clear()

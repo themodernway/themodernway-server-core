@@ -29,7 +29,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.Properties;
@@ -734,41 +733,34 @@ public final class IO
         return file.isHidden();
     }
 
-    public static final boolean exists(final Path path, final LinkOption... options)
+    public static final boolean exists(final Path path)
     {
-        return Files.exists(path, options);
+        return IO.exists(path.toFile());
     }
 
-    public static final boolean isFolder(final Path path, final LinkOption... options)
+    public static final boolean isFolder(final Path path)
     {
-        return Files.isDirectory(path, options);
+        return IO.isFolder(path.toFile());
     }
 
-    public static final boolean isFile(final Path path, final LinkOption... options)
+    public static final boolean isFile(final Path path)
     {
-        return Files.isRegularFile(path, options);
+        return IO.isFile(path.toFile());
     }
 
     public static final boolean isReadable(final Path path)
     {
-        return Files.isReadable(path);
+        return IO.isReadable(path.toFile());
     }
 
     public static final boolean isWritable(final Path path)
     {
-        return Files.isWritable(path);
+        return IO.isWritable(path.toFile());
     }
 
     public static final boolean isHidden(final Path path)
     {
-        try
-        {
-            return Files.isHidden(path);
-        }
-        catch (final IOException e)
-        {
-            return false;
-        }
+        return IO.isHidden(path.toFile());
     }
 
     public static final String getStringAtMost(final InputStream stream, final long leng, final long slop) throws IOException

@@ -32,5 +32,6 @@ public class NoCloseProxyInputStream extends FilterInputStream
     @Override
     public void close() throws IOException
     {
+        // empty by design.
     }
 }

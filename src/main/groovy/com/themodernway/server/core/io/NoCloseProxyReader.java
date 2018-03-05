@@ -32,5 +32,6 @@ public class NoCloseProxyReader extends FilterReader
     @Override
     public void close() throws IOException
     {
+        // empty by design.
     }
 }
