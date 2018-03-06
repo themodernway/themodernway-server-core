@@ -16,29 +16,37 @@
 
 package com.themodernway.server.core.scripting;
 
-import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.common.api.types.IStringValued;
+import java.io.IOException;
+import java.util.Map;
 
-public enum ScriptType implements IStringValued
+import org.springframework.core.io.Resource;
+
+import com.themodernway.common.api.java.util.CommonOps;
+
+public class KotlinScriptingProperties extends AbstractScriptingProperties
 {
-    GROOVY("groovy"), KOTLIN("kotlin"), JAVASCRIPT("javascript");
-
-    private final String m_value;
-
-    private ScriptType(final String value)
+    public KotlinScriptingProperties()
     {
-        m_value = StringOps.requireTrimOrNull(value);
+        super(ScriptType.KOTLIN);
+    }
+
+    public KotlinScriptingProperties(final Map<String, String> properties)
+    {
+        this();
+
+        populate(CommonOps.requireNonNull(properties));
+    }
+
+    public KotlinScriptingProperties(final Resource resource) throws IOException
+    {
+        this();
+
+        populate(CommonOps.requireNonNull(resource));
     }
 
     @Override
-    public final String getValue()
+    protected void start()
     {
-        return m_value;
-    }
-
-    @Override
-    public final String toString()
-    {
-        return m_value;
+        // empty by design.
     }
 }
