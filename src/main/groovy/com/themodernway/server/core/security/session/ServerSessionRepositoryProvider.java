@@ -26,13 +26,12 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
-import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.Activatable;
+import com.themodernway.server.core.ICoreBase;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public class ServerSessionRepositoryProvider extends Activatable implements IServerSessionRepositoryProvider, BeanFactoryAware
+public class ServerSessionRepositoryProvider extends Activatable implements IServerSessionRepositoryProvider, ICoreBase, BeanFactoryAware
 {
     private static final Logger                                   logger         = LoggingOps.getLogger(ServerSessionRepositoryProvider.class);
 
@@ -47,7 +46,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
     {
         if (null != repository)
         {
-            final String domain = StringOps.toTrimOrNull(repository.getDomain());
+            final String domain = toTrimOrNull(repository.getDomain());
 
             if (null != domain)
             {
@@ -57,21 +56,33 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
 
                     repository.setActive(true);
 
-                    logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Registered");
+                    if (logger.isInfoEnabled())
+                    {
+                        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, format("ServerSessionRepositoryProvider.addSessionRepository(%s) Registered", domain));
+                    }
                 }
                 else
                 {
-                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Duplicate ignored");
+                    if (logger.isErrorEnabled())
+                    {
+                        logger.error(LoggingOps.THE_MODERN_WAY_MARKER, format("ServerSessionRepositoryProvider.addSessionRepository(%s) Duplicate ignored", domain));
+                    }
                 }
             }
             else
             {
-                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null domain name");
+                if (logger.isErrorEnabled())
+                {
+                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null domain name");
+                }
             }
         }
         else
         {
-            logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null repository");
+            if (logger.isErrorEnabled())
+            {
+                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null repository");
+            }
         }
     }
 
@@ -86,13 +97,13 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
     @Override
     public List<String> getServerSessionRepositoryDomains()
     {
-        return CommonOps.toUnmodifiableList(m_repositories.keySet());
+        return toUnmodifiableList(m_repositories.keySet());
     }
 
     @Override
     public IServerSessionRepository getServerSessionRepository(final String domain)
     {
-        return m_repositories.get(StringOps.requireTrimOrNull(domain));
+        return m_repositories.get(requireTrimOrNull(domain));
     }
 
     @Override
@@ -120,7 +131,10 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
                 }
                 catch (final Exception e)
                 {
-                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.cleanExpiredSessions() error.", e);
+                    if (logger.isErrorEnabled())
+                    {
+                        logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.cleanExpiredSessions() error.", e);
+                    }
                 }
             }
         }

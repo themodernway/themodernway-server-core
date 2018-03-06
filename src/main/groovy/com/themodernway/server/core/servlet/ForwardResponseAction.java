@@ -16,9 +16,11 @@
 
 package com.themodernway.server.core.servlet;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,11 +41,18 @@ public class ForwardResponseAction extends AbstractResponseAction
     }
 
     @Override
-    public void call(final HttpServletRequest request, final HttpServletResponse response, final IServletResponseErrorCodeManager code) throws Exception
+    public void call(final HttpServletRequest request, final HttpServletResponse response, final IServletResponseErrorCodeManager code) throws IOException
     {
         setHeaders(response);
 
-        request.getRequestDispatcher(StringOps.requireTrimOrNull(getPath())).forward(request, response);
+        try
+        {
+            request.getRequestDispatcher(StringOps.requireTrimOrNull(getPath())).forward(request, response);
+        }
+        catch (final ServletException e)
+        {
+            throw new IOException(e);
+        }
     }
 
     @Override

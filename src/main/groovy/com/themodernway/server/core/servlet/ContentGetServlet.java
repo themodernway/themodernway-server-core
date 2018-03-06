@@ -158,12 +158,12 @@ public class ContentGetServlet extends AbstractContentServlet
         }
     }
 
-    protected String getRedirect(final HttpServletRequest request, final HttpServletResponse response, final String path) throws Exception
+    protected String getRedirect(final HttpServletRequest request, final HttpServletResponse response, final String path) throws IOException
     {
         return null;
     }
 
-    protected boolean head(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
+    protected boolean head(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws IOException
     {
         if (isNeverCache())
         {
@@ -179,7 +179,7 @@ public class ContentGetServlet extends AbstractContentServlet
         }
     }
 
-    protected void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
+    protected void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws IOException
     {
         if (send)
         {

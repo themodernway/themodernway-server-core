@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.servlet;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface IResponseAction
 {
-    public void call(HttpServletRequest request, HttpServletResponse response, IServletResponseErrorCodeManager code) throws Exception;
+    public void call(HttpServletRequest request, HttpServletResponse response, IServletResponseErrorCodeManager code) throws IOException;
 
     public IResponseAction withHeaders(Map<String, ?> headers);
 

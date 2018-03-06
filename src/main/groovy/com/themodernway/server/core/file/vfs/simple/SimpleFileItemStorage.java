@@ -1093,7 +1093,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             super.validate();
 
-            throw new IOException(format("Can't stream folder (%s).", getPath()));
+            throw new IOException(format("Can't write folder (%s).", getPath()));
         }
     }
 }

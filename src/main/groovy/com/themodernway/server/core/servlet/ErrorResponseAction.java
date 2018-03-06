@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.servlet;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -49,7 +50,7 @@ public class ErrorResponseAction extends StatusCodeResponseAction
     }
 
     @Override
-    public void call(final HttpServletRequest request, final HttpServletResponse response, final IServletResponseErrorCodeManager code) throws Exception
+    public void call(final HttpServletRequest request, final HttpServletResponse response, final IServletResponseErrorCodeManager code) throws IOException
     {
         setHeaders(response);
 

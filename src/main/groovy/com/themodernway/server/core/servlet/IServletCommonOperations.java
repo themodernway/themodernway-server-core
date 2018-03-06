@@ -47,7 +47,7 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
 
     public default LinkedHashMap<String, String> getParametersFromRequest(final HttpServletRequest request)
     {
-        final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+        final LinkedHashMap<String, String> params = new LinkedHashMap<>();
 
         final Enumeration<String> names = request.getParameterNames();
 
@@ -67,7 +67,7 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
 
     public default LinkedHashMap<String, String> getHeadersFromRequest(final HttpServletRequest request)
     {
-        final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+        final LinkedHashMap<String, String> params = new LinkedHashMap<>();
 
         final Enumeration<String> names = request.getHeaderNames();
 

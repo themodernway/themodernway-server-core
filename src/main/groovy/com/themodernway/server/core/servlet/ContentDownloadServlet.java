@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.servlet;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public class ContentDownloadServlet extends ContentGetServlet
     }
 
     @Override
-    protected boolean head(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
+    protected boolean head(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws IOException
     {
         doNeverCache(request, response);
 
@@ -53,7 +54,7 @@ public class ContentDownloadServlet extends ContentGetServlet
     }
 
     @Override
-    protected void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws Exception
+    protected void send(final HttpServletRequest request, final HttpServletResponse response, final IFileItem file, final boolean send) throws IOException
     {
         if (send)
         {
