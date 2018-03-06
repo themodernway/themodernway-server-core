@@ -36,11 +36,7 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
 {
     private static final Logger                           logger        = LoggingOps.getLogger(BuildDescriptorProvider.class);
 
-    private final LinkedHashMap<String, IBuildDescriptor> m_descriptors = new LinkedHashMap<String, IBuildDescriptor>();
-
-    public BuildDescriptorProvider()
-    {
-    }
+    private final LinkedHashMap<String, IBuildDescriptor> m_descriptors = new LinkedHashMap<>();
 
     protected void addDescriptor(final IBuildDescriptor descriptor)
     {
@@ -54,11 +50,14 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
                 {
                     m_descriptors.put(name, descriptor);
 
-                    logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "BuildDescriptorProvider.addDescriptor(" + name + ") Registered");
+                    if (logger.isInfoEnabled())
+                    {
+                        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("BuildDescriptorProvider.addDescriptor(%s) Registered", name));
+                    }
                 }
-                else
+                else if (logger.isErrorEnabled())
                 {
-                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "BuildDescriptorProvider.addDescriptor(" + name + ") Duplicate ignored");
+                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("BuildDescriptorProvider.addDescriptor(%s) Duplicate ignored", name));
                 }
             }
         }

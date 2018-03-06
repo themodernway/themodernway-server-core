@@ -208,8 +208,10 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
 
             if ((null != valu) && (valu.length() > leng))
             {
-                logger().error(format("possible header attack on (%s), max is (%d), found (%d), value (%s).", head, leng, valu.length(), valu));
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(format("possible header attack on (%s), max is (%d), found (%d), value (%s).", head, leng, valu.length(), valu));
+                }
                 return false;
             }
         }
@@ -237,7 +239,7 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
 
     public default Map<String, String> getConfigurationParameters()
     {
-        final LinkedHashMap<String, String> conf = new LinkedHashMap<String, String>();
+        final LinkedHashMap<String, String> conf = new LinkedHashMap<>();
 
         for (final String name : getConfigurationParameterNames())
         {
