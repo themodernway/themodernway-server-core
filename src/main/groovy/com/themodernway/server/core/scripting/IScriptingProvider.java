@@ -23,20 +23,27 @@ import java.util.List;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import org.springframework.core.io.Resource;
 
 public interface IScriptingProvider extends Closeable
 {
-    public ScriptEngine engine(ScriptType type);
+    public ScriptEngine engine(ScriptType type) throws ScriptException;
 
-    public ScriptEngine engine(ScriptType type, Resource resource) throws Exception;
+    public ScriptEngine engine(ScriptType type, Resource resource) throws ScriptException;
 
-    public ScriptEngine engine(ScriptType type, Reader reader) throws Exception;
+    public ScriptEngine engine(ScriptType type, Reader reader) throws ScriptException;
 
-    public ScriptEngine engine(ScriptType type, InputStream stream) throws Exception;
+    public ScriptEngine engine(ScriptType type, InputStream stream) throws ScriptException;
 
-    public ScriptEngine engine(ScriptType type, ClassLoader loader);
+    public ScriptEngine engine(ScriptType type, ClassLoader loader) throws ScriptException;
+
+    public ScriptingProxy proxy(ScriptType type, Resource resource) throws ScriptException;
+
+    public ScriptingProxy proxy(ScriptType type, Reader reader) throws ScriptException;
+
+    public ScriptingProxy proxy(ScriptType type, InputStream stream) throws ScriptException;
 
     public List<String> getScriptingLanguageNames();
 
@@ -49,10 +56,4 @@ public interface IScriptingProvider extends Closeable
     public ScriptEngineManager getScriptEngineManager();
 
     public ScriptEngineManager getScriptEngineManager(ClassLoader loader);
-
-    public ScriptingProxy proxy(ScriptType type, Resource resource) throws Exception;
-
-    public ScriptingProxy proxy(ScriptType type, Reader reader) throws Exception;
-
-    public ScriptingProxy proxy(ScriptType type, InputStream stream) throws Exception;
 }

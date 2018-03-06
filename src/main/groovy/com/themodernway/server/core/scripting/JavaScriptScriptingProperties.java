@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.scripting;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.core.io.Resource;
@@ -36,7 +37,7 @@ public class JavaScriptScriptingProperties extends AbstractScriptingProperties
         populate(CommonOps.requireNonNull(properties));
     }
 
-    public JavaScriptScriptingProperties(final Resource resource) throws Exception
+    public JavaScriptScriptingProperties(final Resource resource) throws IOException
     {
         this();
 

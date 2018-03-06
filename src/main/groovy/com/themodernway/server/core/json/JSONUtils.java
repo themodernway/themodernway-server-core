@@ -297,15 +297,25 @@ public final class JSONUtils
         return null;
     }
 
+    static final JSONArray toJSONArray(final List<?> list)
+    {
+        return ((list instanceof JSONArray) ? ((JSONArray) list) : new JSONArray(list));
+    }
+
     public static final JSONArray asArray(final Object object)
     {
-        return ((object instanceof List) ? ((object instanceof JSONArray) ? ((JSONArray) object) : new JSONArray((List<?>) object)) : null);
+        return ((object instanceof List) ? toJSONArray((List<?>) object) : null);
+    }
+
+    static final JSONObject toJSONObject(final Map<String, ?> json)
+    {
+        return ((json instanceof JSONObject) ? ((JSONObject) json) : new JSONObject(json));
     }
 
     @SuppressWarnings("unchecked")
     public static final JSONObject asObject(final Object object)
     {
-        return ((object instanceof Map) ? ((object instanceof JSONObject) ? ((JSONObject) object) : new JSONObject((Map<String, ?>) object)) : null);
+        return ((object instanceof Map) ? toJSONObject((Map<String, ?>) object) : null);
     }
 
     public static final String asString(final Object object)

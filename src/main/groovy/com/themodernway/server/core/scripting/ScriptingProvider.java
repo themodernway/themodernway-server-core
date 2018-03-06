@@ -27,6 +27,7 @@ import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
@@ -69,37 +70,53 @@ public class ScriptingProvider implements IScriptingProvider
     }
 
     @Override
-    public ScriptEngine engine(final ScriptType type)
+    public ScriptEngine engine(final ScriptType type) throws ScriptException
     {
         return getScriptEngineManager().getEngineByName(StringOps.requireTrimOrNull(type.getValue()));
     }
 
     @Override
-    public ScriptEngine engine(final ScriptType type, final ClassLoader loader)
+    public ScriptEngine engine(final ScriptType type, final ClassLoader loader) throws ScriptException
     {
         return getScriptEngineManager(CommonOps.requireNonNull(loader)).getEngineByName(StringOps.requireTrimOrNull(type.getValue()));
     }
 
     @Override
-    public ScriptEngine engine(final ScriptType type, final Resource resource) throws Exception
+    public ScriptEngine engine(final ScriptType type, final Resource resource) throws ScriptException
     {
-        return engine(type, resource.getInputStream());
+        try
+        {
+            return engine(type, resource.getInputStream());
+        }
+        catch (final IOException e)
+        {
+            throw new ScriptException(e);
+        }
     }
 
     @Override
-    public ScriptEngine engine(final ScriptType type, final Reader reader) throws Exception
+    public ScriptEngine engine(final ScriptType type, final Reader reader) throws ScriptException
     {
-        final ScriptEngine engine = engine(type);
+        try (Reader inputs = reader)
+        {
+            final ScriptEngine engine = engine(type);
 
-        engine.eval(reader);
+            engine.eval(inputs);
 
-        reader.close();
-
-        return engine;
+            return engine;
+        }
+        catch (final IOException e)
+        {
+            throw new ScriptException(e);
+        }
+        finally
+        {
+            IO.close(reader);
+        }
     }
 
     @Override
-    public ScriptEngine engine(final ScriptType type, final InputStream stream) throws Exception
+    public ScriptEngine engine(final ScriptType type, final InputStream stream) throws ScriptException
     {
         return engine(type, new InputStreamReader(stream, IO.UTF_8_CHARSET));
     }
@@ -219,19 +236,19 @@ public class ScriptingProvider implements IScriptingProvider
     }
 
     @Override
-    public ScriptingProxy proxy(final ScriptType type, final Resource resource) throws Exception
+    public ScriptingProxy proxy(final ScriptType type, final Resource resource) throws ScriptException
     {
         return new ScriptingProxy(type, resource);
     }
 
     @Override
-    public ScriptingProxy proxy(final ScriptType type, final Reader reader) throws Exception
+    public ScriptingProxy proxy(final ScriptType type, final Reader reader) throws ScriptException
     {
         return new ScriptingProxy(type, reader);
     }
 
     @Override
-    public ScriptingProxy proxy(final ScriptType type, final InputStream stream) throws Exception
+    public ScriptingProxy proxy(final ScriptType type, final InputStream stream) throws ScriptException
     {
         return new ScriptingProxy(type, stream);
     }

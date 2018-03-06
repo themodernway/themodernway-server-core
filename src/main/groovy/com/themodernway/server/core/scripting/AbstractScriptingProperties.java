@@ -91,5 +91,5 @@ public abstract class AbstractScriptingProperties extends Activatable implements
         getProperties().clear();
     }
 
-    abstract protected void start();
+    protected abstract void start();
 }

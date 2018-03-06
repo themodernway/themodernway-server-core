@@ -30,17 +30,17 @@ class ScriptingProxy extends CoreGroovySupport
 
     private final ScriptEngine m_engine
 
-    public ScriptingProxy(final ScriptType type, final Resource resource) throws Exception
+    public ScriptingProxy(final ScriptType type, final Resource resource) throws ScriptException
     {
         this(type, resource.getInputStream())
     }
 
-    public ScriptingProxy(final ScriptType type, final InputStream stream) throws Exception
+    public ScriptingProxy(final ScriptType type, final InputStream stream) throws ScriptException
     {
         this(type, new InputStreamReader(stream))
     }
 
-    public ScriptingProxy(final ScriptType type, final Reader reader) throws Exception
+    public ScriptingProxy(final ScriptType type, final Reader reader) throws ScriptException
     {
         m_type = type
 
