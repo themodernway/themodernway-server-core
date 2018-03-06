@@ -39,7 +39,7 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class ScriptingProvider implements IScriptingProvider
 {
-    private final static Logger                                   logger = LoggingOps.getLogger(ScriptingProvider.class);
+    private static final Logger                                   logger = LoggingOps.getLogger(ScriptingProvider.class);
 
     private final LinkedHashMap<ScriptType, IScriptingProperties> m_dict = new LinkedHashMap<>();
 
@@ -59,12 +59,12 @@ public class ScriptingProvider implements IScriptingProvider
 
                 if (logger.isInfoEnabled())
                 {
-                    logger.info(LoggingOps.TMW_MARKER, String.format("IScriptingProperties for type (%s) registered.", type.getValue()));
+                    logger.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("IScriptingProperties for type (%s) registered.", type.getValue()));
                 }
             }
             else if (logger.isWarnEnabled())
             {
-                logger.warn(LoggingOps.TMW_MARKER, String.format("IScriptingProperties for type (%s) ignored.", type.getValue()));
+                logger.warn(LoggingOps.THE_MODERN_WAY_MARKER, String.format("IScriptingProperties for type (%s) ignored.", type.getValue()));
             }
         }
     }

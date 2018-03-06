@@ -38,7 +38,7 @@ public final class MDC
         {
             if (logger.isErrorEnabled())
             {
-                logger.error(LoggingOps.TMW_MARKER, "clear()", e);
+                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "clear()", e);
             }
         }
     }
@@ -55,7 +55,7 @@ public final class MDC
         {
             if (logger.isErrorEnabled())
             {
-                logger.error(LoggingOps.TMW_MARKER, "put()", e);
+                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "put()", e);
             }
         }
     }
@@ -72,7 +72,7 @@ public final class MDC
         {
             if (logger.isErrorEnabled())
             {
-                logger.error(LoggingOps.TMW_MARKER, "remove()", e);
+                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "remove()", e);
             }
         }
     }
@@ -89,7 +89,7 @@ public final class MDC
         {
             if (logger.isErrorEnabled())
             {
-                logger.error(LoggingOps.TMW_MARKER, "get()", e);
+                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "get()", e);
             }
         }
         return null;

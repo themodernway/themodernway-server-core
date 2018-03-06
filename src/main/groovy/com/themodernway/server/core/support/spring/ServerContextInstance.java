@@ -135,7 +135,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
                 }
                 catch (final Exception e)
                 {
-                    logger().error(LoggingOps.TMW_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
                 }
                 if (null == bean)
                 {
@@ -150,14 +150,14 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
                     }
                     catch (final Exception e)
                     {
-                        logger().error(LoggingOps.TMW_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
+                        logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
                     }
                 }
             }
         }
         catch (final Exception e)
         {
-            logger().error(LoggingOps.TMW_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
+            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
         }
         return bean;
     }
@@ -250,7 +250,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
         }
         if (logger().isDebugEnabled())
         {
-            logger().debug(LoggingOps.TMW_MARKER, format("Using AuthorizationProvider default (%s).", DEFAULT_AUTH.getClass().getName()));
+            logger().debug(LoggingOps.THE_MODERN_WAY_MARKER, format("Using AuthorizationProvider default (%s).", DEFAULT_AUTH.getClass().getName()));
         }
         return DEFAULT_AUTH;
     }

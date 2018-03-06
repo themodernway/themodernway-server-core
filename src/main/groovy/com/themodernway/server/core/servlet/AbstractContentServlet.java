@@ -34,7 +34,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
 
     private final String                                      m_storage_name;
 
-    private final ConcurrentHashMap<String, IFileItemStorage> m_storage_save   = new ConcurrentHashMap<String, IFileItemStorage>();
+    private final ConcurrentHashMap<String, IFileItemStorage> m_storage_save   = new ConcurrentHashMap<>();
 
     protected AbstractContentServlet(final String name, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
     {
@@ -89,8 +89,10 @@ public abstract class AbstractContentServlet extends HTTPServletBase
     {
         return name -> {
 
-            logger().info(format("firstFileItemStorageLookup(%s, %s)", getName(), name));
-
+            if (logger().isInfoEnabled())
+            {
+                logger().info(format("firstFileItemStorageLookup(%s, %s)", getName(), name));
+            }
             return getServerContext().getFileItemStorage(name);
         };
     }
@@ -104,8 +106,10 @@ public abstract class AbstractContentServlet extends HTTPServletBase
     {
         if (null == file)
         {
-            logger().error(format("Can't find path (%s).", path));
-
+            if (logger().isErrorEnabled())
+            {
+                logger().error(format("Can't find path (%s).", path));
+            }
             return false;
         }
         if (file.getFileItemStorage().isAttributesPreferred())
@@ -114,26 +118,34 @@ public abstract class AbstractContentServlet extends HTTPServletBase
 
             if (false == attr.exists())
             {
-                logger().error(format("Path does not exist (%s).", path));
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(format("Path does not exist (%s).", path));
+                }
                 return false;
             }
             if (false == attr.isFile())
             {
-                logger().error(format("Path is not file (%s).", path));
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(format("Path is not file (%s).", path));
+                }
                 return false;
             }
             if (false == attr.isReadable())
             {
-                logger().error(format("Can't read path (%s).", path));
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(format("Can't read path (%s).", path));
+                }
                 return false;
             }
             if (attr.isHidden())
             {
-                logger().error(format("Path is hidden file (%s).", path));
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(format("Path is hidden file (%s).", path));
+                }
                 return false;
             }
             return true;
@@ -142,26 +154,34 @@ public abstract class AbstractContentServlet extends HTTPServletBase
         {
             if (false == file.exists())
             {
-                logger().error(format("Path does not exist (%s).", path));
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(format("Path does not exist (%s).", path));
+                }
                 return false;
             }
             if (false == file.isReadable())
             {
-                logger().error(format("Can't read path (%s).", path));
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(format("Can't read path (%s).", path));
+                }
                 return false;
             }
             if (false == file.isFile())
             {
-                logger().error(format("Path is not file (%s).", path));
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(format("Path is not file (%s).", path));
+                }
                 return false;
             }
             if (file.isHidden())
             {
-                logger().error(format("Path is hidden file (%s).", path));
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(format("Path is hidden file (%s).", path));
+                }
                 return false;
             }
             return true;

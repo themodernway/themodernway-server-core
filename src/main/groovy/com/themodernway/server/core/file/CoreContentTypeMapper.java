@@ -66,7 +66,7 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
         {
             if (m_logs.isInfoEnabled())
             {
-                m_logs.info(LoggingOps.TMW_MARKER, String.format("loading (%s) mime file.", m_rsrc));
+                m_logs.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("loading (%s) mime file.", m_rsrc));
             }
             stream = m_rsrc.getInputStream();
 
@@ -78,7 +78,7 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
                 {
                     if (m_logs.isInfoEnabled())
                     {
-                        m_logs.info(LoggingOps.TMW_MARKER, String.format("adding to (%s) mime type (%s).", m_rsrc, type));
+                        m_logs.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("adding to (%s) mime type (%s).", m_rsrc, type));
                     }
                     m_maps.addMimeTypes(type);
                 }

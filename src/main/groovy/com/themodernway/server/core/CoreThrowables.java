@@ -37,7 +37,7 @@ public final class CoreThrowables
     {
         if ((echo) && (logger.isErrorEnabled()))
         {
-            logger.error(LoggingOps.TMW_MARKER, "handle()", e);
+            logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "handle()", e);
         }
     }
 }

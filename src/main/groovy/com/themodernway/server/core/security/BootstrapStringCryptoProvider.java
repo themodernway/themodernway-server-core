@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.security;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -23,48 +24,47 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 
-import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.ICoreBase;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public final class BootstrapStringCryptoProvider implements IStringCryptoProvider
+public final class BootstrapStringCryptoProvider implements IStringCryptoProvider, ICoreBase
 {
     private static final Logger logger = LoggingOps.getLogger(BootstrapStringCryptoProvider.class);
 
     private final TextEncryptor m_pcrypt;
 
-    public BootstrapStringCryptoProvider(final Resource resource) throws Exception
+    public BootstrapStringCryptoProvider(final Resource resource) throws IOException
     {
         this(resource, "bootstrap.crypto.pass", "bootstrap.crypto.salt");
     }
 
-    public BootstrapStringCryptoProvider(final Resource resource, final String passname, final String saltname) throws Exception
+    public BootstrapStringCryptoProvider(final Resource resource, final String passname, final String saltname) throws IOException
     {
         if (logger.isInfoEnabled())
         {
-            logger.info(LoggingOps.TMW_MARKER, "BootstrapStringCryptoProvider(" + resource.getURI().toString() + ", " + passname + ", " + saltname + ")");
+            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, format("BootstrapStringCryptoProvider(%s, %s, %s)", resource.getURI().toString(), passname, saltname));
         }
         final Properties properties = IO.toProperties(resource);
 
-        final String pass = StringOps.requireTrimOrNull(properties.getProperty(StringOps.requireTrimOrNull(passname)));
+        final String pass = requireTrimOrNull(properties.getProperty(requireTrimOrNull(passname)));
 
-        final String salt = StringOps.requireTrimOrNull(properties.getProperty(StringOps.requireTrimOrNull(saltname)));
+        final String salt = requireTrimOrNull(properties.getProperty(requireTrimOrNull(saltname)));
 
         if (SimpleCryptoKeysGenerator.getCryptoKeysGenerator().isPassValid(pass))
         {
             if (logger.isInfoEnabled())
             {
-                logger.info(LoggingOps.TMW_MARKER, "BootstrapStringCryptoProvider(password has validated)");
+                logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "BootstrapStringCryptoProvider password has validated.");
             }
         }
         else
         {
             if (logger.isErrorEnabled())
             {
-                logger.error(LoggingOps.TMW_MARKER, "BootstrapStringCryptoProvider(password is not valid)");
+                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "BootstrapStringCryptoProvider password is not valid.");
             }
-            throw new IllegalArgumentException("BootstrapStringCryptoProvider(password is not valid)");
+            throw new IllegalArgumentException("BootstrapStringCryptoProvider password is not valid.");
         }
         m_pcrypt = Encryptors.delux(pass, salt);
     }
@@ -72,12 +72,12 @@ public final class BootstrapStringCryptoProvider implements IStringCryptoProvide
     @Override
     public final String encrypt(final String text)
     {
-        return m_pcrypt.encrypt(CommonOps.requireNonNull(text));
+        return m_pcrypt.encrypt(requireNonNull(text));
     }
 
     @Override
     public final String decrypt(final String text)
     {
-        return m_pcrypt.decrypt(CommonOps.requireNonNull(text));
+        return m_pcrypt.decrypt(requireNonNull(text));
     }
 }

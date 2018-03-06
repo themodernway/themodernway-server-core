@@ -57,21 +57,21 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
 
                     repository.setActive(true);
 
-                    logger.info(LoggingOps.TMW_MARKER, "ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Registered");
+                    logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Registered");
                 }
                 else
                 {
-                    logger.error(LoggingOps.TMW_MARKER, "ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Duplicate ignored");
+                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Duplicate ignored");
                 }
             }
             else
             {
-                logger.error(LoggingOps.TMW_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null domain name");
+                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null domain name");
             }
         }
         else
         {
-            logger.error(LoggingOps.TMW_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null repository");
+            logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null repository");
         }
     }
 
@@ -120,7 +120,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
                 }
                 catch (final Exception e)
                 {
-                    logger.error(LoggingOps.TMW_MARKER, "ServerSessionRepositoryProvider.cleanExpiredSessions() error.", e);
+                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.cleanExpiredSessions() error.", e);
                 }
             }
         }

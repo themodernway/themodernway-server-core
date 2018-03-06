@@ -77,15 +77,15 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 
     public static class CoreObjectMapper extends ObjectMapper implements ICoreObjectMapper
     {
-        private static final long                   serialVersionUID = 1L;
+        private static final long                    serialVersionUID = 1L;
 
-        public static final JsonGenerator.Feature[] OUTPUT_ENABLED   = { JsonGenerator.Feature.ESCAPE_NON_ASCII };
+        private static final JsonGenerator.Feature[] OUTPUT_ENABLED   = { JsonGenerator.Feature.ESCAPE_NON_ASCII };
 
-        public static final JsonParser.Feature[]    PARSER_ENABLED   = { JsonParser.Feature.ALLOW_COMMENTS, JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES };
+        private static final JsonParser.Feature[]    PARSER_ENABLED   = { JsonParser.Feature.ALLOW_COMMENTS, JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES };
 
-        public static final DefaultPrettyPrinter    PRETTY_PRINTER   = buildPrettyPrinter(4);
+        private static final DefaultPrettyPrinter    PRETTY_PRINTER   = buildPrettyPrinter(4);
 
-        public static final DefaultPrettyPrinter buildPrettyPrinter(final int repeat)
+        private static final DefaultPrettyPrinter buildPrettyPrinter(final int repeat)
         {
             final String indent = StringOps.repeat(StringOps.SPACE_STRING, repeat);
 

@@ -24,7 +24,7 @@ import com.themodernway.common.api.types.Activatable;
 @SuppressWarnings("serial")
 public abstract class AbstractServerSessionRepository extends Activatable implements IServerSessionRepository
 {
-    private final IServerSessionHelper m_helper;
+    private transient IServerSessionHelper m_helper;
 
     protected AbstractServerSessionRepository()
     {

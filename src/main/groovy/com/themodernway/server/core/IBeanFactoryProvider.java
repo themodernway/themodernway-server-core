@@ -34,7 +34,7 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
     {
         if (logger().isInfoEnabled())
         {
-            logger().info(LoggingOps.TMW_MARKER, format("starting close (%s).", getName()));
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("starting close (%s).", getName()));
         }
         for (final T item : items())
         {
@@ -42,7 +42,7 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
         }
         if (logger().isInfoEnabled())
         {
-            logger().info(LoggingOps.TMW_MARKER, format("finished close (%s).", getName()));
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("finished close (%s).", getName()));
         }
     }
 
@@ -54,7 +54,7 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
         }
         else if (logger().isErrorEnabled())
         {
-            logger().error(LoggingOps.TMW_MARKER, format("null item close (%s).", getName()));
+            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("null item close (%s).", getName()));
         }
     }
 

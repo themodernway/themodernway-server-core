@@ -54,11 +54,11 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
                 {
                     m_descriptors.put(name, descriptor);
 
-                    logger.info(LoggingOps.TMW_MARKER, "BuildDescriptorProvider.addDescriptor(" + name + ") Registered");
+                    logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "BuildDescriptorProvider.addDescriptor(" + name + ") Registered");
                 }
                 else
                 {
-                    logger.error(LoggingOps.TMW_MARKER, "BuildDescriptorProvider.addDescriptor(" + name + ") Duplicate ignored");
+                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "BuildDescriptorProvider.addDescriptor(" + name + ") Duplicate ignored");
                 }
             }
         }

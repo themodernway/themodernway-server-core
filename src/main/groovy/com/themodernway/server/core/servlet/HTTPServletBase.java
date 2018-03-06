@@ -152,7 +152,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
                 if (null == session)
                 {
-                    logger().error(LoggingOps.TMW_MARKER, format("invalid session (%s).", sessid));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("invalid session (%s).", sessid));
 
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
@@ -160,7 +160,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
                 }
                 if (session.isExpired())
                 {
-                    logger().error(LoggingOps.TMW_MARKER, format("expired session (%s).", session.getId()));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("expired session (%s).", session.getId()));
 
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
@@ -173,7 +173,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
             {
                 if (null == session)
                 {
-                    logger().error(LoggingOps.TMW_MARKER, format("no session with required roles in (%s).", toPrintableString(roles)));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("no session with required roles in (%s).", toPrintableString(roles)));
 
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
@@ -183,7 +183,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
                 if ((null == perms) || (perms.isEmpty()))
                 {
-                    logger().error(LoggingOps.TMW_MARKER, format("session (%s) with empty roles in (%s).", session.getId(), toPrintableString(roles)));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("session (%s) with empty roles in (%s).", session.getId(), toPrintableString(roles)));
 
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
@@ -191,7 +191,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
                 }
                 if (CommonOps.none(roles, perms))
                 {
-                    logger().error(LoggingOps.TMW_MARKER, format("session (%s) with no matching roles of (%s) in (%s).", session.getId(), toPrintableString(perms), toPrintableString(roles)));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("session (%s) with no matching roles of (%s) in (%s).", session.getId(), toPrintableString(perms), toPrintableString(roles)));
 
                     sendErrorCode(request, response, HttpServletResponse.SC_FORBIDDEN);
 
@@ -254,7 +254,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         }
         catch (final Exception e)
         {
-            logger().error(LoggingOps.TMW_MARKER, "captured overall exception for security.", e);
+            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
 
             sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 

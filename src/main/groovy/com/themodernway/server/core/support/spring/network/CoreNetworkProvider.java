@@ -126,12 +126,12 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
                             }
                             else
                             {
-                                logger().error(LoggingOps.TMW_MARKER, String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", name));
+                                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", name));
                             }
                         }
                         catch (final Exception e)
                         {
-                            logger().error(LoggingOps.TMW_MARKER, String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", name), e);
+                            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", name), e);
                         }
                         return null;
                 }
@@ -145,7 +145,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
             {
                 if (factory instanceof DisposableBean)
                 {
-                    logger().info(LoggingOps.TMW_MARKER, String.format("close(%s).", factory.getClass().getName()));
+                    logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("close(%s).", factory.getClass().getName()));
 
                     try
                     {
@@ -153,12 +153,12 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
                     }
                     catch (final Exception e)
                     {
-                        logger().error(LoggingOps.TMW_MARKER, "close().", e);
+                        logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "close().", e);
                     }
                 }
                 else if (factory instanceof Closeable)
                 {
-                    logger().info(LoggingOps.TMW_MARKER, String.format("close(%s).", factory.getClass().getName()));
+                    logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("close(%s).", factory.getClass().getName()));
 
                     try
                     {
@@ -166,7 +166,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
                     }
                     catch (final Exception e)
                     {
-                        logger().error(LoggingOps.TMW_MARKER, "close().", e);
+                        logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "close().", e);
                     }
                 }
             }
@@ -212,11 +212,11 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
         {
             m_rest_execs.setRequestFactory(factory);
 
-            logger().info(LoggingOps.TMW_MARKER, String.format("setHttpFactoryByName(%s).", factory.getClass().getName()));
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("setHttpFactoryByName(%s).", factory.getClass().getName()));
         }
         else
         {
-            logger().error(LoggingOps.TMW_MARKER, String.format("setHttpFactoryByName(%s) not found.", impl));
+            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("setHttpFactoryByName(%s) not found.", impl));
         }
     }
 
@@ -235,7 +235,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
     @Override
     public void close() throws IOException
     {
-        logger().info(LoggingOps.TMW_MARKER, "close().");
+        logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "close().");
 
         m_fact_cache.close();
     }
@@ -500,7 +500,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
         if (logger().isDebugEnabled())
         {
-            logger().debug(LoggingOps.TMW_MARKER, String.format("DEBUG: method(%s) url(%s) headers(%s).", method, template.getUriTemplateHandler().expand(curl, CommonOps.requireNonNullOrElse(params, EMPTY_PARAMS)).toString(), headers));
+            logger().debug(LoggingOps.THE_MODERN_WAY_MARKER, String.format("DEBUG: method(%s) url(%s) headers(%s).", method, template.getUriTemplateHandler().expand(curl, CommonOps.requireNonNullOrElse(params, EMPTY_PARAMS)).toString(), headers));
         }
         try
         {
@@ -508,7 +508,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
         }
         catch (final Exception e)
         {
-            logger().error(LoggingOps.TMW_MARKER, String.format("ERROR: method(%s) url(%s) headers(%s).", method, template.getUriTemplateHandler().expand(curl, CommonOps.requireNonNullOrElse(params, EMPTY_PARAMS)).toString(), headers), e);
+            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("ERROR: method(%s) url(%s) headers(%s).", method, template.getUriTemplateHandler().expand(curl, CommonOps.requireNonNullOrElse(params, EMPTY_PARAMS)).toString(), headers), e);
 
             final HTTPHeaders keep = new HTTPHeaders(headers);
 
@@ -532,7 +532,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
         }
         catch (final ParserException e)
         {
-            logger().error(LoggingOps.TMW_MARKER, "getMappedValue()", e);
+            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "getMappedValue()", e);
 
             return null;
         }
@@ -547,6 +547,6 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        logger().info(LoggingOps.TMW_MARKER, "start().");
+        logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "start().");
     }
 }

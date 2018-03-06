@@ -36,11 +36,11 @@ public class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
 
     public static class CoreXMLMapper extends XmlMapper implements ICoreObjectMapper
     {
-        private static final long                   serialVersionUID = 1L;
+        private static final long                    serialVersionUID = 1L;
 
-        public static final JsonGenerator.Feature[] OUTPUT_ENABLED   = {};
+        private static final JsonGenerator.Feature[] OUTPUT_ENABLED   = {};
 
-        public static final JsonParser.Feature[]    PARSER_ENABLED   = {};
+        private static final JsonParser.Feature[]    PARSER_ENABLED   = {};
 
         public CoreXMLMapper()
         {

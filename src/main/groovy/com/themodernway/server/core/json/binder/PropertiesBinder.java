@@ -52,11 +52,11 @@ public class PropertiesBinder extends AbstractDataBinder<CorePropertiesMapper>
 
     public static class CorePropertiesMapper extends JavaPropsMapper implements ICoreObjectMapper
     {
-        private static final long                   serialVersionUID = 1L;
+        private static final long                    serialVersionUID = 1L;
 
-        public static final JsonGenerator.Feature[] OUTPUT_ENABLED   = {};
+        private static final JsonGenerator.Feature[] OUTPUT_ENABLED   = {};
 
-        public static final JsonParser.Feature[]    PARSER_ENABLED   = {};
+        private static final JsonParser.Feature[]    PARSER_ENABLED   = {};
 
         public CorePropertiesMapper()
         {

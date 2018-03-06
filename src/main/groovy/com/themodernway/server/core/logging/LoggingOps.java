@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.logging;
 
+import java.io.IOException;
 import java.net.URL;
 
 import org.slf4j.Logger;
@@ -40,10 +41,10 @@ public final class LoggingOps
     {
         init();
 
-        TMW_MARKER = MarkerFactory.getMarker("com.themodernway.server.core.logging.MARKER");
+        THE_MODERN_WAY_MARKER = MarkerFactory.getMarker("com.themodernway.server.core.logging.MARKER");
     }
 
-    public static final Marker TMW_MARKER;
+    public static final Marker THE_MODERN_WAY_MARKER;
 
     private LoggingOps()
     {
@@ -59,7 +60,7 @@ public final class LoggingOps
         return LoggerFactory.getLogger(CommonOps.requireNonNull(type));
     }
 
-    public static final void init(final String location) throws Exception
+    public static final void init(final String location) throws IOException
     {
         final URL url = ResourceUtils.getURL(SystemPropertyUtils.resolvePlaceholders(location));
 

@@ -123,12 +123,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
             if (logger.isInfoEnabled())
             {
-                logger.info(LoggingOps.TMW_MARKER, format("SimpleFileItemStorage(%s,%s) open.", m_name, m_base));
+                logger.info(LoggingOps.THE_MODERN_WAY_MARKER, format("SimpleFileItemStorage(%s,%s) open.", m_name, m_base));
             }
         }
         else if (logger.isErrorEnabled())
         {
-            logger.error(LoggingOps.TMW_MARKER, format("SimpleFileItemStorage(%s,%s) can't access.", m_name, m_base));
+            logger.error(LoggingOps.THE_MODERN_WAY_MARKER, format("SimpleFileItemStorage(%s,%s) can't access.", m_name, m_base));
         }
     }
 
@@ -209,7 +209,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         if (logger.isInfoEnabled())
         {
-            logger.info(LoggingOps.TMW_MARKER, format("SimpleFileItemStorage(%s,%s).close().", getName(), getBasePath()));
+            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, format("SimpleFileItemStorage(%s,%s).close().", getName(), getBasePath()));
         }
     }
 

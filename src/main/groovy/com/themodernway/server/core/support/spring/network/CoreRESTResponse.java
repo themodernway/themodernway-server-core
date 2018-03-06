@@ -91,7 +91,7 @@ public class CoreRESTResponse implements IRESTResponse
         }
         catch (final ParserException e)
         {
-            logger.error(LoggingOps.TMW_MARKER, "Error parsing JSON", e);
+            logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "Error parsing JSON", e);
         }
         return null;
     }

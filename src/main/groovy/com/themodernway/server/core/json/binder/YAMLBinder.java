@@ -37,11 +37,11 @@ public class YAMLBinder extends AbstractDataBinder<CoreYAMLMapper>
 
     public static class CoreYAMLMapper extends YAMLMapper implements ICoreObjectMapper
     {
-        private static final long                   serialVersionUID = 1L;
+        private static final long                    serialVersionUID = 1L;
 
-        public static final JsonGenerator.Feature[] OUTPUT_ENABLED   = {};
+        private static final JsonGenerator.Feature[] OUTPUT_ENABLED   = {};
 
-        public static final JsonParser.Feature[]    PARSER_ENABLED   = { JsonParser.Feature.ALLOW_YAML_COMMENTS };
+        private static final JsonParser.Feature[]    PARSER_ENABLED   = { JsonParser.Feature.ALLOW_YAML_COMMENTS };
 
         public CoreYAMLMapper()
         {

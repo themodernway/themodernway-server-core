@@ -33,7 +33,7 @@ public class CoreWebContextLoaderListener extends ContextLoaderListener
     @Override
     public void contextInitialized(final ServletContextEvent event)
     {
-        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.contextInitialized() STARTING");
+        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextInitialized() STARTING");
 
         super.contextInitialized(event);
 
@@ -51,29 +51,29 @@ public class CoreWebContextLoaderListener extends ContextLoaderListener
                 }
             }
         }
-        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.contextInitialized() COMPLETE");
+        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextInitialized() COMPLETE");
     }
 
     @Override
     public void contextDestroyed(final ServletContextEvent event)
     {
-        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.contextDestroyed() STARTING");
+        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() STARTING");
 
         super.contextDestroyed(event);
 
-        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.contextDestroyed() COMPLETE");
+        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() COMPLETE");
     }
 
     @Override
     protected void customizeContext(final ServletContext sc, final ConfigurableWebApplicationContext context)
     {
-        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.customizeContext() STARTING");
+        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.customizeContext() STARTING");
 
         super.customizeContext(sc, context);
 
         ServerContextInstance.setApplicationContext(context);
 
-        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.customizeContext() COMPLETE");
+        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.customizeContext() COMPLETE");
     }
 
     protected boolean isServletContextCustomizerEnabled()

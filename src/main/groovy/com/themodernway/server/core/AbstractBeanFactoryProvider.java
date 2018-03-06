@@ -81,7 +81,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             if (logger().isErrorEnabled())
             {
-                logger().error(LoggingOps.TMW_MARKER, format(NULL_VALUE_E, getName()));
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format(NULL_VALUE_E, getName()));
             }
             return false;
         }
@@ -91,7 +91,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             if (logger().isErrorEnabled())
             {
-                logger().error(LoggingOps.TMW_MARKER, format(NULL_VALUE_E, getName()));
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format(NULL_VALUE_E, getName()));
             }
             return false;
         }
@@ -99,13 +99,13 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             if (logger().isWarnEnabled())
             {
-                logger().warn(LoggingOps.TMW_MARKER, format("duplicate name (%s) ignored in (%s).", name, getName()));
+                logger().warn(LoggingOps.THE_MODERN_WAY_MARKER, format("duplicate name (%s) ignored in (%s).", name, getName()));
             }
             return false;
         }
         if (logger().isInfoEnabled())
         {
-            logger().info(LoggingOps.TMW_MARKER, format("stored name(%s) in (%s).", name, getName()));
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("stored name(%s) in (%s).", name, getName()));
         }
         return true;
     }
@@ -154,7 +154,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         }
         if (logger().isErrorEnabled())
         {
-            logger().error(LoggingOps.TMW_MARKER, format("not DefaultListableBeanFactory (%s).", getName()));
+            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("not DefaultListableBeanFactory (%s).", getName()));
         }
         return toUnmodifiableMap(emptyMap());
     }

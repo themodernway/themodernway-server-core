@@ -116,31 +116,31 @@ public class FilterFactoryContextCustomizer implements IServletContextCustomizer
                         {
                             dispatcher.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), isMatchAfter(), maps);
 
-                            logger().info(LoggingOps.TMW_MARKER, String.format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
                         }
                         else
                         {
-                            logger().error(LoggingOps.TMW_MARKER, String.format("customize (%s) already registered.", name));
+                            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("customize (%s) already registered.", name));
                         }
                     }
                     else
                     {
-                        logger().error(LoggingOps.TMW_MARKER, String.format("customize (%s) null filter.", name));
+                        logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("customize (%s) null filter.", name));
                     }
                 }
                 else
                 {
-                    logger().error(LoggingOps.TMW_MARKER, String.format("customize (%s) empty mappings.", name));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("customize (%s) empty mappings.", name));
                 }
             }
             else
             {
-                logger().error(LoggingOps.TMW_MARKER, "customize() no filter name.");
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "customize() no filter name.");
             }
         }
         else
         {
-            logger().error(LoggingOps.TMW_MARKER, "customize() no filter factory.");
+            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "customize() no filter factory.");
         }
     }
 }

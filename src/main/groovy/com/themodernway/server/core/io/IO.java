@@ -75,7 +75,7 @@ public final class IO
         {
             if (logger.isDebugEnabled())
             {
-                logger.debug(LoggingOps.TMW_MARKER, "close()", e);
+                logger.debug(LoggingOps.THE_MODERN_WAY_MARKER, "close()", e);
             }
         }
     }

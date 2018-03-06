@@ -73,7 +73,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
 
             configure(injector);
 
-            logger().info(LoggingOps.TMW_MARKER, "HeaderInjectorFilter.addHeaderInjector(" + injector.getName() + ")");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "HeaderInjectorFilter.addHeaderInjector(" + injector.getName() + ")");
         }
     }
 
@@ -168,7 +168,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
                 }
                 catch (final Throwable t)
                 {
-                    logger().error(LoggingOps.TMW_MARKER, "Could not inject headers " + injector.getName(), t);
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Could not inject headers " + injector.getName(), t);
 
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
