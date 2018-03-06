@@ -20,10 +20,6 @@ import javax.servlet.ServletException;
 
 public class XSSProtectionFilter extends HeaderInjectorFilter
 {
-    public XSSProtectionFilter()
-    {
-    }
-
     @Override
     public void initialize() throws ServletException
     {

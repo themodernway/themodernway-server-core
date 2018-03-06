@@ -31,7 +31,7 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjectorFilter
 {
-    private final ArrayList<IHeaderInjector> m_injectors = new ArrayList<IHeaderInjector>();
+    private final ArrayList<IHeaderInjector> m_injectors = new ArrayList<>();
 
     public HeaderInjectorFilter()
     {
@@ -166,10 +166,12 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
                         return;
                     }
                 }
-                catch (final Throwable t)
+                catch (final Exception e)
                 {
-                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Could not inject headers " + injector.getName(), t);
-
+                    if (logger().isErrorEnabled())
+                    {
+                        logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Could not inject headers " + injector.getName(), e);
+                    }
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
                     return;

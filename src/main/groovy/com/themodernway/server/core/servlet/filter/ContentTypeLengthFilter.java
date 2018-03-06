@@ -20,10 +20,6 @@ import javax.servlet.ServletException;
 
 public class ContentTypeLengthFilter extends HeaderInjectorFilter
 {
-    public ContentTypeLengthFilter()
-    {
-    }
-
     @Override
     public void initialize() throws ServletException
     {

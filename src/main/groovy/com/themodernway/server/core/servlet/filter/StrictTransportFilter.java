@@ -20,10 +20,6 @@ import javax.servlet.ServletException;
 
 public class StrictTransportFilter extends HeaderInjectorFilter
 {
-    public StrictTransportFilter()
-    {
-    }
-
     @Override
     public void initialize() throws ServletException
     {

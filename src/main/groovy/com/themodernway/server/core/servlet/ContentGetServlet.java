@@ -103,7 +103,7 @@ public class ContentGetServlet extends AbstractContentServlet
                 }
                 if (path.endsWith(FileAndPathUtils.SINGLE_SLASH))
                 {
-                    response.sendRedirect(FileAndPathUtils.POINT_SLASHY + getHomePage());
+                    response.sendRedirect(FileAndPathUtils.POINT_SLASHY + "index.html");
 
                     return;
                 }
@@ -202,10 +202,5 @@ public class ContentGetServlet extends AbstractContentServlet
         {
             response.setContentLengthLong(0L);
         }
-    }
-
-    public String getHomePage()
-    {
-        return "index.html";
     }
 }

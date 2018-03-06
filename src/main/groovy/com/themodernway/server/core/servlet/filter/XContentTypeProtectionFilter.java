@@ -20,10 +20,6 @@ import javax.servlet.ServletException;
 
 public class XContentTypeProtectionFilter extends HeaderInjectorFilter
 {
-    public XContentTypeProtectionFilter()
-    {
-    }
-
     @Override
     public void initialize() throws ServletException
     {

@@ -20,10 +20,6 @@ import javax.servlet.ServletException;
 
 public class CacheControlFilter extends HeaderInjectorFilter
 {
-    public CacheControlFilter()
-    {
-    }
-
     @Override
     public void initialize() throws ServletException
     {

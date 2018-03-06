@@ -20,10 +20,6 @@ import javax.servlet.ServletException;
 
 public class XFrameOptionsFilter extends HeaderInjectorFilter
 {
-    public XFrameOptionsFilter()
-    {
-    }
-
     @Override
     public void initialize() throws ServletException
     {
