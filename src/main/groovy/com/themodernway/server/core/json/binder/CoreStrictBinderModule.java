@@ -26,7 +26,6 @@ import org.springframework.core.io.ClassPathResource;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.core.Versioned;
 import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -37,11 +36,15 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreStrictBinderModule extends SimpleModule
 {
-    private static final long serialVersionUID = 1L;
+    private static final long    serialVersionUID = 1L;
+
+    private static final Logger  logger           = LoggingOps.LOGGER(CoreStrictBinderModule.class);
+
+    private static final Version VERSION          = buildVersion();
 
     public CoreStrictBinderModule()
     {
-        super("CoreStrictBinderModule", PackageVersion.VERSION);
+        super("CoreStrictBinderModule", VERSION);
 
         addSerializer(Long.class, CoreStrictLongSerializer.INSTANCE);
 
@@ -60,6 +63,32 @@ public class CoreStrictBinderModule extends SimpleModule
     public boolean equals(final Object o)
     {
         return this == o;
+    }
+
+    private static final Version buildVersion()
+    {
+        try
+        {
+            final Properties properties = IO.toProperties(new ClassPathResource("strictbinder.properties", CoreStrictBinderModule.class));
+
+            final String mversion = properties.getProperty("strictbinder.mversion", "2.0");
+
+            final String group_id = properties.getProperty("strictbinder.group_id", "com.themodernway");
+
+            final String artifact = properties.getProperty("strictbinder.artifact", "themodernway-server-core");
+
+            final String gversion = properties.getProperty("strictbinder.gversion", "@GRADLE_BUILD_MODULE_VERSION@");
+
+            return VersionUtil.parseVersion(gversion.equals("@GRADLE_BUILD_MODULE_VERSION@") ? mversion : gversion, group_id, artifact);
+        }
+        catch (final IOException e)
+        {
+            if (logger.isErrorEnabled())
+            {
+                logger.error(LoggingOps.TMW_MARKER, "strictbinder.properties", e);
+            }
+            return Version.unknownVersion();
+        }
     }
 
     public static final class CoreStrictLongSerializer extends StdSerializer<Long>
@@ -139,47 +168,6 @@ public class CoreStrictBinderModule extends SimpleModule
             else
             {
                 g.writeNumber(o.doubleValue());
-            }
-        }
-    }
-
-    public static final class PackageVersion implements Versioned
-    {
-        private static final Logger logger  = LoggingOps.LOGGER(PackageVersion.class);
-
-        public static final Version VERSION = make();
-
-        @Override
-        public Version version()
-        {
-            return VERSION;
-        }
-
-        private static final Version make()
-        {
-            try
-            {
-                final Properties properties = IO.toProperties(new ClassPathResource("strictbinder.properties", CoreStrictBinderModule.class));
-
-                final String mversion = properties.getProperty("strictbinder.mversion", "2.0");
-
-                final String group_id = properties.getProperty("strictbinder.group_id", "com.themodernway");
-
-                final String artifact = properties.getProperty("strictbinder.artifact", "themodernway-server-core");
-
-                final String gversion = properties.getProperty("strictbinder.gversion", "@GRADLE_BUILD_MODULE_VERSION@");
-
-                final Version version = VersionUtil.parseVersion(gversion.equals("@GRADLE_BUILD_MODULE_VERSION@") ? mversion : gversion, group_id, artifact);
-
-                return version;
-            }
-            catch (final IOException e)
-            {
-                if (logger.isErrorEnabled())
-                {
-                    logger.error(LoggingOps.TMW_MARKER, "strictbinder.properties", e);
-                }
-                return Version.unknownVersion();
             }
         }
     }

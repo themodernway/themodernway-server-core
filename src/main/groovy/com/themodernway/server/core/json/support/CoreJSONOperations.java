@@ -83,7 +83,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
         }
         catch (final Exception e)
         {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -141,7 +141,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
         }
         catch (final Exception e)
         {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -207,7 +207,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
         }
         catch (final Exception e)
         {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -256,7 +256,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
         }
         catch (final Exception e)
         {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 

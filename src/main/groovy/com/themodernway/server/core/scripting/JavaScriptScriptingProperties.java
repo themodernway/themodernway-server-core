@@ -42,4 +42,10 @@ public class JavaScriptScriptingProperties extends AbstractScriptingProperties
 
         populate(CommonOps.requireNonNull(resource));
     }
+
+    @Override
+    protected void start()
+    {
+        // empty by design.
+    }
 }

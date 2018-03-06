@@ -16,99 +16,22 @@
 
 package com.themodernway.server.core.json;
 
-import com.themodernway.common.api.java.util.CommonOps;
-
-@SuppressWarnings("serial")
 public class ParserException extends Exception
 {
-    public static final int ERROR_UNEXPECTED_CHAR      = 0;
+    private static final long serialVersionUID = 1L;
 
-    public static final int ERROR_UNEXPECTED_TOKEN     = 1;
-
-    public static final int ERROR_UNEXPECTED_EXCEPTION = 2;
-
-    private int             m_errorType                = ERROR_UNEXPECTED_EXCEPTION;
-
-    private Object          m_unexpectedObject         = CommonOps.nulled();
-
-    private int             m_position                 = CommonOps.IS_NOT_FOUND;
-
-    public ParserException(final Exception e)
+    public ParserException(final Throwable cause)
     {
-        super(e);
-
-        m_errorType = ERROR_UNEXPECTED_EXCEPTION;
+        super(cause);
     }
 
-    public ParserException(final int errorType)
+    public ParserException(final String message)
     {
-        this(CommonOps.IS_NOT_FOUND, errorType, CommonOps.nulled());
+        super(message);
     }
 
-    public ParserException(final int errorType, final Object unexpectedObject)
+    public ParserException(final String message, final Throwable cause)
     {
-        this(CommonOps.IS_NOT_FOUND, errorType, unexpectedObject);
-    }
-
-    public ParserException(final int position, final int errorType, final Object unexpectedObject)
-    {
-        m_position = position;
-
-        m_errorType = errorType;
-
-        m_unexpectedObject = unexpectedObject;
-    }
-
-    public int getErrorType()
-    {
-        return m_errorType;
-    }
-
-    public void setErrorType(final int errorType)
-    {
-        m_errorType = errorType;
-    }
-
-    public int getPosition()
-    {
-        return m_position;
-    }
-
-    public void setPosition(final int position)
-    {
-        m_position = position;
-    }
-
-    public Object getUnexpectedObject()
-    {
-        return m_unexpectedObject;
-    }
-
-    public void setUnexpectedObject(final Object unexpectedObject)
-    {
-        m_unexpectedObject = unexpectedObject;
-    }
-
-    @Override
-    public String toString()
-    {
-        final StringBuilder sb = new StringBuilder();
-
-        switch (m_errorType)
-        {
-            case ERROR_UNEXPECTED_CHAR:
-                sb.append("Unexpected character (").append(m_unexpectedObject).append(") at position ").append(m_position).append(".");
-                break;
-            case ERROR_UNEXPECTED_TOKEN:
-                sb.append("Unexpected token ").append(m_unexpectedObject).append(" at position ").append(m_position).append(".");
-                break;
-            case ERROR_UNEXPECTED_EXCEPTION:
-                sb.append("Unexpected exception at position ").append(m_position).append(": ").append(m_unexpectedObject);
-                break;
-            default:
-                sb.append("Unkown error at position ").append(m_position).append(".");
-                break;
-        }
-        return sb.toString();
+        super(message, cause);
     }
 }

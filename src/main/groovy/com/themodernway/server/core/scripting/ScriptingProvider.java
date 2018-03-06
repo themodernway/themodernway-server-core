@@ -40,7 +40,7 @@ public class ScriptingProvider implements IScriptingProvider
 {
     private final static Logger                                   logger = LoggingOps.LOGGER(ScriptingProvider.class);
 
-    private final LinkedHashMap<ScriptType, IScriptingProperties> m_dict = new LinkedHashMap<ScriptType, IScriptingProperties>();
+    private final LinkedHashMap<ScriptType, IScriptingProperties> m_dict = new LinkedHashMap<>();
 
     public ScriptingProvider(final List<IScriptingProperties> list)
     {
@@ -56,11 +56,14 @@ public class ScriptingProvider implements IScriptingProvider
                 }
                 m_dict.put(type, prop);
 
-                logger.info("IScriptingProperties for type " + type.getValue() + " registered.");
+                if (logger.isInfoEnabled())
+                {
+                    logger.info(String.format("IScriptingProperties for type (%s) registered.", type.getValue()));
+                }
             }
-            else
+            else if (logger.isWarnEnabled())
             {
-                logger.warn("IScriptingProperties for type " + type.getValue() + " already registered, ignored.");
+                logger.warn(String.format("IScriptingProperties for type (%s) ignored.", type.getValue()));
             }
         }
     }
@@ -104,13 +107,13 @@ public class ScriptingProvider implements IScriptingProvider
     @Override
     public List<String> getScriptingLanguageNames(final ClassLoader loader)
     {
-        final HashSet<String> look = new HashSet<String>();
+        final HashSet<String> look = new HashSet<>();
 
         for (final ScriptEngineFactory factory : getScriptEngineManager(CommonOps.requireNonNull(loader)).getEngineFactories())
         {
             look.addAll(factory.getNames());
         }
-        final HashSet<String> find = new HashSet<String>();
+        final HashSet<String> find = new HashSet<>();
 
         for (final ScriptType type : ScriptType.values())
         {
@@ -128,13 +131,13 @@ public class ScriptingProvider implements IScriptingProvider
     @Override
     public List<String> getScriptingLanguageNames()
     {
-        final HashSet<String> look = new HashSet<String>();
+        final HashSet<String> look = new HashSet<>();
 
         for (final ScriptEngineFactory factory : getScriptEngineManager().getEngineFactories())
         {
             look.addAll(factory.getNames());
         }
-        final HashSet<String> find = new HashSet<String>();
+        final HashSet<String> find = new HashSet<>();
 
         for (final ScriptType type : ScriptType.values())
         {
@@ -152,13 +155,13 @@ public class ScriptingProvider implements IScriptingProvider
     @Override
     public List<ScriptType> getScriptingLanguageTypes()
     {
-        final HashSet<String> look = new HashSet<String>();
+        final HashSet<String> look = new HashSet<>();
 
         for (final ScriptEngineFactory factory : getScriptEngineManager().getEngineFactories())
         {
             look.addAll(factory.getNames());
         }
-        final HashSet<ScriptType> find = new HashSet<ScriptType>();
+        final HashSet<ScriptType> find = new HashSet<>();
 
         for (final ScriptType type : ScriptType.values())
         {
@@ -176,13 +179,13 @@ public class ScriptingProvider implements IScriptingProvider
     @Override
     public List<ScriptType> getScriptingLanguageTypes(final ClassLoader loader)
     {
-        final HashSet<String> look = new HashSet<String>();
+        final HashSet<String> look = new HashSet<>();
 
         for (final ScriptEngineFactory factory : getScriptEngineManager(CommonOps.requireNonNull(loader)).getEngineFactories())
         {
             look.addAll(factory.getNames());
         }
-        final HashSet<ScriptType> find = new HashSet<ScriptType>();
+        final HashSet<ScriptType> find = new HashSet<>();
 
         for (final ScriptType type : ScriptType.values())
         {
@@ -200,10 +203,7 @@ public class ScriptingProvider implements IScriptingProvider
     @Override
     public void close() throws IOException
     {
-        for (final IScriptingProperties prop : m_dict.values())
-        {
-            prop.close();
-        }
+        IO.close(m_dict.values());
     }
 
     @Override

@@ -71,7 +71,7 @@ public abstract class AbstractScriptingProperties extends Activatable implements
         return super.setActive(active);
     }
 
-    protected void populate(final Resource resource) throws Exception
+    protected void populate(final Resource resource) throws IOException
     {
         IO.toProperties(getProperties(), resource);
     }
@@ -91,7 +91,5 @@ public abstract class AbstractScriptingProperties extends Activatable implements
         getProperties().clear();
     }
 
-    protected void start()
-    {
-    }
+    abstract protected void start();
 }

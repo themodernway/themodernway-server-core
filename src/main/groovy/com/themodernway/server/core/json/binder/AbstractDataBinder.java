@@ -53,7 +53,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 {
     private M m_mapper;
 
-    protected final static JSONObject MAKE(final Map<?, ?> make)
+    protected static final JSONObject json(final Map<?, ?> make)
     {
         return new JSONObject(CommonOps.rawmap(make));
     }
@@ -65,7 +65,9 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
     protected M copy()
     {
-        return m_mapper = CommonOps.cast(m_mapper.copy());
+        m_mapper = CommonOps.cast(m_mapper.copy());
+
+        return m_mapper;
     }
 
     @Override
@@ -375,55 +377,55 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public JSONObject bindJSON(final Path path) throws ParserException
     {
-        return MAKE(bind(path, LinkedHashMap.class));
+        return json(bind(path, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final File file) throws ParserException
     {
-        return MAKE(bind(file, LinkedHashMap.class));
+        return json(bind(file, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final IFileItem file) throws ParserException
     {
-        return MAKE(bind(file, LinkedHashMap.class));
+        return json(bind(file, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final InputStream stream) throws ParserException
     {
-        return MAKE(bind(stream, LinkedHashMap.class));
+        return json(bind(stream, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final Reader reader) throws ParserException
     {
-        return MAKE(bind(reader, LinkedHashMap.class));
+        return json(bind(reader, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final Resource resource) throws ParserException
     {
-        return MAKE(bind(resource, LinkedHashMap.class));
+        return json(bind(resource, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final URL url) throws ParserException
     {
-        return MAKE(bind(url, LinkedHashMap.class));
+        return json(bind(url, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final CharSequence text) throws ParserException
     {
-        return MAKE(bind(text, LinkedHashMap.class));
+        return json(bind(text, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final Properties properties) throws ParserException
     {
-        return MAKE(bind(properties, LinkedHashMap.class));
+        return json(bind(properties, LinkedHashMap.class));
     }
 
     @Override
@@ -524,7 +526,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
             }
             else if (object instanceof Map)
             {
-                return MAKE((Map<?, ?>) object);
+                return json((Map<?, ?>) object);
             }
             else if (object instanceof CharSequence)
             {
