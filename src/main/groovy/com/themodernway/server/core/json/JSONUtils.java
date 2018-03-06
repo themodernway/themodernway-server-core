@@ -16,8 +16,6 @@
 
 package com.themodernway.server.core.json;
 
-import static com.themodernway.common.api.java.util.CommonOps.nulled;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
@@ -125,35 +123,6 @@ public final class JSONUtils
         }
     }
 
-    public static final boolean isInteger(final Object object)
-    {
-        if (null == object)
-        {
-            return false;
-        }
-        if (object instanceof Integer)
-        {
-            return true;
-        }
-        if (object instanceof Long)
-        {
-            final long value = ((Long) object);
-
-            return (false == ((value > Integer.MAX_VALUE) || (value < Integer.MIN_VALUE)));
-        }
-        if (object instanceof BigInteger)
-        {
-            final BigInteger value = ((BigInteger) object);
-
-            return (false == ((value.compareTo(BIG_INTEGER_MAX) > 0) || (value.compareTo(BIG_INTEGER_MIN) < 0)));
-        }
-        if (object instanceof Short)
-        {
-            return true;
-        }
-        return false;
-    }
-
     public static final boolean isDoubleInfiniteOrNan(final Double dval)
     {
         return (dval.isInfinite() || dval.isNaN());
@@ -164,40 +133,19 @@ public final class JSONUtils
         return (fval.isInfinite() || fval.isNaN());
     }
 
+    public static final boolean isInteger(final Object object)
+    {
+        return (null != asInteger(object));
+    }
+
     public static final boolean isDouble(final Object object)
     {
-        if (null == object)
-        {
-            return false;
-        }
-        if (object instanceof Double)
-        {
-            return (false == (isDoubleInfiniteOrNan(((Double) object))));
-        }
-        if (object instanceof Float)
-        {
-            return (false == (isFloatInfiniteOrNan(((Float) object))));
-        }
-        if (object instanceof BigDecimal)
-        {
-            final BigDecimal value = ((BigDecimal) object);
-
-            if ((value.compareTo(BIG_DECIMAL_MAX) > 0) || (value.compareTo(BIG_DECIMAL_MIN) < 0))
-            {
-                return false;
-            }
-            if (isDoubleInfiniteOrNan(value.doubleValue()))
-            {
-                return false;
-            }
-            return true;
-        }
-        return false;
+        return (null != asDouble(object));
     }
 
     public static final boolean isNumber(final Object object)
     {
-        return (object instanceof Number) ? (isInteger(object) || isDouble(object)) : false;
+        return (null != asNumber(object));
     }
 
     public static final boolean isObject(final Object object)
@@ -227,177 +175,109 @@ public final class JSONUtils
 
     public static final Integer asInteger(final Object object)
     {
-        if (null == object)
-        {
-            return nulled();
-        }
-        if (object instanceof Integer)
-        {
-            return ((Integer) object);
-        }
-        if (object instanceof Long)
-        {
-            final Long value = ((Long) object);
-
-            if ((value > Integer.MAX_VALUE) || (value < Integer.MIN_VALUE))
-            {
-                return nulled();
-            }
-            return value.intValue();
-        }
-        if (object instanceof Short)
-        {
-            return ((Short) object).intValue();
-        }
-        if (object instanceof BigInteger)
-        {
-            final BigInteger value = ((BigInteger) object);
-
-            if ((value.compareTo(BIG_INTEGER_MAX) > 0) || (value.compareTo(BIG_INTEGER_MIN) < 0))
-            {
-                return nulled();
-            }
-            return value.intValue();
-        }
-        if (object instanceof BigDecimal)
-        {
-            final BigDecimal value = ((BigDecimal) object);
-
-            if ((value.compareTo(BIG_DEC_INT_MAX) > 0) || (value.compareTo(BIG_DEC_INT_MIN) < 0))
-            {
-                return nulled();
-            }
-            return value.intValue();
-        }
         if (object instanceof Number)
         {
+            if (object instanceof Integer)
+            {
+                return ((Integer) object);
+            }
+            if (object instanceof Long)
+            {
+                final Long value = ((Long) object);
+
+                return (((value > Integer.MAX_VALUE) || (value < Integer.MIN_VALUE)) ? null : value.intValue());
+            }
+            if (object instanceof Short)
+            {
+                return ((Short) object).intValue();
+            }
+            if (object instanceof BigInteger)
+            {
+                final BigInteger value = ((BigInteger) object);
+
+                return (((value.compareTo(BIG_INTEGER_MAX) > 0) || (value.compareTo(BIG_INTEGER_MIN) < 0)) ? null : value.intValue());
+            }
+            if (object instanceof BigDecimal)
+            {
+                final BigDecimal value = ((BigDecimal) object);
+
+                return (((value.compareTo(BIG_DEC_INT_MAX) > 0) || (value.compareTo(BIG_DEC_INT_MIN) < 0)) ? null : value.intValue());
+            }
             final long lval = ((Number) object).longValue();
 
-            if ((lval > Integer.MAX_VALUE) || (lval < Integer.MIN_VALUE))
-            {
-                return nulled();
-            }
-            return ((int) lval);
+            return (((lval > Integer.MAX_VALUE) || (lval < Integer.MIN_VALUE)) ? null : ((int) lval));
         }
-        return nulled();
+        return null;
     }
 
     public static final Long asLong(final Object object)
     {
-        if (null == object)
-        {
-            return nulled();
-        }
-        if (object instanceof Long)
-        {
-            return ((Long) object);
-        }
-        if (object instanceof Integer)
-        {
-            return ((Integer) object).longValue();
-        }
-        if (object instanceof Double)
-        {
-            final Double dval = ((Double) object);
-
-            if (isDoubleInfiniteOrNan(dval))
-            {
-                return nulled();
-            }
-            if ((dval.doubleValue() > Long.MAX_VALUE) || (dval.doubleValue() < Long.MIN_VALUE))
-            {
-                return nulled();
-            }
-            return dval.longValue();
-        }
-        if (object instanceof BigInteger)
-        {
-            final BigInteger value = ((BigInteger) object);
-
-            if ((value.compareTo(BIG_INTLONG_MAX) > 0) || (value.compareTo(BIG_INTLONG_MIN) < 0))
-            {
-                return nulled();
-            }
-            return value.longValue();
-        }
-        if (object instanceof BigDecimal)
-        {
-            final BigDecimal value = ((BigDecimal) object);
-
-            if ((value.compareTo(BIG_DEC_LONGMAX) > 0) || (value.compareTo(BIG_DEC_LONGMIN) < 0))
-            {
-                return nulled();
-            }
-            return value.longValue();
-        }
         if (object instanceof Number)
         {
+            if (object instanceof Long)
+            {
+                return ((Long) object);
+            }
+            if (object instanceof Integer)
+            {
+                return ((Integer) object).longValue();
+            }
+            if (object instanceof Double)
+            {
+                final Double dval = ((Double) object);
+
+                return (((isDoubleInfiniteOrNan(dval)) || ((dval.doubleValue() > Long.MAX_VALUE) || (dval.doubleValue() < Long.MIN_VALUE))) ? null : dval.longValue());
+            }
+            if (object instanceof BigInteger)
+            {
+                final BigInteger value = ((BigInteger) object);
+
+                return (((value.compareTo(BIG_INTLONG_MAX) > 0) || (value.compareTo(BIG_INTLONG_MIN) < 0)) ? null : value.longValue());
+            }
+            if (object instanceof BigDecimal)
+            {
+                final BigDecimal value = ((BigDecimal) object);
+
+                return (((value.compareTo(BIG_DEC_LONGMAX) > 0) || (value.compareTo(BIG_DEC_LONGMIN) < 0)) ? null : value.longValue());
+            }
             return ((Number) object).longValue();
         }
-        return nulled();
+        return null;
     }
 
     public static final Double asDouble(final Object object)
     {
-        if (null == object)
-        {
-            return nulled();
-        }
-        if (object instanceof Double)
-        {
-            final Double dval = ((Double) object);
-
-            if (isDoubleInfiniteOrNan(dval))
-            {
-                return nulled();
-            }
-            return dval;
-        }
-        if (object instanceof Float)
-        {
-            final Float fval = ((Float) object);
-
-            if (isFloatInfiniteOrNan(fval))
-            {
-                return nulled();
-            }
-            return fval.doubleValue();
-        }
-        if (object instanceof BigDecimal)
-        {
-            final BigDecimal value = ((BigDecimal) object);
-
-            if ((value.compareTo(BIG_DECIMAL_MAX) > 0) || (value.compareTo(BIG_DECIMAL_MIN) < 0))
-            {
-                return nulled();
-            }
-            if (isDoubleInfiniteOrNan(value.doubleValue()))
-            {
-                return nulled();
-            }
-            return value.doubleValue();
-        }
-        if (object instanceof BigInteger)
-        {
-            final BigInteger value = ((BigInteger) object);
-
-            if ((value.compareTo(BIG_INT_DEC_MAX) > 0) || (value.compareTo(BIG_INT_DEC_MIN) < 0))
-            {
-                return nulled();
-            }
-            return value.doubleValue();
-        }
         if (object instanceof Number)
         {
+            if (object instanceof Double)
+            {
+                final Double dval = ((Double) object);
+
+                return ((isDoubleInfiniteOrNan(dval)) ? null : dval);
+            }
+            if (object instanceof Float)
+            {
+                final Float fval = ((Float) object);
+
+                return ((isFloatInfiniteOrNan(fval)) ? null : fval.doubleValue());
+            }
+            if (object instanceof BigDecimal)
+            {
+                final BigDecimal value = ((BigDecimal) object);
+
+                return ((((value.compareTo(BIG_DECIMAL_MAX) > 0) || (value.compareTo(BIG_DECIMAL_MIN) < 0)) || (isDoubleInfiniteOrNan(value.doubleValue()))) ? null : value.doubleValue());
+            }
+            if (object instanceof BigInteger)
+            {
+                final BigInteger value = ((BigInteger) object);
+
+                return (((value.compareTo(BIG_INT_DEC_MAX) > 0) || (value.compareTo(BIG_INT_DEC_MIN) < 0)) ? null : value.doubleValue());
+            }
             final Double dval = ((Number) object).doubleValue();
 
-            if (isDoubleInfiniteOrNan(dval))
-            {
-                return nulled();
-            }
-            return dval;
+            return ((isDoubleInfiniteOrNan(dval)) ? null : dval);
         }
-        return nulled();
+        return null;
     }
 
     public static final Number asNumber(final Object object)
@@ -414,81 +294,33 @@ public final class JSONUtils
             }
             return asLong(object);
         }
-        return nulled();
+        return null;
     }
 
     public static final JSONArray asArray(final Object object)
     {
-        if (null == object)
-        {
-            return nulled();
-        }
-        if (object instanceof JSONArray)
-        {
-            return ((JSONArray) object);
-        }
-        if (object instanceof List)
-        {
-            return new JSONArray((List<?>) object);
-        }
-        return nulled();
+        return ((object instanceof List) ? ((object instanceof JSONArray) ? ((JSONArray) object) : new JSONArray((List<?>) object)) : null);
     }
 
     @SuppressWarnings("unchecked")
     public static final JSONObject asObject(final Object object)
     {
-        if (null == object)
-        {
-            return nulled();
-        }
-        if (object instanceof JSONObject)
-        {
-            return ((JSONObject) object);
-        }
-        if (object instanceof Map)
-        {
-            return new JSONObject((Map<String, ?>) object);
-        }
-        return nulled();
+        return ((object instanceof Map) ? ((object instanceof JSONObject) ? ((JSONObject) object) : new JSONObject((Map<String, ?>) object)) : null);
     }
 
     public static final String asString(final Object object)
     {
-        if (null == object)
-        {
-            return nulled();
-        }
-        if (object instanceof CharSequence)
-        {
-            return ((CharSequence) object).toString();
-        }
-        return nulled();
+        return ((object instanceof CharSequence) ? ((CharSequence) object).toString() : null);
     }
 
     public static final Boolean asBoolean(final Object object)
     {
-        if (null == object)
-        {
-            return nulled();
-        }
-        if (object instanceof Boolean)
-        {
-            return ((Boolean) object);
-        }
-        return nulled();
+        return ((object instanceof Boolean) ? ((Boolean) object) : null);
     }
 
     public static final Date asDate(final Object object)
     {
-        if (null == object)
-        {
-            return nulled();
-        }
-        if (object instanceof Date)
-        {
-            return new Date(((Date) object).getTime());
-        }
-        return nulled();
+        return ((object instanceof Date) ? new Date(((Date) object).getTime()) : null);
     }
 
     public static final JSONType getJSONType(final Object object)
@@ -501,18 +333,6 @@ public final class JSONUtils
         {
             return JSONType.STRING;
         }
-        if (object instanceof Number)
-        {
-            if (null != asNumber(object))
-            {
-                return JSONType.NUMBER;
-            }
-            return JSONType.UNDEFINED;
-        }
-        if (object instanceof Boolean)
-        {
-            return JSONType.BOOLEAN;
-        }
         if (object instanceof Map)
         {
             return JSONType.OBJECT;
@@ -521,11 +341,15 @@ public final class JSONUtils
         {
             return JSONType.ARRAY;
         }
+        if (object instanceof Boolean)
+        {
+            return JSONType.BOOLEAN;
+        }
         if (object instanceof Date)
         {
             return JSONType.DATE;
         }
-        return JSONType.UNDEFINED;
+        return (isNumber(object) ? JSONType.NUMBER : JSONType.UNDEFINED);
     }
 
     public static final boolean isJSONType(final Object object, final JSONType type)
