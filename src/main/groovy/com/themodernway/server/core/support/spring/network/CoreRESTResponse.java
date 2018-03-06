@@ -30,7 +30,7 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreRESTResponse implements IRESTResponse
 {
-    private static final Logger         logger = LoggingOps.LOGGER(CoreRESTResponse.class);
+    private static final Logger         logger = LoggingOps.getLogger(CoreRESTResponse.class);
 
     private static final IBinder        BINDER = BinderType.JSON.getBinder();
 
@@ -91,7 +91,7 @@ public class CoreRESTResponse implements IRESTResponse
         }
         catch (final ParserException e)
         {
-            logger.error("Error parsing JSON", e);
+            logger.error(LoggingOps.TMW_MARKER, "Error parsing JSON", e);
         }
         return null;
     }

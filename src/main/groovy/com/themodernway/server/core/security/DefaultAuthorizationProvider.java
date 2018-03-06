@@ -26,11 +26,11 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICoreCommon
 {
-    private final Logger m_logger = LoggingOps.LOGGER(getClass());
+    private final Logger m_logger = LoggingOps.getLogger(getClass());
 
     public DefaultAuthorizationProvider()
     {
-        logger().info("DefaultAuthorizationProvider()");
+        logger().info(LoggingOps.TMW_MARKER, "DefaultAuthorizationProvider()");
     }
 
     @Override
@@ -38,13 +38,13 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
     {
         if (null == target)
         {
-            logger().error("error null target");
+            logger().error(LoggingOps.TMW_MARKER, "error null target");
 
             return new AuthorizationResult(false, E_RUNTIMEERROR, "error null target");
         }
         if (null == roles)
         {
-            logger().error("error null roles");
+            logger().error(LoggingOps.TMW_MARKER, "error null roles");
 
             return new AuthorizationResult(false, E_RUNTIMEERROR, "error null roles");
         }
@@ -52,7 +52,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
 
         if (roles.isEmpty())
         {
-            logger().error("error empty roles");
+            logger().error(LoggingOps.TMW_MARKER, "error empty roles");
 
             return new AuthorizationResult(false, E_RUNTIMEERROR, "error empty roles");
         }
@@ -60,7 +60,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
         {
             if (logger().isDebugEnabled())
             {
-                logger().debug("dispatch authorization roles " + toPrintableString(roles));
+                logger().debug(LoggingOps.TMW_MARKER, "dispatch authorization roles " + toPrintableString(roles));
             }
             final IAuthorizationResult result = ((IAuthorizedObject) target).isAuthorized(roles);
 
@@ -68,11 +68,11 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
             {
                 if (logger().isDebugEnabled())
                 {
-                    logger().debug("dispatch to authorization result " + result.toString());
+                    logger().debug(LoggingOps.TMW_MARKER, "dispatch to authorization result " + result.toString());
                 }
                 return result;
             }
-            logger().error("error null authorization result");
+            logger().error(LoggingOps.TMW_MARKER, "error null authorization result");
 
             return new AuthorizationResult(false, E_RUNTIMEERROR, "error null authorization result");
         }
@@ -82,7 +82,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
         {
             if (logger().isDebugEnabled())
             {
-                logger().debug("pass no authorizations present");
+                logger().debug(LoggingOps.TMW_MARKER, "pass no authorizations present");
             }
             return new AuthorizationResult(true, I_WASVALIDATED, "pass no authorizations present");
         }
@@ -96,7 +96,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
                 {
                     if (logger().isDebugEnabled())
                     {
-                        logger().debug("fail not role " + type + " in roles " + toPrintableString(roles));
+                        logger().debug(LoggingOps.TMW_MARKER, "fail not role " + type + " in roles " + toPrintableString(roles));
                     }
                     return new AuthorizationResult(false, E_EXCLUDEDROLE, "fail not role " + type);
                 }
@@ -114,7 +114,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
                 {
                     if (logger().isDebugEnabled())
                     {
-                        logger().debug("fail and role " + type + " in roles " + toPrintableString(roles));
+                        logger().debug(LoggingOps.TMW_MARKER, "fail and role " + type + " in roles " + toPrintableString(roles));
                     }
                     return new AuthorizationResult(false, E_NOTVALIDROLE, "fail and role " + type);
                 }
@@ -131,14 +131,14 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
                 {
                     if (logger().isDebugEnabled())
                     {
-                        logger().debug("pass any role " + type + " in roles " + toPrintableString(roles));
+                        logger().debug(LoggingOps.TMW_MARKER, "pass any role " + type + " in roles " + toPrintableString(roles));
                     }
                     return new AuthorizationResult(true, I_WASVALIDATED, "pass any role " + type);
                 }
             }
             if (logger().isDebugEnabled())
             {
-                logger().debug("fail any " + toPrintableString(list) + " in roles " + toPrintableString(roles));
+                logger().debug(LoggingOps.TMW_MARKER, "fail any " + toPrintableString(list) + " in roles " + toPrintableString(roles));
             }
             return new AuthorizationResult(false, E_NOTVALIDROLE, "fail any role");
         }
@@ -154,7 +154,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
                     {
                         if (logger().isDebugEnabled())
                         {
-                            logger().debug("fail value role " + type + " in roles " + toPrintableString(roles));
+                            logger().debug(LoggingOps.TMW_MARKER, "fail value role " + type + " in roles " + toPrintableString(roles));
                         }
                         return new AuthorizationResult(false, E_NOTVALIDROLE, "fail value role " + type);
                     }
@@ -163,7 +163,7 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
         }
         if (logger().isDebugEnabled())
         {
-            logger().debug("pass no authorizations matched in roles " + toPrintableString(roles));
+            logger().debug(LoggingOps.TMW_MARKER, "pass no authorizations matched in roles " + toPrintableString(roles));
         }
         return new AuthorizationResult(true, I_WASVALIDATED, "pass no authorizations matched");
     }
@@ -177,6 +177,6 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
     @Override
     public void close() throws IOException
     {
-        logger().info("DefaultAuthorizationProvider().close()");
+        logger().info(LoggingOps.TMW_MARKER, "DefaultAuthorizationProvider().close()");
     }
 }

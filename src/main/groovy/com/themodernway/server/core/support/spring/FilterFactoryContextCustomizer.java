@@ -35,7 +35,7 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class FilterFactoryContextCustomizer implements IServletContextCustomizer, ICoreCommon
 {
-    private final Logger   m_logs = LoggingOps.LOGGER(getClass());
+    private final Logger   m_logs = LoggingOps.getLogger(getClass());
 
     private final String   m_name;
 
@@ -116,31 +116,31 @@ public class FilterFactoryContextCustomizer implements IServletContextCustomizer
                         {
                             dispatcher.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), isMatchAfter(), maps);
 
-                            logger().info(String.format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                            logger().info(LoggingOps.TMW_MARKER, String.format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
                         }
                         else
                         {
-                            logger().error(String.format("customize (%s) already registered.", name));
+                            logger().error(LoggingOps.TMW_MARKER, String.format("customize (%s) already registered.", name));
                         }
                     }
                     else
                     {
-                        logger().error(String.format("customize (%s) null filter.", name));
+                        logger().error(LoggingOps.TMW_MARKER, String.format("customize (%s) null filter.", name));
                     }
                 }
                 else
                 {
-                    logger().error(String.format("customize (%s) empty mappings.", name));
+                    logger().error(LoggingOps.TMW_MARKER, String.format("customize (%s) empty mappings.", name));
                 }
             }
             else
             {
-                logger().error("customize() no filter name.");
+                logger().error(LoggingOps.TMW_MARKER, "customize() no filter name.");
             }
         }
         else
         {
-            logger().error("customize() no filter factory.");
+            logger().error(LoggingOps.TMW_MARKER, "customize() no filter factory.");
         }
     }
 }

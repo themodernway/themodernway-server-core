@@ -28,7 +28,7 @@ public abstract class HTTPFilterBase implements IHTTPFilter
 
     private FilterConfig m_config    = null;
 
-    private final Logger m_logger    = LoggingOps.LOGGER(getClass());
+    private final Logger m_logger    = LoggingOps.getLogger(getClass());
 
     protected HTTPFilterBase()
     {

@@ -22,7 +22,7 @@ import com.themodernway.common.api.java.util.StringOps;
 
 public final class MDC
 {
-    private static final Logger logger = LoggingOps.LOGGER(MDC.class);
+    private static final Logger logger = LoggingOps.getLogger(MDC.class);
 
     private MDC()
     {

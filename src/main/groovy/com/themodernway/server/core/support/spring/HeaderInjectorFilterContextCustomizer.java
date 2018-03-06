@@ -31,7 +31,7 @@ import com.themodernway.server.core.servlet.filter.IHeaderInjector;
 
 public class HeaderInjectorFilterContextCustomizer extends FilterFactoryContextCustomizer implements IFilterFactory
 {
-    private final List<IHeaderInjector> m_injectors = new ArrayList<IHeaderInjector>();
+    private final List<IHeaderInjector> m_injectors = new ArrayList<>();
 
     public HeaderInjectorFilterContextCustomizer(final String name, final String maps, final List<IHeaderInjector> injectors)
     {

@@ -28,12 +28,12 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreWebContextLoaderListener extends ContextLoaderListener
 {
-    private static final Logger logger = LoggingOps.LOGGER(CoreWebContextLoaderListener.class);
+    private static final Logger logger = LoggingOps.getLogger(CoreWebContextLoaderListener.class);
 
     @Override
     public void contextInitialized(final ServletContextEvent event)
     {
-        logger.info("CoreWebContextLoaderListener.contextInitialized() STARTING");
+        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.contextInitialized() STARTING");
 
         super.contextInitialized(event);
 
@@ -51,29 +51,29 @@ public class CoreWebContextLoaderListener extends ContextLoaderListener
                 }
             }
         }
-        logger.info("CoreWebContextLoaderListener.contextInitialized() COMPLETE");
+        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.contextInitialized() COMPLETE");
     }
 
     @Override
     public void contextDestroyed(final ServletContextEvent event)
     {
-        logger.info("CoreWebContextLoaderListener.contextDestroyed() STARTING");
+        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.contextDestroyed() STARTING");
 
         super.contextDestroyed(event);
 
-        logger.info("CoreWebContextLoaderListener.contextDestroyed() COMPLETE");
+        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.contextDestroyed() COMPLETE");
     }
 
     @Override
     protected void customizeContext(final ServletContext sc, final ConfigurableWebApplicationContext context)
     {
-        logger.info("CoreWebContextLoaderListener.customizeContext() STARTING");
+        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.customizeContext() STARTING");
 
         super.customizeContext(sc, context);
 
         ServerContextInstance.setApplicationContext(context);
 
-        logger.info("CoreWebContextLoaderListener.customizeContext() COMPLETE");
+        logger.info(LoggingOps.TMW_MARKER, "CoreWebContextLoaderListener.customizeContext() COMPLETE");
     }
 
     protected boolean isServletContextCustomizerEnabled()

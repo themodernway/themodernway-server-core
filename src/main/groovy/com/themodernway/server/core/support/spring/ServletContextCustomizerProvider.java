@@ -30,7 +30,7 @@ import com.themodernway.server.core.io.IO;
 
 public class ServletContextCustomizerProvider implements IServletContextCustomizerProvider, BeanFactoryAware
 {
-    private final ArrayList<IServletContextCustomizer> m_customizers = new ArrayList<IServletContextCustomizer>();
+    private final ArrayList<IServletContextCustomizer> m_customizers = new ArrayList<>();
 
     @Override
     public List<IServletContextCustomizer> getServletContextCustomizers()

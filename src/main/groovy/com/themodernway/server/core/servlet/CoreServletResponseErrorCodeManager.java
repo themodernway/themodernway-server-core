@@ -33,7 +33,7 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
 
     private final boolean                                m_dosend;
 
-    private final Logger                                 m_logger = LoggingOps.LOGGER(getClass());
+    private final Logger                                 m_logger = LoggingOps.getLogger(getClass());
 
     public CoreServletResponseErrorCodeManager()
     {
@@ -56,11 +56,11 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
         {
             if (null != (mess = StringOps.toTrimOrNull(mess)))
             {
-                logger().debug(String.format("sending code (%s) message (%s).", code, mess));
+                logger().debug(LoggingOps.TMW_MARKER, String.format("sending code (%s) message (%s).", code, mess));
             }
             else
             {
-                logger().debug(String.format("sending code (%s).", code));
+                logger().debug(LoggingOps.TMW_MARKER, String.format("sending code (%s).", code));
             }
         }
     }
@@ -80,7 +80,7 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
             }
             catch (final IOException e)
             {
-                logger().error(String.format("error sending code (%s) message (%s).", code, mess), e);
+                logger().error(LoggingOps.TMW_MARKER, String.format("error sending code (%s) message (%s).", code, mess), e);
             }
         }
         debug(code, mess);

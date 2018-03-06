@@ -19,7 +19,7 @@ package com.themodernway.server.core.io;
 import java.io.IOException;
 import java.util.Locale;
 
-import com.themodernway.server.core.CoreOps;
+import com.themodernway.server.core.CoreThrowables;
 
 @SuppressWarnings("unchecked")
 public interface IFormatted<T extends IFormatted<T>>
@@ -42,7 +42,7 @@ public interface IFormatted<T extends IFormatted<T>>
         }
         catch (final IOException e)
         {
-            CoreOps.handle(e);
+            CoreThrowables.handle(e);
         }
         return (T) this;
     }
@@ -55,7 +55,7 @@ public interface IFormatted<T extends IFormatted<T>>
         }
         catch (final IOException e)
         {
-            CoreOps.handle(e);
+            CoreThrowables.handle(e);
         }
         return (T) this;
     }

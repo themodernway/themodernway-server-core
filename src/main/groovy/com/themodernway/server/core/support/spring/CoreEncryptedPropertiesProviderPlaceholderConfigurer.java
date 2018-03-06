@@ -133,7 +133,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
         private final void decrypt(final Properties props)
         {
-            final LinkedHashMap<String, String> saved = new LinkedHashMap<String, String>();
+            final LinkedHashMap<String, String> saved = new LinkedHashMap<>();
 
             props.forEach((e, o) -> {
 
@@ -143,7 +143,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
                 if ((null != v) && (false == v.isEmpty()) && (v.startsWith(m_prefix)))
                 {
-                    final String r = v.replace(m_prefix, "");
+                    final String r = v.replace(m_prefix, StringOps.EMPTY_STRING);
 
                     final String d = (r.isEmpty() ? r : m_crypto.decrypt(r));
 
@@ -155,7 +155,7 @@ public final class CoreEncryptedPropertiesProviderPlaceholderConfigurer extends 
 
         private final void encrypt(final Properties props)
         {
-            final LinkedHashMap<String, String> saved = new LinkedHashMap<String, String>(props.size());
+            final LinkedHashMap<String, String> saved = new LinkedHashMap<>(props.size());
 
             for (final Object o : props.keySet())
             {

@@ -16,17 +16,28 @@
 
 package com.themodernway.server.core;
 
-import com.themodernway.common.api.java.util.CommonOps;
+import org.slf4j.Logger;
 
-public final class CoreOps
+import com.themodernway.server.core.logging.LoggingOps;
+
+public final class CoreThrowables
 {
-    private CoreOps()
+    private static final Logger logger = LoggingOps.getLogger(CoreThrowables.class);
+
+    private CoreThrowables()
     {
-        // empty private constructor
     }
 
     public static final void handle(final Throwable e)
     {
-        CommonOps.requireNonNull(e);
+        handle(false, e);
+    }
+
+    public static final void handle(final boolean echo, final Throwable e)
+    {
+        if ((echo) && (logger.isErrorEnabled()))
+        {
+            logger.error(LoggingOps.TMW_MARKER, "handle()", e);
+        }
     }
 }

@@ -35,7 +35,7 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
 {
     private EmbeddedValueResolver                   m_factory;
 
-    private final ConcurrentHashMap<String, String> m_docache = new ConcurrentHashMap<String, String>();
+    private final ConcurrentHashMap<String, String> m_docache = new ConcurrentHashMap<>();
 
     public CorePropertiesResolver()
     {

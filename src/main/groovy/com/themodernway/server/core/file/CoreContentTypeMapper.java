@@ -37,7 +37,7 @@ import com.themodernway.server.core.logging.LoggingOps;
 @NotThreadSafe
 public class CoreContentTypeMapper implements ICoreContentTypeMapper, InitializingBean
 {
-    private final Logger         m_logs = LoggingOps.LOGGER(getClass());
+    private final Logger         m_logs = LoggingOps.getLogger(getClass());
 
     private String[]             m_type = null;
 

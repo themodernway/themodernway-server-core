@@ -18,6 +18,8 @@ package com.themodernway.server.core.json.binder;
 
 import java.util.Properties;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.PropertiesBinder.CorePropertiesMapper;
@@ -50,11 +52,15 @@ public class PropertiesBinder extends AbstractDataBinder<CorePropertiesMapper>
 
     public static class CorePropertiesMapper extends JavaPropsMapper implements ICoreObjectMapper
     {
-        private static final long serialVersionUID = 1L;
+        private static final long                   serialVersionUID = 1L;
+
+        public static final JsonGenerator.Feature[] OUTPUT_ENABLED   = {};
+
+        public static final JsonParser.Feature[]    PARSER_ENABLED   = {};
 
         public CorePropertiesMapper()
         {
-            withDefaults(this);
+            withDefaults(this).enable(PARSER_ENABLED).enable(OUTPUT_ENABLED);
         }
 
         protected CorePropertiesMapper(final CorePropertiesMapper parent)

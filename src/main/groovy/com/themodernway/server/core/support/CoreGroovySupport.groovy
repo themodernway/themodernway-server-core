@@ -64,7 +64,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
 {
     private final static CoreGroovySupport  INSTANCE = new CoreGroovySupport()
 
-    private final Logger                    m_logger = LoggingOps.LOGGER(getClass())
+    private final Logger                    m_logger = LoggingOps.getLogger(getClass())
 
     @Memoized
     public static CoreGroovySupport getCoreGroovySupport()

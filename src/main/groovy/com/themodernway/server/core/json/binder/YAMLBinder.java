@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.json.binder;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
@@ -36,7 +37,11 @@ public class YAMLBinder extends AbstractDataBinder<CoreYAMLMapper>
 
     public static class CoreYAMLMapper extends YAMLMapper implements ICoreObjectMapper
     {
-        private static final long serialVersionUID = 1L;
+        private static final long                   serialVersionUID = 1L;
+
+        public static final JsonGenerator.Feature[] OUTPUT_ENABLED   = {};
+
+        public static final JsonParser.Feature[]    PARSER_ENABLED   = { JsonParser.Feature.ALLOW_YAML_COMMENTS };
 
         public CoreYAMLMapper()
         {
@@ -51,7 +56,7 @@ public class YAMLBinder extends AbstractDataBinder<CoreYAMLMapper>
         @Override
         public <M extends ObjectMapper> M withDefaults(final M mapper)
         {
-            withExtendedModules(mapper).enable(JsonParser.Feature.ALLOW_YAML_COMMENTS);
+            withExtendedModules(mapper).enable(PARSER_ENABLED).enable(OUTPUT_ENABLED);
 
             return mapper;
         }

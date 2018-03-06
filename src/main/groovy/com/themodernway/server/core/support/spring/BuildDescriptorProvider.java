@@ -34,7 +34,7 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFactoryAware
 {
-    private static final Logger                           logger        = LoggingOps.LOGGER(BuildDescriptorProvider.class);
+    private static final Logger                           logger        = LoggingOps.getLogger(BuildDescriptorProvider.class);
 
     private final LinkedHashMap<String, IBuildDescriptor> m_descriptors = new LinkedHashMap<String, IBuildDescriptor>();
 
@@ -54,11 +54,11 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
                 {
                     m_descriptors.put(name, descriptor);
 
-                    logger.info("BuildDescriptorProvider.addDescriptor(" + name + ") Registered");
+                    logger.info(LoggingOps.TMW_MARKER, "BuildDescriptorProvider.addDescriptor(" + name + ") Registered");
                 }
                 else
                 {
-                    logger.error("BuildDescriptorProvider.addDescriptor(" + name + ") Duplicate ignored");
+                    logger.error(LoggingOps.TMW_MARKER, "BuildDescriptorProvider.addDescriptor(" + name + ") Duplicate ignored");
                 }
             }
         }

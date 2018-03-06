@@ -85,7 +85,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         return make(path.toFile(), stor);
     }
 
-    private static final Logger      logger = LoggingOps.LOGGER(SimpleFileItemStorage.class);
+    private static final Logger      logger = LoggingOps.getLogger(SimpleFileItemStorage.class);
 
     private final File               m_file;
 

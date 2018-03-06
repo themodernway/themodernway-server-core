@@ -36,7 +36,7 @@ import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
 public class ServletFactoryContextCustomizer implements IServletContextCustomizer, ICoreCommon, IServletFactoryContextCustomizer
 {
-    private final Logger                     m_logs = LoggingOps.LOGGER(getClass());
+    private final Logger                     m_logs = LoggingOps.getLogger(getClass());
 
     private final String                     m_name;
 
@@ -191,30 +191,30 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
 
                         if (false == done.isEmpty())
                         {
-                            logger().warn(format("customize (%s) already mapped (%s).", name, StringOps.toCommaSeparated(done)));
+                            logger().warn(LoggingOps.TMW_MARKER, format("customize (%s) already mapped (%s).", name, StringOps.toCommaSeparated(done)));
                         }
                         dispatcher.setLoadOnStartup(getLoadOnStartup());
 
-                        logger().info(format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                        logger().info(LoggingOps.TMW_MARKER, format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
                     }
                     else
                     {
-                        logger().error(format("customize (%s) already registered.", name));
+                        logger().error(LoggingOps.TMW_MARKER, format("customize (%s) already registered.", name));
                     }
                 }
                 else
                 {
-                    logger().error(format("customize (%s) null servlet.", name));
+                    logger().error(LoggingOps.TMW_MARKER, format("customize (%s) null servlet.", name));
                 }
             }
             else
             {
-                logger().error(format("customize (%s) empty mappings.", name));
+                logger().error(LoggingOps.TMW_MARKER, format("customize (%s) empty mappings.", name));
             }
         }
         else
         {
-            logger().error("customize() no servlet name.");
+            logger().error(LoggingOps.TMW_MARKER, "customize() no servlet name.");
         }
     }
 }

@@ -49,12 +49,12 @@ public final class LoggingOps
     {
     }
 
-    public static final Logger LOGGER(final String name)
+    public static final Logger getLogger(final String name)
     {
         return LoggerFactory.getLogger(CommonOps.requireNonNull(name));
     }
 
-    public static final Logger LOGGER(final Class<?> type)
+    public static final Logger getLogger(final Class<?> type)
     {
         return LoggerFactory.getLogger(CommonOps.requireNonNull(type));
     }

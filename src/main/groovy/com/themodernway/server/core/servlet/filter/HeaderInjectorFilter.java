@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjectorFilter
 {
@@ -72,7 +73,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
 
             configure(injector);
 
-            logger().info("HeaderInjectorFilter.addHeaderInjector(" + injector.getName() + ")");
+            logger().info(LoggingOps.TMW_MARKER, "HeaderInjectorFilter.addHeaderInjector(" + injector.getName() + ")");
         }
     }
 
@@ -167,7 +168,7 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
                 }
                 catch (final Throwable t)
                 {
-                    logger().error("Could not inject headers " + injector.getName(), t);
+                    logger().error(LoggingOps.TMW_MARKER, "Could not inject headers " + injector.getName(), t);
 
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 

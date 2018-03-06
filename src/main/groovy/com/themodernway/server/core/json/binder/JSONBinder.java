@@ -77,18 +77,19 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 
     public static class CoreObjectMapper extends ObjectMapper implements ICoreObjectMapper
     {
-        private static final long                serialVersionUID = 1L;
+        private static final long                   serialVersionUID = 1L;
 
-        public static final DefaultPrettyPrinter PRETTY           = PRETTY(4);
+        public static final JsonGenerator.Feature[] OUTPUT_ENABLED   = { JsonGenerator.Feature.ESCAPE_NON_ASCII };
 
-        public static final DefaultPrettyPrinter PRETTY(final String indent)
+        public static final JsonParser.Feature[]    PARSER_ENABLED   = { JsonParser.Feature.ALLOW_COMMENTS, JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES };
+
+        public static final DefaultPrettyPrinter    PRETTY_PRINTER   = buildPrettyPrinter(4);
+
+        public static final DefaultPrettyPrinter buildPrettyPrinter(final int repeat)
         {
+            final String indent = StringOps.repeat(StringOps.SPACE_STRING, repeat);
+
             return new DefaultPrettyPrinter().withArrayIndenter(new DefaultIndenter().withIndent(indent)).withObjectIndenter(new DefaultIndenter().withIndent(indent));
-        }
-
-        public static final DefaultPrettyPrinter PRETTY(final int indent)
-        {
-            return PRETTY(StringOps.repeat(StringOps.SPACE_STRING, indent));
         }
 
         public CoreObjectMapper()
@@ -104,7 +105,7 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
         @Override
         public <M extends ObjectMapper> M withDefaults(final M mapper)
         {
-            withExtendedModules(this).enable(JsonParser.Feature.ALLOW_COMMENTS).enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES).enable(JsonGenerator.Feature.ESCAPE_NON_ASCII).setDefaultPrettyPrinter(PRETTY);
+            withExtendedModules(this).enable(PARSER_ENABLED).enable(OUTPUT_ENABLED).setDefaultPrettyPrinter(PRETTY_PRINTER);
 
             return mapper;
         }

@@ -133,7 +133,7 @@ public class HTTPHeaders extends HttpHeaders
 
     public JSONObject toJSONObject()
     {
-        final Map<String, List<String>> make = new LinkedHashMap<String, List<String>>();
+        final Map<String, List<String>> make = new LinkedHashMap<>();
 
         for (final String k : keySet())
         {

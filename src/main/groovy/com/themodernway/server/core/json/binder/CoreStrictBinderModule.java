@@ -38,7 +38,7 @@ public class CoreStrictBinderModule extends SimpleModule
 {
     private static final long    serialVersionUID = 1L;
 
-    private static final Logger  logger           = LoggingOps.LOGGER(CoreStrictBinderModule.class);
+    private static final Logger  logger           = LoggingOps.getLogger(CoreStrictBinderModule.class);
 
     private static final Version VERSION          = buildVersion();
 

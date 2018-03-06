@@ -36,7 +36,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
 
     private final LinkedHashMap<String, T> m_storage = linkedMap();
 
-    private final Logger                   m_logging = LoggingOps.LOGGER(getClass());
+    private final Logger                   m_logging = LoggingOps.getLogger(getClass());
 
     protected AbstractBeanFactoryProvider(final Class<T> classof)
     {

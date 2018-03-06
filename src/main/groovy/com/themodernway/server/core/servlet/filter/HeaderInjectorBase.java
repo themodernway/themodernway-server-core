@@ -24,7 +24,7 @@ public abstract class HeaderInjectorBase implements IHeaderInjector
 {
     private IHeaderInjectorFilter m_filter;
 
-    private final Logger          m_logger = LoggingOps.LOGGER(getClass());
+    private final Logger          m_logger = LoggingOps.getLogger(getClass());
 
     protected HeaderInjectorBase()
     {

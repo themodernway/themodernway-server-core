@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class CacheControlHeaderInjector extends HeaderInjectorBase
 {
@@ -94,7 +95,7 @@ public class CacheControlHeaderInjector extends HeaderInjectorBase
 
         if (null != m_dont_cache_regex)
         {
-            logger().info("CacheControlHeaderInjector().setDontCacheRegex(" + m_dont_cache_regex + ")");
+            logger().info(LoggingOps.TMW_MARKER, "CacheControlHeaderInjector().setDontCacheRegex(" + m_dont_cache_regex + ")");
         }
     }
 
@@ -109,7 +110,7 @@ public class CacheControlHeaderInjector extends HeaderInjectorBase
 
         if (null != m_long_cache_regex)
         {
-            logger().info("CacheControlHeaderInjector().setLongCacheRegex(" + m_long_cache_regex + ")");
+            logger().info(LoggingOps.TMW_MARKER, "CacheControlHeaderInjector().setLongCacheRegex(" + m_long_cache_regex + ")");
         }
     }
 
@@ -124,7 +125,7 @@ public class CacheControlHeaderInjector extends HeaderInjectorBase
 
         if (null != m_near_cache_regex)
         {
-            logger().info("CacheControlHeaderInjector().setNearCacheRegex(" + m_near_cache_regex + ")");
+            logger().info(LoggingOps.TMW_MARKER, "CacheControlHeaderInjector().setNearCacheRegex(" + m_near_cache_regex + ")");
         }
     }
 
@@ -139,7 +140,7 @@ public class CacheControlHeaderInjector extends HeaderInjectorBase
 
         if (null != m_skip_cache_regex)
         {
-            logger().info("CacheControlHeaderInjector().setSkipCacheRegex(" + m_skip_cache_regex + ")");
+            logger().info(LoggingOps.TMW_MARKER, "CacheControlHeaderInjector().setSkipCacheRegex(" + m_skip_cache_regex + ")");
         }
     }
 

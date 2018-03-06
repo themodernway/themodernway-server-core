@@ -66,7 +66,7 @@ public abstract class ServerCoreSpecification extends Specification implements I
     {
         if (null == m_logger)
         {
-            m_logger = LoggingOps.LOGGER(getClass())
+            m_logger = LoggingOps.getLogger(getClass())
         }
         m_logger
     }

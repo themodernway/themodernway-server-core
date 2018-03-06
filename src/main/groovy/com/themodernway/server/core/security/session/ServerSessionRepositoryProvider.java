@@ -29,11 +29,12 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.Activatable;
+import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.logging.LoggingOps;
 
 public class ServerSessionRepositoryProvider extends Activatable implements IServerSessionRepositoryProvider, BeanFactoryAware
 {
-    private static final Logger                                   logger         = LoggingOps.LOGGER(ServerSessionRepositoryProvider.class);
+    private static final Logger                                   logger         = LoggingOps.getLogger(ServerSessionRepositoryProvider.class);
 
     private final LinkedHashMap<String, IServerSessionRepository> m_repositories = new LinkedHashMap<>();
 
@@ -56,21 +57,21 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
 
                     repository.setActive(true);
 
-                    logger.info("ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Registered");
+                    logger.info(LoggingOps.TMW_MARKER, "ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Registered");
                 }
                 else
                 {
-                    logger.error("ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Duplicate ignored");
+                    logger.error(LoggingOps.TMW_MARKER, "ServerSessionRepositoryProvider.addSessionRepository(" + domain + ") Duplicate ignored");
                 }
             }
             else
             {
-                logger.error("ServerSessionRepositoryProvider.addSessionRepository() null domain name");
+                logger.error(LoggingOps.TMW_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null domain name");
             }
         }
         else
         {
-            logger.error("ServerSessionRepositoryProvider.addSessionRepository() null repository");
+            logger.error(LoggingOps.TMW_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null repository");
         }
     }
 
@@ -79,20 +80,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
     {
         setActive(false);
 
-        for (final IServerSessionRepository repository : m_repositories.values())
-        {
-            if (null != repository)
-            {
-                try
-                {
-                    repository.close();
-                }
-                catch (final Exception e)
-                {
-                    logger.error("ServerSessionRepositoryProvider.close() error.", e);
-                }
-            }
-        }
+        IO.close(m_repositories.values());
     }
 
     @Override
@@ -132,7 +120,7 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
                 }
                 catch (final Exception e)
                 {
-                    logger.error("ServerSessionRepositoryProvider.cleanExpiredSessions() error.", e);
+                    logger.error(LoggingOps.TMW_MARKER, "ServerSessionRepositoryProvider.cleanExpiredSessions() error.", e);
                 }
             }
         }

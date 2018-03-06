@@ -32,7 +32,7 @@ public abstract class AbstractScriptingProperties extends Activatable implements
 {
     private final ScriptType m_type;
 
-    private final Logger     m_logger     = LoggingOps.LOGGER(getClass());
+    private final Logger     m_logger     = LoggingOps.getLogger(getClass());
 
     private final Properties m_properties = new Properties();
 

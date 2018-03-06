@@ -48,29 +48,29 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, InitializingBean
 {
-    private String                          m_user_agent        = HTTPHeaders.DEFAULT_USER_AGENT;
+    private String                         m_user_agent        = HTTPHeaders.DEFAULT_USER_AGENT;
 
-    private final Logger                    m_has_logger        = LoggingOps.LOGGER(getClass());
+    private final Logger                   m_has_logger        = LoggingOps.getLogger(getClass());
 
-    private final HTTPHeaders               m_no_headers        = new HTTPHeaders();
+    private final HTTPHeaders              m_no_headers        = new HTTPHeaders();
 
-    private final RestTemplate              m_rest_execs        = new RestTemplate();
+    private final RestTemplate             m_rest_execs        = new RestTemplate();
 
-    private final CoreFactoryCache          m_fact_cache        = new CoreFactoryCache();
+    private final CoreFactoryCache         m_fact_cache        = new CoreFactoryCache();
 
     private final DefaultUriBuilderFactory m_urlhandler        = new DefaultUriBuilderFactory();
 
-    private static final PathParameters     EMPTY_PARAMS        = new PathParameters();
+    private static final PathParameters    EMPTY_PARAMS        = new PathParameters();
 
-    private static final IBinder            VALUE_MAPPER        = BinderType.JSON.getBinder();
+    private static final IBinder           VALUE_MAPPER        = BinderType.JSON.getBinder();
 
-    private static final String             APACHE_FACTORY_NAME = "apache";
+    private static final String            APACHE_FACTORY_NAME = "apache";
 
-    private static final String             OKHTTP_FACTORY_NAME = "okhttp";
+    private static final String            OKHTTP_FACTORY_NAME = "okhttp";
 
-    private static final String             SIMPLE_FACTORY_NAME = "simple";
+    private static final String            SIMPLE_FACTORY_NAME = "simple";
 
-    private static final String             NATIVE_FACTORY_NAME = "native";
+    private static final String            NATIVE_FACTORY_NAME = "native";
 
     private static final class CoreResponseErrorHandler implements ResponseErrorHandler
     {
@@ -88,7 +88,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
     protected static final class CoreFactoryCache extends AbstractConcurrentCache<ClientHttpRequestFactory> implements IHasLogging
     {
-        private final Logger m_has_logger = LoggingOps.LOGGER(getClass());
+        private final Logger m_has_logger = LoggingOps.getLogger(getClass());
 
         public CoreFactoryCache()
         {
@@ -126,12 +126,12 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
                             }
                             else
                             {
-                                logger().error(String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", name));
+                                logger().error(LoggingOps.TMW_MARKER, String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", name));
                             }
                         }
                         catch (final Exception e)
                         {
-                            logger().error(String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", name), e);
+                            logger().error(LoggingOps.TMW_MARKER, String.format("ERROR: can not create (%s) as ClientHttpRequestFactory.", name), e);
                         }
                         return null;
                 }
@@ -145,7 +145,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
             {
                 if (factory instanceof DisposableBean)
                 {
-                    logger().info(String.format("close(%s).", factory.getClass().getName()));
+                    logger().info(LoggingOps.TMW_MARKER, String.format("close(%s).", factory.getClass().getName()));
 
                     try
                     {
@@ -153,12 +153,12 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
                     }
                     catch (final Exception e)
                     {
-                        logger().error("close().", e);
+                        logger().error(LoggingOps.TMW_MARKER, "close().", e);
                     }
                 }
                 else if (factory instanceof Closeable)
                 {
-                    logger().info(String.format("close(%s).", factory.getClass().getName()));
+                    logger().info(LoggingOps.TMW_MARKER, String.format("close(%s).", factory.getClass().getName()));
 
                     try
                     {
@@ -166,7 +166,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
                     }
                     catch (final Exception e)
                     {
-                        logger().error("close().", e);
+                        logger().error(LoggingOps.TMW_MARKER, "close().", e);
                     }
                 }
             }
@@ -212,11 +212,11 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
         {
             m_rest_execs.setRequestFactory(factory);
 
-            logger().info(String.format("setHttpFactoryByName(%s).", factory.getClass().getName()));
+            logger().info(LoggingOps.TMW_MARKER, String.format("setHttpFactoryByName(%s).", factory.getClass().getName()));
         }
         else
         {
-            logger().error(String.format("setHttpFactoryByName(%s) not found.", impl));
+            logger().error(LoggingOps.TMW_MARKER, String.format("setHttpFactoryByName(%s) not found.", impl));
         }
     }
 
@@ -235,7 +235,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
     @Override
     public void close() throws IOException
     {
-        logger().info("close().");
+        logger().info(LoggingOps.TMW_MARKER, "close().");
 
         m_fact_cache.close();
     }
@@ -500,7 +500,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
         if (logger().isDebugEnabled())
         {
-            logger().debug(String.format("DEBUG: method(%s) url(%s) headers(%s).", method, template.getUriTemplateHandler().expand(curl, CommonOps.requireNonNullOrElse(params, EMPTY_PARAMS)).toString(), headers));
+            logger().debug(LoggingOps.TMW_MARKER, String.format("DEBUG: method(%s) url(%s) headers(%s).", method, template.getUriTemplateHandler().expand(curl, CommonOps.requireNonNullOrElse(params, EMPTY_PARAMS)).toString(), headers));
         }
         try
         {
@@ -508,7 +508,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
         }
         catch (final Exception e)
         {
-            logger().error(String.format("ERROR: method(%s) url(%s) headers(%s).", method, template.getUriTemplateHandler().expand(curl, CommonOps.requireNonNullOrElse(params, EMPTY_PARAMS)).toString(), headers), e);
+            logger().error(LoggingOps.TMW_MARKER, String.format("ERROR: method(%s) url(%s) headers(%s).", method, template.getUriTemplateHandler().expand(curl, CommonOps.requireNonNullOrElse(params, EMPTY_PARAMS)).toString(), headers), e);
 
             final HTTPHeaders keep = new HTTPHeaders(headers);
 
@@ -532,7 +532,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
         }
         catch (final ParserException e)
         {
-            logger().error("getMappedValue()", e);
+            logger().error(LoggingOps.TMW_MARKER, "getMappedValue()", e);
 
             return null;
         }
@@ -547,6 +547,6 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        logger().info("start().");
+        logger().info(LoggingOps.TMW_MARKER, "start().");
     }
 }

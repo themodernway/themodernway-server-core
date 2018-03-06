@@ -30,7 +30,7 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public final class BootstrapStringCryptoProvider implements IStringCryptoProvider
 {
-    private static final Logger logger = LoggingOps.LOGGER(BootstrapStringCryptoProvider.class);
+    private static final Logger logger = LoggingOps.getLogger(BootstrapStringCryptoProvider.class);
 
     private final TextEncryptor m_pcrypt;
 
@@ -41,8 +41,10 @@ public final class BootstrapStringCryptoProvider implements IStringCryptoProvide
 
     public BootstrapStringCryptoProvider(final Resource resource, final String passname, final String saltname) throws Exception
     {
-        logger.info("BootstrapStringCryptoProvider(" + resource.getURI().toString() + ", " + passname + ", " + saltname + ")");
-
+        if (logger.isInfoEnabled())
+        {
+            logger.info(LoggingOps.TMW_MARKER, "BootstrapStringCryptoProvider(" + resource.getURI().toString() + ", " + passname + ", " + saltname + ")");
+        }
         final Properties properties = IO.toProperties(resource);
 
         final String pass = StringOps.requireTrimOrNull(properties.getProperty(StringOps.requireTrimOrNull(passname)));
@@ -51,14 +53,17 @@ public final class BootstrapStringCryptoProvider implements IStringCryptoProvide
 
         if (SimpleCryptoKeysGenerator.getCryptoKeysGenerator().isPassValid(pass))
         {
-            logger.info("BootstrapStringCryptoProvider(password has validated)");
+            if (logger.isInfoEnabled())
+            {
+                logger.info(LoggingOps.TMW_MARKER, "BootstrapStringCryptoProvider(password has validated)");
+            }
         }
         else
         {
-            logger.error("BootstrapStringCryptoProvider(password is not valid)");
-
-            logger.trace("BootstrapStringCryptoProvider(password is not valid) " + pass);
-
+            if (logger.isErrorEnabled())
+            {
+                logger.error(LoggingOps.TMW_MARKER, "BootstrapStringCryptoProvider(password is not valid)");
+            }
             throw new IllegalArgumentException("BootstrapStringCryptoProvider(password is not valid)");
         }
         m_pcrypt = Encryptors.delux(pass, salt);
