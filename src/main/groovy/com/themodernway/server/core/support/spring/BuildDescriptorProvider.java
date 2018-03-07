@@ -96,6 +96,7 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
     @Override
     public void close() throws IOException
     {
+        // empty by design.
     }
 
     @Override

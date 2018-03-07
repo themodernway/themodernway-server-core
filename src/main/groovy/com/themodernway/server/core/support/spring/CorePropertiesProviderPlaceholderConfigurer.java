@@ -22,5 +22,6 @@ public class CorePropertiesProviderPlaceholderConfigurer extends PropertySources
 {
     public CorePropertiesProviderPlaceholderConfigurer()
     {
+        // empty by design.
     }
 }

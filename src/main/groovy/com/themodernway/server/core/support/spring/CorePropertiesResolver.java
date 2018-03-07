@@ -39,6 +39,7 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
 
     public CorePropertiesResolver()
     {
+        // empty by design.
     }
 
     @Override
@@ -138,10 +139,7 @@ public class CorePropertiesResolver implements IPropertiesResolver, BeanFactoryA
 
     private final Function<String, String> property()
     {
-        return name -> {
-
-            return expression("${" + name + "}");
-        };
+        return name -> expression("${" + name + "}");
     }
 
     @Override
