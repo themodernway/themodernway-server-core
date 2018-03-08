@@ -91,6 +91,7 @@ public class FilterFactoryContextCustomizer implements IServletContextCustomizer
     @Override
     public void close() throws IOException
     {
+        // empty by design.
     }
 
     @Override
@@ -116,29 +117,32 @@ public class FilterFactoryContextCustomizer implements IServletContextCustomizer
                         {
                             dispatcher.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), isMatchAfter(), maps);
 
-                            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                            if (logger().isErrorEnabled())
+                            {
+                                logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                            }
                         }
-                        else
+                        else if (logger().isErrorEnabled())
                         {
                             logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("customize (%s) already registered.", name));
                         }
                     }
-                    else
+                    else if (logger().isErrorEnabled())
                     {
                         logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("customize (%s) null filter.", name));
                     }
                 }
-                else
+                else if (logger().isErrorEnabled())
                 {
                     logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("customize (%s) empty mappings.", name));
                 }
             }
-            else
+            else if (logger().isErrorEnabled())
             {
                 logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "customize() no filter name.");
             }
         }
-        else
+        else if (logger().isErrorEnabled())
         {
             logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "customize() no filter factory.");
         }

@@ -75,5 +75,6 @@ public class CoreCaffeineCacheManager extends CaffeineCacheManager implements Ca
     @Override
     public void close() throws IOException
     {
+        // empty by design.
     }
 }

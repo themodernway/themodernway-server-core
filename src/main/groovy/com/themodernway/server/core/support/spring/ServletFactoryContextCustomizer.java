@@ -142,6 +142,7 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
     @Override
     public void close() throws IOException
     {
+        // empty by design.
     }
 
     @Override
@@ -191,28 +192,33 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
 
                         if (false == done.isEmpty())
                         {
-                            logger().warn(LoggingOps.THE_MODERN_WAY_MARKER, format("customize (%s) already mapped (%s).", name, StringOps.toCommaSeparated(done)));
+                            if (logger().isWarnEnabled())
+                            {
+                                logger().warn(LoggingOps.THE_MODERN_WAY_MARKER, format("customize (%s) already mapped (%s).", name, StringOps.toCommaSeparated(done)));
+                            }
                         }
                         dispatcher.setLoadOnStartup(getLoadOnStartup());
-
-                        logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                        if (logger().isInfoEnabled())
+                        {
+                            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("customize (%s) mapped to (%s).", name, StringOps.toCommaSeparated(maps)));
+                        }
                     }
-                    else
+                    else if (logger().isErrorEnabled())
                     {
                         logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("customize (%s) already registered.", name));
                     }
                 }
-                else
+                else if (logger().isErrorEnabled())
                 {
                     logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("customize (%s) null servlet.", name));
                 }
             }
-            else
+            else if (logger().isErrorEnabled())
             {
                 logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("customize (%s) empty mappings.", name));
             }
         }
-        else
+        else if (logger().isErrorEnabled())
         {
             logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "customize() no servlet name.");
         }
