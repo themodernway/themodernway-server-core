@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
 
+import org.springframework.beans.BeansException;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -53,11 +54,11 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
 
     public String getOriginalBeanName(String name);
 
-    public <B> B getBean(String name, Class<B> type) throws Exception;
+    public <B> B getBean(String name, Class<B> type) throws BeansException;
 
     public <B> B getBeanSafely(String name, Class<B> type);
 
-    public <B> Map<String, B> getBeansOfType(Class<B> type) throws Exception;
+    public <B> Map<String, B> getBeansOfType(Class<B> type) throws BeansException;
 
     public Environment getEnvironment();
 

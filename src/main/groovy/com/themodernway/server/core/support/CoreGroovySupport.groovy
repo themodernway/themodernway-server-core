@@ -25,6 +25,7 @@ import java.util.function.Supplier
 import java.util.stream.Stream
 
 import org.slf4j.Logger
+import org.springframework.beans.BeansException
 import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
@@ -197,7 +198,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Override
-    public <B> B getBean(String name, Class<B> type) throws Exception
+    public <B> B getBean(String name, Class<B> type) throws BeansException
     {
         getServerContext().getBean(name, type)
     }
@@ -209,7 +210,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Override
-    public <B> Map<String, B> getBeansOfType(Class<B> type) throws Exception
+    public <B> Map<String, B> getBeansOfType(Class<B> type) throws BeansException
     {
         getServerContext().getBeansOfType(type)
     }

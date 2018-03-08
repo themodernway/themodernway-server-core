@@ -93,9 +93,9 @@ public class CacheControlHeaderInjector extends HeaderInjectorBase
     {
         m_dont_cache_regex = StringOps.toTrimOrNull(regex);
 
-        if (null != m_dont_cache_regex)
+        if ((null != m_dont_cache_regex) && (logger().isInfoEnabled()))
         {
-            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CacheControlHeaderInjector().setDontCacheRegex(" + m_dont_cache_regex + ")");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("CacheControlHeaderInjector().setDontCacheRegex(%s)", m_dont_cache_regex));
         }
     }
 
@@ -108,9 +108,9 @@ public class CacheControlHeaderInjector extends HeaderInjectorBase
     {
         m_long_cache_regex = StringOps.toTrimOrNull(regex);
 
-        if (null != m_long_cache_regex)
+        if ((null != m_long_cache_regex) && (logger().isInfoEnabled()))
         {
-            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CacheControlHeaderInjector().setLongCacheRegex(" + m_long_cache_regex + ")");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("CacheControlHeaderInjector().setLongCacheRegex(%s)", m_long_cache_regex));
         }
     }
 
@@ -123,9 +123,9 @@ public class CacheControlHeaderInjector extends HeaderInjectorBase
     {
         m_near_cache_regex = StringOps.toTrimOrNull(regex);
 
-        if (null != m_near_cache_regex)
+        if ((null != m_near_cache_regex) && (logger().isInfoEnabled()))
         {
-            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CacheControlHeaderInjector().setNearCacheRegex(" + m_near_cache_regex + ")");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("CacheControlHeaderInjector().setNearCacheRegex(%s)", m_near_cache_regex));
         }
     }
 
@@ -138,9 +138,9 @@ public class CacheControlHeaderInjector extends HeaderInjectorBase
     {
         m_skip_cache_regex = StringOps.toTrimOrNull(regex);
 
-        if (null != m_skip_cache_regex)
+        if ((null != m_skip_cache_regex) && (logger().isInfoEnabled()))
         {
-            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CacheControlHeaderInjector().setSkipCacheRegex(" + m_skip_cache_regex + ")");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("CacheControlHeaderInjector().setSkipCacheRegex(%s)", m_skip_cache_regex));
         }
     }
 

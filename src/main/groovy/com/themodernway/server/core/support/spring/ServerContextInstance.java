@@ -25,6 +25,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
@@ -50,13 +51,13 @@ import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider;
 
 public class ServerContextInstance extends CoreJSONOperations implements IServerContext
 {
-    private static ApplicationContext                 APPCONTEXT   = null;
+    private static ApplicationContext                APPCONTEXT   = null;
 
-    private final static DefaultAuthorizationProvider DEFAULT_AUTH = new DefaultAuthorizationProvider();
+    public static final DefaultAuthorizationProvider DEFAULT_AUTH = new DefaultAuthorizationProvider();
 
-    private final static ServerContextInstance        INSTANCE     = new ServerContextInstance();
+    public static final ServerContextInstance        INSTANCE     = new ServerContextInstance();
 
-    private final Logger                              m_logger     = LoggingOps.getLogger(getClass());
+    private final Logger                             m_logger     = LoggingOps.getLogger(getClass());
 
     public static final ServerContextInstance getServerContextInstance()
     {
@@ -109,7 +110,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
-    public final <B> B getBean(final String name, final Class<B> type) throws Exception
+    public final <B> B getBean(final String name, final Class<B> type) throws BeansException
     {
         return getApplicationContext().getBean(requireNonNull(name), requireNonNull(type));
     }
@@ -135,7 +136,10 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
                 }
                 catch (final Exception e)
                 {
-                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
+                    if (logger().isErrorEnabled())
+                    {
+                        logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
+                    }
                 }
                 if (null == bean)
                 {
@@ -150,20 +154,26 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
                     }
                     catch (final Exception e)
                     {
-                        logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
+                        if (logger().isErrorEnabled())
+                        {
+                            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
+                        }
                     }
                 }
             }
         }
         catch (final Exception e)
         {
-            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("getBeanSafely(%s,%s) error.", name, type.getName()), e);
+            }
         }
         return bean;
     }
 
     @Override
-    public final <B> Map<String, B> getBeansOfType(final Class<B> type) throws Exception
+    public final <B> Map<String, B> getBeansOfType(final Class<B> type) throws BeansException
     {
         return toUnmodifiableMap(getApplicationContext().getBeansOfType(requireNonNull(type)));
     }

@@ -22,7 +22,7 @@ import java.util.function.IntSupplier
 import java.util.function.LongSupplier
 import java.util.function.Supplier
 import java.util.stream.Stream
-
+import org.springframework.beans.BeansException
 import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
 import org.springframework.core.env.Environment
@@ -168,7 +168,7 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
         getServerContext().containsBean(name)
     }
 
-    public <B> B getBean(String name, Class<B> type) throws Exception
+    public <B> B getBean(String name, Class<B> type) throws BeansException
     {
         getServerContext().getBean(name, type)
     }
@@ -178,7 +178,7 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
         getServerContext().getBeanSafely(name, type)
     }
 
-    public <B> Map<String, B> getBeansOfType(Class<B> type) throws Exception
+    public <B> Map<String, B> getBeansOfType(Class<B> type) throws BeansException
     {
         getServerContext().getBeansOfType(type)
     }
