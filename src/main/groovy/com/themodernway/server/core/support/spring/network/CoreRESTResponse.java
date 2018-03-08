@@ -87,7 +87,9 @@ public class CoreRESTResponse implements IRESTResponse
             {
                 return null;
             }
-            return (m_json = BINDER.bindJSON(body));
+            m_json = BINDER.bindJSON(body);
+            
+            return m_json;
         }
         catch (final ParserException e)
         {

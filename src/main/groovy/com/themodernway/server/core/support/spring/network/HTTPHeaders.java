@@ -16,9 +16,7 @@
 
 package com.themodernway.server.core.support.spring.network;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -133,13 +131,13 @@ public class HTTPHeaders extends HttpHeaders
 
     public JSONObject toJSONObject()
     {
-        final Map<String, List<String>> make = new LinkedHashMap<>();
+        JSONObject make = new JSONObject();
 
-        for (final String k : keySet())
+        for (final String k : CommonOps.toList(keySet()))
         {
             make.put(k, get(k));
         }
-        return new JSONObject(make);
+        return make;
     }
 
     public String toJSONString()

@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.support.spring.testing;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -30,17 +31,19 @@ public interface IServerCoreTesting
 {
     public static class TestingOps
     {
-        public static final void setupServerCoreLogging() throws Exception
+        public static final void setupServerCoreLogging() throws IOException
         {
+            // empty by design.
         }
 
-        public static final void setupServerCoreLogging(final String location) throws Exception
+        public static final void setupServerCoreLogging(final String location) throws IOException
         {
             LoggingOps.init(CommonOps.requireNonNull(location));
         }
 
         public static final void closeServerCoreLogging()
         {
+            // empty by design.
         }
 
         public static final IServerContext setupServerCoreContext(final String... locations)
@@ -56,14 +59,14 @@ public interface IServerCoreTesting
             return instance;
         }
 
-        public static final IServerContext setupServerCoreDefault(final String... locations) throws Exception
+        public static final IServerContext setupServerCoreDefault(final String... locations) throws IOException
         {
             setupServerCoreLogging();
 
             return setupServerCoreContext(locations);
         }
 
-        public static final IServerContext setupServerCoreDefault(final List<String> locations) throws Exception
+        public static final IServerContext setupServerCoreDefault(final List<String> locations) throws IOException
         {
             setupServerCoreLogging();
 
@@ -98,7 +101,7 @@ public interface IServerCoreTesting
             ServerContextInstance.setApplicationContext(null);
         }
 
-        protected TestingOps()
+        private TestingOps()
         {
         }
     }
