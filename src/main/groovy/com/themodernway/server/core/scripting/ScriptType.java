@@ -21,7 +21,7 @@ import com.themodernway.common.api.types.IStringValued;
 
 public enum ScriptType implements IStringValued
 {
-    GROOVY("groovy"), KOTLIN("kotlin"), JAVASCRIPT("javascript");
+    GROOVY("groovy"), JAVASCRIPT("javascript");
 
     private final String m_value;
 

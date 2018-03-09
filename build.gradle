@@ -272,7 +272,6 @@ dependencies {
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.4')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.9.4')
     compile(group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.4')
-    compile(group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.9.4')
     compile(group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
@@ -286,10 +285,6 @@ dependencies {
     compile(group: 'com.sun.mail', name: 'javax.mail', version: '1.6.1')
     compile(group: 'io.projectreactor', name: 'reactor-core', version: '3.1.5.RELEASE')
     compile(group: 'org.springframework.session', name: 'spring-session-core', version: '2.0.2.RELEASE')
-    compile(group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.2.30')
-    compile(group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.2.30')
-    compile(group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: '1.2.30')
-    compile(group: 'org.jetbrains.kotlin', name: 'kotlin-script-util', version: '1.2.30')
     compile(group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.14', classifier: 'indy')
     compile(group: 'org.codehaus.gpars', name: 'gpars', version: '1.2.1')
     compile(group: 'javax.activation', name: 'activation', version: '1.1.1')
