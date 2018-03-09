@@ -51,13 +51,13 @@ import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider;
 
 public class ServerContextInstance extends CoreJSONOperations implements IServerContext
 {
-    private static ApplicationContext                APPCONTEXT   = null;
+    private static ApplicationContext                applicationcontext = null;
 
-    public static final DefaultAuthorizationProvider DEFAULT_AUTH = new DefaultAuthorizationProvider();
+    public static final DefaultAuthorizationProvider DEFAULT_AUTH       = new DefaultAuthorizationProvider();
 
-    public static final ServerContextInstance        INSTANCE     = new ServerContextInstance();
+    public static final ServerContextInstance        INSTANCE           = new ServerContextInstance();
 
-    private final Logger                             m_logger     = LoggingOps.getLogger(getClass());
+    private final Logger                             m_logger           = LoggingOps.getLogger(getClass());
 
     public static final ServerContextInstance getServerContextInstance()
     {
@@ -70,19 +70,19 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
 
     public static final void setApplicationContext(final ApplicationContext context)
     {
-        APPCONTEXT = context;
+        applicationcontext = context;
     }
 
     @Override
     public final boolean isApplicationContextInitialized()
     {
-        return (null != APPCONTEXT);
+        return (null != applicationcontext);
     }
 
     @Override
     public final ApplicationContext getApplicationContext()
     {
-        return requireNonNull(APPCONTEXT, "ApplicationContext is null, initialization error.");
+        return requireNonNull(applicationcontext, "ApplicationContext is null, initialization error.");
     }
 
     @Override

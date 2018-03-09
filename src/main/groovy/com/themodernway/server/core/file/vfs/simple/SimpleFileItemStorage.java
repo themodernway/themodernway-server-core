@@ -985,19 +985,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public IFileItem create(String name, final Reader reader) throws IOException
         {
-            InputStream stream = null;
-
             name = nametest(name, true);
 
-            try
+            try (InputStream stream = new ReaderInputStream(reader, IO.UTF_8_CHARSET))
             {
-                stream = new ReaderInputStream(reader, IO.UTF_8_CHARSET);
-
                 return create(name, stream);
-            }
-            finally
-            {
-                IO.close(stream);
             }
         }
 
