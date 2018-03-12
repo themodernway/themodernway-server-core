@@ -33,8 +33,10 @@ public class CoreWebContextLoaderListener extends ContextLoaderListener
     @Override
     public void contextInitialized(final ServletContextEvent event)
     {
-        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextInitialized() STARTING");
-
+        if (logger.isInfoEnabled())
+        {
+            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextInitialized() STARTING");
+        }
         super.contextInitialized(event);
 
         if (isServletContextCustomizerEnabled())
@@ -51,29 +53,42 @@ public class CoreWebContextLoaderListener extends ContextLoaderListener
                 }
             }
         }
-        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextInitialized() COMPLETE");
+        if (logger.isInfoEnabled())
+        {
+            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextInitialized() COMPLETE");
+        }
     }
 
     @Override
     public void contextDestroyed(final ServletContextEvent event)
     {
-        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() STARTING");
-
+        if (logger.isInfoEnabled())
+        {
+            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() STARTING");
+        }
         super.contextDestroyed(event);
 
-        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() COMPLETE");
+        if (logger.isInfoEnabled())
+        {
+            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() COMPLETE");
+        }
     }
 
     @Override
     protected void customizeContext(final ServletContext sc, final ConfigurableWebApplicationContext context)
     {
-        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.customizeContext() STARTING");
-
+        if (logger.isInfoEnabled())
+        {
+            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.customizeContext() STARTING");
+        }
         super.customizeContext(sc, context);
 
         ServerContextInstance.setApplicationContext(context);
 
-        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.customizeContext() COMPLETE");
+        if (logger.isInfoEnabled())
+        {
+            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.customizeContext() COMPLETE");
+        }
     }
 
     protected boolean isServletContextCustomizerEnabled()

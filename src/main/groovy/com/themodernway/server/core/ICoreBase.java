@@ -40,7 +40,7 @@ public interface ICoreBase
 {
     default <T> T nulled()
     {
-        return CommonOps.nulled();
+        return null;
     }
 
     default <T> T cast(final Object value)

@@ -33,6 +33,7 @@ import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class ContentUploadServlet extends AbstractContentServlet
 {
@@ -56,16 +57,20 @@ public class ContentUploadServlet extends AbstractContentServlet
 
             if (null == fold)
             {
-                logger().error("Can't find storage root.");
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't find storage root.");
+                }
                 sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
             }
             if (false == fold.isWritable())
             {
-                logger().error("Can't write storage root.");
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't write storage root.");
+                }
                 sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
@@ -74,8 +79,10 @@ public class ContentUploadServlet extends AbstractContentServlet
 
             if (null == path)
             {
-                logger().error("Can't find path info.");
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't find path info.");
+                }
                 sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
@@ -92,8 +99,10 @@ public class ContentUploadServlet extends AbstractContentServlet
                 {
                     if (item.getSize() > fold.getFileSizeLimit())
                     {
-                        logger().error("File size exceeds limit.");
-
+                        if (logger().isErrorEnabled())
+                        {
+                            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "File size exceeds limit.");
+                        }
                         sendErrorCode(request, response, HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
 
                         return;
@@ -106,8 +115,10 @@ public class ContentUploadServlet extends AbstractContentServlet
                         {
                             if (file.isFolder())
                             {
-                                logger().error("Can't write storage folder.");
-
+                                if (logger().isErrorEnabled())
+                                {
+                                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't write storage folder.");
+                                }
                                 sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                                 return;
@@ -137,8 +148,10 @@ public class ContentUploadServlet extends AbstractContentServlet
         }
         catch (final Exception e)
         {
-            logger().error("Captured overall exception for security.", e);
-
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Captured overall exception for security.", e);
+            }
             sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
             return;

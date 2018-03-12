@@ -70,7 +70,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
 
     protected String name(final String name, final T valu)
     {
-        requireNonNull(valu, () -> format(NULL_VALUE_E, getName()));
+        requireNonNull(valu, () -> format("null valu in (%s).", getName()));
 
         return getOriginalBeanName(name);
     }
@@ -81,7 +81,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             if (logger().isErrorEnabled())
             {
-                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format(NULL_VALUE_E, getName()));
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("null valu in (%s).", getName()));
             }
             return false;
         }
@@ -91,7 +91,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             if (logger().isErrorEnabled())
             {
-                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format(NULL_VALUE_E, getName()));
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("null valu in (%s).", getName()));
             }
             return false;
         }

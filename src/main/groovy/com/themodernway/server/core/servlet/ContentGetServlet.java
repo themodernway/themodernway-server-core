@@ -27,6 +27,7 @@ import com.themodernway.server.core.ITimeSupplier;
 import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public class ContentGetServlet extends AbstractContentServlet
 {
@@ -50,8 +51,10 @@ public class ContentGetServlet extends AbstractContentServlet
         }
         catch (ServletException | IOException e)
         {
-            logger().error("captured overall exception for security.", e);
-
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
+            }
             sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
             return;
@@ -67,8 +70,10 @@ public class ContentGetServlet extends AbstractContentServlet
         }
         catch (ServletException | IOException e)
         {
-            logger().error("captured overall exception for security.", e);
-
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
+            }
             sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
             return;
@@ -112,8 +117,10 @@ public class ContentGetServlet extends AbstractContentServlet
 
             if (null == path)
             {
-                logger().error("Can't find path info.");
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't find path info.");
+                }
                 sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
@@ -122,16 +129,20 @@ public class ContentGetServlet extends AbstractContentServlet
 
             if (null == fold)
             {
-                logger().error("Can't find storage root.");
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't find storage root.");
+                }
                 sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
             }
             if (false == fold.isReadable())
             {
-                logger().error("Can't read storage root.");
-
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't read storage root.");
+                }
                 sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                 return;
@@ -152,8 +163,10 @@ public class ContentGetServlet extends AbstractContentServlet
         }
         catch (final Exception e)
         {
-            logger().error("Captured overall exception for security.", e);
-
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Captured overall exception for security.", e);
+            }
             sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }

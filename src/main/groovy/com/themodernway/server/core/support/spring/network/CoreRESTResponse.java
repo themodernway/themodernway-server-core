@@ -88,12 +88,15 @@ public class CoreRESTResponse implements IRESTResponse
                 return null;
             }
             m_json = BINDER.bindJSON(body);
-            
+
             return m_json;
         }
         catch (final ParserException e)
         {
-            logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "Error parsing JSON", e);
+            if (logger.isErrorEnabled())
+            {
+                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "Error parsing JSON", e);
+            }
         }
         return null;
     }

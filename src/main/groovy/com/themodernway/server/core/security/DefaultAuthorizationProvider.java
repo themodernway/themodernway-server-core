@@ -38,22 +38,28 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
     {
         if (null == target)
         {
-            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "error null target");
-
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "error null target");
+            }
             return new AuthorizationResult(false, E_RUNTIMEERROR, "error null target");
         }
         if (null == roles)
         {
-            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "error null roles");
-
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "error null roles");
+            }
             return new AuthorizationResult(false, E_RUNTIMEERROR, "error null roles");
         }
         roles = toUnique(roles);
 
         if (roles.isEmpty())
         {
-            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "error empty roles");
-
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "error empty roles");
+            }
             return new AuthorizationResult(false, E_RUNTIMEERROR, "error empty roles");
         }
         if (target instanceof IAuthorizedObject)
@@ -72,8 +78,10 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
                 }
                 return result;
             }
-            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "error null authorization result");
-
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "error null authorization result");
+            }
             return new AuthorizationResult(false, E_RUNTIMEERROR, "error null authorization result");
         }
         final Authorized authorized = target.getClass().getAnnotation(Authorized.class);
@@ -177,6 +185,9 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
     @Override
     public void close() throws IOException
     {
-        logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "DefaultAuthorizationProvider().close()");
+        if (logger().isInfoEnabled())
+        {
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "DefaultAuthorizationProvider().close()");
+        }
     }
 }

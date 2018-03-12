@@ -121,7 +121,7 @@ public abstract class AbstractNoSyncBufferedWriter<T extends AbstractNoSyncBuffe
     }
 
     @Override
-    public void write(final String s, final int off, final int len) throws IOException
+    public void write(final String str, final int off, final int len) throws IOException
     {
         doEnsuredOpen();
 
@@ -133,7 +133,7 @@ public abstract class AbstractNoSyncBufferedWriter<T extends AbstractNoSyncBuffe
         {
             final int lputsize = Math.min(m_sizeof - m_nextch, ltotalsz - loffsets);
 
-            s.getChars(loffsets, loffsets + lputsize, m_charbf, m_nextch);
+            str.getChars(loffsets, loffsets + lputsize, m_charbf, m_nextch);
 
             loffsets = loffsets + lputsize;
 

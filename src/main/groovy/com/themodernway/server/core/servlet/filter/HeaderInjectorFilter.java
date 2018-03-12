@@ -73,7 +73,10 @@ public class HeaderInjectorFilter extends HTTPFilterBase implements IHeaderInjec
 
             configure(injector);
 
-            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "HeaderInjectorFilter.addHeaderInjector(" + injector.getName() + ")");
+            if (logger().isInfoEnabled())
+            {
+                logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "HeaderInjectorFilter.addHeaderInjector(" + injector.getName() + ")");
+            }
         }
     }
 

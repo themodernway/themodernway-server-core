@@ -27,6 +27,7 @@ import com.themodernway.server.core.file.vfs.IFileItemAttributes;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.file.vfs.IFolderItem;
+import com.themodernway.server.core.logging.LoggingOps;
 
 public abstract class AbstractContentServlet extends HTTPServletBase
 {
@@ -91,7 +92,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
 
             if (logger().isInfoEnabled())
             {
-                logger().info(format("firstFileItemStorageLookup(%s, %s)", getName(), name));
+                logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("firstFileItemStorageLookup(%s, %s)", getName(), name));
             }
             return getServerContext().getFileItemStorage(name);
         };
@@ -108,7 +109,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
         {
             if (logger().isErrorEnabled())
             {
-                logger().error(format("Can't find path (%s).", path));
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("Can't find path (%s).", path));
             }
             return false;
         }
@@ -120,7 +121,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
             {
                 if (logger().isErrorEnabled())
                 {
-                    logger().error(format("Path does not exist (%s).", path));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("Path does not exist (%s).", path));
                 }
                 return false;
             }
@@ -128,7 +129,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
             {
                 if (logger().isErrorEnabled())
                 {
-                    logger().error(format("Path is not file (%s).", path));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("Path is not file (%s).", path));
                 }
                 return false;
             }
@@ -136,7 +137,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
             {
                 if (logger().isErrorEnabled())
                 {
-                    logger().error(format("Can't read path (%s).", path));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("Can't read path (%s).", path));
                 }
                 return false;
             }
@@ -144,7 +145,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
             {
                 if (logger().isErrorEnabled())
                 {
-                    logger().error(format("Path is hidden file (%s).", path));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("Path is hidden file (%s).", path));
                 }
                 return false;
             }
@@ -156,7 +157,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
             {
                 if (logger().isErrorEnabled())
                 {
-                    logger().error(format("Path does not exist (%s).", path));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("Path does not exist (%s).", path));
                 }
                 return false;
             }
@@ -164,7 +165,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
             {
                 if (logger().isErrorEnabled())
                 {
-                    logger().error(format("Can't read path (%s).", path));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("Can't read path (%s).", path));
                 }
                 return false;
             }
@@ -172,7 +173,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
             {
                 if (logger().isErrorEnabled())
                 {
-                    logger().error(format("Path is not file (%s).", path));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("Path is not file (%s).", path));
                 }
                 return false;
             }
@@ -180,7 +181,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
             {
                 if (logger().isErrorEnabled())
                 {
-                    logger().error(format("Path is hidden file (%s).", path));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("Path is hidden file (%s).", path));
                 }
                 return false;
             }

@@ -22,6 +22,7 @@ import java.util.function.IntSupplier
 import java.util.function.LongSupplier
 import java.util.function.Supplier
 import java.util.stream.Stream
+
 import org.springframework.beans.BeansException
 import org.springframework.cache.CacheManager
 import org.springframework.context.ApplicationContext
@@ -249,7 +250,7 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
 
     public <T> T nulled()
     {
-        CommonOps.nulled()
+        null
     }
 
     public <T> T cast(Object value)

@@ -224,10 +224,9 @@ public class SimpleJSONServerSession implements IServerSession
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T> T getAttribute(final String name)
     {
-        return (T) getAttributes().get(CommonOps.requireNonNull(name));
+        return CommonOps.cast(getAttributes().get(CommonOps.requireNonNull(name)));
     }
 
     @Override

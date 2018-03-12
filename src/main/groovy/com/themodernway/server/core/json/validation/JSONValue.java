@@ -71,7 +71,7 @@ public class JSONValue implements IJSONValue
                 return dval;
             }
         }
-        return CommonOps.nulled();
+        return null;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class JSONValue implements IJSONValue
         {
             return CommonOps.cast(valu);
         }
-        return CommonOps.nulled();
+        return null;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class JSONValue implements IJSONValue
         {
             return CommonOps.cast(valu);
         }
-        return CommonOps.nulled();
+        return null;
     }
 
     @Override

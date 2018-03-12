@@ -46,7 +46,6 @@ import org.apache.commons.io.input.ReaderInputStream;
 import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 
-import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.file.FileAndPathUtils;
@@ -252,7 +251,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         private int                m_bits = 0;
 
-        private IOException        m_oops = CommonOps.nulled();
+        private IOException        m_oops = null;
 
         protected static final boolean isSet(final int bits, final int flag)
         {

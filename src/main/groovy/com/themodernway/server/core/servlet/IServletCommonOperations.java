@@ -33,6 +33,7 @@ import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.ITimeSupplier;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.security.IAuthorizationResult;
 import com.themodernway.server.core.security.session.IServerSession;
 import com.themodernway.server.core.support.spring.IServerContext;
@@ -210,7 +211,7 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
             {
                 if (logger().isErrorEnabled())
                 {
-                    logger().error(format("possible header attack on (%s), max is (%d), found (%d), value (%s).", head, leng, valu.length(), valu));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("possible header attack on (%s), max is (%d), found (%d), value (%s).", head, leng, valu.length(), valu));
                 }
                 return false;
             }

@@ -34,8 +34,6 @@ public interface ICoreCommon extends ICoreBase, IPropertiesResolver, IHasLogging
 
     public static final String EMPTY_STRING = StringOps.EMPTY_STRING;
 
-    public static final String NULL_VALUE_E = "null valu in (%s).";
-
     public static List<String> toTaggingValues(final Object target)
     {
         if (null == target)

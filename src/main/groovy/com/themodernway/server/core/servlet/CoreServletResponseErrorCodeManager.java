@@ -80,7 +80,10 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
             }
             catch (final IOException e)
             {
-                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("error sending code (%s) message (%s).", code, mess), e);
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("error sending code (%s) message (%s).", code, mess), e);
+                }
             }
         }
         debug(code, mess);

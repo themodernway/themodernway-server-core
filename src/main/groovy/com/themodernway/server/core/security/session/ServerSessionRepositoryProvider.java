@@ -61,28 +61,19 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
                         logger.info(LoggingOps.THE_MODERN_WAY_MARKER, format("ServerSessionRepositoryProvider.addSessionRepository(%s) Registered", domain));
                     }
                 }
-                else
+                else if (logger.isErrorEnabled())
                 {
-                    if (logger.isErrorEnabled())
-                    {
-                        logger.error(LoggingOps.THE_MODERN_WAY_MARKER, format("ServerSessionRepositoryProvider.addSessionRepository(%s) Duplicate ignored", domain));
-                    }
+                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, format("ServerSessionRepositoryProvider.addSessionRepository(%s) Duplicate ignored", domain));
                 }
             }
-            else
+            else if (logger.isErrorEnabled())
             {
-                if (logger.isErrorEnabled())
-                {
-                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null domain name");
-                }
+                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null domain name");
             }
         }
-        else
+        else if (logger.isErrorEnabled())
         {
-            if (logger.isErrorEnabled())
-            {
-                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null repository");
-            }
+            logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null repository");
         }
     }
 
