@@ -54,7 +54,7 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
         }
         catch (final ParserException e)
         {
-            LOGGER.error("bind().", e);
+            LOGGER.error(LoggingOps.THE_MODERN_WAY_MARKER, "bind().", e);
 
             throw new HttpMessageNotReadableException("bind", e);
         }
@@ -77,7 +77,7 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
         }
         catch (final ParserException e)
         {
-            LOGGER.error("send().", e);
+            LOGGER.error(LoggingOps.THE_MODERN_WAY_MARKER, "send().", e);
 
             throw new HttpMessageNotWritableException("send", e);
         }
