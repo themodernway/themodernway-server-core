@@ -200,7 +200,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
         m_rest_execs.setErrorHandler(new CoreResponseErrorHandler());
 
-        m_rest_execs.getMessageConverters().stream().map(m_converters::add);
+        m_converters.addAll(m_rest_execs.getMessageConverters());
 
         m_rest_execs.setMessageConverters(m_converters);
     }

@@ -32,7 +32,7 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
 
     private static final List<MediaType> MEDIAT = Arrays.asList(MediaType.APPLICATION_JSON_UTF8);
 
-    private static final Logger          logger = LoggingOps.getLogger(CoreJSONHttpMessageConverter.class);
+    private static final Logger          LOGGER = LoggingOps.getLogger(CoreJSONHttpMessageConverter.class);
 
     public CoreJSONHttpMessageConverter()
     {
@@ -54,7 +54,7 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
         }
         catch (final ParserException e)
         {
-            logger.error("bind().", e);
+            LOGGER.error("bind().", e);
 
             throw new HttpMessageNotReadableException("bind", e);
         }
@@ -77,7 +77,7 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
         }
         catch (final ParserException e)
         {
-            logger.error("send().", e);
+            LOGGER.error("send().", e);
 
             throw new HttpMessageNotWritableException("send", e);
         }
