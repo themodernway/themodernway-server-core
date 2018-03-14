@@ -434,12 +434,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     }
 
     @Override
-    public <T> T nulled()
-    {
-        null
-    }
-
-    @Override
     public <T> T cast(Object value)
     {
         CommonOps.cast(value)

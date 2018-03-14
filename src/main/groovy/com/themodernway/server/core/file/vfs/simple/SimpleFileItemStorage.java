@@ -479,13 +479,13 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public String getBaseName() throws IOException
         {
-            return toTrimOrElse(FileAndPathUtils.base(getPath()), EMPTY_STRING);
+            return toTrimOrElse(FileAndPathUtils.base(getPath()), StringOps.EMPTY_STRING);
         }
 
         @Override
         public String getExtension() throws IOException
         {
-            return toTrimOrElse(FileAndPathUtils.extn(getAbsolutePath()), EMPTY_STRING);
+            return toTrimOrElse(FileAndPathUtils.extn(getAbsolutePath()), StringOps.EMPTY_STRING);
         }
 
         @Override
@@ -928,7 +928,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             }
             final IFileItemStorage stor = getFileItemStorage();
 
-            path = concat(stor.getBasePath(), toTrimOrElse(path, EMPTY_STRING));
+            path = concat(stor.getBasePath(), toTrimOrElse(path, StringOps.EMPTY_STRING));
 
             if (null != path)
             {

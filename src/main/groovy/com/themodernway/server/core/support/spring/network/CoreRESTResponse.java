@@ -18,44 +18,33 @@ package com.themodernway.server.core.support.spring.network;
 
 import java.util.function.Supplier;
 
-import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.ParserException;
-import com.themodernway.server.core.json.binder.BinderType;
-import com.themodernway.server.core.json.binder.IBinder;
-import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreRESTResponse implements IRESTResponse
 {
-    private static final Logger         logger = LoggingOps.getLogger(CoreRESTResponse.class);
-
-    private static final IBinder        BINDER = BinderType.JSON.getBinder();
-
-    private final String                m_body;
-
     private final Supplier<HTTPHeaders> m_head;
 
     private final HttpStatus            m_stat;
 
     private final ICoreNetworkProvider  m_prov;
 
-    private JSONObject                  m_json;
+    private final JSONObject            m_json;
 
-    public CoreRESTResponse(final ICoreNetworkProvider prov, final ResponseEntity<String> resp)
+    public CoreRESTResponse(final ICoreNetworkProvider prov, final ResponseEntity<JSONObject> resp)
     {
         this(prov, resp.getStatusCode(), (resp.hasBody() ? resp.getBody() : null), () -> new HTTPHeaders(resp.getHeaders()));
     }
 
-    public CoreRESTResponse(final ICoreNetworkProvider prov, final HttpStatus stat, final String body, final Supplier<HTTPHeaders> head)
+    public CoreRESTResponse(final ICoreNetworkProvider prov, final HttpStatus stat, final JSONObject body, final Supplier<HTTPHeaders> head)
     {
         m_prov = prov;
 
         m_stat = stat;
 
-        m_body = body;
+        m_json = body;
 
         m_head = head;
     }
@@ -67,38 +56,9 @@ public class CoreRESTResponse implements IRESTResponse
     }
 
     @Override
-    public String body()
-    {
-        return m_body;
-    }
-
-    @Override
     public JSONObject json()
     {
-        if (null != m_json)
-        {
-            return m_json;
-        }
-        try
-        {
-            final String body = body();
-
-            if ((null == body) || (body.isEmpty()))
-            {
-                return null;
-            }
-            m_json = BINDER.bindJSON(body);
-
-            return m_json;
-        }
-        catch (final ParserException e)
-        {
-            if (logger.isErrorEnabled())
-            {
-                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "Error parsing JSON", e);
-            }
-        }
-        return null;
+        return m_json;
     }
 
     @Override

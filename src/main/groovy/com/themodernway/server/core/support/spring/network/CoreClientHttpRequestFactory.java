@@ -23,10 +23,13 @@ public class CoreClientHttpRequestFactory extends HttpComponentsClientHttpReques
 {
     public CoreClientHttpRequestFactory()
     {
+        setBufferRequestBody(false);
     }
 
     public CoreClientHttpRequestFactory(final int route, final int total)
     {
         super(HttpClientBuilder.create().useSystemProperties().setMaxConnPerRoute(route).setMaxConnTotal(total).build());
+
+        setBufferRequestBody(false);
     }
 }

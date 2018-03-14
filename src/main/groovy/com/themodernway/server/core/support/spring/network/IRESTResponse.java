@@ -24,8 +24,6 @@ public interface IRESTResponse
 
     public boolean good();
 
-    public String body();
-
     public JSONObject json();
 
     public HTTPHeaders headers();

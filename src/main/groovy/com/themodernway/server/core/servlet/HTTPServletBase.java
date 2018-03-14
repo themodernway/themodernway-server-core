@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.limiting.IRateLimited;
 import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.security.session.IServerSession;
@@ -210,7 +211,7 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
             }
             response.setCharacterEncoding(CHARSET_UTF_8);
 
-            final String meth = toTrimOrElse(request.getMethod(), EMPTY_STRING).toUpperCase();
+            final String meth = toTrimOrElse(request.getMethod(), StringOps.EMPTY_STRING).toUpperCase();
 
             if (HTTP_METHOD_GET.equals(meth))
             {

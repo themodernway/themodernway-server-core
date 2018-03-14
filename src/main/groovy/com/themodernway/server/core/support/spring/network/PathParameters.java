@@ -16,16 +16,12 @@
 
 package com.themodernway.server.core.support.spring.network;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
-public class PathParameters extends LinkedHashMap<String, Object>
+public class PathParameters extends HashMap<String, Object>
 {
     private static final long serialVersionUID = 1L;
-
-    public PathParameters()
-    {
-    }
 
     public PathParameters(final Map<String, ?> vars)
     {

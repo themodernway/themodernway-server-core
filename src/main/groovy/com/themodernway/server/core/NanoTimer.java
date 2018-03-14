@@ -16,9 +16,10 @@
 
 package com.themodernway.server.core;
 
-import com.themodernway.common.api.java.util.IHTTPConstants;
+import static com.themodernway.common.api.java.util.IHTTPConstants.NANOSECONDS_IN_MILLISECOND;
+import static com.themodernway.common.api.java.util.IHTTPConstants.NANOSECONDS_TO_MILLISECOND;
 
-public class NanoTimer
+public final class NanoTimer
 {
     private long m_nanos;
 
@@ -37,13 +38,13 @@ public class NanoTimer
     {
         final long ndiff = System.nanoTime() - m_nanos;
 
-        if (ndiff < IHTTPConstants.NANOSECONDS_IN_MILLISECOND)
+        if (ndiff < NANOSECONDS_IN_MILLISECOND)
         {
             return String.format("(%s) ns.", ndiff);
         }
         else
         {
-            return String.format("(%.3f) ms.", IHTTPConstants.NANOSECONDS_TO_MILLISECOND * ndiff);
+            return String.format("(%.3f) ms.", NANOSECONDS_TO_MILLISECOND * ndiff);
         }
     }
 }

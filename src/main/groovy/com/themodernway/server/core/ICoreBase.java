@@ -38,11 +38,6 @@ import com.themodernway.common.api.types.IFixedIterable;
 
 public interface ICoreBase
 {
-    default <T> T nulled()
-    {
-        return null;
-    }
-
     default <T> T cast(final Object value)
     {
         return CommonOps.cast(value);

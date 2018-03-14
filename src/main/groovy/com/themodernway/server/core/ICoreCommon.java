@@ -30,10 +30,6 @@ import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 public interface ICoreCommon extends ICoreBase, IPropertiesResolver, IHasLogging
 {
-    public static final int    IS_NOT_FOUND = CommonOps.IS_NOT_FOUND;
-
-    public static final String EMPTY_STRING = StringOps.EMPTY_STRING;
-
     public static List<String> toTaggingValues(final Object target)
     {
         if (null == target)

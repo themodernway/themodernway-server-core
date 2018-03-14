@@ -248,11 +248,6 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
         getServerContext().getResolvedExpression(expr, otherwise)
     }
 
-    public <T> T nulled()
-    {
-        null
-    }
-
     public <T> T cast(Object value)
     {
         CommonOps.cast(value)
