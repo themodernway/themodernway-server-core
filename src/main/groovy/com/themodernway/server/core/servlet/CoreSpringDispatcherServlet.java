@@ -35,17 +35,17 @@ import com.themodernway.server.core.security.session.IServerSession;
 
 public class CoreSpringDispatcherServlet extends DispatcherServlet implements IRateLimited, IServletCommonOperations
 {
-    private static final long                          serialVersionUID = 1L;
+    private static final long                      serialVersionUID = 1L;
 
-    private final Logger                               m_logger         = LoggingOps.getLogger(getClass());
+    private final Logger                           m_logger         = LoggingOps.getLogger(getClass());
 
-    private transient RateLimiter                      m_ratelimit;
+    private transient RateLimiter                  m_ratelimit;
 
-    private transient List<String>                     m_roleslist;
+    private final List<String>                     m_roleslist;
 
-    private transient ISessionIDFromRequestExtractor   m_extractor;
+    private final ISessionIDFromRequestExtractor   m_extractor;
 
-    private transient IServletResponseErrorCodeManager m_errorcode;
+    private final IServletResponseErrorCodeManager m_errorcode;
 
     public CoreSpringDispatcherServlet(final WebApplicationContext context, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
     {

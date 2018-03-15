@@ -29,11 +29,13 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreServletResponseErrorCodeManager implements IServletResponseErrorCodeManager, IHasLogging
 {
-    public static final IServletResponseErrorCodeManager DEFAULT  = new CoreServletResponseErrorCodeManager();
+    private static final long                            serialVersionUID = 1L;
+
+    public static final IServletResponseErrorCodeManager DEFAULT          = new CoreServletResponseErrorCodeManager();
 
     private final boolean                                m_dosend;
 
-    private final Logger                                 m_logger = LoggingOps.getLogger(getClass());
+    private final Logger                                 m_logger         = LoggingOps.getLogger(getClass());
 
     public CoreServletResponseErrorCodeManager()
     {

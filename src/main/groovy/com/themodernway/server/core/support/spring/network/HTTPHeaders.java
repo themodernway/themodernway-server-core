@@ -143,7 +143,12 @@ public class HTTPHeaders extends HttpHeaders
         {
             if (null != k)
             {
-                make.put(k, StringOps.toList(get(k).stream()));
+                final List<String> list = get(k);
+
+                if ((null != list) && (false == list.isEmpty()))
+                {
+                    make.put(k, StringOps.toList(list.stream()));
+                }
             }
         }
         return make;

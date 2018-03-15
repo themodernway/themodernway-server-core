@@ -16,10 +16,12 @@
 
 package com.themodernway.server.core.servlet;
 
+import java.io.Serializable;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface IServletResponseErrorCodeManager
+public interface IServletResponseErrorCodeManager extends Serializable
 {
     default void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code)
     {
