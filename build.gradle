@@ -244,7 +244,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.0.9-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.0.10-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.1')
     compile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')

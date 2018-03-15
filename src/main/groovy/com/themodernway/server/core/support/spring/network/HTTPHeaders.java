@@ -35,7 +35,7 @@ public class HTTPHeaders extends HttpHeaders
 {
     private static final long            serialVersionUID       = 1L;
 
-    public static final String           DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.0.9 (Language=Java/%s)", System.getProperty("java.version"));
+    public static final String           DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.0.10 (Language=Java/%s)", System.getProperty("java.version"));
 
     public static final MediaType        XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
 
@@ -141,7 +141,10 @@ public class HTTPHeaders extends HttpHeaders
 
         for (final String k : CommonOps.toList(keySet()))
         {
-            make.put(k, StringOps.toList(get(k).stream()));
+            if (null != k)
+            {
+                make.put(k, StringOps.toList(get(k).stream()));
+            }
         }
         return make;
     }

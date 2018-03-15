@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.json.JSONType;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
@@ -325,7 +326,7 @@ public final class JSONUtils
 
     public static final Boolean asBoolean(final Object object)
     {
-        return ((object instanceof Boolean) ? ((Boolean) object) : null);
+        return ((object instanceof Boolean) ? ((Boolean) object) : CommonOps.cast(null));
     }
 
     public static final Date asDate(final Object object)
