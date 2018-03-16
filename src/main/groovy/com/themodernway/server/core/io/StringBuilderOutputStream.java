@@ -23,7 +23,7 @@ import org.apache.commons.io.output.WriterOutputStream;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public class StringBuilderOutputStream extends WriterOutputStream implements CharSequence, IFormatted<StringBuilderOutputStream>
+public class StringBuilderOutputStream extends WriterOutputStream implements CharSequence
 {
     private final NoSyncStringBuilderWriter m_writer;
 

@@ -46,7 +46,7 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return ServerContextInstance.getServerContextInstance();
     }
 
-    public default LinkedHashMap<String, String> getParametersFromRequest(final HttpServletRequest request)
+    default LinkedHashMap<String, String> getParametersFromRequest(final HttpServletRequest request)
     {
         final LinkedHashMap<String, String> params = new LinkedHashMap<>();
 
@@ -61,12 +61,12 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return params;
     }
 
-    public default JSONObject getJSONParametersFromRequest(final HttpServletRequest request)
+    default JSONObject getJSONParametersFromRequest(final HttpServletRequest request)
     {
         return new JSONObject(getParametersFromRequest(request));
     }
 
-    public default LinkedHashMap<String, String> getHeadersFromRequest(final HttpServletRequest request)
+    default LinkedHashMap<String, String> getHeadersFromRequest(final HttpServletRequest request)
     {
         final LinkedHashMap<String, String> params = new LinkedHashMap<>();
 
@@ -81,12 +81,12 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return params;
     }
 
-    public default JSONObject getJSONHeadersFromRequest(final HttpServletRequest request)
+    default JSONObject getJSONHeadersFromRequest(final HttpServletRequest request)
     {
         return new JSONObject(getHeadersFromRequest(request));
     }
 
-    public default JSONObject getUserPrincipalsFromRequest(final HttpServletRequest request, final List<String> keys)
+    default JSONObject getUserPrincipalsFromRequest(final HttpServletRequest request, final List<String> keys)
     {
         final JSONObject principals = new JSONObject();
 
@@ -116,49 +116,49 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return principals;
     }
 
-    public default IServerSession getSession(final String sessid, final String domain)
+    default IServerSession getSession(final String sessid, final String domain)
     {
         return HTTPUtils.getSession(sessid, domain);
     }
 
-    public default IServerSession getSession(final String sessid)
+    default IServerSession getSession(final String sessid)
     {
         return getSession(sessid, getSessionProviderDomainName());
     }
 
     @Override
-    public default IServerContext getServerContext()
+    default IServerContext getServerContext()
     {
         return getServerContextInstance();
     }
 
     @SuppressWarnings("unchecked")
-    public default List<String> getCombinedRoles(final IServerSession sess, final List<String> role)
+    default List<String> getCombinedRoles(final IServerSession sess, final List<String> role)
     {
         return toUnique(toListOfLists(role, (sess == null) ? arrayList() : sess.getRoles()));
     }
 
-    public default IAuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)
+    default IAuthorizationResult isAuthorized(final HttpServletRequest request, final IServerSession session, final Object target, final List<String> roles)
     {
         return getServerContext().isAuthorized(target, getCombinedRoles(session, roles));
     }
 
-    public default boolean isApplicationContextInitialized()
+    default boolean isApplicationContextInitialized()
     {
         return getServerContext().isApplicationContextInitialized();
     }
 
-    public default ApplicationContext getApplicationContext()
+    default ApplicationContext getApplicationContext()
     {
         return getServerContext().getApplicationContext();
     }
 
-    public default WebApplicationContext getWebApplicationContext()
+    default WebApplicationContext getWebApplicationContext()
     {
         return getServerContext().getWebApplicationContext();
     }
 
-    public default void doNeverCache(final HttpServletRequest request, final HttpServletResponse response)
+    default void doNeverCache(final HttpServletRequest request, final HttpServletResponse response)
     {
         final long time = ITimeSupplier.now();
 
@@ -171,14 +171,14 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         response.setHeader(CACHE_CONTROL_HEADER, NO_CACHE_CONTROL_HEADER_VALUE);
     }
 
-    public default void doLongFuture(final HttpServletRequest request, final HttpServletResponse response)
+    default void doLongFuture(final HttpServletRequest request, final HttpServletResponse response)
     {
         response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_MAX_AGE_PREFIX + YEAR_IN_SECONDS);
 
         response.setDateHeader(EXPIRES_HEADER, ITimeSupplier.now() + YEAR_IN_MILLISECONDS);
     }
 
-    public default void doNearFuture(final HttpServletRequest request, final HttpServletResponse response)
+    default void doNearFuture(final HttpServletRequest request, final HttpServletResponse response)
     {
         response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_MAX_AGE_PREFIX + WEEK_IN_SECONDS);
 
@@ -186,22 +186,22 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
     }
 
     @Override
-    public default Logger logger()
+    default Logger logger()
     {
         return getServerContext().logger();
     }
 
-    public default int getMaxContentTypeLength()
+    default int getMaxContentTypeLength()
     {
         return DEFAULT_CONTENT_TYPE_MAX_HEADER_LENGTH;
     }
 
-    public default boolean isMaxContentTypeHeaderLengthValid(final HttpServletRequest request, final HttpServletResponse response)
+    default boolean isMaxContentTypeHeaderLengthValid(final HttpServletRequest request, final HttpServletResponse response)
     {
         return isMaxHeaderLengthValid(request, response, CONTENT_TYPE_HEADER, Math.min(Math.max(0, getMaxContentTypeLength()), MAXIMUM_CONTENT_TYPE_MAX_HEADER_LENGTH));
     }
 
-    public default boolean isMaxHeaderLengthValid(final HttpServletRequest request, final HttpServletResponse response, String head, int leng)
+    default boolean isMaxHeaderLengthValid(final HttpServletRequest request, final HttpServletResponse response, String head, int leng)
     {
         if ((null != (head = toTrimOrNull(head))) && ((leng = Math.max(0, leng)) > 0))
         {
@@ -219,26 +219,26 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return true;
     }
 
-    public default void destroy()
+    default void destroy()
     {
     }
 
-    public default String getSessionProviderDomainName()
+    default String getSessionProviderDomainName()
     {
         return toTrimOrElse(getConfigurationParameter(SESSION_PROVIDER_DOMAIN_NAME_PARAM), STRING_DEFAULT);
     }
 
-    public default List<String> getConfigurationParameterNames()
+    default List<String> getConfigurationParameterNames()
     {
         return emptyList();
     }
 
-    public default String getConfigurationParameter(final String name)
+    default String getConfigurationParameter(final String name)
     {
         return null;
     }
 
-    public default Map<String, String> getConfigurationParameters()
+    default Map<String, String> getConfigurationParameters()
     {
         final LinkedHashMap<String, String> conf = new LinkedHashMap<>();
 
@@ -254,27 +254,27 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return conf;
     }
 
-    public default String getConfigurationParameterOrProperty(final String name)
+    default String getConfigurationParameterOrProperty(final String name)
     {
         return toTrimOrElse(getConfigurationParameter(name), getServerContext().getPropertyByName(name));
     }
 
-    public default String getConfigurationParameterOrPropertyOtherwise(final String name, final String otherwise)
+    default String getConfigurationParameterOrPropertyOtherwise(final String name, final String otherwise)
     {
         return toTrimOrElse(getConfigurationParameter(name), getServerContext().getPropertyByName(name, otherwise));
     }
 
-    public default boolean isNotModifiedSince(final HttpServletRequest request, final HttpServletResponse response, final long time)
+    default boolean isNotModifiedSince(final HttpServletRequest request, final HttpServletResponse response, final long time)
     {
         return getServletWebRequest(request, response).checkNotModified(time);
     }
 
-    public default boolean isModifiedSince(final HttpServletRequest request, final HttpServletResponse response, final long time)
+    default boolean isModifiedSince(final HttpServletRequest request, final HttpServletResponse response, final long time)
     {
         return (false == isNotModifiedSince(request, response, time));
     }
 
-    public default ServletWebRequest getServletWebRequest(final HttpServletRequest request, final HttpServletResponse response)
+    default ServletWebRequest getServletWebRequest(final HttpServletRequest request, final HttpServletResponse response)
     {
         return new ServletWebRequest(request, response);
     }

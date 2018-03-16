@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public class OutputStreamProxyWriter extends OutputStreamWriter implements IFormatted<OutputStreamProxyWriter>
+public class OutputStreamProxyWriter extends OutputStreamWriter
 {
     public OutputStreamProxyWriter(final OutputStream stream)
     {

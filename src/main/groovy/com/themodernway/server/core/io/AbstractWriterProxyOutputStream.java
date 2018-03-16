@@ -23,9 +23,9 @@ import org.apache.commons.io.output.WriterOutputStream;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public abstract class AbstractWriterProxyOutputStream<T extends AbstractWriterProxyOutputStream<T>> extends WriterOutputStream implements IFormatted<T>
+public abstract class AbstractWriterProxyOutputStream<T extends AbstractWriterProxyOutputStream<T>> extends WriterOutputStream
 {
-    public AbstractWriterProxyOutputStream(final Writer writer, final Charset charset)
+    protected AbstractWriterProxyOutputStream(final Writer writer, final Charset charset)
     {
         super(CommonOps.requireNonNull(writer), CommonOps.requireNonNull(charset));
     }

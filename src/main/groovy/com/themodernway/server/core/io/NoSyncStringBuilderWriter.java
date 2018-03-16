@@ -21,7 +21,7 @@ import java.io.Writer;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public class NoSyncStringBuilderWriter extends Writer implements CharSequence, IFormatted<NoSyncStringBuilderWriter>
+public class NoSyncStringBuilderWriter extends Writer implements CharSequence
 {
     private final StringBuilder m_builder;
 

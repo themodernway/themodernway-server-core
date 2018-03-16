@@ -110,7 +110,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     {
         m_name = requireTrimOrNull(name);
 
-        m_base = requireTrimOrNull(normalize(requireTrimOrNull(failIfNullBytePresent(base))));
+        m_base = requireTrimOrNull(normalize(base));
 
         m_file = new File(m_base);
 
@@ -734,19 +734,6 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             return file;
         }
 
-        protected String nametest(String name, final boolean make) throws IOException
-        {
-            validate();
-
-            name = failIfNullBytePresent(requireNonNull(name));
-
-            if ((make) && (false == getFileItemStorage().isWritable()))
-            {
-                throw new IOException(format("Can't create nowrite (%s).", name));
-            }
-            return name;
-        }
-
         protected boolean exists(final File file)
         {
             return IO.exists(file);
@@ -920,7 +907,9 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public IFileItem file(final String name) throws IOException
         {
-            String path = normalize(nametest(name, false));
+            super.validate();
+
+            String path = normalize(name);
 
             if (false == path.startsWith(SINGLE_SLASH))
             {
@@ -944,48 +933,26 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
-        public IFileItem create(String name, final Path path) throws IOException
+        public IFileItem create(final String name, final Path path) throws IOException
         {
-            InputStream stream = null;
-
-            name = nametest(name, true);
-
-            try
+            try (InputStream stream = IO.toInputStream(path))
             {
-                stream = IO.toInputStream(path);
-
                 return create(name, stream);
-            }
-            finally
-            {
-                IO.close(stream);
             }
         }
 
         @Override
-        public IFileItem create(String name, final Resource resource) throws IOException
+        public IFileItem create(final String name, final Resource resource) throws IOException
         {
-            InputStream stream = null;
-
-            name = nametest(name, true);
-
-            try
+            try (InputStream stream = resource.getInputStream())
             {
-                stream = resource.getInputStream();
-
                 return create(name, stream);
-            }
-            finally
-            {
-                IO.close(stream);
             }
         }
 
         @Override
-        public IFileItem create(String name, final Reader reader) throws IOException
+        public IFileItem create(final String name, final Reader reader) throws IOException
         {
-            name = nametest(name, true);
-
             try (InputStream stream = new ReaderInputStream(reader, IO.UTF_8_CHARSET))
             {
                 return create(name, stream);
@@ -993,55 +960,43 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         }
 
         @Override
-        public IFileItem create(String name, final InputStream input) throws IOException
+        public IFileItem create(final String name, final InputStream input) throws IOException
         {
-            name = nametest(name, true);
-
             final IFileItem item = file(name);
 
             if (null != item)
             {
+                if (false == getFileItemStorage().isWritable())
+                {
+                    throw new IOException(format("Can't create nowrite (%s).", item.getPath()));
+                }
+                if (item.isFolder())
+                {
+                    throw new IOException(format("Can't create folder (%s).", item.getPath()));
+                }
                 if (item.isHidden())
                 {
                     throw new IOException(format("Can't create hidden (%s).", item.getPath()));
                 }
-                if (item.exists())
-                {
-                    if (item.isFile())
-                    {
-                        if (false == item.delete())
-                        {
-                            throw new IOException(format("Can't delete (%s).", item.getPath()));
-                        }
-                    }
-                    else
-                    {
-                        throw new IOException(format("Can't delete folder (%s).", item.getPath()));
-                    }
-                }
                 final File file = new File(item.getAbsolutePath());
 
-                if ((false == file.getParentFile().exists()) && (false == file.getParentFile().mkdirs()))
+                final File parn = file.getParentFile();
+
+                if ((null != parn) && (false == parn.mkdirs()) && (false == isFolder(parn)))
                 {
                     throw new IOException(format("Can't create folder (%s).", item.getPath()));
                 }
-                if (false == file.createNewFile())
+                if ((exists(file)) && (false == isWritable(file)))
                 {
-                    throw new IOException(format("Can't create file (%s).", item.getPath()));
+                    throw new IOException(format("Can't replace file (%s).", item.getPath()));
                 }
-                final OutputStream fios = IO.toOutputStream(file);
-
-                try
+                try (OutputStream fios = IO.toOutputStream(file))
                 {
                     IO.copy(input, fios);
 
                     fios.flush();
 
                     return make(file, getFileItemStorage());
-                }
-                finally
-                {
-                    IO.close(fios);
                 }
             }
             throw new IOException(format("Can't resolve (%s).", name));

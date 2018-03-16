@@ -32,7 +32,6 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.file.FileAndPathUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
-import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.logging.LoggingOps;
 
 public class ContentUploadServlet extends AbstractContentServlet
@@ -103,6 +102,8 @@ public class ContentUploadServlet extends AbstractContentServlet
                         {
                             logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "File size exceeds limit.");
                         }
+                        item.delete();
+
                         sendErrorCode(request, response, HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
 
                         return;
@@ -111,39 +112,37 @@ public class ContentUploadServlet extends AbstractContentServlet
 
                     if (null != file)
                     {
-                        if (file.exists())
+                        try (InputStream read = item.getInputStream())
                         {
-                            if (file.isFolder())
-                            {
-                                if (logger().isErrorEnabled())
-                                {
-                                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't write storage folder.");
-                                }
-                                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
-
-                                return;
-                            }
-                            else
-                            {
-                                file.delete();
-                            }
-                        }
-                        InputStream read = null;
-
-                        try
-                        {
-                            read = item.getInputStream();
-
                             fold.create(file.getPath(), read);
                         }
-                        finally
+                        catch (final IOException e)
                         {
+                            if (logger().isErrorEnabled())
+                            {
+                                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't write file.", e);
+                            }
                             item.delete();
 
-                            IO.close(read);
+                            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+                            return;
                         }
                     }
+                    else
+                    {
+                        if (logger().isErrorEnabled())
+                        {
+                            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't find file.");
+                        }
+                        item.delete();
+
+                        sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
+
+                        return;
+                    }
                 }
+                item.delete();
             }
         }
         catch (final Exception e)

@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.security.session.IServerSession;
@@ -34,19 +33,19 @@ public final class HTTPUtils implements ICoreServletConstants
     {
     }
 
-    public static Cookie setCookie(final HttpServletRequest request, final HttpServletResponse response, final String name, final String value, final String path)
+    public static final Cookie newCookie(final HttpServletRequest request, final String name, final String value, final String path)
     {
-        return setCookie(request, response, name, value, path, TimeUnit.SECONDS, YEAR_IN_SECONDS);
+        return newCookie(request, name, value, path, TimeUnit.SECONDS, YEAR_IN_SECONDS);
     }
 
-    public static Cookie setCookie(final HttpServletRequest request, final HttpServletResponse response, final String name, final String value, final TimeUnit unit, final long duration)
+    public static final Cookie newCookie(final HttpServletRequest request, final String name, final String value, final TimeUnit unit, final long duration)
     {
-        return setCookie(request, response, name, value, null, unit, duration);
+        return newCookie(request, name, value, null, unit, duration);
     }
 
-    public static Cookie setCookie(final HttpServletRequest request, final HttpServletResponse response, String name, final String value, String path, final TimeUnit unit, final long duration)
+    public static final Cookie newCookie(final HttpServletRequest request, String name, final String value, String path, final TimeUnit unit, final long duration)
     {
-        if ((null != request) && (null != response) && (null != (name = StringOps.toTrimOrNull(name))))
+        if ((null != request) && (null != (name = StringOps.toTrimOrNull(name))))
         {
             if (null == value)
             {
@@ -54,18 +53,23 @@ public final class HTTPUtils implements ICoreServletConstants
 
                 cookie.setMaxAge(0);
 
-                final String ruri = StringOps.toTrimOrNull(request.getHeader(REFERER_HEADER));
-
-                if ((null != ruri) && (ruri.startsWith(HTTPS_URL_PREFIX_DEFAULT)))
+                if (request.isSecure())
                 {
                     cookie.setSecure(true);
+                }
+                else
+                {
+                    final String ruri = StringOps.toTrimOrNull(request.getHeader(REFERER_HEADER));
+
+                    if ((null != ruri) && (ruri.startsWith(HTTPS_URL_PREFIX_DEFAULT)))
+                    {
+                        cookie.setSecure(true);
+                    }
                 }
                 if (null != (path = StringOps.toTrimOrNull(path)))
                 {
                     cookie.setPath(path);
                 }
-                response.addCookie(cookie);
-
                 return cookie;
             }
             else
@@ -78,25 +82,30 @@ public final class HTTPUtils implements ICoreServletConstants
 
                 cookie.setMaxAge(Math.toIntExact(rounded));
 
-                final String ruri = StringOps.toTrimOrNull(request.getHeader(REFERER_HEADER));
-
-                if ((null != ruri) && (ruri.startsWith(HTTPS_URL_PREFIX_DEFAULT)))
+                if (request.isSecure())
                 {
                     cookie.setSecure(true);
+                }
+                else
+                {
+                    final String ruri = StringOps.toTrimOrNull(request.getHeader(REFERER_HEADER));
+
+                    if ((null != ruri) && (ruri.startsWith(HTTPS_URL_PREFIX_DEFAULT)))
+                    {
+                        cookie.setSecure(true);
+                    }
                 }
                 if (null != (path = StringOps.toTrimOrNull(path)))
                 {
                     cookie.setPath(path);
                 }
-                response.addCookie(cookie);
-
                 return cookie;
             }
         }
         return null;
     }
 
-    public static IServerSession getSession(String sessid)
+    public static final IServerSession getSession(String sessid)
     {
         if (null == (sessid = StringOps.toTrimOrNull(sessid)))
         {
@@ -105,13 +114,13 @@ public final class HTTPUtils implements ICoreServletConstants
         return getSession(sessid, STRING_DEFAULT);
     }
 
-    public static IServerSession getSession(String sessid, final String domain)
+    public static final IServerSession getSession(String sessid, final String domain)
     {
         if (null == (sessid = StringOps.toTrimOrNull(sessid)))
         {
             return null;
         }
-        final IServerContext context = getServerContext();
+        final IServerContext context = ServerContextInstance.getServerContextInstance();
 
         if (context.isApplicationContextInitialized())
         {
@@ -120,7 +129,7 @@ public final class HTTPUtils implements ICoreServletConstants
         return null;
     }
 
-    public static IServerSession getSession(String sessid, final IServerSessionRepository repository)
+    public static final IServerSession getSession(String sessid, final IServerSessionRepository repository)
     {
         if (null == (sessid = StringOps.toTrimOrNull(sessid)))
         {
@@ -136,10 +145,5 @@ public final class HTTPUtils implements ICoreServletConstants
             }
         }
         return null;
-    }
-
-    public static IServerContext getServerContext()
-    {
-        return ServerContextInstance.getServerContextInstance();
     }
 }

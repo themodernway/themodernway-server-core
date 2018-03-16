@@ -29,12 +29,12 @@ public abstract class AbstractNoSyncBufferedWriter<T extends AbstractNoSyncBuffe
 
     private char[] m_charbf;
 
-    public AbstractNoSyncBufferedWriter(final Writer writer)
+    protected AbstractNoSyncBufferedWriter(final Writer writer)
     {
         this(writer, IO.DEFAULT_BUFFER_CAPACITY);
     }
 
-    public AbstractNoSyncBufferedWriter(final Writer writer, final int capacity)
+    protected AbstractNoSyncBufferedWriter(final Writer writer, final int capacity)
     {
         super(writer, IO.toValidBufferCapacity(capacity));
 

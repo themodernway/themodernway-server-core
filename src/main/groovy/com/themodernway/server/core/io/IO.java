@@ -177,17 +177,9 @@ public final class IO
 
     public static final long copy(final Resource resource, final OutputStream output) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (InputStream stream = resource.getInputStream())
         {
-            stream = resource.getInputStream();
-
             return IO.copy(stream, output);
-        }
-        finally
-        {
-            IO.close(stream);
         }
     }
 
@@ -195,17 +187,9 @@ public final class IO
     {
         if ((length = Math.max(0L, length)) > 0L)
         {
-            InputStream stream = null;
-
-            try
+            try (InputStream stream = resource.getInputStream())
             {
-                stream = resource.getInputStream();
-
                 return IO.copy(stream, output, length);
-            }
-            finally
-            {
-                IO.close(stream);
             }
         }
         return length;
@@ -213,17 +197,9 @@ public final class IO
 
     public static final long copy(final Resource resource, final Writer output) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (InputStream stream = resource.getInputStream())
         {
-            stream = resource.getInputStream();
-
             return IO.copy(stream, output);
-        }
-        finally
-        {
-            IO.close(stream);
         }
     }
 
@@ -231,17 +207,9 @@ public final class IO
     {
         if ((length = Math.max(0L, length)) > 0L)
         {
-            InputStream stream = null;
-
-            try
+            try (InputStream stream = resource.getInputStream())
             {
-                stream = resource.getInputStream();
-
                 return IO.copy(stream, output, length);
-            }
-            finally
-            {
-                IO.close(stream);
             }
         }
         return length;
@@ -268,17 +236,9 @@ public final class IO
         }
         if ((length = Math.max(0L, Math.min(length, file.length()))) > 0L)
         {
-            InputStream stream = null;
-
-            try
+            try (InputStream stream = IO.toInputStream(file))
             {
-                stream = IO.toInputStream(file);
-
                 return IO.copy(stream, output, length);
-            }
-            finally
-            {
-                IO.close(stream);
             }
         }
         return length;
@@ -305,17 +265,9 @@ public final class IO
         }
         if ((length = Math.max(0L, Math.min(length, file.length()))) > 0L)
         {
-            InputStream stream = null;
-
-            try
+            try (InputStream stream = IO.toInputStream(file))
             {
-                stream = IO.toInputStream(file);
-
                 return IO.copy(stream, output, length);
-            }
-            finally
-            {
-                IO.close(stream);
             }
         }
         return length;
@@ -323,17 +275,9 @@ public final class IO
 
     public static final long copy(final IFileItem file, final OutputStream output) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (InputStream stream =  file.getInputStream())
         {
-            stream = file.getInputStream();
-
             return IO.copy(stream, output);
-        }
-        finally
-        {
-            IO.close(stream);
         }
     }
 
@@ -341,17 +285,9 @@ public final class IO
     {
         if ((length = Math.max(0L, length)) > 0L)
         {
-            InputStream stream = null;
-
-            try
+            try (InputStream stream =  file.getInputStream())
             {
-                stream = file.getInputStream();
-
                 return IO.copy(stream, output, length);
-            }
-            finally
-            {
-                IO.close(stream);
             }
         }
         return length;
@@ -359,17 +295,9 @@ public final class IO
 
     public static final long copy(final IFileItem file, final Writer output) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (InputStream stream =  file.getInputStream())
         {
-            stream = file.getInputStream();
-
             return IO.copy(stream, output);
-        }
-        finally
-        {
-            IO.close(stream);
         }
     }
 
@@ -377,17 +305,9 @@ public final class IO
     {
         if ((length = Math.max(0L, length)) > 0L)
         {
-            InputStream stream = null;
-
-            try
+            try (InputStream stream =  file.getInputStream())
             {
-                stream = file.getInputStream();
-
                 return IO.copy(stream, output, length);
-            }
-            finally
-            {
-                IO.close(stream);
             }
         }
         return length;
@@ -793,17 +713,9 @@ public final class IO
 
     public static final String getStringAtMost(final Resource resource, final long leng, final long slop) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (InputStream stream =  resource.getInputStream())
         {
-            stream = resource.getInputStream();
-
             return IO.getStringAtMost(stream, leng, slop);
-        }
-        finally
-        {
-            IO.close(stream);
         }
     }
 
@@ -814,17 +726,9 @@ public final class IO
 
     public static final String getStringAtMost(final Path path, final long leng, final long slop) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (InputStream stream = IO.toInputStream(path))
         {
-            stream = IO.toInputStream(path);
-
             return IO.getStringAtMost(stream, leng, slop);
-        }
-        finally
-        {
-            IO.close(stream);
         }
     }
 
@@ -835,17 +739,9 @@ public final class IO
 
     public static final String getStringAtMost(final IFileItem file, final long leng, final long slop) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (InputStream stream = file.getInputStream())
         {
-            stream = file.getInputStream();
-
             return IO.getStringAtMost(stream, leng, slop);
-        }
-        finally
-        {
-            IO.close(stream);
         }
     }
 
@@ -856,17 +752,9 @@ public final class IO
 
     public static final String getStringAtMost(final File file, final long leng, final long slop) throws IOException
     {
-        InputStream stream = null;
-
-        try
+        try (InputStream stream = IO.toInputStream(file))
         {
-            stream = IO.toInputStream(file);
-
             return IO.getStringAtMost(stream, leng, slop);
-        }
-        finally
-        {
-            IO.close(stream);
         }
     }
 

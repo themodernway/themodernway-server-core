@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
-   <suppress>
-      <notes><![CDATA[
-      file name: AppleJavaExtensions-1.4.jar
-      ]]></notes>
-      <gav regex="true">^com\.apple:AppleJavaExtensions:.*$</gav>
-      <cpe>cpe:/a:apple:java</cpe>
-   </suppress>
+<suppressions
+	xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+	<suppress>
+		<notes><![CDATA[
+      	file name: AppleJavaExtensions-1.4.jar
+      	]]></notes>
+		<gav regex="true">^com\.apple:AppleJavaExtensions:.*$</gav>
+		<cpe>cpe:/a:apple:java</cpe>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   		file name: spring-session-core-2.0.2.RELEASE.jar
+   		]]></notes>
+		<sha1>9ed548958dde7eed436d03faaa24bddac4d42d42</sha1>
+		<cpe>cpe:/a:pivotal:spring_framework</cpe>
+	</suppress>
+	<suppress>
+        <notes><![CDATA[
+        This suppresses all CVE entries that have a score below CVSS 7.
+        ]]></notes>
+        <cvssBelow>7</cvssBelow>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        This suppresses false positives identified on spring security.
+        ]]></notes>
+        <gav regex="true">org\.springframework\.security:spring.*</gav>
+        <cpe>cpe:/a:vmware:springsource_spring_framework</cpe>
+        <cpe>cpe:/a:springsource:spring_framework</cpe>
+        <cpe>cpe:/a:mod_security:mod_security</cpe>
+    </suppress>
 </suppressions>

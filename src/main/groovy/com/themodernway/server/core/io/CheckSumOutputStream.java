@@ -24,7 +24,7 @@ import java.util.zip.Checksum;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public class CheckSumOutputStream extends CheckedOutputStream implements IFormatted<CheckSumOutputStream>
+public class CheckSumOutputStream extends CheckedOutputStream
 {
     private final boolean m_close;
 

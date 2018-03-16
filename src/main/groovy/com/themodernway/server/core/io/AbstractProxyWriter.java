@@ -21,9 +21,9 @@ import java.io.Writer;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public abstract class AbstractProxyWriter<T extends AbstractProxyWriter<T>> extends FilterWriter implements IFormatted<T>
+public abstract class AbstractProxyWriter<T extends AbstractProxyWriter<T>> extends FilterWriter
 {
-    public AbstractProxyWriter(final Writer writer)
+    protected AbstractProxyWriter(final Writer writer)
     {
         super(CommonOps.requireNonNull(writer));
     }

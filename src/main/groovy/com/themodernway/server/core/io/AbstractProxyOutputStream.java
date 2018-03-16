@@ -21,9 +21,9 @@ import java.io.OutputStream;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public abstract class AbstractProxyOutputStream<T extends AbstractProxyOutputStream<T>> extends FilterOutputStream implements IFormatted<T>
+public abstract class AbstractProxyOutputStream<T extends AbstractProxyOutputStream<T>> extends FilterOutputStream
 {
-    public AbstractProxyOutputStream(final OutputStream stream)
+    protected AbstractProxyOutputStream(final OutputStream stream)
     {
         super(CommonOps.requireNonNull(stream));
     }

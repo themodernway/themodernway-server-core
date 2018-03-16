@@ -21,14 +21,14 @@ import java.io.Writer;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public abstract class AbstractBufferedWriter<T extends AbstractBufferedWriter<T>> extends BufferedWriter implements IFormatted<T>
+public abstract class AbstractBufferedWriter<T extends AbstractBufferedWriter<T>> extends BufferedWriter
 {
-    public AbstractBufferedWriter(final Writer writer)
+    protected AbstractBufferedWriter(final Writer writer)
     {
         super(CommonOps.requireNonNull(writer), IO.DEFAULT_BUFFER_CAPACITY);
     }
 
-    public AbstractBufferedWriter(final Writer writer, final int capacity)
+    protected AbstractBufferedWriter(final Writer writer, final int capacity)
     {
         super(CommonOps.requireNonNull(writer), IO.toValidBufferCapacity(capacity));
     }

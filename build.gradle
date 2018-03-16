@@ -172,7 +172,7 @@ dependencyCheck {
 
 task checkCodeQuality { doLast { println ':checkCodeQuality-done' } }
 
-checkCodeQuality.dependsOn codeCoverage,checkstyleMain,pmdMain,findbugsMain,dependencyCheckAnalyze
+checkCodeQuality.dependsOn codeCoverage,checkstyleMain,pmdMain,findbugsMain,dependencyCheckPurge,dependencyCheckAnalyze
 
 tasks.withType(GroovyCompile) {
     groovyOptions.optimizationOptions.indy = true
@@ -393,6 +393,7 @@ def List<String> springCorePackages() {
         'spring-tx',
         'spring-web',
         'spring-webmvc',
+        'spring-webflux',
         'spring-test'
     ]
 }
