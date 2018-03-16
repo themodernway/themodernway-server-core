@@ -982,11 +982,11 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
                 final File parn = file.getParentFile();
 
-                if ((null != parn) && (false == parn.mkdirs()) && (false == isFolder(parn)))
+                if ((null != parn) && (false == parn.mkdirs()) && (false == IO.isFolder(parn)))
                 {
                     throw new IOException(format("Can't create folder (%s).", item.getPath()));
                 }
-                if ((exists(file)) && (false == isWritable(file)))
+                if ((IO.exists(file)) && (false == IO.isWritable(file)))
                 {
                     throw new IOException(format("Can't replace file (%s).", item.getPath()));
                 }
