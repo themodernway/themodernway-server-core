@@ -16,10 +16,20 @@
 
 package com.themodernway.server.core.support.spring.network;
 
-import org.springframework.web.client.RestTemplate;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
-@FunctionalInterface
-public interface IRestTemplateBuilder
+public class CoreNativeHttpRequestFactory extends HttpComponentsClientHttpRequestFactory
 {
-    public RestTemplate build(RestTemplate template);
+    public CoreNativeHttpRequestFactory()
+    {
+        this(16, 256);
+    }
+
+    public CoreNativeHttpRequestFactory(final int route, final int total)
+    {
+        super(HttpClientBuilder.create().setMaxConnPerRoute(route).setMaxConnTotal(total).build());
+
+        setBufferRequestBody(false);
+    }
 }

@@ -1,9 +1,22 @@
+/*
+ * Copyright (c) 2018, The Modern Way. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.themodernway.server.core.support.spring.network;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
@@ -14,9 +27,9 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.HttpMessageNotWritableException;
 
+import com.fasterxml.jackson.dataformat.yaml.UTF8Reader;
+import com.fasterxml.jackson.dataformat.yaml.UTF8Writer;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
@@ -46,22 +59,24 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
     }
 
     @Override
-    protected JSONObject readInternal(final Class<? extends JSONObject> claz, final HttpInputMessage message) throws IOException, HttpMessageNotReadableException
+    protected JSONObject readInternal(final Class<? extends JSONObject> claz, final HttpInputMessage message) throws IOException
     {
         try
         {
-            return BINDER.bindJSON(new InputStreamReader(message.getBody(), IO.UTF_8_CHARSET));
+            return BINDER.bindJSON(new UTF8Reader(message.getBody(), false));
         }
         catch (final ParserException e)
         {
-            LOGGER.error(LoggingOps.THE_MODERN_WAY_MARKER, "bind().", e);
-
-            throw new HttpMessageNotReadableException("bind", e);
+            if (LOGGER.isErrorEnabled())
+            {
+                LOGGER.error(LoggingOps.THE_MODERN_WAY_MARKER, "bind().", e);
+            }
+            throw new IOException("bind", e);
         }
     }
 
     @Override
-    protected void writeInternal(final JSONObject json, final HttpOutputMessage message) throws IOException, HttpMessageNotWritableException
+    protected void writeInternal(final JSONObject json, final HttpOutputMessage message) throws IOException
     {
         final HttpHeaders head = message.getHeaders();
 
@@ -73,13 +88,15 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
 
         try
         {
-            BINDER.send(new OutputStreamWriter(message.getBody(), IO.UTF_8_CHARSET), json);
+            BINDER.send(new UTF8Writer(message.getBody()), json);
         }
         catch (final ParserException e)
         {
-            LOGGER.error(LoggingOps.THE_MODERN_WAY_MARKER, "send().", e);
-
-            throw new HttpMessageNotWritableException("send", e);
+            if (LOGGER.isErrorEnabled())
+            {
+                LOGGER.error(LoggingOps.THE_MODERN_WAY_MARKER, "send().", e);
+            }
+            throw new IOException("send", e);
         }
     }
 }

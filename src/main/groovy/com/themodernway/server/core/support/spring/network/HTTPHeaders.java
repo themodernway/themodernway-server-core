@@ -110,11 +110,7 @@ public class HTTPHeaders extends HttpHeaders
         {
             final List<String> list = get(USER_AGENT);
 
-            if (null == list)
-            {
-                add(USER_AGENT, ua);
-            }
-            else if (list.isEmpty())
+            if ((null == list) || (list.isEmpty()))
             {
                 add(USER_AGENT, ua);
             }

@@ -77,13 +77,9 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 
     public static class CoreObjectMapper extends ObjectMapper implements ICoreObjectMapper
     {
-        private static final long                    serialVersionUID = 1L;
+        private static final long                 serialVersionUID = 1L;
 
-        private static final JsonGenerator.Feature[] OUTPUT_ENABLED   = { JsonGenerator.Feature.ESCAPE_NON_ASCII };
-
-        private static final JsonParser.Feature[]    PARSER_ENABLED   = { JsonParser.Feature.ALLOW_COMMENTS, JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES };
-
-        private static final DefaultPrettyPrinter    PRETTY_PRINTER   = buildPrettyPrinter(4);
+        private static final DefaultPrettyPrinter PRETTY_PRINTER   = buildPrettyPrinter(4);
 
         private static final DefaultPrettyPrinter buildPrettyPrinter(final int repeat)
         {
@@ -105,7 +101,7 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
         @Override
         public <M extends ObjectMapper> M withDefaults(final M mapper)
         {
-            withExtendedModules(this).enable(PARSER_ENABLED).enable(OUTPUT_ENABLED).setDefaultPrettyPrinter(PRETTY_PRINTER);
+            withExtendedModules(this).enable(JsonParser.Feature.ALLOW_COMMENTS).enable(JsonGenerator.Feature.ESCAPE_NON_ASCII).setDefaultPrettyPrinter(PRETTY_PRINTER);
 
             return mapper;
         }

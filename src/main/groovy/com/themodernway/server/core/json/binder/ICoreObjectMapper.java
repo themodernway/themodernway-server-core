@@ -18,6 +18,8 @@ package com.themodernway.server.core.json.binder;
 
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -64,7 +66,7 @@ public interface ICoreObjectMapper
 
         public static final <M extends ObjectMapper> M withModules(final M mapper, final List<Module> list)
         {
-            mapper.registerModules(list);
+            mapper.registerModules(list).disable(JsonParser.Feature.AUTO_CLOSE_SOURCE).disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
 
             return mapper;
         }

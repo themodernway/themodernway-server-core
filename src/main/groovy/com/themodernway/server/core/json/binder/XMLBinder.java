@@ -16,8 +16,6 @@
 
 package com.themodernway.server.core.json.binder;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.themodernway.server.core.json.binder.XMLBinder.CoreXMLMapper;
 
@@ -36,15 +34,11 @@ public class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
 
     public static class CoreXMLMapper extends XmlMapper implements ICoreObjectMapper
     {
-        private static final long                    serialVersionUID = 1L;
-
-        private static final JsonGenerator.Feature[] OUTPUT_ENABLED   = {};
-
-        private static final JsonParser.Feature[]    PARSER_ENABLED   = {};
+        private static final long serialVersionUID = 1L;
 
         public CoreXMLMapper()
         {
-            withDefaults(this).enable(PARSER_ENABLED).enable(OUTPUT_ENABLED);
+            withDefaults(this);
         }
 
         protected CoreXMLMapper(final CoreXMLMapper parent)

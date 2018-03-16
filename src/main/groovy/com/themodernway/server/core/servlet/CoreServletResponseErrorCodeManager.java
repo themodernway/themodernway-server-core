@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 
-import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.logging.LoggingOps;
 
@@ -31,11 +30,11 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
 {
     private static final long                            serialVersionUID = 1L;
 
+    private static final Logger                          LOGGING          = LoggingOps.getLogger(CoreServletResponseErrorCodeManager.class);
+
     public static final IServletResponseErrorCodeManager DEFAULT          = new CoreServletResponseErrorCodeManager();
 
     private final boolean                                m_dosend;
-
-    private final Logger                                 m_logger         = LoggingOps.getLogger(getClass());
 
     public CoreServletResponseErrorCodeManager()
     {
@@ -52,11 +51,11 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
         return m_dosend;
     }
 
-    protected void debug(final int code, String mess)
+    protected void debug(final int code, final String mess, final boolean send)
     {
-        if (logger().isDebugEnabled())
+        if ((send) && (logger().isDebugEnabled()))
         {
-            if (null != (mess = StringOps.toTrimOrNull(mess)))
+            if (null != mess)
             {
                 logger().debug(LoggingOps.THE_MODERN_WAY_MARKER, String.format("sending code (%s) message (%s).", code, mess));
             }
@@ -68,15 +67,17 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
     }
 
     @Override
-    public void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code, String mess)
+    public void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code, final String mess)
     {
-        if ((null != (mess = StringOps.toTrimOrNull(mess))) && (isSendMessage()))
+        final boolean debg = logger().isDebugEnabled();
+
+        if ((isSendMessage()) && (null != mess))
         {
             try
             {
                 response.sendError(code, mess);
 
-                debug(code, mess);
+                debug(code, mess, debg);
 
                 return;
             }
@@ -88,7 +89,7 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
                 }
             }
         }
-        debug(code, mess);
+        debug(code, mess, debg);
 
         response.setStatus(code);
     }
@@ -96,6 +97,6 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
     @Override
     public Logger logger()
     {
-        return m_logger;
+        return LOGGING;
     }
 }

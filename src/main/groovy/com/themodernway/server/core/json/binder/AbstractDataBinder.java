@@ -19,6 +19,7 @@ package com.themodernway.server.core.json.binder;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -38,10 +39,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.io.IO;
-import com.themodernway.server.core.io.NoCloseProxyInputStream;
-import com.themodernway.server.core.io.NoCloseProxyOutputStream;
-import com.themodernway.server.core.io.NoCloseProxyReader;
-import com.themodernway.server.core.io.NoCloseProxyWriter;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
@@ -207,63 +204,39 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public <T> T bind(final Path path, final Class<T> claz) throws ParserException
     {
-        BufferedReader reader = null;
-
-        try
+        try (BufferedReader reader = IO.toBufferedReader(path))
         {
-            reader = IO.toBufferedReader(path);
-
             return m_mapper.readValue(reader, claz);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
-        }
-        finally
-        {
-            IO.close(reader);
         }
     }
 
     @Override
     public <T> T bind(final File file, final Class<T> claz) throws ParserException
     {
-        BufferedReader reader = null;
-
-        try
+        try (BufferedReader reader = IO.toBufferedReader(file))
         {
-            reader = IO.toBufferedReader(file);
-
             return m_mapper.readValue(reader, claz);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
-        }
-        finally
-        {
-            IO.close(reader);
         }
     }
 
     @Override
     public <T> T bind(final IFileItem file, final Class<T> claz) throws ParserException
     {
-        BufferedReader reader = null;
-
-        try
+        try (BufferedReader reader = file.getBufferedReader())
         {
-            reader = file.getBufferedReader();
-
             return m_mapper.readValue(reader, claz);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
-        }
-        finally
-        {
-            IO.close(reader);
         }
     }
 
@@ -272,9 +245,9 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try
         {
-            return m_mapper.readValue(new NoCloseProxyInputStream(stream), claz);
+            return m_mapper.readValue(stream, claz);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
         }
@@ -285,9 +258,9 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try
         {
-            return m_mapper.readValue(new NoCloseProxyReader(reader), claz);
+            return m_mapper.readValue(reader, claz);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
         }
@@ -296,21 +269,13 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public <T> T bind(final Resource resource, final Class<T> claz) throws ParserException
     {
-        InputStream stream = null;
-
-        try
+        try (InputStream stream = resource.getInputStream())
         {
-            stream = resource.getInputStream();
-
             return m_mapper.readValue(stream, claz);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
-        }
-        finally
-        {
-            IO.close(stream);
         }
     }
 
@@ -321,7 +286,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         {
             return m_mapper.readValue(url, claz);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
         }
@@ -334,7 +299,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         {
             return m_mapper.readValue(text.toString(), claz);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
         }
@@ -347,7 +312,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         {
             return getMapperForProperties().readPropertiesAs(properties, claz);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
         }
@@ -433,23 +398,15 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         CommonOps.requireNonNull(object);
 
-        BufferedWriter buff = null;
-
-        try
+        try (BufferedWriter buff = IO.toBufferedWriter(path))
         {
-            buff = IO.toBufferedWriter(path);
-
             m_mapper.writeValue(buff, object);
 
             buff.flush();
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
-        }
-        finally
-        {
-            IO.close(buff);
         }
     }
 
@@ -462,7 +419,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         {
             m_mapper.writeValue(file, object);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
         }
@@ -475,9 +432,9 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
         try
         {
-            m_mapper.writeValue(new NoCloseProxyOutputStream(stream), object);
+            m_mapper.writeValue(stream, object);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
         }
@@ -490,9 +447,9 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
         try
         {
-            m_mapper.writeValue(new NoCloseProxyWriter(writer), object);
+            m_mapper.writeValue(writer, object);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
         }
@@ -507,7 +464,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         {
             return m_mapper.writeValueAsString(object);
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
         }
@@ -537,7 +494,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
                 return bindJSON(getMapperForJSON().writeValueAsString(object));
             }
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
             throw new ParserException(e);
         }
