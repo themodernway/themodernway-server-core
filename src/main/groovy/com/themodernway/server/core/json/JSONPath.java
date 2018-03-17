@@ -84,6 +84,10 @@ public final class JSONPath
 
         private static final AtomicBoolean SUBT = new AtomicBoolean(false);
 
+        private JSONPathStatics()
+        {
+        }
+
         public static final boolean usehash(final boolean flag)
         {
             return SUBT.getAndSet(flag);
