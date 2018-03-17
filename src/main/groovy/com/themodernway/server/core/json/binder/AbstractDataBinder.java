@@ -62,7 +62,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
     protected M copy()
     {
-        m_mapper = CommonOps.cast(m_mapper.copy());
+        m_mapper = CommonOps.CAST(m_mapper.copy());
 
         return m_mapper;
     }
@@ -327,7 +327,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         }
         if (String.class.equals(claz))
         {
-            return CommonOps.cast(toString(object));
+            return CommonOps.CAST(toString(object));
         }
         try
         {

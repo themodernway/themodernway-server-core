@@ -30,21 +30,9 @@ public class JSONArrayPredicateValidator extends AbstractPredicateAttributeTypeV
     @Override
     public void validate(final IJSONValue json, final ValidationContext ctx)
     {
-        if (null == json)
-        {
-            ctx.addBadTypeError(getName());
+        JSONArray valu;
 
-            return;
-        }
-        final JSONArray valu = json.getAsArray();
-
-        if (null == valu)
-        {
-            ctx.addBadTypeError(getName());
-
-            return;
-        }
-        if (false == test(valu))
+        if ((null == json) || (null == (valu = json.getAsArray())) || (false == test(valu)))
         {
             ctx.addBadTypeError(getName());
         }

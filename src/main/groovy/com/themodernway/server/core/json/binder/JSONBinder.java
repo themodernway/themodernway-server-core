@@ -57,7 +57,7 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
         }
         if (String.class.equals(claz))
         {
-            return CommonOps.cast(toJSONString(object));
+            return CommonOps.CAST(toJSONString(object));
         }
         try
         {

@@ -28,21 +28,9 @@ public class StringPredicateValidator extends AbstractPredicateAttributeTypeVali
     @Override
     public void validate(final IJSONValue json, final ValidationContext ctx)
     {
-        if (null == json)
-        {
-            ctx.addBadTypeError(getName());
+        String valu;
 
-            return;
-        }
-        final String valu = json.getAsString();
-
-        if (null == valu)
-        {
-            ctx.addBadTypeError(getName());
-
-            return;
-        }
-        if (false == test(valu))
+        if ((null == json) || (null == (valu = json.getAsString())) || (false == test(valu)))
         {
             ctx.addBadTypeError(getName());
         }

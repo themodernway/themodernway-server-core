@@ -123,7 +123,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
                             if ((null != type) && (ClientHttpRequestFactory.class.isAssignableFrom(type)))
                             {
-                                return CommonOps.cast(type.newInstance());
+                                return CommonOps.CAST(type.newInstance());
                             }
                             else if (logger().isErrorEnabled())
                             {

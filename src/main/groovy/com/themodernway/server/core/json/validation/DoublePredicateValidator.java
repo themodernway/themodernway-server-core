@@ -28,21 +28,9 @@ public class DoublePredicateValidator extends AbstractPredicateAttributeTypeVali
     @Override
     public void validate(final IJSONValue json, final ValidationContext ctx)
     {
-        if (null == json)
-        {
-            ctx.addBadTypeError(getName());
+        Double valu;
 
-            return;
-        }
-        final Double valu = json.getAsDouble();
-
-        if (null == valu)
-        {
-            ctx.addBadTypeError(getName());
-
-            return;
-        }
-        if (false == test(valu))
+        if ((null == json) || (null == (valu = json.getAsDouble())) || (false == test(valu)))
         {
             ctx.addBadTypeError(getName());
         }

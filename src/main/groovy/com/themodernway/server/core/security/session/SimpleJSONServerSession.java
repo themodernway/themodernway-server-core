@@ -226,7 +226,7 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public <T> T getAttribute(final String name)
     {
-        return CommonOps.cast(getAttributes().get(CommonOps.requireNonNull(name)));
+        return CommonOps.CAST(getAttributes().get(CommonOps.requireNonNull(name)));
     }
 
     @Override

@@ -248,9 +248,9 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
         getServerContext().getResolvedExpression(expr, otherwise)
     }
 
-    public <T> T cast(Object value)
+    public <T> T CAST(Object value)
     {
-        CommonOps.cast(value)
+        CommonOps.CAST(value)
     }
 
     public boolean isNull(Object value)

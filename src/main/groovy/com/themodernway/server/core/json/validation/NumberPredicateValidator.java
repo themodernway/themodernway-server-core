@@ -28,21 +28,9 @@ public class NumberPredicateValidator extends AbstractPredicateAttributeTypeVali
     @Override
     public void validate(final IJSONValue json, final ValidationContext ctx)
     {
-        if (null == json)
-        {
-            ctx.addBadTypeError(getName());
+        Number valu;
 
-            return;
-        }
-        final Number valu = json.getAsNumber();
-
-        if (null == valu)
-        {
-            ctx.addBadTypeError(getName());
-
-            return;
-        }
-        if (false == test(valu))
+        if ((null == json) || (null == (valu = json.getAsNumber())) || (false == test(valu)))
         {
             ctx.addBadTypeError(getName());
         }

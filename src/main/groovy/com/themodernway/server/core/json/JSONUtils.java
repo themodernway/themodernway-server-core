@@ -25,10 +25,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.script.Invocable;
+import javax.script.ScriptException;
+
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.json.JSONType;
+import com.themodernway.common.api.types.INativeFunction;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
+
+import groovy.lang.Closure;
 
 public final class JSONUtils
 {
@@ -326,12 +332,48 @@ public final class JSONUtils
 
     public static final Boolean asBoolean(final Object object)
     {
-        return ((object instanceof Boolean) ? ((Boolean) object) : CommonOps.cast(null));
+        return ((object instanceof Boolean) ? ((Boolean) object) : CommonOps.NULL());
     }
 
     public static final Date asDate(final Object object)
     {
         return ((object instanceof Date) ? new Date(((Date) object).getTime()) : null);
+    }
+
+    private static final Object[] arguments(final Object target, final Object[] args)
+    {
+        final Object[] list = new Object[args.length + 1];
+
+        list[0] = target;
+
+        for (int i = 0; i < args.length; i++)
+        {
+            list[i + 1] = args[i];
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static final <T> INativeFunction<T> asNativeFunction(final Object object)
+    {
+        if (object instanceof Closure)
+        {
+            return (target, args) -> ((Closure<T>) object).call(arguments(target, args));
+        }
+        if (object instanceof Invocable)
+        {
+            return (target, args) -> {
+                try
+                {
+                    return CommonOps.CAST(((Invocable) object).invokeFunction(target.toString(), args));
+                }
+                catch (NoSuchMethodException | ScriptException e)
+                {
+                    return CommonOps.NULL();
+                }
+            };
+        }
+        return null;
     }
 
     public static final JSONType getJSONType(final Object object)

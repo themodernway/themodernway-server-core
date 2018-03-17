@@ -27,6 +27,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.json.JSONArrayDefinition;
 import com.themodernway.common.api.json.JSONType;
+import com.themodernway.common.api.types.INativeFunction;
 import com.themodernway.server.core.CoreThrowables;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
@@ -210,6 +211,12 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         return JSONUtils.asDate(get(index));
     }
 
+    @Override
+    public INativeFunction<?> getAsNativeFunction(final int index)
+    {
+        return null;
+    }
+
     public <T> T asType(final Class<T> type)
     {
         if (type.isAssignableFrom(getClass()))
@@ -222,7 +229,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
 
             if (String.class.equals(type))
             {
-                return CommonOps.cast(bind.toString(this));
+                return CommonOps.CAST(bind.toString(this));
             }
             if (bind.canSerializeType(type))
             {

@@ -28,6 +28,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.json.JSONObjectDefinition;
 import com.themodernway.common.api.json.JSONType;
+import com.themodernway.common.api.types.INativeFunction;
 import com.themodernway.server.core.CoreThrowables;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
@@ -35,7 +36,7 @@ import com.themodernway.server.core.json.validation.IJSONValidator;
 import com.themodernway.server.core.json.validation.IValidationContext;
 
 @JacksonXmlRootElement(localName = "result")
-public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
+public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled, IJSONPathEnabled
 {
     private static final long serialVersionUID = 1L;
 
@@ -106,6 +107,12 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         put(CommonOps.requireNonNull(key), value);
 
         return this;
+    }
+
+    @Override
+    public IEvaluationContext path()
+    {
+        return JSONPath.parse(this);
     }
 
     @Override
@@ -229,6 +236,12 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     }
 
     @Override
+    public INativeFunction<?> getAsNativeFunction(final String key)
+    {
+        return null;
+    }
+
+    @Override
     public Object remove(final String key)
     {
         return super.remove(CommonOps.requireNonNull(key));
@@ -282,7 +295,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
             if (String.class.equals(type))
             {
-                return CommonOps.cast(bind.toString(this));
+                return CommonOps.CAST(bind.toString(this));
             }
             final T valu = bind.convert(this, type);
 

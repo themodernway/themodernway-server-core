@@ -38,9 +38,9 @@ import com.themodernway.common.api.types.IFixedIterable;
 
 public interface ICoreBase
 {
-    default <T> T cast(final Object value)
+    default <T> T CAST(final Object value)
     {
-        return CommonOps.cast(value);
+        return CommonOps.CAST(value);
     }
 
     default boolean isNull(final Object value)
@@ -136,7 +136,7 @@ public interface ICoreBase
 
     default <T> List<T> toList(final Collection<? extends T> source, final Predicate<? super T> predicate)
     {
-        return CommonOps.cast(CommonOps.toList(source.stream(), predicate));
+        return CommonOps.CAST(CommonOps.toList(source.stream(), predicate));
     }
 
     default <T> List<T> toList(final ICursor<? extends T> source)

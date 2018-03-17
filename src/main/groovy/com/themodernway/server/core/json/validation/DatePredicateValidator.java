@@ -29,21 +29,9 @@ public class DatePredicateValidator extends AbstractPredicateAttributeTypeValida
     @Override
     public void validate(final IJSONValue json, final ValidationContext ctx)
     {
-        if (null == json)
-        {
-            ctx.addBadTypeError(getName());
+        Date valu;
 
-            return;
-        }
-        final Date valu = json.getAsDate();
-
-        if (null == valu)
-        {
-            ctx.addBadTypeError(getName());
-
-            return;
-        }
-        if (false == test(valu))
+        if ((null == json) || (null == (valu = json.getAsDate())) || (false == test(valu)))
         {
             ctx.addBadTypeError(getName());
         }

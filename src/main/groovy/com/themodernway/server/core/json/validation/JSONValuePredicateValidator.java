@@ -28,13 +28,7 @@ public class JSONValuePredicateValidator extends AbstractPredicateAttributeTypeV
     @Override
     public void validate(final IJSONValue json, final ValidationContext ctx)
     {
-        if (null == json)
-        {
-            ctx.addBadTypeError(getName());
-
-            return;
-        }
-        if (false == test(json))
+        if ((null == json) || (false == test(json)))
         {
             ctx.addBadTypeError(getName());
         }

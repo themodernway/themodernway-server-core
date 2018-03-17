@@ -28,21 +28,9 @@ public class LongPredicateValidator extends AbstractPredicateAttributeTypeValida
     @Override
     public void validate(final IJSONValue json, final ValidationContext ctx)
     {
-        if (null == json)
-        {
-            ctx.addBadTypeError(getName());
+        Long valu;
 
-            return;
-        }
-        final Long valu = json.getAsLong();
-
-        if (null == valu)
-        {
-            ctx.addBadTypeError(getName());
-
-            return;
-        }
-        if (false == test(valu))
+        if ((null == json) || (null == (valu = json.getAsLong())) || (false == test(valu)))
         {
             ctx.addBadTypeError(getName());
         }
