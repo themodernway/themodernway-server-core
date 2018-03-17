@@ -48,7 +48,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '2.0.11-RELEASE'
+version = '2.0.12-RELEASE'
 
 group = 'com.themodernway'
 
@@ -244,7 +244,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.0.11-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.0.12-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.1')
     compile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
@@ -260,7 +260,7 @@ dependencies {
     compile(group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.3')
     compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5')
     compile(group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.10.0')
-    compile(group: 'com.google.guava', name: 'guava', version: '24.0-jre')
+    compile(group: 'com.google.guava', name: 'guava', version: '24.1-jre')
     compile(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.2')
     compile(group: 'com.github.ben-manes.caffeine', name: 'jcache', version: '2.6.2')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.4')
@@ -272,7 +272,7 @@ dependencies {
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.4')
     compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.9.4')
     compile(group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.4')
-    compile(group: 'com.jayway.jsonpath', name: 'json-path', version: '2.3.0')
+    compile(group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0')
     compile(group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
