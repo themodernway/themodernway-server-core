@@ -41,6 +41,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.logging.LoggingOps;
 
@@ -56,7 +57,7 @@ public final class IO
 
     public static final int     MAXIMUM_BUFFER_CAPACITY = DEFAULT_BUFFER_CAPACITY * 4;
 
-    public static final Charset UTF_8_CHARSET           = Charset.forName(CommonOps.CHARSET_UTF_8);
+    public static final Charset UTF_8_CHARSET           = Charset.forName(StringOps.CHARSET_UTF_8);
 
     private IO()
     {

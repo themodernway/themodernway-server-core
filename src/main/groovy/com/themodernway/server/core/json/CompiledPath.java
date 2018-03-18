@@ -16,22 +16,25 @@
 
 package com.themodernway.server.core.json;
 
-import com.jayway.jsonpath.Predicate;
-import com.jayway.jsonpath.TypeRef;
+import com.jayway.jsonpath.JsonPath;
+import com.themodernway.common.api.java.util.CommonOps;
 
-public interface IEvaluationContext
+public final class CompiledPath
 {
-    public <T> T eval(String path, Predicate... filters);
+    private final JsonPath m_path;
 
-    public <T> T eval(String path, Class<T> type, Predicate... filters);
+    protected CompiledPath(final JsonPath path)
+    {
+        m_path = CommonOps.requireNonNull(path);
+    }
 
-    public <T> T eval(String path, TypeRef<T> type);
+    public String getPath()
+    {
+        return m_path.getPath();
+    }
 
-    public <T> T eval(CompiledPath path);
-
-    public <T> T eval(CompiledPath path, Class<T> type);
-
-    public <T> T eval(CompiledPath path, TypeRef<T> type);
-
-    public IEvaluationContext limit(int size);
+    protected JsonPath getJsonPath()
+    {
+        return m_path;
+    }
 }

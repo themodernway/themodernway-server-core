@@ -72,6 +72,14 @@ class ScriptingProxy extends CoreGroovySupport
 
     def methodMissing(String name, args)
     {
+        if (m_engine instanceof Invocable)
+        {
+            if (null == args)
+            {
+                return (m_engine as Invocable).invokeFunction(name)
+            }
+            return (m_engine as Invocable).invokeFunction(name, args as Object[])
+        }
         def pref = ''
 
         if ((null == args) || (args.size() == 0))

@@ -28,9 +28,6 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.json.JSONArrayDefinition;
 import com.themodernway.common.api.json.JSONType;
 import com.themodernway.common.api.types.INativeFunction;
-import com.themodernway.server.core.CoreThrowables;
-import com.themodernway.server.core.json.binder.BinderType;
-import com.themodernway.server.core.json.binder.IBinder;
 
 @JacksonXmlRootElement(localName = "results")
 public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
@@ -160,7 +157,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public boolean isNativeFunction(final int index)
     {
-        return false;
+        return JSONUtils.isNativeFunction(get(index));
     }
 
     @Override
@@ -214,38 +211,12 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public INativeFunction<?> getAsNativeFunction(final int index)
     {
-        return null;
+        return JSONUtils.asNativeFunction(get(index));
     }
 
     public <T> T asType(final Class<T> type)
     {
-        if (type.isAssignableFrom(getClass()))
-        {
-            return type.cast(this);
-        }
-        try
-        {
-            final IBinder bind = BinderType.JSON.getBinder();
-
-            if (String.class.equals(type))
-            {
-                return CommonOps.CAST(bind.toString(this));
-            }
-            if (bind.canSerializeType(type))
-            {
-                final T valu = bind.convert(this, type);
-
-                if (valu != null)
-                {
-                    return valu;
-                }
-            }
-        }
-        catch (final ParserException e)
-        {
-            CoreThrowables.handle(e);
-        }
-        throw new ClassCastException(getClass().getName() + " cannot be coerced into " + type.getName());
+        return JSONUtils.asType(this, type);
     }
 
     @Override

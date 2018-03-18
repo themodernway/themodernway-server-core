@@ -25,16 +25,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.script.Invocable;
-import javax.script.ScriptException;
-
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.json.JSONType;
 import com.themodernway.common.api.types.INativeFunction;
+import com.themodernway.server.core.CoreThrowables;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
-
-import groovy.lang.Closure;
 
 public final class JSONUtils
 {
@@ -68,6 +64,39 @@ public final class JSONUtils
 
     private JSONUtils()
     {
+    }
+
+    public static final <T> T asType(final Object self, final Class<T> type)
+    {
+        if (null == self)
+        {
+            return null;
+        }
+        if (type.isAssignableFrom(self.getClass()))
+        {
+            return type.cast(self);
+        }
+        try
+        {
+            if (String.class.equals(type))
+            {
+                return CommonOps.CAST(OBJECT_BINDER.toString(self));
+            }
+            if (OBJECT_BINDER.canSerializeType(type))
+            {
+                final T valu = OBJECT_BINDER.convert(self, type);
+
+                if (valu != null)
+                {
+                    return valu;
+                }
+            }
+        }
+        catch (final ParserException e)
+        {
+            CoreThrowables.handle(e);
+        }
+        throw new ClassCastException(self.getClass().getName() + " cannot be coerced into " + type.getName());
     }
 
     public static final String toJSONString(final Object value, final boolean strict)
@@ -178,6 +207,11 @@ public final class JSONUtils
     public static final boolean isDate(final Object object)
     {
         return (object instanceof Date);
+    }
+
+    public static final boolean isNativeFunction(final Object object)
+    {
+        return false;
     }
 
     public static final Integer asInteger(final Object object)
@@ -340,39 +374,8 @@ public final class JSONUtils
         return ((object instanceof Date) ? new Date(((Date) object).getTime()) : null);
     }
 
-    private static final Object[] arguments(final Object target, final Object[] args)
-    {
-        final Object[] list = new Object[args.length + 1];
-
-        list[0] = target;
-
-        for (int i = 0; i < args.length; i++)
-        {
-            list[i + 1] = args[i];
-        }
-        return list;
-    }
-
-    @SuppressWarnings("unchecked")
     public static final <T> INativeFunction<T> asNativeFunction(final Object object)
     {
-        if (object instanceof Closure)
-        {
-            return (target, args) -> ((Closure<T>) object).call(arguments(target, args));
-        }
-        if (object instanceof Invocable)
-        {
-            return (target, args) -> {
-                try
-                {
-                    return CommonOps.CAST(((Invocable) object).invokeFunction(target.toString(), args));
-                }
-                catch (NoSuchMethodException | ScriptException e)
-                {
-                    return CommonOps.NULL();
-                }
-            };
-        }
         return null;
     }
 

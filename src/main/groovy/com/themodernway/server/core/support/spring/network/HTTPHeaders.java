@@ -29,23 +29,27 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.json.IJSONEnabled;
+import com.themodernway.server.core.json.IJSONObjectSupplier;
 import com.themodernway.server.core.json.JSONObject;
 
-public class HTTPHeaders extends HttpHeaders
+public class HTTPHeaders extends HttpHeaders implements IJSONObjectSupplier, IJSONEnabled
 {
     private static final long            serialVersionUID       = 1L;
 
-    public static final String           DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.0.12 (Language=Java/%s)", System.getProperty("java.version"));
+    public static final String           DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.0.14 (Language=Java/%s)", System.getProperty("java.version"));
 
     public static final MediaType        XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
 
-    public static final MediaType        JSON_MEDIA_TYPE        = MediaType.APPLICATION_JSON_UTF8;
+    public static final MediaType        JSON_MEDIA_TYPE        = MediaType.APPLICATION_JSON;
+
+    public static final MediaType        JSON_MEDIA_TYPE_UTF8   = MediaType.APPLICATION_JSON_UTF8;
 
     public static final MediaType        YAML_MEDIA_TYPE        = MediaType.valueOf(IHTTPConstants.CONTENT_TYPE_APPLICATION_YAML);
 
     public static final MediaType        PROPERTIES_MEDIA_TYPE  = MediaType.valueOf(IHTTPConstants.CONTENT_TYPE_TEXT_PROPERTIES);
 
-    private static final List<MediaType> JSON_ACCEPT_MEDIA_TYPE = CommonOps.toList(JSON_MEDIA_TYPE);
+    private static final List<MediaType> JSON_ACCEPT_MEDIA_TYPE = CommonOps.toList(JSON_MEDIA_TYPE, JSON_MEDIA_TYPE_UTF8);
 
     public HTTPHeaders(final HttpHeaders head)
     {
@@ -131,6 +135,7 @@ public class HTTPHeaders extends HttpHeaders
         return this;
     }
 
+    @Override
     public JSONObject toJSONObject()
     {
         final JSONObject make = new JSONObject();
@@ -150,6 +155,7 @@ public class HTTPHeaders extends HttpHeaders
         return make;
     }
 
+    @Override
     public String toJSONString()
     {
         return toJSONObject().toJSONString();
@@ -159,5 +165,11 @@ public class HTTPHeaders extends HttpHeaders
     public String toString()
     {
         return toJSONString();
+    }
+
+    @Override
+    public String toJSONString(final boolean strict)
+    {
+        return toJSONObject().toJSONString(strict);
     }
 }

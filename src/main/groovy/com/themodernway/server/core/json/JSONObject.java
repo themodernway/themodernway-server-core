@@ -29,9 +29,6 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.json.JSONObjectDefinition;
 import com.themodernway.common.api.json.JSONType;
 import com.themodernway.common.api.types.INativeFunction;
-import com.themodernway.server.core.CoreThrowables;
-import com.themodernway.server.core.json.binder.BinderType;
-import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.json.validation.IJSONValidator;
 import com.themodernway.server.core.json.validation.IValidationContext;
 
@@ -42,6 +39,11 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
     public JSONObject()
     {
+    }
+
+    public JSONObject(final int capacity)
+    {
+        super(capacity);
     }
 
     public JSONObject(final Map<String, ?> map)
@@ -184,7 +186,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public boolean isNativeFunction(final String key)
     {
-        return false;
+        return JSONUtils.isNativeFunction(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
@@ -238,7 +240,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public INativeFunction<?> getAsNativeFunction(final String key)
     {
-        return null;
+        return JSONUtils.asNativeFunction(get(CommonOps.requireNonNull(key)));
     }
 
     @Override
@@ -285,30 +287,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
     public <T> T asType(final Class<T> type)
     {
-        if (type.isAssignableFrom(getClass()))
-        {
-            return type.cast(this);
-        }
-        try
-        {
-            final IBinder bind = BinderType.JSON.getBinder();
-
-            if (String.class.equals(type))
-            {
-                return CommonOps.CAST(bind.toString(this));
-            }
-            final T valu = bind.convert(this, type);
-
-            if (valu != null)
-            {
-                return valu;
-            }
-        }
-        catch (final ParserException e)
-        {
-            CoreThrowables.handle(e);
-        }
-        throw new ClassCastException(getClass().getName() + " cannot be coerced into " + type.getName());
+        return JSONUtils.asType(this, type);
     }
 
     @Override

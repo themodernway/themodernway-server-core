@@ -16,28 +16,91 @@
 
 package com.themodernway.server.core.json;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URL;
+import java.nio.file.Path;
+
+import org.springframework.core.io.Resource;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
+import com.jayway.jsonpath.Predicate;
 import com.jayway.jsonpath.ReadContext;
 import com.jayway.jsonpath.TypeRef;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.file.vfs.IFileItem;
+import com.themodernway.server.core.io.ReaderProxyInputStream;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
 
 public final class JSONPath
 {
-    private static final Configuration CONFIGURATION = Configuration.builder().mappingProvider(new JacksonMappingProvider(new CoreObjectMapper())).build();
+    private static final Option[]      CONFIGOPTIONS = { Option.ALWAYS_RETURN_LIST, Option.SUPPRESS_EXCEPTIONS };
+
+    private static final Configuration CONFIGURATION = Configuration.builder().mappingProvider(new JacksonMappingProvider(new CoreObjectMapper())).options(CONFIGOPTIONS).build();
 
     private JSONPath()
     {
     }
 
+    public static final CompiledPath compile(final String path, final Predicate... filters)
+    {
+        return new CompiledPath(JsonPath.compile(path, filters));
+    }
+
+    public static final IEvaluationContext parse(final String string)
+    {
+        return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(string), CONFIGURATION));
+    }
+
     public static final IEvaluationContext parse(final Object object)
     {
         return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(object), CONFIGURATION));
+    }
+
+    public static final IEvaluationContext parse(final URL url) throws IOException
+    {
+        return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(url), CONFIGURATION));
+    }
+
+    public static final IEvaluationContext parse(final InputStream stream) throws IOException
+    {
+        return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(stream), CONFIGURATION));
+    }
+
+    public static final IEvaluationContext parse(final Reader reader) throws IOException
+    {
+        return parse(new ReaderProxyInputStream(reader));
+    }
+
+    public static final IEvaluationContext parse(final File file) throws IOException
+    {
+        return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(file), CONFIGURATION));
+    }
+
+    public static final IEvaluationContext parse(final Path path) throws IOException
+    {
+        return parse(path.toFile());
+    }
+
+    public static final IEvaluationContext parse(final IFileItem file) throws IOException
+    {
+        try (InputStream stream = file.getInputStream())
+        {
+            return parse(stream);
+        }
+    }
+
+    public static final IEvaluationContext parse(final Resource resource) throws IOException
+    {
+        try (InputStream stream = resource.getInputStream())
+        {
+            return parse(stream);
+        }
     }
 
     private static final class InternalEvaluationContext implements IEvaluationContext
@@ -50,21 +113,39 @@ public final class JSONPath
         }
 
         @Override
-        public final <T> T eval(final String path)
+        public final <T> T eval(final String path, final Predicate... filters)
         {
-            return m_ctxt.read(JSONPathStatics.PATH(path));
+            return m_ctxt.read(CommonOps.requireNonNull(path), filters);
         }
 
         @Override
-        public final <T> T eval(final String path, final Class<T> type)
+        public final <T> T eval(final String path, final Class<T> type, final Predicate... filters)
         {
-            return m_ctxt.read(JSONPathStatics.PATH(path), CommonOps.requireNonNull(type));
+            return m_ctxt.read(CommonOps.requireNonNull(path), CommonOps.requireNonNull(type), filters);
+        }
+
+        @Override
+        public final <T> T eval(final CompiledPath path)
+        {
+            return m_ctxt.read(path.getJsonPath());
+        }
+
+        @Override
+        public final <T> T eval(final CompiledPath path, final Class<T> type)
+        {
+            return m_ctxt.read(path.getJsonPath(), CommonOps.requireNonNull(type));
         }
 
         @Override
         public final <T> T eval(final String path, final TypeRef<T> type)
         {
-            return m_ctxt.read(JSONPathStatics.PATH(path), CommonOps.requireNonNull(type));
+            return m_ctxt.read(CommonOps.requireNonNull(path), CommonOps.requireNonNull(type));
+        }
+
+        @Override
+        public final <T> T eval(final CompiledPath path, final TypeRef<T> type)
+        {
+            return m_ctxt.read(path.getJsonPath(), CommonOps.requireNonNull(type));
         }
 
         @Override
@@ -73,33 +154,6 @@ public final class JSONPath
             m_ctxt = m_ctxt.limit(Math.max(size, 0));
 
             return this;
-        }
-    }
-
-    public static final class JSONPathStatics
-    {
-        private static final String        MARK = "$";
-
-        private static final String        HASH = "#";
-
-        private static final AtomicBoolean SUBT = new AtomicBoolean(false);
-
-        private JSONPathStatics()
-        {
-        }
-
-        public static final boolean usehash(final boolean flag)
-        {
-            return SUBT.getAndSet(flag);
-        }
-
-        static final String PATH(final String path)
-        {
-            if (SUBT.get())
-            {
-                return StringOps.requireTrimOrNull(path).replaceAll(HASH, MARK);
-            }
-            return StringOps.requireTrimOrNull(path);
         }
     }
 }

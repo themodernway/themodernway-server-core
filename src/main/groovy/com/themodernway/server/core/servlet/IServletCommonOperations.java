@@ -233,6 +233,11 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         return emptyList();
     }
 
+    default List<String> getDefaultRoles()
+    {
+        return toUnmodifiableList("ANONYMOUS");
+    }
+
     default String getConfigurationParameter(final String name)
     {
         return null;
