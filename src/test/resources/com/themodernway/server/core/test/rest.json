@@ -11,7 +11,8 @@
         "geo": {
             "lat": "24.8918",
             "lng": "21.8984"
-        }
+        },
+        "primary": true
     },
     "phone": "210.067.6132",
     "website": "elvis.io",

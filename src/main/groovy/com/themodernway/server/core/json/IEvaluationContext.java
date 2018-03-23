@@ -21,11 +21,11 @@ import com.jayway.jsonpath.TypeRef;
 
 public interface IEvaluationContext
 {
-    public <T> T eval(String path, Predicate... filters);
+    public <T> T eval(CharSequence path, Predicate... filters);
 
-    public <T> T eval(String path, Class<T> type, Predicate... filters);
+    public <T> T eval(CharSequence path, Class<T> type, Predicate... filters);
 
-    public <T> T eval(String path, TypeRef<T> type);
+    public <T> T eval(CharSequence path, TypeRef<T> type);
 
     public <T> T eval(CompiledPath path);
 

@@ -21,9 +21,7 @@ import java.util.List;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
@@ -38,7 +36,7 @@ public interface IServerCoreTesting
 
         public static final void setupServerCoreLogging(final String location) throws IOException
         {
-            LoggingOps.init(CommonOps.requireNonNull(location));
+            // empty by design.
         }
 
         public static final void closeServerCoreLogging()

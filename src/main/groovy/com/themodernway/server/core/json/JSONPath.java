@@ -47,17 +47,17 @@ public final class JSONPath
     {
     }
 
-    public static final CompiledPath compile(final String path, final Predicate... filters)
+    public static final CompiledPath compile(final CharSequence path, final Predicate... filters)
     {
-        return new CompiledPath(JsonPath.compile(path, filters));
+        return new CompiledPath(JsonPath.compile(CommonOps.requireNonNull(path.toString()), filters));
     }
 
-    public static final IEvaluationContext parse(final String string)
+    public static final IEvaluationContext parse(final CharSequence json)
     {
-        return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(string), CONFIGURATION));
+        return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(json.toString()), CONFIGURATION));
     }
 
-    public static final IEvaluationContext parse(final Object object)
+    public static final IEvaluationContext parse(final JSONObject object)
     {
         return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(object), CONFIGURATION));
     }
@@ -107,21 +107,21 @@ public final class JSONPath
     {
         private ReadContext m_ctxt;
 
-        public InternalEvaluationContext(final ReadContext ctxt)
+        private InternalEvaluationContext(final ReadContext ctxt)
         {
             m_ctxt = CommonOps.requireNonNull(ctxt);
         }
 
         @Override
-        public final <T> T eval(final String path, final Predicate... filters)
+        public final <T> T eval(final CharSequence path, final Predicate... filters)
         {
-            return m_ctxt.read(CommonOps.requireNonNull(path), filters);
+            return m_ctxt.read(CommonOps.requireNonNull(path.toString()), filters);
         }
 
         @Override
-        public final <T> T eval(final String path, final Class<T> type, final Predicate... filters)
+        public final <T> T eval(final CharSequence path, final Class<T> type, final Predicate... filters)
         {
-            return m_ctxt.read(CommonOps.requireNonNull(path), CommonOps.requireNonNull(type), filters);
+            return m_ctxt.read(CommonOps.requireNonNull(path.toString()), CommonOps.requireNonNull(type), filters);
         }
 
         @Override
@@ -137,9 +137,9 @@ public final class JSONPath
         }
 
         @Override
-        public final <T> T eval(final String path, final TypeRef<T> type)
+        public final <T> T eval(final CharSequence path, final TypeRef<T> type)
         {
-            return m_ctxt.read(CommonOps.requireNonNull(path), CommonOps.requireNonNull(type));
+            return m_ctxt.read(CommonOps.requireNonNull(path.toString()), CommonOps.requireNonNull(type));
         }
 
         @Override

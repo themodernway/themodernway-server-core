@@ -57,11 +57,6 @@ public abstract class ServerCoreSpecification extends Specification implements I
         m_logging = true
     }
 
-    def level(String level = "INFO")
-    {
-        LoggingOps.level(level)
-    }
-
     public Logger logger()
     {
         if (null == m_logger)

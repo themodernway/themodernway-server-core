@@ -39,27 +39,41 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     {
         setup:
         def bind = BinderType.JSON.getBinder()
-        def json = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/rest.json'))
-        def text = json.toString()
+        def rest = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/rest.json'))
+        def look = rest.path().eval('$.name')
 
         expect:
-        text == text
+        look != null
 
         cleanup:
-        echo text
+        echo json(look)
     }
 
     def "test binder 2"()
     {
         setup:
         def bind = BinderType.JSON.getBinder()
-        def json = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/rest.json'))
-        def look = json.path().eval('$.name')
+        def rest = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/rest.json'))
+        def look = rest.path().eval('$.address')
 
         expect:
         look != null
 
         cleanup:
-        echo look
+        echo json(look)
+    }
+
+    def "test binder 3"()
+    {
+        setup:
+        def bind = BinderType.JSON.getBinder()
+        def rest = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/rest.json'))
+        def look = rest.path().eval('$.oops')
+
+        expect:
+        look != null
+
+        cleanup:
+        echo json(look)
     }
 }

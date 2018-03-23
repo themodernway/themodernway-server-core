@@ -72,6 +72,7 @@ public class CoreWebContextLoaderListener extends ContextLoaderListener
         {
             logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() COMPLETE");
         }
+        ServerContextInstance.setApplicationContext(null);
     }
 
     @Override
