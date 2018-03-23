@@ -99,6 +99,9 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
 
         expect:
         answ.isAuthorized() == false
+
+        cleanup:
+        echo answ
     }
 
     def "Test Authorized AdminPOJO [USER]"()
@@ -109,6 +112,9 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
 
         expect:
         answ.isAuthorized() == false
+
+        cleanup:
+        echo answ
     }
 
     def "Test Authorized AdminPOJO [ADMIN]"()
@@ -119,6 +125,9 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
 
         expect:
         answ.isAuthorized() == true
+
+        cleanup:
+        echo answ
     }
 
     def "Test Authorized AdminPOJO [ADMIN,USER,TEST]"()
@@ -129,6 +138,9 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
 
         expect:
         answ.isAuthorized() == true
+
+        cleanup:
+        echo answ
     }
 
     def "Test Authorized AdminUserPOJO [TEST]"()
@@ -139,6 +151,9 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
 
         expect:
         answ.isAuthorized() == false
+
+        cleanup:
+        echo answ
     }
 
     def "Test Authorized AdminUserPOJO [USER]"()
@@ -149,6 +164,9 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
 
         expect:
         answ.isAuthorized() == false
+
+        cleanup:
+        echo answ
     }
 
     def "Test Authorized AdminUserPOJO [ADMIN]"()
@@ -159,12 +177,14 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
 
         expect:
         answ.isAuthorized() == false
+
+        cleanup:
+        echo answ
     }
 
     def "Test Authorized AdminUserPOJO [ADMIN,USER]"()
     {
         setup:
-        level("DEBUG")
         def test = new AdminUserPOJO('ADMIN')
         def answ = isAuthorized(test, ['ADMIN', 'USER'])
 
@@ -172,13 +192,12 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         answ.isAuthorized() == true
 
         cleanup:
-        level()
+        echo answ
     }
 
     def "Test Authorized AuthAllPOJO [ADMIN,USER]"()
     {
         setup:
-        level("DEBUG")
         def test = new AuthAllPOJO('ALL')
         def answ = isAuthorized(test, ['ADMIN', 'USER'])
 
@@ -186,13 +205,12 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         answ.isAuthorized() == true
 
         cleanup:
-        level()
+        echo answ
     }
 
     def "Test Authorized AuthAllPOJO [ADMIN]"()
     {
         setup:
-        level("DEBUG")
         def test = new AuthAllPOJO('ALL')
         def answ = isAuthorized(test, ['ADMIN'])
 
@@ -200,13 +218,12 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         answ.isAuthorized() == false
 
         cleanup:
-        level()
+        echo answ
     }
 
     def "Test Authorized AuthAllPOJO [ADMIN,USER] not [ANON]"()
     {
         setup:
-        level("DEBUG")
         def test = new AuthAllPOJO('ALL')
         def answ = isAuthorized(test, ['ADMIN', 'USER', 'ANON'])
 
@@ -214,13 +231,12 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         answ.isAuthorized() == false
 
         cleanup:
-        level()
+        echo answ
     }
 
     def "Test Authorized AuthAnyPOJO [ADMIN,USER]"()
     {
         setup:
-        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['ADMIN', 'USER'])
 
@@ -228,13 +244,12 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         answ.isAuthorized() == true
 
         cleanup:
-        level()
+        echo answ
     }
 
     def "Test Authorized AuthAnyPOJO [ADMIN]"()
     {
         setup:
-        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['ADMIN'])
 
@@ -242,13 +257,12 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         answ.isAuthorized() == true
 
         cleanup:
-        level()
+        echo answ
     }
 
     def "Test Authorized AuthAnyPOJO [USER]"()
     {
         setup:
-        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['USER'])
 
@@ -256,13 +270,12 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         answ.isAuthorized() == true
 
         cleanup:
-        level()
+        echo answ
     }
 
     def "Test Authorized AuthAnyPOJO [USER,TEST]"()
     {
         setup:
-        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['USER', 'TEST'])
 
@@ -270,13 +283,12 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         answ.isAuthorized() == true
 
         cleanup:
-        level()
+        echo answ
     }
 
     def "Test Authorized AuthAnyPOJO [TEST]"()
     {
         setup:
-        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['TEST'])
 
@@ -284,13 +296,12 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         answ.isAuthorized() == false
 
         cleanup:
-        level()
+        echo answ
     }
 
     def "Test Authorized AuthAnyPOJO [ADMIN,USER] not [ANON]"()
     {
         setup:
-        level("DEBUG")
         def test = new AuthAnyPOJO('ANY')
         def answ = isAuthorized(test, ['ADMIN', 'USER', 'ANON'])
 
@@ -298,6 +309,6 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
         answ.isAuthorized() == false
 
         cleanup:
-        level()
+        echo answ
     }
 }
