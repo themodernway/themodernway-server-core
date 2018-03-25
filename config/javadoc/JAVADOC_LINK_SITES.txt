@@ -5,4 +5,4 @@ http://spockframework.github.io/spock/javadoc/1.0
 https://docs.spring.io/spring/docs/5.0.4.RELEASE/javadoc-api
 https://docs.spring.io/spring-security/site/docs/5.0.3.RELEASE/api
 https://docs.spring.io/spring-session/docs/2.0.2.RELEASE/api
-http://docs.themodernway.com/documents/javadoc/themodernway-common-v2/
+http://docs.themodernway.com/docs/javadoc/themodernway-common-v2/
