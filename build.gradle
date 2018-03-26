@@ -48,7 +48,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '2.1.0-RELEASE'
+version = '2.1.1-RELEASE'
 
 group = 'com.themodernway'
 
@@ -243,8 +243,8 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.1.0-RELEASE')
-    compile(group: 'org.ow2.asm', name: 'asm', version: '6.1')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.1.1-RELEASE')
+    compile(group: 'org.ow2.asm', name: 'asm', version: '6.1.1')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.25')
@@ -260,15 +260,15 @@ dependencies {
     compile(group: 'com.google.guava', name: 'guava', version: '24.1-jre')
     compile(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.2')
     compile(group: 'com.github.ben-manes.caffeine', name: 'jcache', version: '2.6.2')
-    compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.4')
-    compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.4')
-    compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.4')
-    compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.9.4')
-    compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.4')
-    compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.4')
-    compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.4')
-    compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.9.4')
-    compile(group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.4')
+    compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.5')
+    compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5')
+    compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.5')
+    compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.9.5')
+    compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.5')
+    compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.5')
+    compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.5')
+    compile(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.9.5')
+    compile(group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.5')
     compile(group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0')
     compile(group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
