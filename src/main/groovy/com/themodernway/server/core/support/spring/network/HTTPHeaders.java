@@ -40,7 +40,7 @@ public class HTTPHeaders extends HttpHeaders
 {
     private static final long           serialVersionUID       = 1L;
 
-    public static final String          DEFAULT_USER_AGENT     = String.format("The-Modern-Way/1.3.3 (Language=Java/%s)", System.getProperty("java.version"));
+    public static final String          DEFAULT_USER_AGENT     = String.format("The-Modern-Way/1.3.4 (Language=Java/%s)", System.getProperty("java.version"));
 
     public static final MediaType       XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
 
@@ -81,7 +81,7 @@ public class HTTPHeaders extends HttpHeaders
     {
         final Enumeration<String> names = request.getHeaderNames();
 
-        final HashMap<String, List<String>> head = new HashMap<String, List<String>>();
+        final HashMap<String, List<String>> head = new HashMap<>();
 
         while (names.hasMoreElements())
         {
@@ -93,7 +93,7 @@ public class HTTPHeaders extends HttpHeaders
 
                 if (null != vals)
                 {
-                    final ArrayList<String> list = new ArrayList<String>(1);
+                    final ArrayList<String> list = new ArrayList<>(1);
 
                     while (vals.hasMoreElements())
                     {
@@ -221,7 +221,7 @@ public class HTTPHeaders extends HttpHeaders
 
     public JSONObject toJSONObject()
     {
-        final Map<String, List<String>> make = new LinkedHashMap<String, List<String>>();
+        final Map<String, List<String>> make = new LinkedHashMap<>();
 
         for (final String k : keySet())
         {
