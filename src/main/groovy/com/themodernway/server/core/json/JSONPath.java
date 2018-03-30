@@ -57,11 +57,6 @@ public final class JSONPath
         return CommonOps.requireNonNull(CommonOps.requireNonNull(valu).toString());
     }
 
-    private static final JsonPath cast(final ICompiledPath path)
-    {
-        return CommonOps.CAST(CommonOps.requireNonNull(CommonOps.requireNonNull(path).getCompiledPath()));
-    }
-
     private JSONPath()
     {
     }
@@ -152,6 +147,16 @@ public final class JSONPath
     private static final class InternalEvaluationContext implements IEvaluationContext
     {
         private DocumentContext m_ctxt;
+
+        private static final JsonPath cast(final ICompiledPath path)
+        {
+            return CommonOps.CAST(CommonOps.requireNonNull(CommonOps.requireNonNull(path).getCompiledPath()));
+        }
+
+        private static final String cast(final CharSequence valu)
+        {
+            return CommonOps.requireNonNull(CommonOps.requireNonNull(valu).toString());
+        }
 
         private InternalEvaluationContext(final DocumentContext ctxt)
         {

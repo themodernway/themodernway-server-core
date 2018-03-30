@@ -287,7 +287,6 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public JSONObject toJSONObject()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new JSONObject("list", this);
     }
 }
