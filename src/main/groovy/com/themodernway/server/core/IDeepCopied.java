@@ -11,18 +11,13 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License. ThreadLocal.withInitial(supplier);
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core;
 
 @FunctionalInterface
-public interface IJSONPathEnabled
+public interface IDeepCopied<T extends IDeepCopied<T>>
 {
-    public IEvaluationContext path(boolean copy);
-
-    default IEvaluationContext path()
-    {
-        return path(false);
-    }
+    public T deep();
 }

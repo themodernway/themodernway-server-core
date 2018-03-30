@@ -16,13 +16,9 @@
 
 package com.themodernway.server.core.json;
 
-@FunctionalInterface
-public interface IJSONPathEnabled
-{
-    public IEvaluationContext path(boolean copy);
+import java.util.function.Predicate;
 
-    default IEvaluationContext path()
-    {
-        return path(false);
-    }
+@FunctionalInterface
+public interface IEvaluationListener extends Predicate<IEvaluationListenerResult>
+{
 }

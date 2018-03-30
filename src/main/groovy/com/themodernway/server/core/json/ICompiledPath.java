@@ -16,25 +16,9 @@
 
 package com.themodernway.server.core.json;
 
-import com.jayway.jsonpath.JsonPath;
-import com.themodernway.common.api.java.util.CommonOps;
-
-public final class CompiledPath
+public interface ICompiledPath
 {
-    private final JsonPath m_path;
+    public boolean isDefinite();
 
-    protected CompiledPath(final JsonPath path)
-    {
-        m_path = CommonOps.requireNonNull(path);
-    }
-
-    public String getPath()
-    {
-        return m_path.getPath();
-    }
-
-    protected JsonPath getJsonPath()
-    {
-        return m_path;
-    }
+    public <T> T getCompiledPath();
 }

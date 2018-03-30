@@ -16,13 +16,11 @@
 
 package com.themodernway.server.core.json;
 
-@FunctionalInterface
-public interface IJSONPathEnabled
+public interface IEvaluationListenerResult
 {
-    public IEvaluationContext path(boolean copy);
+    public int index();
 
-    default IEvaluationContext path()
-    {
-        return path(false);
-    }
+    public String path();
+
+    public Object result();
 }

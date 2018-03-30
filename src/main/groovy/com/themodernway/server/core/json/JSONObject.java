@@ -29,13 +29,14 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.json.JSONObjectDefinition;
 import com.themodernway.common.api.json.JSONType;
 import com.themodernway.common.api.types.INativeFunction;
+import com.themodernway.server.core.IDeepCopied;
 import com.themodernway.server.core.json.validation.IJSONValidator;
 import com.themodernway.server.core.json.validation.IValidationContext;
 
 @JacksonXmlRootElement(localName = "result")
-public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled, IJSONPathEnabled
+public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IDeepCopied<JSONObject>, IJSONObjectSupplier, IJSONStreamAware, IJSONEnabled, IJSONPathEnabled
 {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 6519927319475402111L;
 
     public JSONObject()
     {
@@ -112,8 +113,18 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     }
 
     @Override
-    public IEvaluationContext path()
+    public JSONObject deep()
     {
+        return JSONUtils.deep(this);
+    }
+
+    @Override
+    public IEvaluationContext path(final boolean copy)
+    {
+        if (copy)
+        {
+            return JSONPath.parse(deep());
+        }
         return JSONPath.parse(this);
     }
 
@@ -288,6 +299,12 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     public <T> T asType(final Class<T> type)
     {
         return JSONUtils.asType(this, type);
+    }
+
+    @Override
+    public JSONObject toJSONObject()
+    {
+        return this;
     }
 
     @Override

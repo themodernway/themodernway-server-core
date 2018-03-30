@@ -28,9 +28,10 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.json.JSONArrayDefinition;
 import com.themodernway.common.api.json.JSONType;
 import com.themodernway.common.api.types.INativeFunction;
+import com.themodernway.server.core.IDeepCopied;
 
 @JacksonXmlRootElement(localName = "results")
-public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONStreamAware, IJSONEnabled
+public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IDeepCopied<JSONArray>, IJSONObjectSupplier, IJSONStreamAware, IJSONEnabled
 {
     private static final long serialVersionUID = 928145403133304801L;
 
@@ -275,5 +276,18 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     public boolean isJSONType(final int index, final JSONType type)
     {
         return (type == getJSONType(index));
+    }
+
+    @Override
+    public JSONArray deep()
+    {
+        return JSONUtils.deep(this);
+    }
+
+    @Override
+    public JSONObject toJSONObject()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

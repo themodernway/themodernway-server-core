@@ -99,6 +99,46 @@ public final class JSONUtils
         throw new ClassCastException(self.getClass().getName() + " cannot be coerced into " + type.getName());
     }
 
+    public static final JSONObject deep(final JSONObject object)
+    {
+        if (null == object)
+        {
+            return null;
+        }
+        if (object.isEmpty())
+        {
+            return new JSONObject();
+        }
+        try
+        {
+            return OBJECT_BINDER.bindJSON(OBJECT_BINDER.toString(object));
+        }
+        catch (final ParserException e)
+        {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static final JSONArray deep(final JSONArray array)
+    {
+        if (null == array)
+        {
+            return null;
+        }
+        if (array.isEmpty())
+        {
+            return new JSONArray();
+        }
+        try
+        {
+            return OBJECT_BINDER.bindJSON(OBJECT_BINDER.toString(new JSONObject("array", array))).getAsArray("array");
+        }
+        catch (final ParserException e)
+        {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     public static final String toJSONString(final Object value, final boolean strict)
     {
         try

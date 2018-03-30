@@ -21,17 +21,43 @@ import com.jayway.jsonpath.TypeRef;
 
 public interface IEvaluationContext
 {
+    public String json();
+
+    public <T> T model();
+
     public <T> T eval(CharSequence path, Predicate... filters);
 
     public <T> T eval(CharSequence path, Class<T> type, Predicate... filters);
 
     public <T> T eval(CharSequence path, TypeRef<T> type);
 
-    public <T> T eval(CompiledPath path);
+    public <T> T eval(ICompiledPath path);
 
-    public <T> T eval(CompiledPath path, Class<T> type);
+    public <T> T eval(ICompiledPath path, Class<T> type);
 
-    public <T> T eval(CompiledPath path, TypeRef<T> type);
+    public <T> T eval(ICompiledPath path, TypeRef<T> type);
+
+    public IEvaluationContext set(CharSequence path, Object valu, Predicate... filters);
+
+    public IEvaluationContext set(ICompiledPath path, Object valu);
+
+    public IEvaluationContext put(CharSequence path, CharSequence pkey, Object valu, Predicate... filters);
+
+    public IEvaluationContext put(ICompiledPath path, CharSequence pkey, Object valu);
+
+    public IEvaluationContext add(CharSequence path, Object valu, Predicate... filters);
+
+    public IEvaluationContext add(ICompiledPath path, Object valu);
+
+    public IEvaluationContext map(CharSequence path, IMappingFunction func, Predicate... filters);
+
+    public IEvaluationContext map(ICompiledPath path, IMappingFunction func);
+
+    public IEvaluationContext delete(CharSequence path, Predicate... filters);
+
+    public IEvaluationContext delete(ICompiledPath path);
 
     public IEvaluationContext limit(int size);
+
+    public IEvaluationContext listen(IEvaluationListener... listeners);
 }

@@ -20,5 +20,6 @@
         "name": "Johns Group",
         "catchPhrase": "Configurable multimedia task-force",
         "bs": "generate enterprise e-tailers"
-    }
+    },
+    "list": [1, 2, 3, 4, 5]
 }
