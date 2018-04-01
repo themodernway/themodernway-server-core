@@ -16,7 +16,7 @@
 
 package com.themodernway.server.core.json;
 
-import com.themodernway.common.api.json.JSONStringify;
+import com.themodernway.common.api.types.json.JSONStringify;
 
 public interface IJSONEnabled extends JSONStringify
 {

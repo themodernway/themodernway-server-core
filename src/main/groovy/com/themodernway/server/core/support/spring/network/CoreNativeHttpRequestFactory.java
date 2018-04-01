@@ -23,7 +23,7 @@ public class CoreNativeHttpRequestFactory extends HttpComponentsClientHttpReques
 {
     public CoreNativeHttpRequestFactory()
     {
-        this(16, 256);
+        this(Runtime.getRuntime().availableProcessors(), 256);
     }
 
     public CoreNativeHttpRequestFactory(final int route, final int total)

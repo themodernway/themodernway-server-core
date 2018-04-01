@@ -26,15 +26,14 @@ import java.util.Map;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.json.JSONObjectDefinition;
-import com.themodernway.common.api.json.JSONType;
 import com.themodernway.common.api.types.INativeFunction;
-import com.themodernway.server.core.IDeepCopied;
+import com.themodernway.common.api.types.json.JSONObjectDefinition;
+import com.themodernway.common.api.types.json.JSONType;
 import com.themodernway.server.core.json.validation.IJSONValidator;
 import com.themodernway.server.core.json.validation.IValidationContext;
 
 @JacksonXmlRootElement(localName = "result")
-public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IDeepCopied<JSONObject>, IJSONObjectSupplier, IJSONStreamAware, IJSONEnabled, IJSONPathEnabled
+public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, IJSONObjectSupplier, IJSONStreamAware, IJSONEnabled, IJSONPathEnabled
 {
     private static final long serialVersionUID = 6519927319475402111L;
 
@@ -105,6 +104,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         }
     }
 
+    @Override
     public JSONObject set(final String key, final Object value)
     {
         put(CommonOps.requireNonNull(key), value);
@@ -260,6 +260,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         return super.remove(CommonOps.requireNonNull(key));
     }
 
+    @Override
     public JSONObject minus(final String... keys)
     {
         CommonOps.requireNonNull(keys);
@@ -271,6 +272,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         return this;
     }
 
+    @Override
     public JSONObject minus(final List<String> keys)
     {
         CommonOps.requireNonNull(keys);

@@ -25,13 +25,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.json.JSONArrayDefinition;
-import com.themodernway.common.api.json.JSONType;
 import com.themodernway.common.api.types.INativeFunction;
-import com.themodernway.server.core.IDeepCopied;
+import com.themodernway.common.api.types.json.JSONArrayDefinition;
+import com.themodernway.common.api.types.json.JSONType;
 
 @JacksonXmlRootElement(localName = "results")
-public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IDeepCopied<JSONArray>, IJSONObjectSupplier, IJSONStreamAware, IJSONEnabled
+public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONObjectSupplier, IJSONStreamAware, IJSONEnabled
 {
     private static final long serialVersionUID = 928145403133304801L;
 
@@ -56,6 +55,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         return this;
     }
 
+    @Override
     public JSONArray push(final Object value)
     {
         add(value);
@@ -288,5 +288,75 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     public JSONObject toJSONObject()
     {
         return new JSONObject("list", this);
+    }
+
+    @Override
+    public JSONArray reverse()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <T> T pop()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <T> T shift()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JSONArray push(final Object... objects)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JSONArray put(final int index, final Object value)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JSONArray fill(final Object value)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JSONArray fill(final Object value, final int beg)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JSONArray fill(final Object value, final int beg, final int end)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JSONArray unshift(final Object value)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JSONArray unshift(final Object... objects)
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.springframework.mail.MailMessage;
 
-import com.themodernway.common.api.json.JSONStringify;
+import com.themodernway.common.api.types.json.JSONStringify;
 import com.themodernway.server.core.json.IJSONObjectSupplier;
 
 public interface ICoreSimpleMailMessage extends ISmartMailMessage, MailMessage, IJSONObjectSupplier, JSONStringify

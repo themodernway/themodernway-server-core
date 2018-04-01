@@ -20,7 +20,7 @@ import static java.lang.System.err
 
 import org.slf4j.Logger
 
-import com.themodernway.common.api.json.JSONStringify
+import com.themodernway.common.api.types.json.JSONStringify
 import com.themodernway.server.core.logging.LoggingOps
 import com.themodernway.server.core.logging.MDC
 import com.themodernway.server.core.support.spring.IServerContext

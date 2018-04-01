@@ -18,7 +18,7 @@ package com.themodernway.server.core.json.validation;
 
 import java.util.Date;
 
-import com.themodernway.common.api.json.JSONType;
+import com.themodernway.common.api.types.json.JSONType;
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
 
