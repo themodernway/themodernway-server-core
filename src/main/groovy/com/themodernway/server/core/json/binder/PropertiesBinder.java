@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
-import com.themodernway.server.core.json.ParserException;
+import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.json.binder.PropertiesBinder.CorePropertiesMapper;
 
 public class PropertiesBinder extends AbstractDataBinder<CorePropertiesMapper>

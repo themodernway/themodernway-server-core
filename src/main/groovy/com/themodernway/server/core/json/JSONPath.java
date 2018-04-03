@@ -37,6 +37,7 @@ import com.jayway.jsonpath.TypeRef;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;

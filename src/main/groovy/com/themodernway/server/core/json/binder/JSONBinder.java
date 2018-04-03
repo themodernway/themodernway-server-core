@@ -25,7 +25,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.json.ParserException;
+import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.json.binder.ICoreObjectMapper.Modules;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
 

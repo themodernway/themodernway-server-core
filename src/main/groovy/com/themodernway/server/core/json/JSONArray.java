@@ -20,11 +20,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.types.ICursor;
+import com.themodernway.common.api.types.IFixedIterable;
 import com.themodernway.common.api.types.INativeFunction;
 import com.themodernway.common.api.types.json.JSONArrayDefinition;
 import com.themodernway.common.api.types.json.JSONType;
@@ -43,16 +48,88 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         super(Math.max(0, size));
     }
 
-    public JSONArray(final List<?> value)
+    public JSONArray(final List<?> source)
     {
-        addAll(CommonOps.requireNonNull(value));
+        append(source);
     }
 
-    public JSONArray append(final List<?> value)
+    public JSONArray(final Stream<?> source)
     {
-        addAll(CommonOps.requireNonNull(value));
+        append(source);
+    }
+
+    public JSONArray(final ICursor<?> source)
+    {
+        append(source);
+    }
+
+    public JSONArray(final IFixedIterable<?> source)
+    {
+        append(source);
+    }
+
+    public JSONArray append(final List<?> source)
+    {
+        addAll(CommonOps.requireNonNull(source));
 
         return this;
+    }
+
+    public JSONArray append(final int beg, final List<?> source)
+    {
+        addAll(beg, CommonOps.requireNonNull(source));
+
+        return this;
+    }
+
+    public JSONArray append(final Set<?> source)
+    {
+        return append(CommonOps.toList(source));
+    }
+
+    public JSONArray append(final int beg, final Set<?> source)
+    {
+        return append(beg, CommonOps.toList(source));
+    }
+
+    public JSONArray append(final Object... objects)
+    {
+        return append(CommonOps.toList(objects));
+    }
+
+    public JSONArray append(final int beg, final Object... objects)
+    {
+        return append(beg, CommonOps.toList(objects));
+    }
+
+    public JSONArray append(final Stream<?> source)
+    {
+        return append(CommonOps.toList(source));
+    }
+
+    public JSONArray append(final int beg, final Stream<?> source)
+    {
+        return append(beg, CommonOps.toList(source));
+    }
+
+    public JSONArray append(final ICursor<?> source)
+    {
+        return append(CommonOps.toList(source));
+    }
+
+    public JSONArray append(final int beg, final ICursor<?> source)
+    {
+        return append(beg, CommonOps.toList(source));
+    }
+
+    public JSONArray append(final IFixedIterable<?> source)
+    {
+        return append(CommonOps.toList(source));
+    }
+
+    public JSONArray append(final int beg, final IFixedIterable<?> source)
+    {
+        return append(beg, CommonOps.toList(source));
     }
 
     @Override
@@ -293,70 +370,100 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public JSONArray reverse()
     {
-        // TODO Auto-generated method stub
-        return null;
+        Collections.reverse(this);
+
+        return this;
     }
 
     @Override
     public <T> T pop()
     {
-        // TODO Auto-generated method stub
-        return null;
+        final int siz = size();
+
+        if (siz > 0)
+        {
+            return CommonOps.CAST(remove(siz - 1));
+        }
+        throw new IllegalArgumentException("empty list for pop().");
     }
 
     @Override
     public <T> T shift()
     {
-        // TODO Auto-generated method stub
-        return null;
+        final int siz = size();
+
+        if (siz > 0)
+        {
+            return CommonOps.CAST(remove(0));
+        }
+        throw new IllegalArgumentException("empty list for shift().");
     }
 
     @Override
     public JSONArray push(final Object... objects)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return append(objects);
     }
 
     @Override
     public JSONArray put(final int index, final Object value)
     {
-        // TODO Auto-generated method stub
-        return null;
+        set(index, value);
+
+        return this;
     }
 
     @Override
     public JSONArray fill(final Object value)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return fill(value, 0);
     }
 
     @Override
     public JSONArray fill(final Object value, final int beg)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return fill(value, beg, size());
     }
 
     @Override
     public JSONArray fill(final Object value, final int beg, final int end)
     {
-        // TODO Auto-generated method stub
-        return null;
+        if (beg < 0)
+        {
+            throw new IllegalArgumentException("start index is negative.");
+        }
+        final int siz = size();
+
+        if (beg > siz)
+        {
+            throw new IllegalArgumentException("start index larger than size.");
+        }
+        if (beg > end)
+        {
+            throw new IllegalArgumentException("start index larger than last index.");
+        }
+        if (siz < end)
+        {
+            ensureCapacity(end);
+        }
+        for (int i = beg; i < end; i++)
+        {
+            set(i, value);
+        }
+        return this;
     }
 
     @Override
     public JSONArray unshift(final Object value)
     {
-        // TODO Auto-generated method stub
-        return null;
+        add(0, value);
+
+        return this;
     }
 
     @Override
     public JSONArray unshift(final Object... objects)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return append(0, objects);
     }
 }

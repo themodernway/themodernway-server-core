@@ -30,9 +30,9 @@ import org.springframework.http.converter.AbstractHttpMessageConverter;
 
 import com.fasterxml.jackson.dataformat.yaml.UTF8Reader;
 import com.fasterxml.jackson.dataformat.yaml.UTF8Writer;
+import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.ParserException;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.logging.LoggingOps;

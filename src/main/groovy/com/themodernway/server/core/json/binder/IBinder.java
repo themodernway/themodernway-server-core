@@ -31,9 +31,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.ParserException;
 
 public interface IBinder
 {
