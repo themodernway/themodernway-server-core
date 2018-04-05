@@ -16,8 +16,9 @@
 
 package com.themodernway.server.core;
 
-import java.text.ParseException;
 import java.util.function.Supplier;
+
+import com.themodernway.common.api.types.ParserException;
 
 public interface IFormattingParser<T>
 {
@@ -25,7 +26,7 @@ public interface IFormattingParser<T>
 
     public String format(Supplier<T> value);
 
-    public T parse(String string) throws ParseException;
+    public T parse(String string) throws ParserException;
 
-    public T parse(Supplier<String> string) throws ParseException;
+    public T parse(Supplier<String> string) throws ParserException;
 }

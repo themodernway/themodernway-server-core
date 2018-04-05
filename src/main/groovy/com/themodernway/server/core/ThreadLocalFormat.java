@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.util.function.Supplier;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.common.api.types.ParserException;
 
 public abstract class ThreadLocalFormat<T, F extends Format> extends ThreadLocalValued<F> implements IFormattingParser<T>
 {
@@ -42,13 +43,20 @@ public abstract class ThreadLocalFormat<T, F extends Format> extends ThreadLocal
     }
 
     @Override
-    public T parse(final String source) throws ParseException
+    public T parse(final String source) throws ParserException
     {
-        return CommonOps.CAST(getValue().parseObject(CommonOps.requireNonNull(source)));
+        try
+        {
+            return CommonOps.CAST(getValue().parseObject(CommonOps.requireNonNull(source)));
+        }
+        catch (final ParseException e)
+        {
+           throw new ParserException(e);
+        }
     }
 
     @Override
-    public T parse(final Supplier<String> supplier) throws ParseException
+    public T parse(final Supplier<String> supplier) throws ParserException
     {
         return parse(supplier.get());
     }

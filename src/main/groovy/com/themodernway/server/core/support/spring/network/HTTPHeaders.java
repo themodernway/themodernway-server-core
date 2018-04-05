@@ -30,10 +30,10 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.IJSONEnabled;
-import com.themodernway.server.core.json.IJSONObjectSupplier;
+import com.themodernway.server.core.json.JSONObjectSupplier;
 import com.themodernway.server.core.json.JSONObject;
 
-public class HTTPHeaders extends HttpHeaders implements IJSONObjectSupplier, IJSONEnabled
+public class HTTPHeaders extends HttpHeaders implements JSONObjectSupplier, IJSONEnabled
 {
     private static final long            serialVersionUID       = 1L;
 

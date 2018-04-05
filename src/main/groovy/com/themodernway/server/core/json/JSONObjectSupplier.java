@@ -17,7 +17,7 @@
 package com.themodernway.server.core.json;
 
 @FunctionalInterface
-public interface IJSONObjectSupplier
+public interface JSONObjectSupplier
 {
     public JSONObject toJSONObject();
 }

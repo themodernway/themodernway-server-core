@@ -22,9 +22,9 @@ import java.util.List;
 
 import org.springframework.session.Session;
 
-import com.themodernway.server.core.json.IJSONObjectSupplier;
+import com.themodernway.server.core.json.JSONObjectSupplier;
 
-public interface IServerSession extends Session, IJSONObjectSupplier, Serializable
+public interface IServerSession extends Session, JSONObjectSupplier, Serializable
 {
     public static final long     DEFAULT_MAX_INACTIVE_INTERVAL_SECONDS  = 1800L;
 

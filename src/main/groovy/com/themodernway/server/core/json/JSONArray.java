@@ -35,7 +35,7 @@ import com.themodernway.common.api.types.json.JSONArrayDefinition;
 import com.themodernway.common.api.types.json.JSONType;
 
 @JacksonXmlRootElement(localName = "results")
-public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, IJSONObjectSupplier, IJSONStreamAware, IJSONEnabled
+public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, JSONObjectSupplier, IJSONStreamAware, IJSONEnabled
 {
     private static final long serialVersionUID = 928145403133304801L;
 
