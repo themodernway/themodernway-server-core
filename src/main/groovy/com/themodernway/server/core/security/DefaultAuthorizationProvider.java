@@ -30,7 +30,10 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
 
     public DefaultAuthorizationProvider()
     {
-        logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "DefaultAuthorizationProvider()");
+        if (logger().isInfoEnabled())
+        {
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "DefaultAuthorizationProvider()");
+        }
     }
 
     @Override

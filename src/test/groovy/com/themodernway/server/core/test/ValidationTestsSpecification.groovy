@@ -25,7 +25,7 @@ public class ValidationTestsSpecification extends ServerCoreSpecification implem
 {
     def setupSpec()
     {
-        setupServerCoreDefault(
+        setupServerCoreDefault(ValidationTestsSpecification,
                 "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
                 "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
                 )

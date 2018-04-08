@@ -19,66 +19,93 @@ package com.themodernway.server.core.support.spring.testing;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
 public interface IServerCoreTesting
 {
-    public static class TestingOps
+    public static final class TestingOps
     {
-        public static final void setupServerCoreLogging() throws IOException
+        private static Logger logger = LoggingOps.getLogger(IServerCoreTesting.class);
+
+        public static final void setupServerCoreLogging(final Class<?> type) throws IOException
         {
-            // empty by design.
+            logger = LoggingOps.getLogger(type);
         }
 
-        public static final void setupServerCoreLogging(final String location) throws IOException
+        public static final void setupServerCoreLogging(final Class<?> type, final String location) throws IOException
         {
-            // empty by design.
+            logger = LoggingOps.getLogger(type);
         }
 
         public static final void closeServerCoreLogging()
         {
-            // empty by design.
+            if (logger.isInfoEnabled())
+            {
+                logger.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("finished TestingOps.closeServerCoreLogging()."));
+            }
         }
 
-        public static final IServerContext setupServerCoreContext(final String... locations)
+        public static final void setupServerCoreContext(final Class<?> type, final String name, final String... locations)
         {
+            final String show = StringOps.toCommaSeparated(locations);
+
+            if (logger.isInfoEnabled())
+            {
+                logger.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("starting TestingOps.setupServerCoreContext(%s) (%s).", name, show));
+            }
             final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(locations, false);
 
-            final ServerContextInstance instance = ServerContextInstance.getServerContextInstance();
+            context.setDisplayName(StringOps.toTrimOrElse(name, "ServerCoreTesting_ApplicationContext"));
 
             ServerContextInstance.setApplicationContext(context);
 
             context.refresh();
 
-            return instance;
+            if (logger.isInfoEnabled())
+            {
+                logger.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("finished TestingOps.setupServerCoreContext(%s) (%s).", name, show));
+            }
         }
 
-        public static final IServerContext setupServerCoreDefault(final String... locations) throws IOException
+        public static final void setupServerCoreDefault(final Class<?> type, final String name, final String... locations) throws IOException
         {
-            setupServerCoreLogging();
+            setupServerCoreLogging(type);
 
-            return setupServerCoreContext(locations);
+            setupServerCoreContext(type, name, locations);
         }
 
-        public static final IServerContext setupServerCoreDefault(final List<String> locations) throws IOException
+        public static final void setupServerCoreDefault(final Class<?> type, final String name, final List<String> locations) throws IOException
         {
-            setupServerCoreLogging();
+            setupServerCoreLogging(type);
 
-            return setupServerCoreContext(locations);
+            setupServerCoreContext(type, name, locations);
         }
 
-        public static final IServerContext setupServerCoreContext(final List<String> locations)
+        public static final void setupServerCoreContext(final Class<?> type, final String name, final List<String> locations)
         {
-            return setupServerCoreContext(StringOps.toArray(locations));
+            setupServerCoreContext(type, name, StringOps.toArray(locations));
         }
 
         public static final void closeServerCoreContext()
         {
-            closeServerCoreContext(ServerContextInstance.getServerContextInstance());
+            final IServerContext instance = ServerContextInstance.getServerContextInstance();
+
+            if (instance.isApplicationContextInitialized())
+            {
+                final ClassPathXmlApplicationContext context = ((ClassPathXmlApplicationContext) instance.getApplicationContext());
+
+                if (null != context)
+                {
+                    context.close();
+                }
+            }
+            ServerContextInstance.setApplicationContext(null);
         }
 
         public static final void closeServerCoreDefault()
@@ -86,17 +113,6 @@ public interface IServerCoreTesting
             closeServerCoreContext();
 
             closeServerCoreLogging();
-        }
-
-        public static final void closeServerCoreContext(final IServerContext instance)
-        {
-            final ClassPathXmlApplicationContext context = ((ClassPathXmlApplicationContext) instance.getApplicationContext());
-
-            if (null != context)
-            {
-                context.close();
-            }
-            ServerContextInstance.setApplicationContext(null);
         }
 
         private TestingOps()

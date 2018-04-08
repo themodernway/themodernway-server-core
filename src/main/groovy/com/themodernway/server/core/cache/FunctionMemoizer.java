@@ -19,6 +19,8 @@ package com.themodernway.server.core.cache;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
+import com.themodernway.common.api.java.util.CommonOps;
+
 public final class FunctionMemoizer<T, R>
 {
     private final ConcurrentHashMap<T, R> m_cache = new ConcurrentHashMap<>();
@@ -29,11 +31,15 @@ public final class FunctionMemoizer<T, R>
 
     private final Function<T, R> remember(final Function<T, R> function)
     {
+        CommonOps.requireNonNull(function);
+
         return input -> m_cache.computeIfAbsent(input, function);
     }
 
     public static final <T, R> Function<T, R> memoize(final Function<T, R> function)
     {
+        CommonOps.requireNonNull(function);
+
         return new FunctionMemoizer<T, R>().remember(function);
     }
 }

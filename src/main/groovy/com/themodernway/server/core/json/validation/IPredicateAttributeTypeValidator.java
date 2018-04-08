@@ -16,7 +16,8 @@
 
 package com.themodernway.server.core.json.validation;
 
-public interface IPredicateAttributeTypeValidator<T> extends IAttributeTypeValidator
+import java.util.function.Predicate;
+
+public interface IPredicateAttributeTypeValidator<T> extends IAttributeTypeValidator, Predicate<T>
 {
-    public boolean test(T value);
 }

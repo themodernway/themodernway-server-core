@@ -96,5 +96,4 @@ public interface IFileItemWrapper extends IFileItem
 
     @Override
     public IFileItemAttributes getAttributes() throws FileStorageException;
-
 }

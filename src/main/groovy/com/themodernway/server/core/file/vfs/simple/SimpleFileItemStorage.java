@@ -253,14 +253,14 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         private IOException        m_oops = null;
 
-        protected static final boolean isSet(final int bits, final int flag)
-        {
-            return ((bits & flag) == flag);
-        }
-
         protected static final int doSet(final int bits, final int flag)
         {
             return (bits | flag);
+        }
+
+        protected static final boolean isSet(final int bits, final int flag)
+        {
+            return ((bits & flag) == flag);
         }
 
         public SimpleFileItemAttributes(final SimpleFileItem item)

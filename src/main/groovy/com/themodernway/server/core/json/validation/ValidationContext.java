@@ -111,22 +111,6 @@ public class ValidationContext implements IValidationContext
     @Override
     public String getErrorString()
     {
-        final StringBuilder b = new StringBuilder();
-
-        boolean first = true;
-
-        for (final ValidationError e : m_errors)
-        {
-            if (first)
-            {
-                first = false;
-            }
-            else
-            {
-                b.append(StringOps.COMMA_LIST_SEPARATOR);
-            }
-            b.append(e.toString());
-        }
-        return b.toString();
+        return StringOps.toCommaSeparated(getErrors().stream().map(e -> e.toString()));
     }
 }

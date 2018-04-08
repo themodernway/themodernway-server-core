@@ -64,7 +64,7 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
     private final RestTemplate               m_rest_execs        = new RestTemplate(CommonOps.toList(new CoreJSONHttpMessageConverter()));
 
-    private final CoreFactoryCache           m_fact_cache        = new CoreFactoryCache();
+    private final CoreFactoryCache           m_fact_cache        = new CoreFactoryCache(m_has_logger);
 
     private final DefaultUriBuilderFactory   m_urlhandler        = new DefaultUriBuilderFactory();
 
@@ -85,16 +85,18 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
     protected static final class CoreFactoryCache extends AbstractConcurrentCache<ClientHttpRequestFactory> implements IHasLogging
     {
-        private final Logger m_has_logger = LoggingOps.getLogger(getClass());
+        private final Logger m_has_logger;
 
-        public CoreFactoryCache()
+        public CoreFactoryCache(final Logger logger)
         {
-            super("CoreFactoryCache");
+            this("CoreFactoryCache", logger);
         }
 
-        public CoreFactoryCache(final String named)
+        public CoreFactoryCache(final String named, final Logger logger)
         {
             super(named);
+
+            m_has_logger = logger;
         }
 
         @Override

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.json.path;
 
 import com.jayway.jsonpath.Predicate;
 import com.jayway.jsonpath.TypeRef;

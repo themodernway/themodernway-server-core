@@ -20,8 +20,8 @@ import com.jayway.jsonpath.TypeRef
 import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.json.JSONObject
-import com.themodernway.server.core.json.JSONPath
 import com.themodernway.server.core.json.binder.BinderType
+import com.themodernway.server.core.json.path.JSONPath
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
@@ -29,7 +29,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
 {
     def setupSpec()
     {
-        setupServerCoreDefault(
+        setupServerCoreDefault(JsonPathTestsSpecification,
                 "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
                 "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
                 )

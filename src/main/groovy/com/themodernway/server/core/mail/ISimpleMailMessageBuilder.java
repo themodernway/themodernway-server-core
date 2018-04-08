@@ -37,5 +37,5 @@ public interface ISimpleMailMessageBuilder
 
     public ISimpleMailMessageBuilder subject(String valu);
 
-    public CoreSimpleMailMessage make();
+    public ICoreSimpleMailMessage make();
 }

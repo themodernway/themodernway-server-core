@@ -19,6 +19,7 @@ package com.themodernway.server.core.support.spring;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeansException;
 import org.springframework.cache.CacheManager;
@@ -41,6 +42,9 @@ import com.themodernway.server.core.security.ICryptoProvider;
 import com.themodernway.server.core.security.session.IServerSessionRepository;
 import com.themodernway.server.core.security.session.IServerSessionRepositoryProvider;
 import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider;
+import com.themodernway.server.core.support.spring.network.PathParameters;
+
+import io.micrometer.core.instrument.MeterRegistry;
 
 public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPropertiesResolver, IHasLogging, ICoreBase
 {
@@ -82,6 +86,8 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
 
     public ICoreNetworkProvider network();
 
+    public PathParameters parameters(Map<String, ?> vars);
+
     public String uuid();
 
     public IScriptingProvider scripting();
@@ -95,4 +101,8 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public IMailSenderProvider getMailSenderProvider();
 
     public IMailSender getMailSender(String name);
+
+    public Optional<MeterRegistry> getMeterRegistry();
+
+    public Optional<MeterRegistry> getMeterRegistry(String name);
 }

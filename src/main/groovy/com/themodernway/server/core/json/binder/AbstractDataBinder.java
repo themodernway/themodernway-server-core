@@ -321,6 +321,10 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public <T> T convert(final Object object, final Class<T> claz) throws ParserException
     {
+        if (null == object)
+        {
+            return null;
+        }
         if (claz.isAssignableFrom(object.getClass()))
         {
             return claz.cast(object);
@@ -448,6 +452,8 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         try
         {
             m_mapper.writeValue(writer, object);
+
+            writer.flush();
         }
         catch (final IOException e)
         {

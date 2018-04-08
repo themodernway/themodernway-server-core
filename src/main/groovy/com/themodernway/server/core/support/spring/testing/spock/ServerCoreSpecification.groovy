@@ -22,8 +22,6 @@ import org.slf4j.Logger
 
 import com.themodernway.common.api.types.json.JSONStringify
 import com.themodernway.server.core.logging.LoggingOps
-import com.themodernway.server.core.logging.MDC
-import com.themodernway.server.core.support.spring.IServerContext
 import com.themodernway.server.core.support.spring.testing.IServerCoreTesting
 
 import groovy.transform.CompileStatic
@@ -32,24 +30,18 @@ import spock.lang.Specification
 @CompileStatic
 public abstract class ServerCoreSpecification extends Specification implements IServerCoreTesting
 {
-    private static IServerContext   s_context
-
     private Logger                  m_logger
 
     private boolean                 m_logging = true
 
-    public static final void setupServerCoreDefault(final String... locations) throws Exception
+    public static final void setupServerCoreDefault(final Class type, final String... locations) throws Exception
     {
-        MDC.put('session', "%-TEST-SESSION-%")
-
-        s_context = IServerCoreTesting.TestingOps.setupServerCoreDefault(locations)
+        TestingOps.setupServerCoreDefault(type, type.getSimpleName() + "_ApplicationContext", locations)
     }
 
     public static final void closeServerCoreDefault()
     {
-        IServerCoreTesting.TestingOps.closeServerCoreDefault()
-
-        s_context = null
+       TestingOps.closeServerCoreDefault()
     }
 
     def setup()

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.json.path;
 
 import java.io.File;
 import java.io.InputStream;
@@ -39,6 +39,7 @@ import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.file.vfs.IFileItem;
+import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
 

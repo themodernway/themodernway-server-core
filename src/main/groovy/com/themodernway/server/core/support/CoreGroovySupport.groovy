@@ -22,6 +22,9 @@ import java.util.function.DoubleSupplier
 import java.util.function.IntSupplier
 import java.util.function.LongSupplier
 import java.util.function.Supplier
+import java.util.stream.DoubleStream
+import java.util.stream.IntStream
+import java.util.stream.LongStream
 import java.util.stream.Stream
 
 import org.slf4j.Logger
@@ -56,9 +59,11 @@ import com.themodernway.server.core.support.spring.IServerContext
 import com.themodernway.server.core.support.spring.IServletContextCustomizerProvider
 import com.themodernway.server.core.support.spring.ServerContextInstance
 import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider
+import com.themodernway.server.core.support.spring.network.PathParameters
 
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
+import io.micrometer.core.instrument.MeterRegistry
 
 @CompileStatic
 public class CoreGroovySupport implements IServerContext, Closeable
@@ -690,13 +695,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Stream<T> toStream(T... source)
-    {
-         CommonOps.toStream(source)
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
     public <T> T[] toArray(T... source)
     {
         CommonOps.toArray(source)
@@ -750,6 +748,24 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public String getSystemProperty(String name, Supplier<String> otherwise)
     {
         getServerContext().getSystemProperty(name, otherwise)
+    }
+
+    @Memoized
+    public Optional<MeterRegistry> getMeterRegistry()
+    {
+        getServerContext().getMeterRegistry()
+    }
+
+    @Memoized
+    public Optional<MeterRegistry> getMeterRegistry(String name)
+    {
+        getServerContext().getMeterRegistry(name)
+    }
+
+    @Override
+    public PathParameters parameters(Map<String, ?> vars)
+    {
+        new PathParameters(requireNonNull(vars))
     }
 
     @Override
@@ -918,5 +934,60 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public String failIfNullBytePresent(String string)
     {
         StringOps.failIfNullBytePresent(string)
+    }
+
+    @Override
+    public <T> Stream<T> emptyStream()
+    {
+        CommonOps.emptyStream()
+    }
+
+    @Override
+    public <T> Stream<T> toStream(T source)
+    {
+        CommonOps.toStream(source)
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> Stream<T> toStream(T... source)
+    {
+        CommonOps.toStream(source)
+    }
+
+    @Override
+    public IntStream toStream(int source)
+    {
+        CommonOps.toStream(source)
+    }
+
+    @Override
+    public IntStream toStream(int... source)
+    {
+        CommonOps.toStream(source)
+    }
+
+    @Override
+    public LongStream toStream(long source)
+    {
+        CommonOps.toStream(source)
+    }
+
+    @Override
+    public LongStream toStream(long... source)
+    {
+        CommonOps.toStream(source)
+    }
+
+    @Override
+    public DoubleStream toStream(double source)
+    {
+        CommonOps.toStream(source)
+    }
+
+    @Override
+    public DoubleStream toStream(double... source)
+    {
+        CommonOps.toStream(source)
     }
 }

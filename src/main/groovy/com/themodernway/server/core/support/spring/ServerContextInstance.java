@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -48,6 +49,9 @@ import com.themodernway.server.core.security.ICryptoProvider;
 import com.themodernway.server.core.security.session.IServerSessionRepository;
 import com.themodernway.server.core.security.session.IServerSessionRepositoryProvider;
 import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider;
+import com.themodernway.server.core.support.spring.network.PathParameters;
+
+import io.micrometer.core.instrument.MeterRegistry;
 
 public class ServerContextInstance extends CoreJSONOperations implements IServerContext
 {
@@ -320,6 +324,12 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     }
 
     @Override
+    public final PathParameters parameters(final Map<String, ?> vars)
+    {
+        return new PathParameters(requireNonNull(vars));
+    }
+
+    @Override
     public final ICoreNetworkProvider network()
     {
         return requireNonNull(getBeanSafely("NetworkProvider", ICoreNetworkProvider.class), "NetworkProvider is null, initialization error.");
@@ -371,5 +381,17 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     public final CacheManager getCacheManager(final String name)
     {
         return getBeanSafely(requireNonNull(name), CacheManager.class);
+    }
+
+    @Override
+    public final Optional<MeterRegistry> getMeterRegistry()
+    {
+        return getMeterRegistry("CoreMeterRegistry");
+    }
+
+    @Override
+    public final Optional<MeterRegistry> getMeterRegistry(final String name)
+    {
+        return toOptional(getBeanSafely(requireNonNull(name), MeterRegistry.class));
     }
 }

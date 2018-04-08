@@ -23,7 +23,7 @@ public class ParaTestsSpecification extends ServerCoreSpecification implements C
 {
     def setupSpec()
     {
-        setupServerCoreDefault(
+        setupServerCoreDefault(ParaTestsSpecification,
                 "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
                 "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
                 )

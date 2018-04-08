@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.support.spring.network;
 
+import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
@@ -28,7 +29,17 @@ public class CoreNativeHttpRequestFactory extends HttpComponentsClientHttpReques
 
     public CoreNativeHttpRequestFactory(final int route, final int total)
     {
-        super(HttpClientBuilder.create().setMaxConnPerRoute(route).setMaxConnTotal(total).build());
+        this(HttpClientBuilder.create().setMaxConnPerRoute(route).setMaxConnTotal(total));
+    }
+
+    public CoreNativeHttpRequestFactory(final HttpClientBuilder builder)
+    {
+        this(builder.build());
+    }
+
+    public CoreNativeHttpRequestFactory(final HttpClient client)
+    {
+        super(client);
 
         setBufferRequestBody(false);
     }

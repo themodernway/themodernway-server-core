@@ -17,7 +17,8 @@
 package com.themodernway.server.core.security.tools;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
+import org.apache.commons.codec.digest.DigestUtils;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
@@ -34,13 +35,6 @@ public final class Digests
 
     public static final MessageDigest getMessageDigest(final String algorithm)
     {
-        try
-        {
-            return MessageDigest.getInstance(CommonOps.requireNonNull(algorithm));
-        }
-        catch (final NoSuchAlgorithmException e)
-        {
-            throw new IllegalArgumentException(e);
-        }
+        return DigestUtils.getDigest(CommonOps.requireNonNull(algorithm));
     }
 }

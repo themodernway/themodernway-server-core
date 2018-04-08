@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.json.path;
 
-public interface IEvaluationListenerResult
+@FunctionalInterface
+public interface IJSONPathEnabled
 {
-    public int index();
+    public IEvaluationContext path(boolean copy);
 
-    public String path();
-
-    public Object result();
+    default IEvaluationContext path()
+    {
+        return path(false);
+    }
 }

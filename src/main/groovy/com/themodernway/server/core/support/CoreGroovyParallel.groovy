@@ -18,13 +18,16 @@ package com.themodernway.server.core.support
 
 import com.themodernway.common.api.java.util.CommonOps
 
+import groovy.transform.CompileStatic
+import groovyx.gpars.GParsPoolUtil
 import groovyx.gpars.ParallelEnhancer
 
+@CompileStatic
 public class CoreGroovyParallel
 {
     public static final <T> T parallel(final T collection)
     {
-        ParallelEnhancer.enhanceInstance(CommonOps.requireNonNull(collection)).makeConcurrent()
+        GParsPoolUtil.makeConcurrent(ParallelEnhancer.enhanceInstance(CommonOps.requireNonNull(collection)))
     }
 
     public static final void pause(final long time)

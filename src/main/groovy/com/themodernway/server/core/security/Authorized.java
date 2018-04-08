@@ -25,11 +25,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Authorized
 {
-    String[] not() default {};
+    public String[] not() default {};
 
-    String[] all() default {};
+    public String[] all() default {};
 
-    String[] any() default {};
+    public String[] any() default {};
 
-    String[] value() default "USER";
+    public String[] value() default {};
 }

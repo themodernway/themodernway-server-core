@@ -23,7 +23,7 @@ public class CacheTestsSpecification extends ServerCoreSpecification implements 
 {
     def setupSpec()
     {
-        setupServerCoreDefault(
+        setupServerCoreDefault(CacheTestsSpecification,
             "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
             "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml",
             "classpath:/com/themodernway/server/core/config/CoreCaffieneCacheApplicationContext.xml"
@@ -45,7 +45,7 @@ public class CacheTestsSpecification extends ServerCoreSpecification implements 
 
         expect:
         test.get('uniq', String) == uniq
-        
+
         cleanup:
         echo core.getCacheNames()
     }

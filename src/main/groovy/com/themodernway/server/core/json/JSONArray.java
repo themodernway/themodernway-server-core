@@ -16,9 +16,6 @@
 
 package com.themodernway.server.core.json;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -35,7 +32,7 @@ import com.themodernway.common.api.types.json.JSONArrayDefinition;
 import com.themodernway.common.api.types.json.JSONType;
 
 @JacksonXmlRootElement(localName = "results")
-public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, JSONObjectSupplier, IJSONStreamAware, IJSONEnabled
+public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, JSONObjectSupplier, IJSONStreamAware
 {
     private static final long serialVersionUID = 928145403133304801L;
 
@@ -138,44 +135,6 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         add(value);
 
         return this;
-    }
-
-    @Override
-    public void writeJSONString(final Writer out) throws IOException
-    {
-        JSONUtils.writeObjectAsJSON(out, this);
-    }
-
-    @Override
-    public void writeJSONString(final Writer out, final boolean strict) throws IOException
-    {
-        if (false == strict)
-        {
-            JSONUtils.writeObjectAsJSON(out, this);
-        }
-        else
-        {
-            JSONUtils.writeObjectAsJSON(out, this, true);
-        }
-    }
-
-    @Override
-    public void writeJSONString(final OutputStream out) throws IOException
-    {
-        JSONUtils.writeObjectAsJSON(out, this);
-    }
-
-    @Override
-    public void writeJSONString(final OutputStream out, final boolean strict) throws IOException
-    {
-        if (false == strict)
-        {
-            JSONUtils.writeObjectAsJSON(out, this);
-        }
-        else
-        {
-            JSONUtils.writeObjectAsJSON(out, this, true);
-        }
     }
 
     @Override

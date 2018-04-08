@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.json.path;
 
 import java.util.Collection;
 import java.util.List;

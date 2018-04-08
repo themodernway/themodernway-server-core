@@ -51,8 +51,6 @@ public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeVa
     @Override
     public void validate(final IJSONValue jval, final ValidationContext ctx)
     {
-        final boolean must = getMust();
-
         final List<IAttributeTypeValidator> list = getList();
 
         final int size = list.size();
@@ -63,11 +61,13 @@ public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeVa
 
             return;
         }
+        final boolean must = getMust();
+
         for (int i = 0; i < size; i++)
         {
-            final ValidationContext tmp = new ValidationContext(ctx);
-
             final IAttributeTypeValidator type = list.get(i);
+
+            final ValidationContext tmp = new ValidationContext(ctx);
 
             type.validate(jval, tmp);
 

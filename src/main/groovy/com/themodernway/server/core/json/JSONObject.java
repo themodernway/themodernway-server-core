@@ -16,9 +16,6 @@
 
 package com.themodernway.server.core.json;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,11 +26,14 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.INativeFunction;
 import com.themodernway.common.api.types.json.JSONObjectDefinition;
 import com.themodernway.common.api.types.json.JSONType;
+import com.themodernway.server.core.json.path.IEvaluationContext;
+import com.themodernway.server.core.json.path.IJSONPathEnabled;
+import com.themodernway.server.core.json.path.JSONPath;
 import com.themodernway.server.core.json.validation.IJSONValidator;
 import com.themodernway.server.core.json.validation.IValidationContext;
 
 @JacksonXmlRootElement(localName = "result")
-public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, JSONObjectSupplier, IJSONStreamAware, IJSONEnabled, IJSONPathEnabled
+public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, JSONObjectSupplier, IJSONStreamAware, IJSONPathEnabled
 {
     private static final long serialVersionUID = 6519927319475402111L;
 
@@ -64,44 +64,6 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     public IValidationContext validate(final IJSONValidator validator)
     {
         return validator.validate(this);
-    }
-
-    @Override
-    public void writeJSONString(final Writer out) throws IOException
-    {
-        JSONUtils.writeObjectAsJSON(out, this);
-    }
-
-    @Override
-    public void writeJSONString(final Writer out, final boolean strict) throws IOException
-    {
-        if (false == strict)
-        {
-            JSONUtils.writeObjectAsJSON(out, this);
-        }
-        else
-        {
-            JSONUtils.writeObjectAsJSON(out, this, true);
-        }
-    }
-
-    @Override
-    public void writeJSONString(final OutputStream out) throws IOException
-    {
-        JSONUtils.writeObjectAsJSON(out, this);
-    }
-
-    @Override
-    public void writeJSONString(final OutputStream out, final boolean strict) throws IOException
-    {
-        if (false == strict)
-        {
-            JSONUtils.writeObjectAsJSON(out, this);
-        }
-        else
-        {
-            JSONUtils.writeObjectAsJSON(out, this, true);
-        }
     }
 
     @Override

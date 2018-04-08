@@ -16,13 +16,10 @@
 
 package com.themodernway.server.core.test
 
-import javax.script.ScriptEngine
-
 import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.io.IO
 import com.themodernway.server.core.io.NoOpWriter
 import com.themodernway.server.core.logging.MDC
-import com.themodernway.server.core.scripting.ScriptType
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
@@ -32,7 +29,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
 {
     def setupSpec()
     {
-        setupServerCoreDefault(
+        setupServerCoreDefault(BasicTestsSpecification,
                 "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
                 "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
                 )
@@ -95,83 +92,18 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         valu['count'] == 1L
     }
 
-    def "test script types"()
-    {
-        setup:
-        def lang = scripting().getScriptingLanguageNames()
-        echo json(languages: lang)
-
-        expect:
-        "dean" == "dean"
-    }
-
-    def "test JS Script"()
-    {
-        setup:
-        ScriptEngine engine = scripting().engine(ScriptType.JAVASCRIPT, reader('classpath:/com/themodernway/server/core/test/test.js'))
-        echo "JavaScript " + engine.get('x')
-        engine.eval('increment_x()')
-        echo "JavaScript " + engine.get('x')
-
-        expect:
-        "dean" == "dean"
-    }
-
-    def "test Groovy Script"()
-    {
-        setup:
-        ScriptEngine engine = scripting().engine(ScriptType.GROOVY, reader('classpath:/com/themodernway/server/core/test/test.gy'))
-        echo "Groovy " + engine.get('x')
-        engine.eval('increment_x()')
-        echo "Groovy " + engine.get('x')
-
-        expect:
-        "dean" == "dean"
-    }
-
     def "test MDC"()
     {
         setup:
-        def keep = MDC.get('session')
         MDC.put('session', 'LOCAL')
-        logger().info('MDC test')
-        if (keep)
-        {
-            MDC.put('session', keep)
-        }
+        logger().info('MDC test init')
 
         expect:
         "dean" == "dean"
-    }
 
-    def "test JavaScript scripting Proxy"()
-    {
-        setup:
-        def p = scripting().proxy(ScriptType.JAVASCRIPT, reader('classpath:/com/themodernway/server/core/test/test.js'))
-
-        p.increment_x()
-        p.testargs(5, 'dean')
-        p.x = 5
-        def z = p.x
-        echo z
-
-        expect:
-        z == 5
-    }
-
-    def "test Groovy scripting Proxy"()
-    {
-        setup:
-        def p = scripting().proxy(ScriptType.GROOVY, reader('classpath:/com/themodernway/server/core/test/test.gy'))
-
-        p.increment_x()
-        p.testargs(5, 'dean')
-        p.x = 5
-        def z = p.x
-        echo z
-
-        expect:
-        z == 5
+        cleanup:
+        MDC.remove('session')
+        logger().info('MDC test done')
     }
 
     def "Nano Timer"()

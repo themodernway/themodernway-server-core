@@ -16,7 +16,9 @@
 
 package com.themodernway.server.core.support.spring.network;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,15 +31,15 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.json.IJSONEnabled;
-import com.themodernway.server.core.json.JSONObjectSupplier;
+import com.themodernway.common.api.types.json.JSONStringifyStrict;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.json.JSONObjectSupplier;
 
-public class HTTPHeaders extends HttpHeaders implements JSONObjectSupplier, IJSONEnabled
+public class HTTPHeaders extends HttpHeaders implements JSONObjectSupplier, JSONStringifyStrict
 {
     private static final long            serialVersionUID       = 1L;
 
-    public static final String           DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.1.4 (Language=Java/%s)", System.getProperty("java.version"));
+    public static final String           DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.1.5 (Language=Java/%s)", System.getProperty("java.version"));
 
     public static final MediaType        XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
 
@@ -135,6 +137,57 @@ public class HTTPHeaders extends HttpHeaders implements JSONObjectSupplier, IJSO
         return this;
     }
 
+    public HTTPHeaders append(String name, final String valu)
+    {
+        name = StringOps.requireTrimOrNull(name);
+
+        super.add(name, valu);
+
+        return this;
+    }
+
+    public HTTPHeaders append(String name, final String... collection)
+    {
+        name = StringOps.requireTrimOrNull(name);
+
+        final List<String> list = StringOps.toUnique(collection);
+
+        if ((null != list) && (false == list.isEmpty()))
+        {
+            super.addAll(name, list);
+        }
+        return this;
+    }
+
+    public HTTPHeaders append(String name, final Collection<String> collection)
+    {
+        name = StringOps.requireTrimOrNull(name);
+
+        final List<String> list = StringOps.toUnique(collection);
+
+        if ((null != list) && (false == list.isEmpty()))
+        {
+            super.addAll(name, list);
+        }
+        return this;
+    }
+
+    public HTTPHeaders reset(String name, final String valu)
+    {
+        name = StringOps.requireTrimOrNull(name);
+
+        super.set(name, valu);
+
+        return this;
+    }
+
+    public HTTPHeaders reset(final Map<String, String> values)
+    {
+        super.setAll(CommonOps.requireNonNull(values));
+
+        return this;
+    }
+
     @Override
     public JSONObject toJSONObject()
     {
@@ -158,18 +211,18 @@ public class HTTPHeaders extends HttpHeaders implements JSONObjectSupplier, IJSO
     @Override
     public String toJSONString()
     {
-        return toJSONObject().toJSONString();
-    }
-
-    @Override
-    public String toString()
-    {
-        return toJSONString();
+        return toJSONString(false);
     }
 
     @Override
     public String toJSONString(final boolean strict)
     {
         return toJSONObject().toJSONString(strict);
+    }
+
+    @Override
+    public String toString()
+    {
+        return toJSONString();
     }
 }

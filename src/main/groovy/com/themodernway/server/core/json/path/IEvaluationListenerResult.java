@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.json.path;
 
-public interface ICompiledPath
+public interface IEvaluationListenerResult
 {
-    public boolean isDefinite();
+    public int index();
 
-    public <T> T getCompiledPath();
+    public String path();
+
+    public Object result();
 }

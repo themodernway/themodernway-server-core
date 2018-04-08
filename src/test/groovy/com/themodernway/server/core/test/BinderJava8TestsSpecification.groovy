@@ -26,7 +26,7 @@ public class BinderJava8TestsSpecification extends ServerCoreSpecification imple
 {
     def setupSpec()
     {
-        setupServerCoreDefault(
+        setupServerCoreDefault(BinderJava8TestsSpecification,
                 "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
                 "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
                 )

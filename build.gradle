@@ -275,7 +275,7 @@ dependencies {
     compile(group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4') {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
-    compile(group: 'io.micrometer', name: 'micrometer-core', version: '1.0.2')
+    compile(group: 'io.micrometer', name: 'micrometer-core', version: '1.0.3')
     springCorePackages().each { String name ->
         compile(group: 'org.springframework', name: name, version: '5.0.5.RELEASE')
     }

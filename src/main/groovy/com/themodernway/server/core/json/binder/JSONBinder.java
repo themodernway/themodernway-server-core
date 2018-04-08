@@ -51,6 +51,10 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
     @Override
     public <T> T convert(final Object object, final Class<T> claz) throws ParserException
     {
+        if (null == object)
+        {
+            return null;
+        }
         if (claz.isAssignableFrom(object.getClass()))
         {
             return claz.cast(object);

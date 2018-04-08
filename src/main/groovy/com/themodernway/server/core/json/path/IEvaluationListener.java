@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.json.path;
+
+import java.util.function.Predicate;
 
 @FunctionalInterface
-public interface IJSONPathEnabled
+public interface IEvaluationListener extends Predicate<IEvaluationListenerResult>
 {
-    public IEvaluationContext path(boolean copy);
-
-    default IEvaluationContext path()
-    {
-        return path(false);
-    }
 }

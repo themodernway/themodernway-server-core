@@ -51,6 +51,7 @@ import com.themodernway.server.core.support.spring.IServerContext
 import com.themodernway.server.core.support.spring.IServletContextCustomizerProvider
 import com.themodernway.server.core.support.spring.ServerContextInstance
 import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider
+import com.themodernway.server.core.support.spring.network.PathParameters
 
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
@@ -162,6 +163,11 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     public ICoreNetworkProvider network()
     {
         getServerContext().network()
+    }
+
+    public PathParameters parameters(Map<String, ?> vars)
+    {
+        new PathParameters(requireNonNull(vars))
     }
 
     public boolean containsBean(String name)
@@ -462,12 +468,6 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Stream<T> toStream(T... source)
-    {
-         CommonOps.toStream(source)
-    }
-
-    @SuppressWarnings("unchecked")
     public <T> T[] toArray(T... source)
     {
         CommonOps.toArray(source)
@@ -483,6 +483,17 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     public <T> List<T> toListOfListsUnique(List<T>... lists)
     {
         CommonOps.toListOfListsUnique(lists)
+    }
+
+    public <T> Stream<T> emptyStream()
+    {
+        CommonOps.emptyStream()
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Stream<T> toStream(T... source)
+    {
+        CommonOps.toStream(source)
     }
 
     @Memoized

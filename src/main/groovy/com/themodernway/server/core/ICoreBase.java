@@ -18,17 +18,23 @@ package com.themodernway.server.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 import java.util.function.LongSupplier;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import com.themodernway.common.api.java.util.CommonOps;
@@ -169,6 +175,16 @@ public interface ICoreBase
         return CommonOps.linkedMap(source);
     }
 
+    default <T> LinkedHashSet<T> linkedSet()
+    {
+        return CommonOps.linkedSet();
+    }
+
+    default <T> LinkedHashSet<T> linkedSet(final Collection<? extends T> source)
+    {
+        return CommonOps.linkedSet(source);
+    }
+
     @SuppressWarnings("rawtypes")
     default <K, V> Map<K, V> rawmap(final Map source)
     {
@@ -226,6 +242,11 @@ public interface ICoreBase
         return CommonOps.toUnmodifiableList(source);
     }
 
+    default <T> Set<T> toUnmodifiableSet(final Collection<? extends T> source)
+    {
+        return Collections.unmodifiableSet(linkedSet(requireNonNull(source)));
+    }
+
     default <T> ArrayList<T> arrayListOfSize(final int size)
     {
         return CommonOps.arrayListOfSize(size);
@@ -273,12 +294,6 @@ public interface ICoreBase
     }
 
     @SuppressWarnings("unchecked")
-    default <T> Stream<T> toStream(final T... source)
-    {
-        return CommonOps.toStream(source);
-    }
-
-    @SuppressWarnings("unchecked")
     default <T> T[] toArray(final T... source)
     {
         return CommonOps.toArray(source);
@@ -294,6 +309,26 @@ public interface ICoreBase
     default <T> List<T> toListOfListsUnique(final List<T>... lists)
     {
         return CommonOps.toListOfListsUnique(lists);
+    }
+
+    default int box(final int val, final int min, final int max)
+    {
+        return CommonOps.box(val, min, max);
+    }
+
+    default long box(final long val, final long min, final long max)
+    {
+        return CommonOps.box(val, min, max);
+    }
+
+    default double box(final double val, final double min, final double max)
+    {
+        return CommonOps.box(val, min, max);
+    }
+
+    default double project(final double value, final double istart, final double istop, final double ostart, final double ostop)
+    {
+        return ostart + ((ostop - ostart) * ((value - istart) / (istop - istart)));
     }
 
     default String getEnvironmentProperty(final String name)
@@ -513,5 +548,51 @@ public interface ICoreBase
     default String failIfNullBytePresent(final String string)
     {
         return StringOps.failIfNullBytePresent(string);
+    }
+
+    default <T> Stream<T> emptyStream()
+    {
+        return CommonOps.emptyStream();
+    }
+
+    default <T> Stream<T> toStream(final T source)
+    {
+        return CommonOps.toStream(source);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T> Stream<T> toStream(final T... source)
+    {
+        return CommonOps.toStream(source);
+    }
+
+    default IntStream toStream(final int source)
+    {
+        return CommonOps.toStream(source);
+    }
+
+    default IntStream toStream(final int... source)
+    {
+        return CommonOps.toStream(source);
+    }
+
+    default LongStream toStream(final long source)
+    {
+        return CommonOps.toStream(source);
+    }
+
+    default LongStream toStream(final long... source)
+    {
+        return CommonOps.toStream(source);
+    }
+
+    default DoubleStream toStream(final double source)
+    {
+        return CommonOps.toStream(source);
+    }
+
+    default DoubleStream toStream(final double... source)
+    {
+        return CommonOps.toStream(source);
     }
 }

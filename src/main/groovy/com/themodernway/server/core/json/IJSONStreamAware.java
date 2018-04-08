@@ -22,11 +22,37 @@ import java.io.Writer;
 
 public interface IJSONStreamAware
 {
-    public void writeJSONString(Writer out) throws IOException;
+    default void writeJSONString(final Writer out) throws IOException
+    {
+        JSONUtils.writeObjectAsJSON(out, this);
+    }
 
-    public void writeJSONString(Writer out, boolean strict) throws IOException;
+    default void writeJSONString(final Writer out, final boolean strict) throws IOException
+    {
+        if (false == strict)
+        {
+            JSONUtils.writeObjectAsJSON(out, this);
+        }
+        else
+        {
+            JSONUtils.writeObjectAsJSON(out, this, true);
+        }
+    }
 
-    public void writeJSONString(OutputStream out) throws IOException;
+    default void writeJSONString(final OutputStream out) throws IOException
+    {
+        JSONUtils.writeObjectAsJSON(out, this);
+    }
 
-    public void writeJSONString(OutputStream out, boolean strict) throws IOException;
+    default void writeJSONString(final OutputStream out, final boolean strict) throws IOException
+    {
+        if (false == strict)
+        {
+            JSONUtils.writeObjectAsJSON(out, this);
+        }
+        else
+        {
+            JSONUtils.writeObjectAsJSON(out, this, true);
+        }
+    }
 }

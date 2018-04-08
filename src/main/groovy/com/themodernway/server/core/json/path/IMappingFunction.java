@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.json.path;
 
-import java.util.function.Predicate;
+import java.util.function.BiFunction;
 
 @FunctionalInterface
-public interface IEvaluationListener extends Predicate<IEvaluationListenerResult>
+public interface IMappingFunction extends BiFunction<Object, IEvaluationContext, Object>
 {
 }

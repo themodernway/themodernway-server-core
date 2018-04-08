@@ -18,7 +18,6 @@ package com.themodernway.server.core.test
 
 import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.support.CoreGroovyTrait
-import com.themodernway.server.core.support.spring.network.PathParameters
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
 import spock.lang.Unroll
@@ -27,7 +26,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
 {
     def setupSpec()
     {
-        setupServerCoreDefault(
+        setupServerCoreDefault(RESTTestsSpecification,
                 "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
                 "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
                 )
@@ -36,6 +35,18 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
     def cleanupSpec()
     {
         closeServerCoreDefault()
+    }
+
+    def "warmup"()
+    {
+        setup:
+        def n = network()
+        def list = (1..100).collect { int id ->
+            n.get('https://jsonplaceholder.typicode.com/posts/{id}', parameters(id: id)).json()
+        }
+
+        expect:
+        list.size() == 100
     }
 
     def "REST GET users 7"()
@@ -56,7 +67,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
     def "REST GET posts PathPaeameters(id:50)"()
     {
         setup:
-        def resp = network().get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: 50))
+        def resp = network().get('https://jsonplaceholder.typicode.com/posts/{id}', parameters(id: 50))
         def answ = resp.json()
 
         expect:
@@ -74,7 +85,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         def n = network()
         def t = new NanoTimer()
         def list = (1..100).collect { int id ->
-            n.get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
+            n.get('https://jsonplaceholder.typicode.com/posts/{id}', parameters(id: id)).json()
         }
         echo t.toString() + " test parallel off"
 
@@ -88,7 +99,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         def n = network()
         def t = new NanoTimer()
         def list = parallel(1..100).collect { int id ->
-            n.get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
+            n.get('https://jsonplaceholder.typicode.com/posts/{id}', parameters(id: id)).json()
         }
         echo t.toString() + " test parallel on"
 
@@ -104,7 +115,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         n.setHttpFactoryByName(name)
         def t = new NanoTimer()
         def list = (1..100).collect { int id ->
-            n.get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
+            n.get('https://jsonplaceholder.typicode.com/posts/{id}', parameters(id: id)).json()
         }
         echo t.toString() + " test parallel off " + name
 
@@ -112,7 +123,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         list.size() == 100
 
         where:
-        name << ["simple", "okhttp", "apache"]
+        name << ["simple", "okhttp", "apache", "native"]
     }
 
     @Unroll
@@ -123,7 +134,7 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         n.setHttpFactoryByName(name)
         def t = new NanoTimer()
         def list = parallel(1..100).collect { int id ->
-            n.get('https://jsonplaceholder.typicode.com/posts/{id}', new PathParameters(id: id)).json()
+            n.get('https://jsonplaceholder.typicode.com/posts/{id}', parameters(id: id)).json()
         }
         echo t.toString() + " test parallel on " + name
 
@@ -131,6 +142,6 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         list.size() == 100
 
         where:
-        name << ["simple", "okhttp", "apache"]
+        name << ["simple", "okhttp", "apache", "native"]
     }
 }

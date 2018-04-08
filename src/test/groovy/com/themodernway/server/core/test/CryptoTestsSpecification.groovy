@@ -32,7 +32,7 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
 {
     def setupSpec()
     {
-        setupServerCoreDefault(
+        setupServerCoreDefault(CryptoTestsSpecification,
                 "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
                 "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
                 )
