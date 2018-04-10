@@ -92,6 +92,18 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         valu['count'] == 1L
     }
 
+    def "test JSONArray"()
+    {
+        setup:
+        def valu = jarr([json(name: "Dean"), json(name: "Jones")])
+
+        expect:
+        valu[0]["name"] == "Dean"
+
+        cleanup:
+        echo valu.toJSONString()
+    }
+
     def "test MDC"()
     {
         setup:
@@ -136,7 +148,6 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def j = b.toJSONString()
         echo b.toString() + " Tiger JSON parsed out"
         echo t.toString() + " Tiger JSON parsed out"
-        //echo b.dumpClassNamesToString()
 
         expect:
         j.toString() == b.toString()
@@ -149,7 +160,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def b = binder().bindJSON(r)
         def j = b.toJSONString()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             b.toString()
         }
@@ -167,7 +178,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def b = z.bindJSON(r)
         def j = b.toJSONString()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             z.toString(b)
         }
@@ -184,7 +195,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 5000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             j.writeJSONString(w, true)
         }
@@ -201,7 +212,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 5000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             j.writeJSONString(w, false)
         }
@@ -218,7 +229,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++)
+        for (int i = 0; i < 10000; i++)
         {
             j.writeJSONString(w, true)
         }
@@ -235,7 +246,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++)
+        for (int i = 0; i < 10000; i++)
         {
             j.writeJSONString(w, false)
         }
@@ -252,7 +263,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++)
+        for (int i = 0; i < 10000; i++)
         {
             j.toJSONString(true)
         }
@@ -269,7 +280,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++)
+        for (int i = 0; i < 10000; i++)
         {
             def s = j.toJSONString(false)
         }
@@ -286,7 +297,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++)
+        for (int i = 0; i < 10000; i++)
         {
             j.toJSONString(true)
         }
@@ -303,7 +314,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def j = binder().bindJSON(r)
         def t = new NanoTimer()
         def w = new NoOpWriter()
-        for(int i = 0; i < 10000; i++)
+        for (int i = 0; i < 10000; i++)
         {
             def s = j.toJSONString(false)
         }
@@ -319,7 +330,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def r = resource('classpath:/com/themodernway/server/core/test/tiger.json')
         def b = binder()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             b.bindJSON(r)
         }
@@ -335,7 +346,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def r = resource('classpath:/com/themodernway/server/core/test/lion.json')
         def b = binder()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             b.bindJSON(r)
         }
@@ -351,7 +362,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def r = resource('classpath:/com/themodernway/server/core/test/tiny.json')
         def b = binder()
         def t = new NanoTimer()
-        for(int i = 0; i < 5000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             b.bindJSON(r)
         }
@@ -367,7 +378,7 @@ public class BasicTestsSpecification extends ServerCoreSpecification implements 
         def r = '{"dean": 53}'
         def b = binder()
         def t = new NanoTimer()
-        for(int i = 0; i < 10000; i++)
+        for (int i = 0; i < 10000; i++)
         {
             b.bindJSON(r)
         }

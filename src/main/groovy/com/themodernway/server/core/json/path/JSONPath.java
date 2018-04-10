@@ -39,6 +39,7 @@ import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.file.vfs.IFileItem;
+import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
@@ -51,7 +52,7 @@ public final class JSONPath
 
     private static final Configuration builder(final ObjectMapper mapper)
     {
-        return Configuration.builder().jsonProvider(new JacksonJsonProvider(mapper)).mappingProvider(new JacksonMappingProvider(mapper)).options(Option.SUPPRESS_EXCEPTIONS).build();
+        return Configuration.builder().jsonProvider(new InternalJacksonJsonProvider(mapper)).mappingProvider(new JacksonMappingProvider(mapper)).options(Option.SUPPRESS_EXCEPTIONS).build();
     }
 
     private static final String cast(final CharSequence valu)
@@ -68,7 +69,7 @@ public final class JSONPath
         return new InternalCompiledPath(JsonPath.compile(cast(path), filters));
     }
 
-    public static final IEvaluationContext parse(final JSONObject object)
+    public static final IEvaluationContext parse(final Object object)
     {
         return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(object), CONFIG));
     }
@@ -116,6 +117,26 @@ public final class JSONPath
     public static final IEvaluationContext parse(final Properties properties) throws ParserException
     {
         return parse(BINDER.bindJSON(properties));
+    }
+
+    private static final class InternalJacksonJsonProvider extends JacksonJsonProvider
+    {
+        public InternalJacksonJsonProvider(final ObjectMapper mapper)
+        {
+            super(mapper, mapper.reader().forType(Object.class));
+        }
+
+        @Override
+        public JSONArray createArray()
+        {
+            return new JSONArray();
+        }
+
+        @Override
+        public JSONObject createMap()
+        {
+            return new JSONObject();
+        }
     }
 
     private static final class InternalCompiledPath implements ICompiledPath

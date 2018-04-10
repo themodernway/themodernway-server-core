@@ -296,4 +296,36 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
         cleanup:
         echo json(result: look)
     }
+
+    def "test binder array 0"()
+    {
+        setup:
+        def path = JSONPath.compile('$[0]')
+        def valu = jarr([json(name: "Dean"), json(name: "Jones")])
+        def ctxt = JSONPath.parse(valu)
+        def look = ctxt.eval(path)
+
+        expect:
+        look != null
+
+        cleanup:
+        echo look.getClass()
+        echo json(result: look)
+    }
+
+    def "test binder array *"()
+    {
+        setup:
+        def path = JSONPath.compile('$[*]')
+        def valu = jarr([json(name: "Dean"), json(name: "Jones")])
+        def ctxt = JSONPath.parse(valu)
+        def look = ctxt.eval(path)
+
+        expect:
+        look != null
+
+        cleanup:
+        echo look.getClass()
+        echo json(result: look)
+    }
 }

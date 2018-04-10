@@ -23,7 +23,7 @@ buildscript {
         classpath(group: 'commons-codec', name: 'commons-codec', version: '1.11')
         classpath(group: 'commons-logging', name: 'commons-logging', version: '1.2')
         classpath(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5')
-        classpath(group: 'org.owasp', name: 'dependency-check-gradle', version: '3.1.1')
+        classpath(group: 'org.owasp', name: 'dependency-check-gradle', version: '3.1.2')
         classpath(group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.6.2')
     }
 }
@@ -48,7 +48,7 @@ sourceCompatibility = 1.8
 
 targetCompatibility = 1.8
 
-version = '2.1.5-RELEASE'
+version = '2.1.6-RELEASE'
 
 group = 'com.themodernway'
 
@@ -121,7 +121,7 @@ jacocoTestReport {
     reports {
         csv {
             enabled true
-            destination project.file("${buildDir}/reports/jacoco/coverage-${version}.csv")
+            destination project.file("${buildDir}/reports/jacoco/coverage-${getBuildModuleVersion()}.csv")
         }
         xml.enabled false
         html.destination project.file("${buildDir}/reports/coverage")
@@ -243,7 +243,7 @@ configurations {
 }
 
 dependencies {
-    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.1.5-RELEASE')
+    compile(group: 'com.themodernway', name: 'themodernway-common', version: '2.1.6-RELEASE')
     compile(group: 'org.ow2.asm', name: 'asm', version: '6.1.1')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25')

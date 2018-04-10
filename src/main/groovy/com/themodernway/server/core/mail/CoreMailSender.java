@@ -190,7 +190,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, I
         }
 
         @Override
-        public ICoreSimpleMailMessage make()
+        public CoreSimpleMailMessage make()
         {
             return m_mess;
         }

@@ -33,7 +33,7 @@ import com.themodernway.server.core.json.validation.IJSONValidator;
 import com.themodernway.server.core.json.validation.IValidationContext;
 
 @JacksonXmlRootElement(localName = "result")
-public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, JSONObjectSupplier, IJSONStreamAware, IJSONPathEnabled
+public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, JSONObjectSupplier, JSONStreamAware, IJSONPathEnabled
 {
     private static final long serialVersionUID = 6519927319475402111L;
 

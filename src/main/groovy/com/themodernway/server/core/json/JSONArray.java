@@ -30,9 +30,12 @@ import com.themodernway.common.api.types.IFixedIterable;
 import com.themodernway.common.api.types.INativeFunction;
 import com.themodernway.common.api.types.json.JSONArrayDefinition;
 import com.themodernway.common.api.types.json.JSONType;
+import com.themodernway.server.core.json.path.IEvaluationContext;
+import com.themodernway.server.core.json.path.IJSONPathEnabled;
+import com.themodernway.server.core.json.path.JSONPath;
 
 @JacksonXmlRootElement(localName = "results")
-public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, JSONObjectSupplier, IJSONStreamAware
+public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, JSONObjectSupplier, JSONStreamAware, IJSONPathEnabled
 {
     private static final long serialVersionUID = 928145403133304801L;
 
@@ -318,6 +321,16 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     public JSONArray deep()
     {
         return JSONUtils.deep(this);
+    }
+
+    @Override
+    public IEvaluationContext path(final boolean copy)
+    {
+        if (copy)
+        {
+            return JSONPath.parse(deep());
+        }
+        return JSONPath.parse(this);
     }
 
     @Override
