@@ -40,7 +40,7 @@ public class HTTPHeaders extends HttpHeaders
 {
     private static final long           serialVersionUID       = 1L;
 
-    public static final String          DEFAULT_USER_AGENT     = String.format("The-Modern-Way/1.3.4 (Language=Java/%s)", System.getProperty("java.version"));
+    public static final String          DEFAULT_USER_AGENT     = String.format("The-Modern-Way/1.3.6 (Language=Java/%s)", System.getProperty("java.version"));
 
     public static final MediaType       XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
 
@@ -68,8 +68,6 @@ public class HTTPHeaders extends HttpHeaders
 
     public HTTPHeaders addAllHeaders(final Map<String, List<String>> head)
     {
-        CommonOps.requireNonNull(head);
-
         if (false == head.isEmpty())
         {
             putAll(head);

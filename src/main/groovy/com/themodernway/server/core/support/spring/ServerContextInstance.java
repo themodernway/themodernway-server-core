@@ -48,8 +48,6 @@ import com.themodernway.server.core.security.ISignatoryProvider;
 import com.themodernway.server.core.security.session.IServerSessionRepository;
 import com.themodernway.server.core.security.session.IServerSessionRepositoryProvider;
 import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider;
-import com.themodernway.server.core.support.spring.network.websocket.IWebSocketService;
-import com.themodernway.server.core.support.spring.network.websocket.IWebSocketServiceProvider;
 
 public class ServerContextInstance extends CoreJSONOperations implements IServerContext
 {
@@ -364,18 +362,6 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
             return new InputStreamReader(resource.getInputStream(), IO.UTF_8_CHARSET);
         }
         return null;
-    }
-
-    @Override
-    public final IWebSocketServiceProvider getWebSocketServiceProvider()
-    {
-        return requireNonNull(getBeanSafely("WebSocketServiceProvider", IWebSocketServiceProvider.class), "WebSocketServiceProvider is null, initialization error.");
-    }
-
-    @Override
-    public final IWebSocketService getWebSocketService(final String name)
-    {
-        return getWebSocketServiceProvider().getWebSocketService(name);
     }
 
     @Override

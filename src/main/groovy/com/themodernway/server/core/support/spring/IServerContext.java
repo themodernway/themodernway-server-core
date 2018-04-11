@@ -41,8 +41,6 @@ import com.themodernway.server.core.security.ISignatoryProvider;
 import com.themodernway.server.core.security.session.IServerSessionRepository;
 import com.themodernway.server.core.security.session.IServerSessionRepositoryProvider;
 import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider;
-import com.themodernway.server.core.support.spring.network.websocket.IWebSocketService;
-import com.themodernway.server.core.support.spring.network.websocket.IWebSocketServiceProvider;
 
 public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPropertiesResolver, IHasLogging, ICoreBase
 {
@@ -85,10 +83,6 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public ISignatoryProvider getSignatoryProvider();
 
     public ICoreNetworkProvider network();
-
-    public IWebSocketServiceProvider getWebSocketServiceProvider();
-
-    public IWebSocketService getWebSocketService(String name);
 
     public String uuid();
 

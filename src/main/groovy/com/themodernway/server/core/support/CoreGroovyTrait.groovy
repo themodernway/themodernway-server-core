@@ -51,8 +51,6 @@ import com.themodernway.server.core.support.spring.IServerContext
 import com.themodernway.server.core.support.spring.IServletContextCustomizerProvider
 import com.themodernway.server.core.support.spring.ServerContextInstance
 import com.themodernway.server.core.support.spring.network.ICoreNetworkProvider
-import com.themodernway.server.core.support.spring.network.websocket.IWebSocketService
-import com.themodernway.server.core.support.spring.network.websocket.IWebSocketServiceProvider
 
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
@@ -216,18 +214,6 @@ public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
     public Reader reader(String location) throws IOException
     {
         getServerContext().reader(location)
-    }
-
-    @Memoized
-    public IWebSocketServiceProvider getWebSocketServiceProvider()
-    {
-        getServerContext().getWebSocketServiceProvider()
-    }
-
-    @Memoized
-    public IWebSocketService getWebSocketService(String name)
-    {
-        getWebSocketServiceProvider().getWebSocketService(name)
     }
 
     @Memoized
