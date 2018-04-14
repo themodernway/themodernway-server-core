@@ -296,7 +296,6 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean equals(final Object other)
     {
         if (null == other)
@@ -310,10 +309,6 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
         if (other instanceof JSONObject)
         {
             return toString().equals(other.toString());
-        }
-        if (other instanceof Map)
-        {
-            return toString().equals(new JSONObject((Map<String, ?>) other).toString());
         }
         return false;
     }

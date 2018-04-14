@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.json.path;
 
-import com.jayway.jsonpath.Predicate;
 import com.jayway.jsonpath.TypeRef;
 
 public interface IEvaluationContext
@@ -25,11 +24,23 @@ public interface IEvaluationContext
 
     public <T> T model();
 
-    public <T> T eval(CharSequence path, Predicate... filters);
+    public <T> T eval(String path);
 
-    public <T> T eval(CharSequence path, Class<T> type, Predicate... filters);
+    public <T> T eval(String path, ICriteria criteria);
 
-    public <T> T eval(CharSequence path, TypeRef<T> type);
+    public <T> T eval(String path, ICriteria... criteria);
+
+    public <T> T eval(String path, ICriteriaBuilder builder);
+
+    public <T> T eval(String path, Class<T> type);
+
+    public <T> T eval(String path, Class<T> type, ICriteria criteria);
+
+    public <T> T eval(String path, Class<T> type, ICriteria... criteria);
+
+    public <T> T eval(String path, Class<T> type, ICriteriaBuilder builder);
+
+    public <T> T eval(String path, TypeRef<T> type);
 
     public <T> T eval(ICompiledPath path);
 
@@ -37,23 +48,23 @@ public interface IEvaluationContext
 
     public <T> T eval(ICompiledPath path, TypeRef<T> type);
 
-    public IEvaluationContext set(CharSequence path, Object valu, Predicate... filters);
+    public IEvaluationContext set(String path, Object valu, ICriteria... criteria);
 
     public IEvaluationContext set(ICompiledPath path, Object valu);
 
-    public IEvaluationContext put(CharSequence path, CharSequence pkey, Object valu, Predicate... filters);
+    public IEvaluationContext put(String path, String pkey, Object valu, ICriteria... criteria);
 
-    public IEvaluationContext put(ICompiledPath path, CharSequence pkey, Object valu);
+    public IEvaluationContext put(ICompiledPath path, String pkey, Object valu);
 
-    public IEvaluationContext add(CharSequence path, Object valu, Predicate... filters);
+    public IEvaluationContext add(String path, Object valu, ICriteria... criteria);
 
     public IEvaluationContext add(ICompiledPath path, Object valu);
 
-    public IEvaluationContext map(CharSequence path, IMappingFunction func, Predicate... filters);
+    public IEvaluationContext map(String path, IMappingFunction func, ICriteria... criteria);
 
     public IEvaluationContext map(ICompiledPath path, IMappingFunction func);
 
-    public IEvaluationContext delete(CharSequence path, Predicate... filters);
+    public IEvaluationContext delete(String path, ICriteria... criteria);
 
     public IEvaluationContext delete(ICompiledPath path);
 

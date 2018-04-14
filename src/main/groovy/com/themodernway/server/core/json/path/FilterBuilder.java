@@ -16,99 +16,61 @@
 
 package com.themodernway.server.core.json.path;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Stream;
-
 import com.jayway.jsonpath.Filter;
-import com.jayway.jsonpath.Predicate;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.common.api.types.IBuilder;
 
-public final class FilterBuilder implements IBuilder<Predicate>
+public final class FilterBuilder implements ICriteriaBuilder
 {
-    public static final FilterBuilder parse(final String parse)
-    {
-        return new FilterBuilder(parse);
-    }
-
-    public static final FilterBuilder filter(final Predicate predicate)
-    {
-        return new FilterBuilder(predicate);
-    }
-
-    public static final FilterBuilder filter(final IBuilder<Predicate> builder)
-    {
-        return new FilterBuilder(builder.build());
-    }
-
-    public static final FilterBuilder filter(final Predicate... predicates)
-    {
-        return new FilterBuilder(CommonOps.toUnmodifiableList(predicates));
-    }
-
-    public static final FilterBuilder filter(final Collection<Predicate> predicates)
-    {
-        return new FilterBuilder(CommonOps.toUnmodifiableList(predicates));
-    }
-
-    public static final FilterBuilder filter(final Stream<Predicate> predicates)
-    {
-        return new FilterBuilder(CommonOps.toUnmodifiableList(predicates));
-    }
-
     private Filter m_crit;
 
-    private FilterBuilder(final String parse)
+    FilterBuilder(final String parse)
     {
         m_crit = Filter.parse(StringOps.requireTrimOrNull(parse));
     }
 
-    private FilterBuilder(final Predicate predicate)
+    FilterBuilder(final ICriteria criteria)
     {
-        m_crit = Filter.filter(CommonOps.requireNonNull(predicate));
+        m_crit = Filter.filter(PredicateCriteria.convert(criteria));
     }
 
-    private FilterBuilder(final List<Predicate> predicates)
+    FilterBuilder(final ICriteriaBuilder builder)
     {
-        if (predicates.size() == 1)
-        {
-            m_crit = Filter.filter(CommonOps.requireNonNull(predicates.get(0)));
-        }
-        else
-        {
-            m_crit = Filter.filter(predicates);
-        }
+        m_crit = Filter.filter(PredicateCriteria.convert(builder.build()));
     }
 
-    public FilterBuilder and(final Predicate predicate)
+    FilterBuilder(final ICriteria... criteria)
     {
-        m_crit = m_crit.and(CommonOps.requireNonNull(predicate));
+        m_crit = Filter.filter(CommonOps.toList(PredicateCriteria.convert(criteria)));
+    }
+
+    public FilterBuilder and(final ICriteria criteria)
+    {
+        m_crit = m_crit.and(PredicateCriteria.convert(criteria));
 
         return this;
     }
 
-    public FilterBuilder and(final IBuilder<Predicate> builder)
+    public FilterBuilder and(final ICriteriaBuilder builder)
     {
         return and(builder.build());
     }
 
-    public FilterBuilder or(final Predicate predicate)
+    public FilterBuilder or(final ICriteria criteria)
     {
-        m_crit = m_crit.or(CommonOps.requireNonNull(predicate));
+        m_crit = m_crit.or(PredicateCriteria.convert(criteria));
 
         return this;
     }
 
-    public FilterBuilder or(final IBuilder<Predicate> builder)
+    public FilterBuilder or(final ICriteriaBuilder builder)
     {
         return or(builder.build());
     }
 
     @Override
-    public Predicate build()
+    public ICriteria build()
     {
-        return m_crit;
+        return new PredicateCriteria(m_crit);
     }
 }

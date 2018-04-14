@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.support.spring.testing;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -33,12 +32,12 @@ public interface IServerCoreTesting
     {
         private static Logger logger = LoggingOps.getLogger(IServerCoreTesting.class);
 
-        public static final void setupServerCoreLogging(final Class<?> type) throws IOException
+        public static final void setupServerCoreLogging(final Class<?> type)
         {
             logger = LoggingOps.getLogger(type);
         }
 
-        public static final void setupServerCoreLogging(final Class<?> type, final String location) throws IOException
+        public static final void setupServerCoreLogging(final Class<?> type, final String location)
         {
             logger = LoggingOps.getLogger(type);
         }
@@ -73,14 +72,14 @@ public interface IServerCoreTesting
             }
         }
 
-        public static final void setupServerCoreDefault(final Class<?> type, final String name, final String... locations) throws IOException
+        public static final void setupServerCoreDefault(final Class<?> type, final String name, final String... locations)
         {
             setupServerCoreLogging(type);
 
             setupServerCoreContext(type, name, locations);
         }
 
-        public static final void setupServerCoreDefault(final Class<?> type, final String name, final List<String> locations) throws IOException
+        public static final void setupServerCoreDefault(final Class<?> type, final String name, final List<String> locations)
         {
             setupServerCoreLogging(type);
 

@@ -328,4 +328,40 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
         echo look.getClass()
         echo json(result: look)
     }
+
+    def "test path conditional 0"()
+    {
+        setup:
+        def path = JSONPath.compile('$.movies[?(@.year >= 1977)].title')
+        def rest = bindJSON()
+        def ctxt = rest.path()
+        def time = new NanoTimer()
+        def look = ctxt.eval(path)
+        echo time
+
+        expect:
+        look != null
+
+        cleanup:
+        echo look.getClass()
+        echo json(result: look)
+    }
+
+    def "test path conditional 1"()
+    {
+        setup:
+        def path = JSONPath.compile('$.movies[?(@.year < 2000)].id')
+        def rest = bindJSON()
+        def ctxt = rest.path()
+        def time = new NanoTimer()
+        def look = ctxt.eval(path)
+        echo time
+
+        expect:
+        look != null
+
+        cleanup:
+        echo look.getClass()
+        echo json(result: look)
+    }
 }

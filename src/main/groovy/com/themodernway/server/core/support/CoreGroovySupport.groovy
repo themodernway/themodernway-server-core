@@ -63,7 +63,6 @@ import com.themodernway.server.core.support.spring.network.PathParameters
 
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
-import io.micrometer.core.instrument.MeterRegistry
 
 @CompileStatic
 public class CoreGroovySupport implements IServerContext, Closeable
@@ -748,18 +747,6 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public String getSystemProperty(String name, Supplier<String> otherwise)
     {
         getServerContext().getSystemProperty(name, otherwise)
-    }
-
-    @Memoized
-    public Optional<MeterRegistry> getMeterRegistry()
-    {
-        getServerContext().getMeterRegistry()
-    }
-
-    @Memoized
-    public Optional<MeterRegistry> getMeterRegistry(String name)
-    {
-        getServerContext().getMeterRegistry(name)
     }
 
     @Override

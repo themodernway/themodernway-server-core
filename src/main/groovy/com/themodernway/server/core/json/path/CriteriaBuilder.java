@@ -20,21 +20,14 @@ import java.util.Collection;
 import java.util.regex.Pattern;
 
 import com.jayway.jsonpath.Criteria;
-import com.jayway.jsonpath.Predicate;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.common.api.types.IBuilder;
 
-public final class CriteriaBuilder implements IBuilder<Predicate>
+public final class CriteriaBuilder implements ICriteriaBuilder
 {
-    public static final CriteriaBuilder where(final String pkey)
-    {
-        return new CriteriaBuilder(pkey);
-    }
-
     private Criteria m_crit;
 
-    private CriteriaBuilder(final String pkey)
+    CriteriaBuilder(final String pkey)
     {
         m_crit = Criteria.where(StringOps.requireTrimOrNull(pkey));
     }
@@ -91,6 +84,11 @@ public final class CriteriaBuilder implements IBuilder<Predicate>
         m_crit = m_crit.gte(o);
 
         return this;
+    }
+
+    public CriteriaBuilder regex(final String pattern)
+    {
+        return regex(Pattern.compile(pattern));
     }
 
     public CriteriaBuilder regex(final Pattern pattern)
@@ -162,9 +160,9 @@ public final class CriteriaBuilder implements IBuilder<Predicate>
         return this;
     }
 
-    public CriteriaBuilder type(final Class<?> claz)
+    public CriteriaBuilder type(final Class<?> type)
     {
-        m_crit = m_crit.type(claz);
+        m_crit = m_crit.type(type);
 
         return this;
     }
@@ -188,21 +186,21 @@ public final class CriteriaBuilder implements IBuilder<Predicate>
         return this;
     }
 
-    public CriteriaBuilder matches(final Predicate predicate)
+    public CriteriaBuilder matches(final ICriteria criteria)
     {
-        m_crit = m_crit.matches(CommonOps.requireNonNull(predicate));
+        m_crit = m_crit.matches(PredicateCriteria.convert(criteria));
 
         return this;
     }
 
-    public CriteriaBuilder matches(final IBuilder<Predicate> builder)
+    public CriteriaBuilder matches(final ICriteriaBuilder builder)
     {
         return matches(builder.build());
     }
 
     @Override
-    public Predicate build()
+    public ICriteria build()
     {
-        return m_crit;
+        return new PredicateCriteria(m_crit);
     }
 }

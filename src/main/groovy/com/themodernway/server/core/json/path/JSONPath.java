@@ -32,7 +32,6 @@ import com.jayway.jsonpath.EvaluationListener;
 import com.jayway.jsonpath.EvaluationListener.EvaluationContinuation;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.Predicate;
 import com.jayway.jsonpath.TypeRef;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
@@ -55,26 +54,71 @@ public final class JSONPath
         return Configuration.builder().jsonProvider(new InternalJacksonJsonProvider(mapper)).mappingProvider(new JacksonMappingProvider(mapper)).options(Option.SUPPRESS_EXCEPTIONS).build();
     }
 
-    private static final String cast(final CharSequence valu)
+    private static final String cast(final String valu)
     {
-        return CommonOps.requireNonNull(CommonOps.requireNonNull(valu).toString());
+        return CommonOps.requireNonNull(valu);
+    }
+
+    static final Configuration config()
+    {
+        return CONFIG;
     }
 
     private JSONPath()
     {
     }
 
-    public static final ICompiledPath compile(final CharSequence path, final Predicate... filters)
+    public static final CriteriaBuilder where(final String pkey)
     {
-        return new InternalCompiledPath(JsonPath.compile(cast(path), filters));
+        return new CriteriaBuilder(pkey);
+    }
+
+    public static final FilterBuilder filter(final String parse)
+    {
+        return new FilterBuilder(parse);
+    }
+
+    public static final FilterBuilder filter(final ICriteria criteria)
+    {
+        return new FilterBuilder(criteria);
+    }
+
+    public static final FilterBuilder filter(final ICriteria... criteria)
+    {
+        return new FilterBuilder(criteria);
+    }
+
+    public static final FilterBuilder filter(final ICriteriaBuilder builder)
+    {
+        return new FilterBuilder(builder);
+    }
+
+    public static final ICompiledPath compile(final String path)
+    {
+        return new InternalCompiledPath(JsonPath.compile(cast(path)));
+    }
+
+    public static final ICompiledPath compile(final String path, final ICriteria criteria)
+    {
+        return new InternalCompiledPath(JsonPath.compile(cast(path), PredicateCriteria.convert(criteria)));
+    }
+
+    public static final ICompiledPath compile(final String path, final ICriteria... criteria)
+    {
+        return new InternalCompiledPath(JsonPath.compile(cast(path), PredicateCriteria.convert(criteria)));
+    }
+
+    public static final ICompiledPath compile(final String path, final ICriteriaBuilder builder)
+    {
+        return new InternalCompiledPath(JsonPath.compile(cast(path), PredicateCriteria.convert(builder.build())));
     }
 
     public static final IEvaluationContext parse(final Object object)
     {
-        return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(object), CONFIG));
+        return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(object), config()));
     }
 
-    public static final IEvaluationContext parse(final CharSequence json) throws ParserException
+    public static final IEvaluationContext parse(final String json) throws ParserException
     {
         return parse(BINDER.bindJSON(json));
     }
@@ -173,12 +217,12 @@ public final class JSONPath
 
         private static final JsonPath cast(final ICompiledPath path)
         {
-            return CommonOps.CAST(CommonOps.requireNonNull(CommonOps.requireNonNull(path).getCompiledPath()));
+            return path.getCompiledPath();
         }
 
-        private static final String cast(final CharSequence valu)
+        private static final String cast(final String valu)
         {
-            return CommonOps.requireNonNull(CommonOps.requireNonNull(valu).toString());
+            return CommonOps.requireNonNull(valu);
         }
 
         private InternalEvaluationContext(final DocumentContext ctxt)
@@ -199,15 +243,51 @@ public final class JSONPath
         }
 
         @Override
-        public final <T> T eval(final CharSequence path, final Predicate... filters)
+        public final <T> T eval(final String path)
         {
-            return m_ctxt.read(cast(path), filters);
+            return m_ctxt.read(cast(path));
         }
 
         @Override
-        public final <T> T eval(final CharSequence path, final Class<T> type, final Predicate... filters)
+        public final <T> T eval(final String path, final ICriteria criteria)
         {
-            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type), filters);
+            return m_ctxt.read(cast(path), PredicateCriteria.convert(criteria));
+        }
+
+        @Override
+        public final <T> T eval(final String path, final ICriteria... criteria)
+        {
+            return m_ctxt.read(cast(path), PredicateCriteria.convert(criteria));
+        }
+
+        @Override
+        public final <T> T eval(final String path, final ICriteriaBuilder builder)
+        {
+            return m_ctxt.read(cast(path), PredicateCriteria.convert(builder.build()));
+        }
+
+        @Override
+        public final <T> T eval(final String path, final Class<T> type)
+        {
+            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type));
+        }
+
+        @Override
+        public final <T> T eval(final String path, final Class<T> type, final ICriteria criteria)
+        {
+            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type), PredicateCriteria.convert(criteria));
+        }
+
+        @Override
+        public final <T> T eval(final String path, final Class<T> type, final ICriteria... criteria)
+        {
+            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type), PredicateCriteria.convert(criteria));
+        }
+
+        @Override
+        public final <T> T eval(final String path, final Class<T> type, final ICriteriaBuilder builder)
+        {
+            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type), PredicateCriteria.convert(builder.build()));
         }
 
         @Override
@@ -223,7 +303,7 @@ public final class JSONPath
         }
 
         @Override
-        public final <T> T eval(final CharSequence path, final TypeRef<T> type)
+        public final <T> T eval(final String path, final TypeRef<T> type)
         {
             return m_ctxt.read(cast(path), CommonOps.requireNonNull(type));
         }
@@ -235,9 +315,9 @@ public final class JSONPath
         }
 
         @Override
-        public final IEvaluationContext set(final CharSequence path, final Object valu, final Predicate... filters)
+        public final IEvaluationContext set(final String path, final Object valu, final ICriteria... criteria)
         {
-            m_ctxt = m_ctxt.set(cast(path), valu, filters);
+            m_ctxt = m_ctxt.set(cast(path), valu, PredicateCriteria.convert(criteria));
 
             return this;
         }
@@ -251,15 +331,15 @@ public final class JSONPath
         }
 
         @Override
-        public final IEvaluationContext put(final CharSequence path, final CharSequence pkey, final Object valu, final Predicate... filters)
+        public final IEvaluationContext put(final String path, final String pkey, final Object valu, final ICriteria... criteria)
         {
-            m_ctxt = m_ctxt.put(cast(path), cast(pkey), valu, filters);
+            m_ctxt = m_ctxt.put(cast(path), cast(pkey), valu, PredicateCriteria.convert(criteria));
 
             return this;
         }
 
         @Override
-        public final IEvaluationContext put(final ICompiledPath path, final CharSequence pkey, final Object valu)
+        public final IEvaluationContext put(final ICompiledPath path, final String pkey, final Object valu)
         {
             m_ctxt = m_ctxt.put(cast(path), cast(pkey), valu);
 
@@ -267,9 +347,9 @@ public final class JSONPath
         }
 
         @Override
-        public final IEvaluationContext add(final CharSequence path, final Object valu, final Predicate... filters)
+        public final IEvaluationContext add(final String path, final Object valu, final ICriteria... criteria)
         {
-            m_ctxt = m_ctxt.add(cast(path), valu, filters);
+            m_ctxt = m_ctxt.add(cast(path), valu, PredicateCriteria.convert(criteria));
 
             return this;
         }
@@ -283,9 +363,9 @@ public final class JSONPath
         }
 
         @Override
-        public final IEvaluationContext delete(final CharSequence path, final Predicate... filters)
+        public final IEvaluationContext delete(final String path, final ICriteria... criteria)
         {
-            m_ctxt = m_ctxt.delete(cast(path), filters);
+            m_ctxt = m_ctxt.delete(cast(path), PredicateCriteria.convert(criteria));
 
             return this;
         }
@@ -299,11 +379,11 @@ public final class JSONPath
         }
 
         @Override
-        public final IEvaluationContext map(final CharSequence path, final IMappingFunction func, final Predicate... filters)
+        public final IEvaluationContext map(final String path, final IMappingFunction func, final ICriteria... criteria)
         {
             CommonOps.requireNonNull(func);
 
-            m_ctxt = m_ctxt.map(cast(path), (valu, configuration) -> func.apply(valu, this), filters);
+            m_ctxt = m_ctxt.map(cast(path), (valu, configuration) -> func.apply(valu, this), PredicateCriteria.convert(criteria));
 
             return this;
         }

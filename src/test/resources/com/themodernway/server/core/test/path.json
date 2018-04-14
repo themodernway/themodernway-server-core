@@ -1,25 +1,48 @@
 {
-    "id": 7,
-    "name": "Kurtis Weissnat",
-    "username": "Elwyn.Skiles",
-    "email": "Telly.Hoeger@billy.biz",
-    "address": {
-        "street": "Rex Trail",
-        "suite": "Suite 280",
-        "city": "Howemouth",
-        "zipcode": "58804-1099",
-        "geo": {
-            "lat": "24.8918",
-            "lng": "21.8984"
-        },
-        "primary": true
-    },
-    "phone": "210.067.6132",
-    "website": "elvis.io",
-    "company": {
-        "name": "Johns Group",
-        "catchPhrase": "Configurable multimedia task-force",
-        "bs": "generate enterprise e-tailers"
-    },
-    "list": [1, 2, 3, 4, 5]
+	"id": 7,
+	"name": "Kurtis Weissnat",
+	"username": "Elwyn.Skiles",
+	"email": "Telly.Hoeger@billy.biz",
+	"address": {
+		"street": "Rex Trail",
+		"suite": "Suite 280",
+		"city": "Howemouth",
+		"zipcode": "58804-1099",
+		"geo": {
+			"lat": "24.8918",
+			"lng": "21.8984"
+		},
+		"primary": true
+	},
+	"phone": "210.067.6132",
+	"website": "elvis.io",
+	"company": {
+		"name": "Johns Group",
+		"catchPhrase": "Configurable multimedia task-force",
+		"bs": "generate enterprise e-tailers"
+	},
+	"list": [
+		1,
+		2,
+		3,
+		4,
+		5
+	],
+	"movies": [
+		{
+			"id": 0,
+			"title": "Star Wars",
+			"year": 1977
+		},
+		{
+			"id": 1,
+			"title": "ET",
+			"year": 1980
+		},
+		{
+			"id": 2,
+			"title": "Godfather",
+			"year": 1976
+		}
+	]
 }

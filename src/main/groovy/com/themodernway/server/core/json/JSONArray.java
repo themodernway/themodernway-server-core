@@ -17,7 +17,6 @@
 package com.themodernway.server.core.json;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -298,10 +297,6 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         {
             return toString().equals(other.toString());
         }
-        if (other instanceof List)
-        {
-            return toString().equals(new JSONArray((List<?>) other).toString());
-        }
         return false;
     }
 
@@ -342,9 +337,7 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     @Override
     public JSONArray reverse()
     {
-        Collections.reverse(this);
-
-        return this;
+        return CommonOps.reverse(this);
     }
 
     @Override
