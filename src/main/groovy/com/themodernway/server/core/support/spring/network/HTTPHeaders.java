@@ -64,76 +64,52 @@ public class HTTPHeaders extends HttpHeaders implements JSONObjectSupplier, JSON
 
     public HTTPHeaders(final HttpServletRequest request)
     {
-        addAll(new ServletServerHttpRequest(request).getHeaders());
+        this(new ServletServerHttpRequest(request).getHeaders());
     }
 
-    public void setHttpServletResponse(final HttpServletResponse response)
+    public HTTPHeaders setHttpServletResponse(final HttpServletResponse response)
     {
-        final ServletServerHttpResponse resp = new ServletServerHttpResponse(response);
-
-        resp.getHeaders().addAll(this);
-
-        resp.close();
-    }
-
-    public HTTPHeaders doRESTHeaders()
-    {
-        return doRESTHeaders(DEFAULT_USER_AGENT);
-    }
-
-    public HTTPHeaders doRESTHeaders(final String ua)
-    {
-        final List<String> json = get(ACCEPT);
-
-        if ((null == json) || (json.isEmpty()))
+        try (ServletServerHttpResponse resp = new ServletServerHttpResponse(response))
         {
-            setAccept(JSON_ACCEPT_MEDIA_TYPE);
+            resp.getHeaders().addAll(this);
         }
-        final List<MediaType> list = getAccept();
+        return this;
+    }
 
-        if ((null == list) || (list.isEmpty()))
+    public HTTPHeaders setIfAccept()
+    {
+        if (null == get(ACCEPT))
         {
-            setAccept(JSON_ACCEPT_MEDIA_TYPE);
+            setAccept();
         }
-        return doUserAgent(ua);
+        return this;
     }
 
-    public HTTPHeaders doUserAgent()
+    public HTTPHeaders setIfUserAgent(final String ua)
     {
-        return doUserAgent(DEFAULT_USER_AGENT);
-    }
-
-    public HTTPHeaders doUserAgent(final String ua)
-    {
-        return addUserAgent(StringOps.toTrimOrElse(ua, DEFAULT_USER_AGENT));
-    }
-
-    public HTTPHeaders addUserAgent(String ua)
-    {
-        ua = StringOps.toTrimOrNull(ua);
-
-        if (null != ua)
+        if (null == get(USER_AGENT))
         {
-            final List<String> list = get(USER_AGENT);
-
-            if ((null == list) || (list.isEmpty()))
-            {
-                add(USER_AGENT, ua);
-            }
-            else
-            {
-                for (String item : list)
-                {
-                    item = StringOps.toTrimOrNull(item);
-
-                    if ((null != item) && (ua.equalsIgnoreCase(item)))
-                    {
-                        return this;
-                    }
-                }
-                add(USER_AGENT, ua);
-            }
+            setUserAgent(ua);
         }
+        return this;
+    }
+
+    public HTTPHeaders setAccept()
+    {
+        setAccept(JSON_ACCEPT_MEDIA_TYPE);
+
+        return this;
+    }
+
+    public HTTPHeaders setUserAgent(final String ua)
+    {
+        return reset(USER_AGENT, StringOps.toTrimOrElse(ua, DEFAULT_USER_AGENT));
+    }
+
+    public HTTPHeaders append(final HttpHeaders head)
+    {
+        super.addAll(head);
+
         return this;
     }
 

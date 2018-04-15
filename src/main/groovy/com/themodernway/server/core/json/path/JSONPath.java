@@ -51,71 +51,21 @@ public final class JSONPath
 
     private static final Configuration builder(final ObjectMapper mapper)
     {
-        return Configuration.builder().jsonProvider(new InternalJacksonJsonProvider(mapper)).mappingProvider(new JacksonMappingProvider(mapper)).options(Option.SUPPRESS_EXCEPTIONS).build();
-    }
-
-    private static final String cast(final String valu)
-    {
-        return CommonOps.requireNonNull(valu);
-    }
-
-    static final Configuration config()
-    {
-        return CONFIG;
+        return Configuration.builder().jsonProvider(new InternalJSONProvider(mapper)).mappingProvider(new InternalMappingProvider(mapper)).options(Option.SUPPRESS_EXCEPTIONS).build();
     }
 
     private JSONPath()
     {
     }
 
-    public static final CriteriaBuilder where(final String pkey)
-    {
-        return new CriteriaBuilder(pkey);
-    }
-
-    public static final FilterBuilder filter(final String parse)
-    {
-        return new FilterBuilder(parse);
-    }
-
-    public static final FilterBuilder filter(final ICriteria criteria)
-    {
-        return new FilterBuilder(criteria);
-    }
-
-    public static final FilterBuilder filter(final ICriteria... criteria)
-    {
-        return new FilterBuilder(criteria);
-    }
-
-    public static final FilterBuilder filter(final ICriteriaBuilder builder)
-    {
-        return new FilterBuilder(builder);
-    }
-
     public static final ICompiledPath compile(final String path)
     {
-        return new InternalCompiledPath(JsonPath.compile(cast(path)));
-    }
-
-    public static final ICompiledPath compile(final String path, final ICriteria criteria)
-    {
-        return new InternalCompiledPath(JsonPath.compile(cast(path), PredicateCriteria.convert(criteria)));
-    }
-
-    public static final ICompiledPath compile(final String path, final ICriteria... criteria)
-    {
-        return new InternalCompiledPath(JsonPath.compile(cast(path), PredicateCriteria.convert(criteria)));
-    }
-
-    public static final ICompiledPath compile(final String path, final ICriteriaBuilder builder)
-    {
-        return new InternalCompiledPath(JsonPath.compile(cast(path), PredicateCriteria.convert(builder.build())));
+        return new InternalCompiledPath(JsonPath.compile(CommonOps.requireNonNull(path)));
     }
 
     public static final IEvaluationContext parse(final Object object)
     {
-        return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(object), config()));
+        return new InternalEvaluationContext(JsonPath.parse(CommonOps.requireNonNull(object), CONFIG));
     }
 
     public static final IEvaluationContext parse(final String json) throws ParserException
@@ -163,23 +113,31 @@ public final class JSONPath
         return parse(BINDER.bindJSON(properties));
     }
 
-    private static final class InternalJacksonJsonProvider extends JacksonJsonProvider
+    private static final class InternalJSONProvider extends JacksonJsonProvider
     {
-        public InternalJacksonJsonProvider(final ObjectMapper mapper)
+        InternalJSONProvider(final ObjectMapper mapper)
         {
             super(mapper, mapper.reader().forType(Object.class));
         }
 
         @Override
-        public JSONArray createArray()
+        public final JSONArray createArray()
         {
             return new JSONArray();
         }
 
         @Override
-        public JSONObject createMap()
+        public final JSONObject createMap()
         {
             return new JSONObject();
+        }
+    }
+
+    private static final class InternalMappingProvider extends JacksonMappingProvider
+    {
+        InternalMappingProvider(final ObjectMapper mapper)
+        {
+            super(mapper);
         }
     }
 
@@ -187,7 +145,7 @@ public final class JSONPath
     {
         private final JsonPath m_path;
 
-        private InternalCompiledPath(final JsonPath path)
+        InternalCompiledPath(final JsonPath path)
         {
             m_path = CommonOps.requireNonNull(path);
         }
@@ -205,9 +163,9 @@ public final class JSONPath
         }
 
         @Override
-        public final <T> T getCompiledPath()
+        public final <T> T getCompiledPath(final Class<T> type)
         {
-            return CommonOps.CAST(m_path);
+            return type.cast(m_path);
         }
     }
 
@@ -215,17 +173,7 @@ public final class JSONPath
     {
         private DocumentContext m_ctxt;
 
-        private static final JsonPath cast(final ICompiledPath path)
-        {
-            return path.getCompiledPath();
-        }
-
-        private static final String cast(final String valu)
-        {
-            return CommonOps.requireNonNull(valu);
-        }
-
-        private InternalEvaluationContext(final DocumentContext ctxt)
+        InternalEvaluationContext(final DocumentContext ctxt)
         {
             m_ctxt = CommonOps.requireNonNull(ctxt);
         }
@@ -245,95 +193,43 @@ public final class JSONPath
         @Override
         public final <T> T eval(final String path)
         {
-            return m_ctxt.read(cast(path));
-        }
-
-        @Override
-        public final <T> T eval(final String path, final ICriteria criteria)
-        {
-            return m_ctxt.read(cast(path), PredicateCriteria.convert(criteria));
-        }
-
-        @Override
-        public final <T> T eval(final String path, final ICriteria... criteria)
-        {
-            return m_ctxt.read(cast(path), PredicateCriteria.convert(criteria));
-        }
-
-        @Override
-        public final <T> T eval(final String path, final ICriteriaBuilder builder)
-        {
-            return m_ctxt.read(cast(path), PredicateCriteria.convert(builder.build()));
+            return m_ctxt.read(CommonOps.requireNonNull(path));
         }
 
         @Override
         public final <T> T eval(final String path, final Class<T> type)
         {
-            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type));
-        }
-
-        @Override
-        public final <T> T eval(final String path, final Class<T> type, final ICriteria criteria)
-        {
-            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type), PredicateCriteria.convert(criteria));
-        }
-
-        @Override
-        public final <T> T eval(final String path, final Class<T> type, final ICriteria... criteria)
-        {
-            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type), PredicateCriteria.convert(criteria));
-        }
-
-        @Override
-        public final <T> T eval(final String path, final Class<T> type, final ICriteriaBuilder builder)
-        {
-            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type), PredicateCriteria.convert(builder.build()));
+            return m_ctxt.read(CommonOps.requireNonNull(path), CommonOps.requireNonNull(type));
         }
 
         @Override
         public final <T> T eval(final ICompiledPath path)
         {
-            return m_ctxt.read(cast(path));
+            return m_ctxt.read(path.getCompiledPath(JsonPath.class));
         }
 
         @Override
         public final <T> T eval(final ICompiledPath path, final Class<T> type)
         {
-            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type));
+            return m_ctxt.read(path.getCompiledPath(JsonPath.class), CommonOps.requireNonNull(type));
         }
 
         @Override
         public final <T> T eval(final String path, final TypeRef<T> type)
         {
-            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type));
+            return m_ctxt.read(CommonOps.requireNonNull(path), CommonOps.requireNonNull(type));
         }
 
         @Override
         public final <T> T eval(final ICompiledPath path, final TypeRef<T> type)
         {
-            return m_ctxt.read(cast(path), CommonOps.requireNonNull(type));
-        }
-
-        @Override
-        public final IEvaluationContext set(final String path, final Object valu, final ICriteria... criteria)
-        {
-            m_ctxt = m_ctxt.set(cast(path), valu, PredicateCriteria.convert(criteria));
-
-            return this;
+            return m_ctxt.read(path.getCompiledPath(JsonPath.class), CommonOps.requireNonNull(type));
         }
 
         @Override
         public final IEvaluationContext set(final ICompiledPath path, final Object valu)
         {
-            m_ctxt = m_ctxt.set(cast(path), valu);
-
-            return this;
-        }
-
-        @Override
-        public final IEvaluationContext put(final String path, final String pkey, final Object valu, final ICriteria... criteria)
-        {
-            m_ctxt = m_ctxt.put(cast(path), cast(pkey), valu, PredicateCriteria.convert(criteria));
+            m_ctxt = m_ctxt.set(path.getCompiledPath(JsonPath.class), valu);
 
             return this;
         }
@@ -341,15 +237,7 @@ public final class JSONPath
         @Override
         public final IEvaluationContext put(final ICompiledPath path, final String pkey, final Object valu)
         {
-            m_ctxt = m_ctxt.put(cast(path), cast(pkey), valu);
-
-            return this;
-        }
-
-        @Override
-        public final IEvaluationContext add(final String path, final Object valu, final ICriteria... criteria)
-        {
-            m_ctxt = m_ctxt.add(cast(path), valu, PredicateCriteria.convert(criteria));
+            m_ctxt = m_ctxt.put(path.getCompiledPath(JsonPath.class), CommonOps.requireNonNull(pkey), valu);
 
             return this;
         }
@@ -357,15 +245,7 @@ public final class JSONPath
         @Override
         public final IEvaluationContext add(final ICompiledPath path, final Object valu)
         {
-            m_ctxt = m_ctxt.add(cast(path), valu);
-
-            return this;
-        }
-
-        @Override
-        public final IEvaluationContext delete(final String path, final ICriteria... criteria)
-        {
-            m_ctxt = m_ctxt.delete(cast(path), PredicateCriteria.convert(criteria));
+            m_ctxt = m_ctxt.add(path.getCompiledPath(JsonPath.class), valu);
 
             return this;
         }
@@ -373,17 +253,7 @@ public final class JSONPath
         @Override
         public final IEvaluationContext delete(final ICompiledPath path)
         {
-            m_ctxt = m_ctxt.delete(cast(path));
-
-            return this;
-        }
-
-        @Override
-        public final IEvaluationContext map(final String path, final IMappingFunction func, final ICriteria... criteria)
-        {
-            CommonOps.requireNonNull(func);
-
-            m_ctxt = m_ctxt.map(cast(path), (valu, configuration) -> func.apply(valu, this), PredicateCriteria.convert(criteria));
+            m_ctxt = m_ctxt.delete(path.getCompiledPath(JsonPath.class));
 
             return this;
         }
@@ -393,7 +263,7 @@ public final class JSONPath
         {
             CommonOps.requireNonNull(func);
 
-            m_ctxt = m_ctxt.map(cast(path), (valu, configuration) -> func.apply(valu, this));
+            m_ctxt = m_ctxt.map(path.getCompiledPath(JsonPath.class), (valu, configuration) -> func.apply(valu, this));
 
             return this;
         }

@@ -16,12 +16,13 @@
 
 package com.themodernway.server.core.test
 
+import static com.themodernway.server.core.json.path.JSONPath.compile
+
 import com.jayway.jsonpath.TypeRef
 import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.binder.BinderType
-import com.themodernway.server.core.json.path.JSONPath
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
@@ -100,7 +101,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test binder 4"()
     {
         setup:
-        def path = JSONPath.compile('$.address')
+        def path = compile('$.address')
         def rest = bindJSON()
         def look = rest.path().eval(path)
 
@@ -114,7 +115,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test binder 5"()
     {
         setup:
-        def path = JSONPath.compile('$.list')
+        def path = compile('$.list')
         def rest = bindJSON()
         def look = rest.path().eval(path)
 
@@ -128,7 +129,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test binder 6"()
     {
         setup:
-        def path = JSONPath.compile('$.list')
+        def path = compile('$.list')
         def rest = json(list: CommonOps.toArray(10, 20, 30))
         def look = rest.path().eval(path)
 
@@ -143,7 +144,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test binder 7"()
     {
         setup:
-        def path = JSONPath.compile('$.list')
+        def path = compile('$.list')
         def rest = json(list: CommonOps.toStream(10, 20, 30))
         def look = rest.path().eval(path)
 
@@ -158,7 +159,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test binder 8"()
     {
         setup:
-        def path = JSONPath.compile('$.list')
+        def path = compile('$.list')
         def rest = json(list: CommonOps.toOptional(CommonOps.toStream(10, 20, 30)))
         def look = rest.path().eval(path)
 
@@ -173,7 +174,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test binder copy 1"()
     {
         setup:
-        def path = JSONPath.compile('$.list')
+        def path = compile('$.list')
         def rest = json(list: CommonOps.toArray(10, 20, 30))
         def look = rest.path(true).eval(path)
 
@@ -188,7 +189,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test binder copy 2"()
     {
         setup:
-        def path = JSONPath.compile('$.list')
+        def path = compile('$.list')
         def rest = json(list: CommonOps.toStream(10, 20, 30))
         def look = rest.path(true).eval(path)
 
@@ -203,7 +204,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test binder copy 3"()
     {
         setup:
-        def path = JSONPath.compile('$.list')
+        def path = compile('$.list')
         def rest = json(list: CommonOps.toOptional(CommonOps.toStream(10, 20, 30)))
         def look = rest.path(true).eval(path)
 
@@ -239,7 +240,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     {
         setup:
         def look
-        def path = JSONPath.compile('$.list')
+        def path = compile('$.list')
         def rest = bindJSON()
         def ctxt = rest.path()
         def time = new NanoTimer()
@@ -280,7 +281,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     {
         setup:
         def look
-        def path = JSONPath.compile('$.list')
+        def path = compile('$.list')
         def rest = bindJSON()
         def ctxt = rest.path()
         def type = new TypeRef<List<Integer>>(){}
@@ -300,9 +301,8 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test binder array 0"()
     {
         setup:
-        def path = JSONPath.compile('$[0]')
-        def valu = jarr([json(name: "Dean"), json(name: "Jones")])
-        def ctxt = JSONPath.parse(valu)
+        def path = compile('$[0]')
+        def ctxt = jarr([json(name: "Dean"), json(name: "Jones")]).path()
         def look = ctxt.eval(path)
 
         expect:
@@ -316,9 +316,8 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test binder array *"()
     {
         setup:
-        def path = JSONPath.compile('$[*]')
-        def valu = jarr([json(name: "Dean"), json(name: "Jones")])
-        def ctxt = JSONPath.parse(valu)
+        def path = compile('$[*]')
+        def ctxt = jarr([json(name: "Dean"), json(name: "Jones")]).path()
         def look = ctxt.eval(path)
 
         expect:
@@ -332,7 +331,7 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test path conditional 0"()
     {
         setup:
-        def path = JSONPath.compile('$.movies[?(@.year >= 1977)].title')
+        def path = compile('$.movies[?(@.year >= 1977)].title')
         def rest = bindJSON()
         def ctxt = rest.path()
         def time = new NanoTimer()
@@ -350,7 +349,25 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
     def "test path conditional 1"()
     {
         setup:
-        def path = JSONPath.compile('$.movies[?(@.year < 2000)].id')
+        def path = compile('$.movies[?(@.year < 2000)].id')
+        def rest = bindJSON()
+        def ctxt = rest.path()
+        def time = new NanoTimer()
+        def look = ctxt.eval(path)
+        echo time
+
+        expect:
+        look != null
+
+        cleanup:
+        echo look.getClass()
+        echo json(result: look)
+    }
+
+    def "test path conditional 3"()
+    {
+        setup:
+        def path = compile('$.movies[?(@.id > 1)].year')
         def rest = bindJSON()
         def ctxt = rest.path()
         def time = new NanoTimer()

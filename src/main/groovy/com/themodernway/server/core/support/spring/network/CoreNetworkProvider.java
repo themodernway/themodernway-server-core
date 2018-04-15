@@ -18,7 +18,6 @@ package com.themodernway.server.core.support.spring.network;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Map;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
@@ -46,27 +45,25 @@ import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, InitializingBean
 {
-    public static final String               APACHE_FACTORY_NAME = "apache";
+    public static final String             APACHE_FACTORY_NAME = "apache";
 
-    public static final String               OKHTTP_FACTORY_NAME = "okhttp";
+    public static final String             OKHTTP_FACTORY_NAME = "okhttp";
 
-    public static final String               SIMPLE_FACTORY_NAME = "simple";
+    public static final String             SIMPLE_FACTORY_NAME = "simple";
 
-    public static final String               NATIVE_FACTORY_NAME = "native";
+    public static final String             NATIVE_FACTORY_NAME = "native";
 
-    private static final Map<String, Object> EPARAM              = CommonOps.emptyMap();
+    private String                         m_user_agent        = HTTPHeaders.DEFAULT_USER_AGENT;
 
-    private String                           m_user_agent        = HTTPHeaders.DEFAULT_USER_AGENT;
+    private final Logger                   m_has_logger        = LoggingOps.getLogger(getClass());
 
-    private final Logger                     m_has_logger        = LoggingOps.getLogger(getClass());
+    private final HTTPHeaders              m_no_headers        = new HTTPHeaders().setAccept().setUserAgent(m_user_agent);
 
-    private final HTTPHeaders                m_no_headers        = new HTTPHeaders();
+    private final RestTemplate             m_rest_execs        = new RestTemplate(CommonOps.toList(new CoreJSONHttpMessageConverter()));
 
-    private final RestTemplate               m_rest_execs        = new RestTemplate(CommonOps.toList(new CoreJSONHttpMessageConverter()));
+    private final CoreFactoryCache         m_fact_cache        = new CoreFactoryCache(m_has_logger);
 
-    private final CoreFactoryCache           m_fact_cache        = new CoreFactoryCache(m_has_logger);
-
-    private final DefaultUriBuilderFactory   m_urlhandler        = new DefaultUriBuilderFactory();
+    private final DefaultUriBuilderFactory m_urlhandler        = new DefaultUriBuilderFactory();
 
     private static final class CoreResponseErrorHandler implements ResponseErrorHandler
     {
@@ -198,8 +195,6 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
     public CoreNetworkProvider()
     {
-        m_no_headers.doRESTHeaders(getUserAgent());
-
         m_rest_execs.setUriTemplateHandler(m_urlhandler);
 
         m_rest_execs.setErrorHandler(new CoreResponseErrorHandler());
@@ -249,6 +244,8 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
     public void setUserAgent(final String agent)
     {
         m_user_agent = StringOps.toTrimOrElse(agent, HTTPHeaders.DEFAULT_USER_AGENT);
+
+        m_no_headers.setUserAgent(m_user_agent);
     }
 
     @Override
@@ -383,36 +380,27 @@ public class CoreNetworkProvider implements ICoreNetworkProvider, IHasLogging, I
 
     protected IRESTResponse exec(final String path, final HttpMethod method, final JSONObject request, final PathParameters params, HTTPHeaders headers)
     {
-        final String curl = CommonOps.requireNonNullOrElse(path, StringOps.EMPTY_STRING);
-
         if (null == headers)
         {
             headers = m_no_headers;
         }
         else
         {
-            headers.doRESTHeaders(getUserAgent());
+            headers.setIfAccept().setIfUserAgent(getUserAgent());
         }
         try
         {
-            if (null == params)
-            {
-                return new CoreRESTResponse(this, m_rest_execs.exchange(curl, method, new HttpEntity<>(request, headers), JSONObject.class, EPARAM));
-            }
-            else
-            {
-                return new CoreRESTResponse(this, m_rest_execs.exchange(curl, method, new HttpEntity<>(request, headers), JSONObject.class, params));
-            }
+            return new CoreRESTResponse(m_rest_execs.exchange(path, method, new HttpEntity<>(request, headers), JSONObject.class, PathParameters.parameters(params)));
         }
         catch (final Exception e)
         {
             if (logger().isErrorEnabled())
             {
-                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("ERROR: method(%s) url(%s) headers(%s).", method, m_rest_execs.getUriTemplateHandler().expand(curl, CommonOps.requireNonNullOrElse(params, EPARAM)).toString(), headers), e);
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("ERROR: method(%s) url(%s) headers(%s).", method, m_rest_execs.getUriTemplateHandler().expand(path, PathParameters.parameters(params)).toString(), headers), e);
             }
             final HTTPHeaders keep = new HTTPHeaders(headers);
 
-            return new CoreRESTResponse(this, HttpStatus.INTERNAL_SERVER_ERROR, new JSONObject().set("error", e.getMessage()), () -> keep);
+            return new CoreRESTResponse(HttpStatus.INTERNAL_SERVER_ERROR, new JSONObject().set("error", e.getMessage()), () -> keep);
         }
     }
 

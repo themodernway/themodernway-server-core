@@ -27,6 +27,4 @@ public interface IRESTResponse
     public JSONObject json();
 
     public HTTPHeaders headers();
-
-    public ICoreNetworkProvider network();
 }

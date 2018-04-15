@@ -25,23 +25,19 @@ import com.themodernway.server.core.json.JSONObject;
 
 public class CoreRESTResponse implements IRESTResponse
 {
-    private final Supplier<HTTPHeaders> m_head;
-
     private final HttpStatus            m_stat;
-
-    private final ICoreNetworkProvider  m_prov;
 
     private final JSONObject            m_json;
 
-    public CoreRESTResponse(final ICoreNetworkProvider prov, final ResponseEntity<JSONObject> resp)
+    private final Supplier<HTTPHeaders> m_head;
+
+    public CoreRESTResponse(final ResponseEntity<JSONObject> resp)
     {
-        this(prov, resp.getStatusCode(), (resp.hasBody() ? resp.getBody() : null), () -> new HTTPHeaders(resp.getHeaders()));
+        this(resp.getStatusCode(), (resp.hasBody() ? resp.getBody() : null), () -> new HTTPHeaders(resp.getHeaders()));
     }
 
-    public CoreRESTResponse(final ICoreNetworkProvider prov, final HttpStatus stat, final JSONObject body, final Supplier<HTTPHeaders> head)
+    public CoreRESTResponse(final HttpStatus stat, final JSONObject body, final Supplier<HTTPHeaders> head)
     {
-        m_prov = prov;
-
         m_stat = stat;
 
         m_json = body;
@@ -71,11 +67,5 @@ public class CoreRESTResponse implements IRESTResponse
     public boolean good()
     {
         return m_stat.is2xxSuccessful();
-    }
-
-    @Override
-    public ICoreNetworkProvider network()
-    {
-        return m_prov;
     }
 }

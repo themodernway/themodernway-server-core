@@ -16,15 +16,32 @@
 
 package com.themodernway.server.core.support.spring.network;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
-public class PathParameters extends HashMap<String, Object>
-{
-    private static final long serialVersionUID = 1L;
+import com.themodernway.common.api.java.util.CommonOps;
 
-    public PathParameters(final Map<String, ?> vars)
+public final class PathParameters
+{
+    private final Map<String, ?> m_parameters;
+
+    public PathParameters(final Map<String, ?> parameters)
     {
-        super(vars);
+        m_parameters = CommonOps.toUnmodifiableMap(parameters);
+    }
+
+    public PathParameters(final String parameter, final Object value)
+    {
+        m_parameters = Collections.singletonMap(parameter, value);
+    }
+
+    public final Map<String, ?> getParameters()
+    {
+        return m_parameters;
+    }
+
+    public static final Map<String, ?> parameters(final PathParameters parameters)
+    {
+        return (null != parameters) ? parameters.getParameters() : CommonOps.emptyMap();
     }
 }

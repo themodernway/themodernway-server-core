@@ -62,9 +62,8 @@ checkstyle {
 tasks.withType(Checkstyle) { source 'src/main' }
 
 task deleteConfigs(type: Delete) {
-    def tree = project.fileTree(dir: "${buildDir}/resources/main")
-    tree.each { file ->
-        delete(file)
+    project.fileTree(dir: "${buildDir}/resources/main").each { file ->
+        file.delete()
     }
 }
 

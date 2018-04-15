@@ -20,5 +20,5 @@ public interface ICompiledPath
 {
     public boolean isDefinite();
 
-    public <T> T getCompiledPath();
+    public <T> T getCompiledPath(Class<T> type);
 }

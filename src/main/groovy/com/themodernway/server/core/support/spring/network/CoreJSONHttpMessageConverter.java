@@ -63,7 +63,7 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
     {
         try
         {
-            return BINDER.bindJSON(new UTF8Reader(message.getBody(), false));
+            return BINDER.bindJSON(new UTF8Reader(message.getBody(), true));
         }
         catch (final ParserException e)
         {

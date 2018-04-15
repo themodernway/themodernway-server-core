@@ -64,6 +64,34 @@ public class RESTTestsSpecification extends ServerCoreSpecification implements C
         echo answ
     }
 
+    def "REST GET users 7 loop off"()
+    {
+        setup:
+        def n = network()
+        def t = new NanoTimer()
+        def list = (1..100).collect { int id ->
+            n.get('https://jsonplaceholder.typicode.com/users/7').json()
+        }
+        echo t.toString() + " 7 test parallel off"
+
+        expect:
+        list.size() == 100
+    }
+
+    def "REST GET users 7 loop on"()
+    {
+        setup:
+        def n = network()
+        def t = new NanoTimer()
+        def list = parallel(1..100).collect { int id ->
+            n.get('https://jsonplaceholder.typicode.com/users/7').json()
+        }
+        echo t.toString() + " 7 test parallel on"
+
+        expect:
+        list.size() == 100
+    }
+
     def "REST GET posts PathPaeameters(id:50)"()
     {
         setup:
