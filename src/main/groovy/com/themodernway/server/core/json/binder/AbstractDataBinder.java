@@ -26,6 +26,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -40,12 +41,16 @@ import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
+import com.themodernway.server.core.json.binder.PropertiesBinder.CorePropertiesMapper;
+import com.themodernway.server.core.json.binder.XMLBinder.CoreXMLMapper;
+import com.themodernway.server.core.json.binder.YAMLBinder.CoreYAMLMapper;
 
 public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBinder
 {
     private M m_mapper;
 
-    protected static final JSONObject xjson(final Map<?, ?> make)
+    protected static final JSONObject json(final Map<?, ?> make)
     {
         return new JSONObject(CommonOps.rawmap(make));
     }
@@ -303,7 +308,14 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public <T> T bind(final Properties properties, final Class<T> claz) throws ParserException
     {
-        return BinderType.PROPERTIES.getBinder().bind(properties, claz);
+        try
+        {
+            return getMapperForProperties().readPropertiesAs(properties, claz);
+        }
+        catch (final IOException e)
+        {
+            throw new ParserException(e);
+        }
     }
 
     @Override
@@ -317,13 +329,13 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
         {
             return claz.cast(object);
         }
-        if (String.class.equals(claz) || CharSequence.class.equals(claz))
+        if (String.class.equals(claz))
         {
             return CommonOps.CAST(toString(object));
         }
         try
         {
-            return m_mapper.convertValue(object, claz);
+            return getMapperForJSON().convertValue(object, claz);
         }
         catch (final IllegalArgumentException e)
         {
@@ -334,55 +346,55 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public JSONObject bindJSON(final Path path) throws ParserException
     {
-        return bind(path, JSONObject.class);
+        return json(bind(path, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final File file) throws ParserException
     {
-        return bind(file, JSONObject.class);
+        return json(bind(file, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final IFileItem file) throws ParserException
     {
-        return bind(file, JSONObject.class);
+        return json(bind(file, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final InputStream stream) throws ParserException
     {
-        return bind(stream, JSONObject.class);
+        return json(bind(stream, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final Reader reader) throws ParserException
     {
-        return bind(reader, JSONObject.class);
+        return json(bind(reader, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final Resource resource) throws ParserException
     {
-        return bind(resource, JSONObject.class);
+        return json(bind(resource, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final URL url) throws ParserException
     {
-        return bind(url, JSONObject.class);
+        return json(bind(url, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final CharSequence text) throws ParserException
     {
-        return bind(text, JSONObject.class);
+        return json(bind(text, LinkedHashMap.class));
     }
 
     @Override
     public JSONObject bindJSON(final Properties properties) throws ParserException
     {
-        return bind(properties, JSONObject.class);
+        return json(bind(properties, LinkedHashMap.class));
     }
 
     @Override
@@ -469,21 +481,28 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         CommonOps.requireNonNull(object);
 
-        if (object instanceof JSONObject)
+        try
         {
-            return ((JSONObject) object);
+            if (object instanceof JSONObject)
+            {
+                return ((JSONObject) object);
+            }
+            else if (object instanceof Map)
+            {
+                return json((Map<?, ?>) object);
+            }
+            else if (object instanceof CharSequence)
+            {
+                return bindJSON(object.toString());
+            }
+            else
+            {
+                return bindJSON(getMapperForJSON().writeValueAsString(object));
+            }
         }
-        else if (object instanceof Map)
+        catch (final IOException e)
         {
-            return new JSONObject(CommonOps.rawmap((Map<?, ?>) object));
-        }
-        else if (object instanceof CharSequence)
-        {
-            return bindJSON(object.toString());
-        }
-        else
-        {
-            return bindJSON(BinderType.PROPERTIES.getBinder().toString(object));
+            throw new ParserException(e);
         }
     }
 
@@ -513,5 +532,25 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     public M getMapper()
     {
         return m_mapper;
+    }
+
+    protected CoreObjectMapper getMapperForJSON()
+    {
+        return new CoreObjectMapper();
+    }
+
+    protected CorePropertiesMapper getMapperForProperties()
+    {
+        return new CorePropertiesMapper();
+    }
+
+    protected CoreXMLMapper getMapperForXML()
+    {
+        return new CoreXMLMapper();
+    }
+
+    protected CoreYAMLMapper getMapperForYAML()
+    {
+        return new CoreYAMLMapper();
     }
 }
