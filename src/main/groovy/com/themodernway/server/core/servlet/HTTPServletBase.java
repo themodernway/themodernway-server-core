@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
+import org.springframework.http.HttpMethod;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.themodernway.common.api.java.util.CommonOps;
@@ -43,13 +44,17 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
 
     private final List<String>                     m_roleslist;
 
+    private final IServletExceptionHandler         m_exception;
+
     private final ISessionIDFromRequestExtractor   m_extractor;
 
     private final IServletResponseErrorCodeManager m_errorcode;
 
-    protected HTTPServletBase(final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
+    protected HTTPServletBase(final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr, final IServletExceptionHandler excp)
     {
-        m_ratelimit = RateLimiterFactory.create(rate);
+        m_exception = excp;
+
+        m_ratelimit = limiter(rate);
 
         m_roleslist = requireNonNullOrElse(role, () -> arrayList());
 
@@ -76,13 +81,16 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
     }
 
     @Override
-    public void acquire()
+    public void acquire(final int units)
     {
-        final RateLimiter rate = getRateLimiter();
-
-        if (null != rate)
+        if (units > 0)
         {
-            rate.acquire();
+            final RateLimiter rate = getRateLimiter();
+
+            if (null != rate)
+            {
+                rate.acquire(units);
+            }
         }
     }
 
@@ -103,9 +111,19 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         return toUnmodifiableList(m_roleslist);
     }
 
+    public IServletExceptionHandler getServletExceptionHandler()
+    {
+        return m_exception;
+    }
+
     public IServletResponseErrorCodeManager getServletResponseErrorCodeManager()
     {
         return m_errorcode;
+    }
+
+    public ISessionIDFromRequestExtractor getSessionIDFromRequestExtractor()
+    {
+        return m_extractor;
     }
 
     protected void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code)
@@ -209,74 +227,84 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
                     return;
                 }
             }
+            if (null != session)
+            {
+                setSessionIntoRequest(request, session);
+            }
             response.setCharacterEncoding(CHARSET_UTF_8);
 
-            final String meth = toTrimOrElse(request.getMethod(), StringOps.EMPTY_STRING).toUpperCase();
+            final HttpMethod meth = HttpMethod.resolve(toTrimOrElse(request.getMethod(), StringOps.EMPTY_STRING).toUpperCase());
 
-            if (HTTP_METHOD_GET.equals(meth))
+            switch (meth)
             {
-                doGet(request, response);
+                case GET:
+                {
+                    doGet(request, response);
 
-                return;
-            }
-            else if (HTTP_METHOD_HEAD.equals(meth))
-            {
-                doHead(request, response);
+                    return;
+                }
+                case HEAD:
+                {
+                    doHead(request, response);
 
-                return;
-            }
-            else if (HTTP_METHOD_POST.equals(meth))
-            {
-                doPost(request, response);
+                    return;
+                }
+                case POST:
+                {
+                    doPost(request, response);
 
-                return;
-            }
-            else if (HTTP_METHOD_PUT.equals(meth))
-            {
-                doPut(request, response);
+                    return;
+                }
+                case PUT:
+                {
+                    doPut(request, response);
 
-                return;
-            }
-            else if (HTTP_METHOD_DELETE.equals(meth))
-            {
-                doDelete(request, response);
+                    return;
+                }
+                case DELETE:
+                {
+                    doDelete(request, response);
 
-                return;
-            }
-            else if (HTTP_METHOD_PATCH.equals(meth))
-            {
-                doPatch(request, response);
+                    return;
+                }
+                case PATCH:
+                {
+                    doPatch(request, response);
 
-                return;
-            }
-            else if (HTTP_METHOD_OPTIONS.equals(meth))
-            {
-                doOptions(request, response);
+                    return;
+                }
+                case OPTIONS:
+                {
+                    doOptions(request, response);
 
-                return;
-            }
-            else if (HTTP_METHOD_TRACE.equals(meth))
-            {
-                doTrace(request, response);
+                    return;
+                }
+                case TRACE:
+                {
+                    doTrace(request, response);
 
-                return;
+                    return;
+                }
+                default:
+                {
+                    super.service(request, response);
+
+                    return;
+                }
             }
-            super.service(request, response);
         }
         catch (final Exception e)
         {
-            if (logger().isErrorEnabled())
+            final IServletExceptionHandler handler = getServletExceptionHandler();
+
+            if ((null == handler) || (false == handler.handle(request, response, getServletResponseErrorCodeManager(), e)))
             {
-                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
+                }
+                sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            return;
         }
-    }
-
-    public ISessionIDFromRequestExtractor getSessionIDFromRequestExtractor()
-    {
-        return m_extractor;
     }
 }

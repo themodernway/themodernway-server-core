@@ -69,6 +69,6 @@ public class ContentUploadServletContextCustomizer extends ServletFactoryContext
     @Override
     public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        return new ContentUploadServlet(getFileItemStorageName(), getFileSizeLimit(), customizer.getRateLimit(), customizer.getRequiredRoles(), customizer.getServletResponseErrorCodeManager(), customizer.getSessionIDFromRequestExtractor());
+        return new ContentUploadServlet(getFileItemStorageName(), getFileSizeLimit(), customizer.getRateLimit(), customizer.getRequiredRoles(), customizer.getServletResponseErrorCodeManager(), customizer.getSessionIDFromRequestExtractor(), customizer.getServletExceptionHandler());
     }
 }

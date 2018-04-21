@@ -106,8 +106,6 @@ public class SimpleJSONServerSessionRepository extends AbstractServerSessionRepo
     @Override
     public void close() throws IOException
     {
-        setActive(false);
-
         m_sessions.clear();
     }
 }

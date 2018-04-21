@@ -31,8 +31,6 @@ public final class FunctionMemoizer<T, R>
 
     private final Function<T, R> remember(final Function<T, R> function)
     {
-        CommonOps.requireNonNull(function);
-
         return input -> m_cache.computeIfAbsent(input, function);
     }
 

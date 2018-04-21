@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.springframework.session.Session;
 
+import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.JSONObjectSupplier;
 
 public interface IServerSession extends Session, JSONObjectSupplier, Serializable
@@ -32,25 +33,27 @@ public interface IServerSession extends Session, JSONObjectSupplier, Serializabl
 
     public String getOriginalId();
 
-    public void setOriginalId(String id);
+    public String setOriginalId(String id);
 
-    public String getUserId();
-
-    public String getDomain();
+    public String getRealm();
 
     public String getStatus();
 
-    public List<String> getRoles();
+    public String getUserId();
+
+    public boolean save();
+
+    public boolean touch();
 
     public boolean isPersisted();
 
-    public void setPersisted(boolean persisted);
+    public boolean setPersisted(boolean persisted);
 
-    public void save();
+    public List<String> getRoles();
 
-    public void touch();
-
-    public IServerSessionRepository getRepository();
+    public JSONObject getMetaData();
 
     public IServerSessionHelper getHelper();
+
+    public IServerSessionRepository getRepository();
 }

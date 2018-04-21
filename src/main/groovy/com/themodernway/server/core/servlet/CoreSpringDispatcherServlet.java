@@ -43,15 +43,19 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
 
     private final List<String>                     m_roleslist;
 
+    private final IServletExceptionHandler         m_exception;
+
     private final ISessionIDFromRequestExtractor   m_extractor;
 
     private final IServletResponseErrorCodeManager m_errorcode;
 
-    public CoreSpringDispatcherServlet(final WebApplicationContext context, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
+    public CoreSpringDispatcherServlet(final WebApplicationContext context, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr, final IServletExceptionHandler excp)
     {
         super(context);
 
-        m_ratelimit = RateLimiterFactory.create(rate);
+        m_exception = excp;
+
+        m_ratelimit = limiter(rate);
 
         m_roleslist = requireNonNullOrElse(role, () -> arrayList());
 
@@ -67,13 +71,16 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
     }
 
     @Override
-    public void acquire()
+    public void acquire(final int units)
     {
-        final RateLimiter rate = getRateLimiter();
-
-        if (null != rate)
+        if (units > 0)
         {
-            rate.acquire();
+            final RateLimiter rate = getRateLimiter();
+
+            if (null != rate)
+            {
+                rate.acquire(units);
+            }
         }
     }
 
@@ -85,6 +92,11 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
     public List<String> getRequiredRoles()
     {
         return toUnmodifiableList(m_roleslist);
+    }
+
+    public IServletExceptionHandler getServletExceptionHandler()
+    {
+        return m_exception;
     }
 
     public IServletResponseErrorCodeManager getServletResponseErrorCodeManager()
@@ -181,19 +193,26 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
                     return;
                 }
             }
+            if (null != session)
+            {
+                setSessionIntoRequest(request, session);
+            }
             response.setCharacterEncoding(CHARSET_UTF_8);
 
             super.service(request, response);
         }
         catch (final Exception e)
         {
-            if (logger().isErrorEnabled())
-            {
-                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
-            }
-            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            final IServletExceptionHandler handler = getServletExceptionHandler();
 
-            return;
+            if ((null == handler) || (false == handler.handle(request, response, getServletResponseErrorCodeManager(), e)))
+            {
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
+                }
+                sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
     }
 

@@ -35,9 +35,9 @@ public class ContentGetServlet extends AbstractContentServlet
 
     private final boolean     m_nocache;
 
-    public ContentGetServlet(final String name, final boolean nocache, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
+    public ContentGetServlet(final String name, final boolean nocache, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr, final IServletExceptionHandler excp)
     {
-        super(name, rate, role, code, extr);
+        super(name, rate, role, code, extr, excp);
 
         m_nocache = nocache;
     }
@@ -45,39 +45,13 @@ public class ContentGetServlet extends AbstractContentServlet
     @Override
     protected void doHead(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        try
-        {
-            content(request, response, false);
-        }
-        catch (ServletException | IOException e)
-        {
-            if (logger().isErrorEnabled())
-            {
-                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
-            }
-            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            return;
-        }
+        content(request, response, false);
     }
 
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        try
-        {
-            content(request, response, true);
-        }
-        catch (ServletException | IOException e)
-        {
-            if (logger().isErrorEnabled())
-            {
-                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
-            }
-            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            return;
-        }
+        content(request, response, true);
     }
 
     public boolean isRedirectOn()
@@ -92,82 +66,71 @@ public class ContentGetServlet extends AbstractContentServlet
 
     protected void content(final HttpServletRequest request, final HttpServletResponse response, final boolean send) throws ServletException, IOException
     {
-        try
+        String path = toTrimOrElse(request.getPathInfo(), FileAndPathUtils.SINGLE_SLASH);
+
+        if (isRedirectOn())
         {
-            String path = toTrimOrElse(request.getPathInfo(), FileAndPathUtils.SINGLE_SLASH);
+            final String redi = toTrimOrNull(getRedirect(request, response, path));
 
-            if (isRedirectOn())
+            if (null != redi)
             {
-                final String redi = toTrimOrNull(getRedirect(request, response, path));
-
-                if (null != redi)
-                {
-                    response.sendRedirect(redi);
-
-                    return;
-                }
-                if (path.endsWith(FileAndPathUtils.SINGLE_SLASH))
-                {
-                    response.sendRedirect(FileAndPathUtils.POINT_SLASHY + "index.html");
-
-                    return;
-                }
-            }
-            path = getPathNormalized(path);
-
-            if (null == path)
-            {
-                if (logger().isErrorEnabled())
-                {
-                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't find path info.");
-                }
-                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
+                response.sendRedirect(redi);
 
                 return;
             }
-            final IFolderItem fold = getRoot();
-
-            if (null == fold)
+            if (path.endsWith(FileAndPathUtils.SINGLE_SLASH))
             {
-                if (logger().isErrorEnabled())
-                {
-                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't find storage root.");
-                }
-                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
+                response.sendRedirect(FileAndPathUtils.POINT_SLASHY + "index.html");
 
                 return;
-            }
-            if (false == fold.isReadable())
-            {
-                if (logger().isErrorEnabled())
-                {
-                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't read storage root.");
-                }
-                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
-
-                return;
-            }
-            final IFileItem file = fold.file(path);
-
-            if (isFileFoundForReading(file, path))
-            {
-                if (head(request, response, file, send))
-                {
-                    send(request, response, file, send);
-                }
-            }
-            else
-            {
-                sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
             }
         }
-        catch (final Exception e)
+        path = getPathNormalized(path);
+
+        if (null == path)
         {
             if (logger().isErrorEnabled())
             {
-                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Captured overall exception for security.", e);
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't find path info.");
             }
-            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
+
+            return;
+        }
+        final IFolderItem fold = getRoot();
+
+        if (null == fold)
+        {
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't find storage root.");
+            }
+            sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
+
+            return;
+        }
+        if (false == fold.isReadable())
+        {
+            if (logger().isErrorEnabled())
+            {
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't read storage root.");
+            }
+            sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
+
+            return;
+        }
+        final IFileItem file = fold.file(path);
+
+        if (isFileFoundForReading(file, path))
+        {
+            if (head(request, response, file, send))
+            {
+                send(request, response, file, send);
+            }
+        }
+        else
+        {
+            sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
         }
     }
 

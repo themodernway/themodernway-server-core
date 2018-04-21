@@ -31,16 +31,19 @@
 	"movies": [
 		{
 			"id": 0,
+			"price": 0.25,
 			"title": "Star Wars",
 			"year": 1977
 		},
 		{
 			"id": 1,
+			"price": 0.50,
 			"title": "ET",
 			"year": 1980
 		},
 		{
 			"id": 2,
+			"price": 1.25,
 			"title": "Godfather",
 			"year": 1976
 		}

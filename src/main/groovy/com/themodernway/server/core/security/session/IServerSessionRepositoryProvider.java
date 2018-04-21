@@ -21,11 +21,9 @@ import java.util.List;
 
 public interface IServerSessionRepositoryProvider extends Closeable
 {
-    public boolean isActive();
+    public List<String> getServerSessionRepositoryRealms();
 
-    public List<String> getServerSessionRepositoryDomains();
-
-    public IServerSessionRepository getServerSessionRepository(String domain);
+    public IServerSessionRepository getServerSessionRepository(String realm);
 
     public void cleanExpiredSessions();
 }

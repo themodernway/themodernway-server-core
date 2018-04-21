@@ -31,6 +31,7 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.logging.LoggingOps;
+import com.themodernway.server.core.servlet.IServletExceptionHandler;
 import com.themodernway.server.core.servlet.IServletResponseErrorCodeManager;
 import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
@@ -53,6 +54,8 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
     private ISessionIDFromRequestExtractor   m_extr;
 
     private IServletResponseErrorCodeManager m_code;
+
+    private IServletExceptionHandler         m_hand;
 
     public ServletFactoryContextCustomizer(final String name, final String maps)
     {
@@ -167,6 +170,18 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
     public IServletResponseErrorCodeManager getServletResponseErrorCodeManager()
     {
         return m_code;
+    }
+
+    @Override
+    public IServletExceptionHandler getServletExceptionHandler()
+    {
+        return m_hand;
+    }
+
+    @Override
+    public void setServletExceptionHandler(final IServletExceptionHandler handler)
+    {
+        m_hand = handler;
     }
 
     @Override

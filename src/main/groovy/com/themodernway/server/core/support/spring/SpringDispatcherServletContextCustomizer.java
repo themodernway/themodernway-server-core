@@ -44,6 +44,6 @@ public class SpringDispatcherServletContextCustomizer extends ServletFactoryCont
     @Override
     public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        return new CoreSpringDispatcherServlet(context, customizer.getRateLimit(), customizer.getRequiredRoles(), customizer.getServletResponseErrorCodeManager(), customizer.getSessionIDFromRequestExtractor());
+        return new CoreSpringDispatcherServlet(context, customizer.getRateLimit(), customizer.getRequiredRoles(), customizer.getServletResponseErrorCodeManager(), customizer.getSessionIDFromRequestExtractor(), customizer.getServletExceptionHandler());
     }
 }

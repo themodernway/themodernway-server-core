@@ -225,6 +225,11 @@ public final class JSONUtils
         return (null != asNumber(object));
     }
 
+    public static final boolean isLong(final Object object)
+    {
+        return (null != asLong(object));
+    }
+
     public static final boolean isObject(final Object object)
     {
         return (object instanceof Map);

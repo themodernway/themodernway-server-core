@@ -16,57 +16,60 @@
  * limitations under the License.
  */
 -->
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/context
 						http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<import resource="classpath:/com/themodernway/common/server/config/CommonServerApplicationContext.xml"/>
+	<import resource="classpath:/com/themodernway/common/server/config/CommonServerApplicationContext.xml" />
 		
 	<bean id="CoreBuildDescriptor" class="com.themodernway.server.core.support.spring.BuildDescriptor">
-		<constructor-arg value="@GRADLE_BUILD_PROJECT_TITLE@"/>
+		<constructor-arg value="@GRADLE_BUILD_PROJECT_TITLE@" />
 		<property name="buildUser">
 			<value><![CDATA[@GRADLE_BUILD_USER@]]></value>
 		</property>
-		<property name="buildDate" value="@GRADLE_BUILD_DATE@"/>
-		<property name="javaVersion" value="@GRADLE_JAVA_VERSION@"/>
-		<property name="buildGITCommitHash" value="@GRADLE_GIT_COMMIT_HASH@"/>
+		<property name="buildDate" value="@GRADLE_BUILD_DATE@" />
+		<property name="javaVersion" value="@GRADLE_JAVA_VERSION@" />
+		<property name="buildGITCommitHash" value="@GRADLE_GIT_COMMIT_HASH@" />
 		<property name="buildGITCommitUser">
 			<value><![CDATA[@GRADLE_GIT_COMMIT_USER@]]></value>
 		</property>
 		<property name="buildGITCommitMessage">
 			<value><![CDATA[@GRADLE_GIT_COMMIT_MESSAGE@]]></value>
 		</property>
-		<property name="buildServerHost" value="@GRADLE_BUILD_SERVER_HOST@"/>
-		<property name="buildServerBuild" value="@GRADLE_BUILD_SERVER_BUILD@"/>
-		<property name="buildModuleVersion" value="@GRADLE_BUILD_ARTIFACT_ID@-@GRADLE_BUILD_MODULE_VERSION@.jar"/>
+		<property name="buildServerHost" value="@GRADLE_BUILD_SERVER_HOST@" />
+		<property name="buildServerBuild" value="@GRADLE_BUILD_SERVER_BUILD@" />
+		<property name="buildModuleVersion" value="@GRADLE_BUILD_ARTIFACT_ID@-@GRADLE_BUILD_MODULE_VERSION@.jar" />
 	</bean>
 		
-	<bean id="CorePropertiesResolver" class="com.themodernway.server.core.support.spring.CorePropertiesResolver" destroy-method="close"/>
+	<bean id="CorePropertiesResolver" class="com.themodernway.server.core.support.spring.CorePropertiesResolver" destroy-method="close" />
 
-	<bean id="BuildDescriptorProvider" class="com.themodernway.server.core.support.spring.BuildDescriptorProvider" destroy-method="close"/>
+	<bean id="BuildDescriptorProvider" class="com.themodernway.server.core.support.spring.BuildDescriptorProvider" destroy-method="close" />
 
 	<bean id="CryptoProvider" class="com.themodernway.server.core.security.CryptoProvider" destroy-method="close">
-		<constructor-arg value="${crypto.provider.pass}"/>
-		<constructor-arg value="${crypto.provider.salt}"/>
-		<constructor-arg value="${crypto.provider.bcrypt.iters}"/>
+		<constructor-arg value="${crypto.provider.pass}" />
+		<constructor-arg value="${crypto.provider.salt}" />
+		<constructor-arg value="${crypto.provider.bcrypt.iters}" />
 	</bean>
 	
-	<bean id="MailSenderProvider" class="com.themodernway.server.core.mail.MailSenderProvider" destroy-method="close"/>
+	<bean id="MailSenderProvider" class="com.themodernway.server.core.mail.MailSenderProvider" destroy-method="close" />
 	
 	<bean id="NetworkProvider" class="com.themodernway.server.core.support.spring.network.CoreNetworkProvider" destroy-method="close">
-		<property name="parsePath" value="${core.network.provider.parse:true}"/>
-		<property name="strictEncoding" value="${core.network.provider.strict:true}"/>
-		<property name="httpFactoryByName" value="${core.network.provider.http.factory:native}"/>
+		<property name="parsePath" value="${core.network.provider.parse:true}" />
+		<property name="strictEncoding" value="${core.network.provider.strict:true}" />
+		<property name="httpFactoryByName" value="${core.network.provider.http.factory:native}" />
 	</bean>
 		
-	<bean id="FileItemStorageProvider" class="com.themodernway.server.core.file.vfs.FileItemStorageProvider" destroy-method="close"/>
+	<bean id="FileItemStorageProvider" class="com.themodernway.server.core.file.vfs.FileItemStorageProvider" destroy-method="close" />
 
-	<bean id="ServerSessionRepositoryProvider" class="com.themodernway.server.core.security.session.ServerSessionRepositoryProvider" destroy-method="close"/>
+	<bean id="ServerSessionRepositoryProvider" class="com.themodernway.server.core.security.session.ServerSessionRepositoryProvider" destroy-method="close" />
 		
-	<bean id="ServletContextCustomizerProvider" class="com.themodernway.server.core.support.spring.ServletContextCustomizerProvider" destroy-method="close"/>
+	<bean id="ServletContextCustomizerProvider" class="com.themodernway.server.core.support.spring.ServletContextCustomizerProvider" destroy-method="close" />
 	
-	<context:annotation-config/>
+	<context:annotation-config />
 	
 </beans>

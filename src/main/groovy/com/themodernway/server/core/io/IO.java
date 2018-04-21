@@ -773,4 +773,17 @@ public final class IO
     {
         return Files.deleteIfExists(path);
     }
+
+    public static final byte[] getbytes(final InputStream stream, final long leng) throws IOException
+    {
+        return IOUtils.toByteArray(stream, leng);
+    }
+
+    public static final byte[] getbytes(final IFileItem file, final long leng) throws IOException
+    {
+        try (InputStream stream = file.getInputStream())
+        {
+            return IO.getbytes(stream, leng);
+        }
+    }
 }

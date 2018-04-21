@@ -21,6 +21,7 @@ import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@FunctionalInterface
 public interface IServletResponseErrorCodeManager extends Serializable
 {
     default void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code)

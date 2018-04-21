@@ -29,7 +29,7 @@ public class CoreNativeHttpRequestFactory extends HttpComponentsClientHttpReques
 
     public CoreNativeHttpRequestFactory(final int procs)
     {
-        this(procs + 1, procs * 8);
+        this(procs + 1, (procs + 1) * 16);
     }
 
     public CoreNativeHttpRequestFactory(final int route, final int total)

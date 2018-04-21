@@ -24,6 +24,8 @@ public interface ICoreServletConstants extends IHTTPConstants
 
     public static final String CONTENT_SERVLET_STORAGE_NAME_DEFAULT = "content";
 
+    public static final String SESSION_REQUEST_ATTRIBUTE_ID         = "core.server.session.request.attribute.id";
+
     public static final String CONTENT_SERVLET_STORAGE_NAME_PARAM   = "core.server.content.servlet.storage.name";
 
     public static final String SESSION_PROVIDER_DOMAIN_NAME_PARAM   = "core.server.session.provider.domain.name";

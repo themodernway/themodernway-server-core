@@ -18,6 +18,7 @@ package com.themodernway.server.core.support.spring;
 
 import java.util.List;
 
+import com.themodernway.server.core.servlet.IServletExceptionHandler;
 import com.themodernway.server.core.servlet.IServletResponseErrorCodeManager;
 import com.themodernway.server.core.servlet.ISessionIDFromRequestExtractor;
 
@@ -50,4 +51,8 @@ public interface IServletFactoryContextCustomizer extends IServletContextCustomi
     public void setServletResponseErrorCodeManager(IServletResponseErrorCodeManager manager);
 
     public IServletResponseErrorCodeManager getServletResponseErrorCodeManager();
+
+    public IServletExceptionHandler getServletExceptionHandler();
+
+    public void setServletExceptionHandler(IServletExceptionHandler nandler);
 }

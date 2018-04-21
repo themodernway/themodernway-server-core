@@ -16,16 +16,28 @@
 
 package com.themodernway.server.core.limiting;
 
+import java.util.concurrent.TimeUnit;
+
 import com.google.common.util.concurrent.RateLimiter;
+import com.themodernway.common.api.java.util.CommonOps;
 
 @FunctionalInterface
 public interface IRateLimited
 {
-    public static final double MAX_RATE_LIMIT = 10000000.0;
+    public static final long   NO_WARMUP_TIME = 0L;
 
-    public static final double MIN_RATE_LIMIT = 0.00000001;
+    public static final double NO_RATE_LIMITS = 0.0d;
 
-    public void acquire();
+    public static final double MAX_RATE_LIMIT = 10000000.0d;
+
+    public static final double MIN_RATE_LIMIT = 0.00000001d;
+
+    default void acquire()
+    {
+        acquire(1);
+    }
+
+    public void acquire(int permits);
 
     public static final class RateLimiterFactory
     {
@@ -33,20 +45,42 @@ public interface IRateLimited
         {
         }
 
+        public static final double normalize(final double rate)
+        {
+            return CommonOps.box(rate, MIN_RATE_LIMIT, MAX_RATE_LIMIT);
+        }
+
         public static final RateLimiter create(final double rate)
         {
-            if (rate <= 0.0)
+            if (rate <= NO_RATE_LIMITS)
             {
                 return null;
             }
-            return RateLimiter.create(Math.min(Math.max(rate, MIN_RATE_LIMIT), MAX_RATE_LIMIT));
+            return RateLimiter.create(normalize(rate));
         }
 
         public static final RateLimiter create(final Class<?> claz)
         {
-            if (claz.isAnnotationPresent(RateLimit.class))
+            if ((null != claz) && (claz.isAnnotationPresent(RateLimit.class)))
             {
-                return create(claz.getAnnotation(RateLimit.class).value());
+                final RateLimit anno = claz.getAnnotation(RateLimit.class);
+
+                if (null != anno)
+                {
+                    final double rate = anno.value();
+
+                    if (rate <= NO_RATE_LIMITS)
+                    {
+                        return null;
+                    }
+                    final long warm = anno.warmup();
+
+                    if (warm <= NO_WARMUP_TIME)
+                    {
+                        return create(rate);
+                    }
+                    return RateLimiter.create(normalize(rate), warm, CommonOps.requireNonNullOrElse(anno.unit(), TimeUnit.MILLISECONDS));
+                }
             }
             return null;
         }

@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -40,9 +41,9 @@ public class ContentUploadServlet extends AbstractContentServlet
 
     private final long        m_limit;
 
-    public ContentUploadServlet(final String name, final long limit, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
+    public ContentUploadServlet(final String name, final long limit, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr, final IServletExceptionHandler excp)
     {
-        super(name, rate, role, code, extr);
+        super(name, rate, role, code, extr, excp);
 
         m_limit = Math.max(CommonOps.IS_NOT_FOUND, limit);
     }
@@ -98,12 +99,12 @@ public class ContentUploadServlet extends AbstractContentServlet
                 {
                     if (item.getSize() > fold.getFileSizeLimit())
                     {
+                        item.delete();
+
                         if (logger().isErrorEnabled())
                         {
                             logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "File size exceeds limit.");
                         }
-                        item.delete();
-
                         sendErrorCode(request, response, HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
 
                         return;
@@ -118,25 +119,29 @@ public class ContentUploadServlet extends AbstractContentServlet
                         }
                         catch (final IOException e)
                         {
-                            if (logger().isErrorEnabled())
-                            {
-                                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't write file.", e);
-                            }
                             item.delete();
 
-                            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                            final IServletExceptionHandler handler = getServletExceptionHandler();
 
+                            if ((null == handler) || (false == handler.handle(request, response, getServletResponseErrorCodeManager(), e)))
+                            {
+                                if (logger().isErrorEnabled())
+                                {
+                                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't write file.", e);
+                                }
+                                sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                            }
                             return;
                         }
                     }
                     else
                     {
+                        item.delete();
+
                         if (logger().isErrorEnabled())
                         {
                             logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Can't find file.");
                         }
-                        item.delete();
-
                         sendErrorCode(request, response, HttpServletResponse.SC_NOT_FOUND);
 
                         return;
@@ -145,15 +150,13 @@ public class ContentUploadServlet extends AbstractContentServlet
                 item.delete();
             }
         }
-        catch (final Exception e)
+        catch (final IOException e)
         {
-            if (logger().isErrorEnabled())
-            {
-                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "Captured overall exception for security.", e);
-            }
-            sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            return;
+            throw e;
+        }
+        catch (final FileUploadException e)
+        {
+            throw new IOException(e);
         }
     }
 

@@ -68,6 +68,6 @@ public class ContentGetServletContextCustomizer extends ServletFactoryContextCus
     @Override
     public Servlet make(final IServletFactoryContextCustomizer customizer, final ServletContext sc, final WebApplicationContext context)
     {
-        return new ContentGetServlet(getFileItemStorageName(), isNeverCache(), customizer.getRateLimit(), customizer.getRequiredRoles(), customizer.getServletResponseErrorCodeManager(), customizer.getSessionIDFromRequestExtractor());
+        return new ContentGetServlet(getFileItemStorageName(), isNeverCache(), customizer.getRateLimit(), customizer.getRequiredRoles(), customizer.getServletResponseErrorCodeManager(), customizer.getSessionIDFromRequestExtractor(), customizer.getServletExceptionHandler());
     }
 }

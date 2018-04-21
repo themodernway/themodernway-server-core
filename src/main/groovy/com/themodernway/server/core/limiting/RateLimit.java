@@ -20,10 +20,15 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RateLimit
 {
-    public double value() default 0.0d;
+    public double value() default IRateLimited.NO_RATE_LIMITS;
+
+    public long warmup() default IRateLimited.NO_WARMUP_TIME;
+
+    public TimeUnit unit() default TimeUnit.MILLISECONDS;
 }

@@ -19,10 +19,9 @@ package com.themodernway.server.core.security.session;
 import java.util.List;
 
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.types.Activatable;
 
 @SuppressWarnings("serial")
-public abstract class AbstractServerSessionRepository extends Activatable implements IServerSessionRepository
+public abstract class AbstractServerSessionRepository implements IServerSessionRepository
 {
     private transient IServerSessionHelper m_helper;
 
@@ -37,32 +36,43 @@ public abstract class AbstractServerSessionRepository extends Activatable implem
     }
 
     @Override
-    public String getDomain()
+    public String getRealm()
     {
-        return getHelper().getDefaultDomain();
+        return getHelper().getDefaultRealm();
     }
 
     @Override
-    public void touch(final String id)
+    public boolean touch(final String id)
     {
         final IServerSession session = findById(id);
 
         if (null != session)
         {
-            session.touch();
+            return session.touch();
         }
+        return false;
     }
 
     @Override
-    public void touch(final IServerSession session)
+    public boolean touch(final IServerSession session)
     {
-        touch(session.getId());
+        if (null != session)
+        {
+            return touch(session.getId());
+        }
+        return false;
     }
 
     @Override
-    public void delete(final IServerSession session)
+    public boolean delete(final IServerSession session)
     {
-        deleteById(session.getId());
+        if (null != session)
+        {
+            deleteById(session.getId());
+
+            return true;
+        }
+        return false;
     }
 
     @Override

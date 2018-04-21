@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.vfs;
+package com.themodernway.server.core.file.vfs.cache;
 
-public interface IFileItemCacheNode
+import java.io.BufferedReader;
+import java.io.InputStream;
+
+import com.themodernway.common.api.types.INamed;
+
+public interface IFileItemCacheNode extends INamed
 {
+    public long getSize();
+
     public long getLastModified();
 
-    public byte[] getContentAsBytes();
+    public String getContentType();
+
+    public byte[] getBytes();
+
+    public InputStream getInputStream();
+
+    public BufferedReader getBufferedReader();
 }

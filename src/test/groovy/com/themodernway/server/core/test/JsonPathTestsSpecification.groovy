@@ -46,6 +46,19 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
         BinderType.JSON.getBinder().bindJSON(resource('classpath:/com/themodernway/server/core/test/path.json'))
     }
 
+    def "test binder"()
+    {
+        setup:
+        def rest = BinderType.JSON.getBinder().bind(resource('classpath:/com/themodernway/server/core/test/path.json'), JSONObject)
+        def look = rest.path().eval('$.name')
+
+        expect:
+        look != null
+
+        cleanup:
+        echo json(result: look)
+    }
+
     def "test binder 0"()
     {
         setup:
@@ -379,6 +392,81 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
 
         cleanup:
         echo look.getClass()
+        echo json(result: look)
+    }
+
+    def "test path conditional 4"()
+    {
+        setup:
+        def path = compile('$.movies[*]')
+        def rest = bindJSON()
+        def ctxt = rest.path()
+        def time = new NanoTimer()
+        def look = ctxt.eval(path)
+        echo time
+
+        expect:
+        look != null
+
+        cleanup:
+        echo look.getClass()
+        echo json(result: look)
+    }
+
+    def "test binder perf 4"()
+    {
+        setup:
+        def look
+        def bind = binder()
+        def text = bindJSON().toJSONString()
+        def time = new NanoTimer()
+        for (int i = 0; i < 10000; i++) {
+            look = bind.bindJSON(text)
+        }
+        echo time.toString() + " text"
+
+        expect:
+        look != null
+
+        cleanup:
+        echo json(result: look)
+    }
+
+    def "test binder perf 5"()
+    {
+        setup:
+        def look
+        def bind = binder()
+        def text = bindJSON().toJSONString()
+        def time = new NanoTimer()
+        for (int i = 0; i < 10000; i++) {
+            look = bind.bindJSON(text)
+        }
+        echo time.toString() + " text"
+
+        expect:
+        look != null
+
+        cleanup:
+        echo json(result: look)
+    }
+
+    def "test binder perf 6"()
+    {
+        setup:
+        def look
+        def bind = binder()
+        def text = bindJSON().toJSONString()
+        def time = new NanoTimer()
+        for (int i = 0; i < 10000; i++) {
+            look = bind.bind(text, JSONObject)
+        }
+        echo time.toString() + " json"
+
+        expect:
+        look != null
+
+        cleanup:
         echo json(result: look)
     }
 }

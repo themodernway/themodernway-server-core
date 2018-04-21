@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.servlet;
 
-import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +37,7 @@ import com.themodernway.server.core.security.IAuthorizationResult;
 import com.themodernway.server.core.security.session.IServerSession;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
+import com.themodernway.server.core.support.spring.network.HTTPHeaders;
 
 public interface IServletCommonOperations extends ICoreCommon, ICoreServletConstants, INamed
 {
@@ -48,42 +48,30 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
 
     default LinkedHashMap<String, String> getParametersFromRequest(final HttpServletRequest request)
     {
-        final LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        final LinkedHashMap<String, String> parm = linkedMap();
 
-        final Enumeration<String> names = request.getParameterNames();
+        toList(request.getParameterNames()).forEach(name -> parm.put(name, request.getParameter(name)));
 
-        while (names.hasMoreElements())
-        {
-            final String name = names.nextElement();
-
-            params.put(name, request.getParameter(name));
-        }
-        return params;
+        return parm;
     }
 
     default JSONObject getJSONParametersFromRequest(final HttpServletRequest request)
     {
-        return new JSONObject(getParametersFromRequest(request));
+        final JSONObject parm = new JSONObject();
+
+        toList(request.getParameterNames()).forEach(name -> parm.put(name, request.getParameter(name)));
+
+        return parm;
     }
 
-    default LinkedHashMap<String, String> getHeadersFromRequest(final HttpServletRequest request)
+    default HTTPHeaders getHeadersFromRequest(final HttpServletRequest request)
     {
-        final LinkedHashMap<String, String> params = new LinkedHashMap<>();
-
-        final Enumeration<String> names = request.getHeaderNames();
-
-        while (names.hasMoreElements())
-        {
-            final String name = names.nextElement();
-
-            params.put(name, request.getHeader(name));
-        }
-        return params;
+        return new HTTPHeaders(request);
     }
 
     default JSONObject getJSONHeadersFromRequest(final HttpServletRequest request)
     {
-        return new JSONObject(getHeadersFromRequest(request));
+        return getHeadersFromRequest(request).toJSONObject();
     }
 
     default JSONObject getUserPrincipalsFromRequest(final HttpServletRequest request, final List<String> keys)
@@ -114,6 +102,29 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
             }
         }
         return principals;
+    }
+
+    default IServerSession getSessionFromRequest(final HttpServletRequest request)
+    {
+        final Object valu = request.getAttribute(SESSION_REQUEST_ATTRIBUTE_ID);
+
+        if (valu instanceof IServerSession)
+        {
+            return CAST(valu);
+        }
+        return null;
+    }
+
+    default void setSessionIntoRequest(final HttpServletRequest request, final IServerSession session)
+    {
+        if (null == session)
+        {
+            request.removeAttribute(SESSION_REQUEST_ATTRIBUTE_ID);
+        }
+        else
+        {
+            request.setAttribute(SESSION_REQUEST_ATTRIBUTE_ID, session);
+        }
     }
 
     default IServerSession getSession(final String sessid, final String domain)

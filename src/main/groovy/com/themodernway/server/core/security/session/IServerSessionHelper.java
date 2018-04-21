@@ -16,21 +16,23 @@
 
 package com.themodernway.server.core.security.session;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 
 public interface IServerSessionHelper
 {
-    public static final String               SP_STATUS_KEY                           = "status";
-
-    public static final String               SP_DOMAIN_KEY                           = "domain";
+    public static final String               SP_REALM_KEY                            = "realm";
 
     public static final String               SP_ROLES_KEY                            = "roles";
 
+    public static final String               SP_STATUS_KEY                           = "status";
+
     public static final String               SP_USER_ID_KEY                          = "user_id";
+
+    public static final String               SP_META_DATA_KEY                        = "meta_data";
 
     public static final String               SP_SESSION_ID_KEY                       = "session_id";
 
@@ -42,7 +44,7 @@ public interface IServerSessionHelper
 
     public static final String               SP_MAX_INACTIVE_INTERVAL_IN_SECONDS_KEY = "max_inactive_interval_in_seconds";
 
-    public static final String               SP_DEFAULT_DOMAIN                       = "default";
+    public static final String               SP_DEFAULT_REALM                        = "default";
 
     public static final IServerSessionHelper SP_DEFAULT_HELPER_INSTANCE              = new SimpleServerSessionHelper();
 
@@ -50,72 +52,91 @@ public interface IServerSessionHelper
     {
     }
 
-    public static class PrefixServerSessionHelper extends SimpleServerSessionHelper
+    public static class MappingServerSessionHelper extends SimpleServerSessionHelper
     {
-        private final String m_prfx;
+        private final UnaryOperator<String> m_maps;
 
-        public PrefixServerSessionHelper(final String prfx)
+        public MappingServerSessionHelper(final UnaryOperator<String> maps)
         {
-            m_prfx = StringOps.toTrimOrElse(prfx, StringOps.EMPTY_STRING);
+            m_maps = CommonOps.requireNonNullOrElse(maps, UnaryOperator.identity());
         }
 
-        protected String getPrefix()
+        protected String getMappingValue(final String valu)
         {
-            return m_prfx;
+            return m_maps.apply(valu);
         }
 
         @Override
         public String getStatusKey()
         {
-            return getPrefix() + super.getStatusKey();
+            return getMappingValue(super.getStatusKey());
         }
 
         @Override
-        public String getDomainKey()
+        public String getRealmKey()
         {
-            return getPrefix() + super.getDomainKey();
+            return getMappingValue(super.getRealmKey());
         }
 
         @Override
         public String geRolesKey()
         {
-            return getPrefix() + super.geRolesKey();
+            return getMappingValue(super.geRolesKey());
         }
 
         @Override
         public String getUserIdKey()
         {
-            return getPrefix() + super.getUserIdKey();
+            return getMappingValue(super.getUserIdKey());
         }
 
         @Override
         public String getSessionIdKey()
         {
-            return getPrefix() + super.getSessionIdKey();
+            return getMappingValue(super.getSessionIdKey());
         }
 
         @Override
         public String getOriginalSessionIdKey()
         {
-            return getPrefix() + super.getOriginalSessionIdKey();
+            return getMappingValue(super.getOriginalSessionIdKey());
         }
 
         @Override
         public String getCreationTimeKey()
         {
-            return getPrefix() + super.getCreationTimeKey();
+            return getMappingValue(super.getCreationTimeKey());
         }
 
         @Override
         public String getLastAccessedTimeKey()
         {
-            return getPrefix() + super.getLastAccessedTimeKey();
+            return getMappingValue(super.getLastAccessedTimeKey());
         }
 
         @Override
         public String getMaxInactiveIntervalKey()
         {
-            return getPrefix() + super.getMaxInactiveIntervalKey();
+            return getMappingValue(super.getMaxInactiveIntervalKey());
+        }
+
+        @Override
+        public String getMetaDataKey()
+        {
+            return getMappingValue(super.getMetaDataKey());
+        }
+    }
+
+    public static class PrefixServerSessionHelper extends MappingServerSessionHelper
+    {
+        private static final UnaryOperator<String> mapper(final String prefix)
+        {
+            return s -> prefix + s;
+        }
+
+        public PrefixServerSessionHelper(final String prefix)
+        {
+            super(mapper(StringOps.toTrimOrElse(prefix, StringOps.EMPTY_STRING)));
         }
     }
 
@@ -124,14 +145,19 @@ public interface IServerSessionHelper
         return SP_STATUS_KEY;
     }
 
-    default String getDomainKey()
+    default String getRealmKey()
     {
-        return SP_DOMAIN_KEY;
+        return SP_REALM_KEY;
     }
 
     default String geRolesKey()
     {
         return SP_ROLES_KEY;
+    }
+
+    default String getMetaDataKey()
+    {
+        return SP_META_DATA_KEY;
     }
 
     default String getUserIdKey()
@@ -174,34 +200,8 @@ public interface IServerSessionHelper
         return CommonOps.toUnmodifiableList("ANONYMOUS");
     }
 
-    default String getDefaultDomain()
+    default String getDefaultRealm()
     {
-        return SP_DEFAULT_DOMAIN;
-    }
-
-    default List<String> toRolesList(final List<?> list)
-    {
-        if ((null != list) && (false == list.isEmpty()))
-        {
-            final HashSet<String> send = new HashSet<>(list.size());
-
-            for (final Object elem : list)
-            {
-                if (elem instanceof String)
-                {
-                    final String valu = StringOps.toTrimOrNull(elem.toString());
-
-                    if (null != valu)
-                    {
-                        send.add(valu);
-                    }
-                }
-            }
-            if (false == send.isEmpty())
-            {
-                return CommonOps.toUnmodifiableList(send);
-            }
-        }
-        return null;
+        return SP_DEFAULT_REALM;
     }
 }

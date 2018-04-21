@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.file.ICoreContentTypeMapper;
+import com.themodernway.server.core.file.vfs.cache.IFileItemCache;
 
 public interface IFileItemStorage extends INamed, Closeable
 {

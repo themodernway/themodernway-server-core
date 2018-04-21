@@ -29,4 +29,6 @@ public interface IFileItemAttributes
     public boolean isFile();
 
     public boolean isFolder();
+
+    public boolean isValidForReading();
 }

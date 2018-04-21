@@ -595,4 +595,13 @@ public interface ICoreBase
     {
         return CommonOps.toStream(source);
     }
+
+    default List<String> toUniqueStringListOf(final List<?> list)
+    {
+        if ((null != list) && (false == list.isEmpty()))
+        {
+            return toList(toUnique(list.stream().filter(o -> o instanceof CharSequence).map(o -> toTrimOrNull(o.toString()))));
+        }
+        return emptyList();
+    }
 }

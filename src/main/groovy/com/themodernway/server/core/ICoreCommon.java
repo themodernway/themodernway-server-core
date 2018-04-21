@@ -21,9 +21,11 @@ import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.TaggingValues;
+import com.themodernway.server.core.limiting.IRateLimited.RateLimiterFactory;
 import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.support.spring.IPropertiesResolver;
 import com.themodernway.server.core.support.spring.IServerContext;
@@ -49,6 +51,16 @@ public interface ICoreCommon extends ICoreBase, IPropertiesResolver, IHasLogging
     default String uuid()
     {
         return getServerContext().uuid();
+    }
+
+    default RateLimiter limiter(final double rate)
+    {
+        return RateLimiterFactory.create(rate);
+    }
+
+    default RateLimiter limiter(final Class<?> claz)
+    {
+        return RateLimiterFactory.create(claz);
     }
 
     @Override

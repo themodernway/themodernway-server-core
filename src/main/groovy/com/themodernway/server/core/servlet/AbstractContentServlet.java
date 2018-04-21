@@ -37,9 +37,9 @@ public abstract class AbstractContentServlet extends HTTPServletBase
 
     private final ConcurrentHashMap<String, IFileItemStorage> m_storage_save   = new ConcurrentHashMap<>();
 
-    protected AbstractContentServlet(final String name, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
+    protected AbstractContentServlet(final String name, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr, final IServletExceptionHandler excp)
     {
-        super(rate, role, code, extr);
+        super(rate, role, code, extr, excp);
 
         m_storage_name = toTrimOrElse(name, CONTENT_SERVLET_STORAGE_NAME_DEFAULT);
     }

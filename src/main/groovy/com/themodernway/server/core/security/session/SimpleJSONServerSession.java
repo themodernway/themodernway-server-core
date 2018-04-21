@@ -22,19 +22,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
-import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.ICoreBase;
 import com.themodernway.server.core.json.JSONObject;
-import com.themodernway.server.core.json.JSONUtils;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
-public class SimpleJSONServerSession implements IServerSession
+public class SimpleJSONServerSession implements IServerSession, ICoreBase
 {
     private static final long              serialVersionUID = 1L;
 
     private final JSONObject               m_attr;
+
+    private final IServerSessionHelper     m_help;
 
     private final IServerSessionRepository m_repo;
 
@@ -42,9 +43,11 @@ public class SimpleJSONServerSession implements IServerSession
 
     protected SimpleJSONServerSession(final JSONObject attr, final IServerSessionRepository repo)
     {
-        m_attr = CommonOps.requireNonNull(attr);
+        m_attr = requireNonNull(attr);
 
-        m_repo = CommonOps.requireNonNull(repo);
+        m_repo = requireNonNull(repo);
+
+        m_help = requireNonNull(m_repo.getHelper());
     }
 
     public SimpleJSONServerSession(final IServerSessionRepository repo)
@@ -66,14 +69,14 @@ public class SimpleJSONServerSession implements IServerSession
 
         setLastAccessedTime(now);
 
-        setDomain(getRepository().getDomain());
+        setRealm(getRepository().getRealm());
 
         setMaxInactiveInterval(DEFAULT_MAX_INACTIVE_INTERVAL_DURATION);
     }
 
     public SimpleJSONServerSession(final Map<String, ?> attr, final IServerSessionRepository repo)
     {
-        this(new JSONObject(CommonOps.requireNonNull(attr)), repo);
+        this(new JSONObject(attr), repo);
 
         if (null == getId())
         {
@@ -85,25 +88,25 @@ public class SimpleJSONServerSession implements IServerSession
         }
         final Instant now = Instant.now();
 
-        final Long cval = JSONUtils.asLong(getAttributes().get(getHelper().getCreationTimeKey()));
-
-        if (null == cval)
+        if (null == getAttributes().getAsLong(getHelper().getCreationTimeKey()))
         {
             setCreationTime(now);
         }
-        final Long lval = JSONUtils.asLong(getAttributes().get(getHelper().getLastAccessedTimeKey()));
-
-        if (null == lval)
+        if (null == getAttributes().getAsLong(getHelper().getLastAccessedTimeKey()))
         {
             setLastAccessedTime(now);
         }
-        final Long dval = JSONUtils.asLong(getAttributes().get(getHelper().getMaxInactiveIntervalKey()));
-
-        if (null == dval)
+        if (null == getAttributes().getAsLong(getHelper().getMaxInactiveIntervalKey()))
         {
             setMaxInactiveInterval(DEFAULT_MAX_INACTIVE_INTERVAL_DURATION);
         }
-        setDomain(getRepository().getDomain());
+        setRealm(getRepository().getRealm());
+    }
+
+    @Override
+    public IServerSessionHelper getHelper()
+    {
+        return m_help;
     }
 
     @Override
@@ -117,10 +120,25 @@ public class SimpleJSONServerSession implements IServerSession
         return m_attr;
     }
 
+    protected String getAsStringFromAtrributes(final String name)
+    {
+        return toTrimOrNull(getAttributes().getAsString(name));
+    }
+
+    protected String getAsStringFromAtrributesOrElse(final String name, final String otherwise)
+    {
+        return requireNonNullOrElse(getAsStringFromAtrributes(name), otherwise);
+    }
+
+    protected String getAsStringFromAtrributesOrElse(final String name, final Supplier<String> otherwise)
+    {
+        return requireNonNullOrElse(getAsStringFromAtrributes(name), otherwise);
+    }
+
     @Override
     public Instant getCreationTime()
     {
-        final Long lval = JSONUtils.asLong(getAttributes().get(getHelper().getCreationTimeKey()));
+        final Long lval = getAttributes().getAsLong(getHelper().getCreationTimeKey());
 
         if (null != lval)
         {
@@ -147,7 +165,7 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public Instant getLastAccessedTime()
     {
-        final Long lval = JSONUtils.asLong(getAttributes().get(getHelper().getLastAccessedTimeKey()));
+        final Long lval = getAttributes().getAsLong(getHelper().getLastAccessedTimeKey());
 
         if (null != lval)
         {
@@ -169,7 +187,7 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public Duration getMaxInactiveInterval()
     {
-        final Long lval = JSONUtils.asLong(getAttributes().get(getHelper().getMaxInactiveIntervalKey()));
+        final Long lval = getAttributes().getAsLong(getHelper().getMaxInactiveIntervalKey());
 
         if (null != lval)
         {
@@ -195,11 +213,7 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public String getId()
     {
-        if (getAttributes().isString(getHelper().getSessionIdKey()))
-        {
-            return StringOps.toTrimOrNull(getAttributes().getAsString(getHelper().getSessionIdKey()));
-        }
-        return null;
+        return getAsStringFromAtrributes(getHelper().getSessionIdKey());
     }
 
     protected void setId(final String id)
@@ -210,23 +224,23 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public String getOriginalId()
     {
-        if (getAttributes().isString(getHelper().getOriginalSessionIdKey()))
-        {
-            return StringOps.toTrimOrNull(getAttributes().getAsString(getHelper().getOriginalSessionIdKey()));
-        }
-        return null;
+        return getAsStringFromAtrributes(getHelper().getOriginalSessionIdKey());
     }
 
     @Override
-    public void setOriginalId(final String id)
+    public String setOriginalId(final String id)
     {
+        final String save = getOriginalId();
+
         setAttribute(getHelper().getOriginalSessionIdKey(), id);
+
+        return save;
     }
 
     @Override
     public <T> T getAttribute(final String name)
     {
-        return CommonOps.CAST(getAttributes().get(CommonOps.requireNonNull(name)));
+        return CAST(getAttributes().get(name));
     }
 
     @Override
@@ -238,7 +252,7 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public void setAttribute(final String name, final Object valu)
     {
-        if (getAttributes().isDefined(CommonOps.requireNonNull(name)))
+        if (getAttributes().isDefined(name))
         {
             if (null == valu)
             {
@@ -264,7 +278,7 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public void removeAttribute(final String name)
     {
-        if (getAttributes().isDefined(CommonOps.requireNonNull(name)))
+        if (getAttributes().isDefined(name))
         {
             getAttributes().remove(name);
 
@@ -275,68 +289,52 @@ public class SimpleJSONServerSession implements IServerSession
     @Override
     public String getUserId()
     {
-        if (getAttributes().isString(getHelper().getUserIdKey()))
-        {
-            return StringOps.toTrimOrNull(getAttributes().getAsString(getHelper().getUserIdKey()));
-        }
-        return null;
+        return getAsStringFromAtrributes(getHelper().getUserIdKey());
     }
 
     @Override
     public String getStatus()
     {
-        if (getAttributes().isString(getHelper().getStatusKey()))
-        {
-            return StringOps.toTrimOrNull(getAttributes().getAsString(getHelper().getStatusKey()));
-        }
-        return null;
+        return getAsStringFromAtrributes(getHelper().getStatusKey());
     }
 
     @Override
-    public String getDomain()
+    public String getRealm()
     {
-        if (getAttributes().isString(getHelper().getDomainKey()))
-        {
-            final String domain = StringOps.toTrimOrNull(getAttributes().getAsString(getHelper().getDomainKey()));
-
-            if (null != domain)
-            {
-                return domain;
-            }
-        }
-        return getRepository().getDomain();
+        return getAsStringFromAtrributesOrElse(getHelper().getRealmKey(), () -> getRepository().getRealm());
     }
 
-    protected void setDomain(final String domain)
+    public String setRealm(final String realm)
     {
-        setAttribute(getHelper().getDomainKey(), domain);
+        final String save = getRealm();
+
+        setAttribute(getHelper().getRealmKey(), realm);
+
+        return save;
     }
 
     @Override
     public List<String> getRoles()
     {
-        if (getAttributes().isArray(getHelper().geRolesKey()))
-        {
-            final List<String> role = getHelper().toRolesList(getAttributes().getAsArray(getHelper().geRolesKey()));
-
-            if ((null != role) && (false == role.isEmpty()))
-            {
-                return CommonOps.toUnmodifiableList(role);
-            }
-        }
-        final List<String> role = getRepository().getDefaultRoles();
+        List<String> role = toUniqueStringListOf(getAttributes().getAsArray(getHelper().geRolesKey()));
 
         if ((null != role) && (false == role.isEmpty()))
         {
-            return CommonOps.toUnmodifiableList(role);
+            return toUnmodifiableList(role);
         }
-        return CommonOps.toUnmodifiableList(getHelper().getDefaultRoles());
+        role = getRepository().getDefaultRoles();
+
+        if ((null != role) && (false == role.isEmpty()))
+        {
+            return toUnmodifiableList(role);
+        }
+        return toUnmodifiableList(getHelper().getDefaultRoles());
     }
 
     @Override
     public JSONObject toJSONObject()
     {
-        return getServerContext().json(getAttributes());
+        return getAttributes().deep();
     }
 
     @Override
@@ -346,30 +344,29 @@ public class SimpleJSONServerSession implements IServerSession
     }
 
     @Override
-    public void setPersisted(final boolean persisted)
+    public boolean setPersisted(final boolean persisted)
     {
-        m_save.set(persisted);
+        return m_save.getAndSet(persisted);
     }
 
     @Override
-    public void save()
+    public boolean save()
     {
         if (isPersisted())
         {
             getRepository().save(this);
+
+            return true;
         }
+        return false;
     }
 
     @Override
-    public IServerSessionHelper getHelper()
-    {
-        return getRepository().getHelper();
-    }
-
-    @Override
-    public void touch()
+    public boolean touch()
     {
         setLastAccessedTime(Instant.now());
+
+        return isPersisted();
     }
 
     protected static IServerContext getServerContext()
@@ -390,5 +387,20 @@ public class SimpleJSONServerSession implements IServerSession
         setId(id);
 
         return id;
+    }
+
+    @Override
+    public JSONObject getMetaData()
+    {
+        return getAttributes().getAsObject(getHelper().getMetaDataKey());
+    }
+
+    public JSONObject setMetaData(final JSONObject meta)
+    {
+        final JSONObject save = getMetaData();
+
+        setAttribute(getHelper().getMetaDataKey(), meta);
+
+        return save;
     }
 }

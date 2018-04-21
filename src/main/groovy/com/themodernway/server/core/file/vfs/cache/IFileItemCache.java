@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.vfs;
+package com.themodernway.server.core.file.vfs.cache;
 
 import com.themodernway.server.core.cache.ICoreCache;
 

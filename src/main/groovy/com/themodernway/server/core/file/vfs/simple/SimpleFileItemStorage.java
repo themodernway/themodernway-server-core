@@ -54,13 +54,13 @@ import com.themodernway.server.core.file.vfs.FileItemWrapper;
 import com.themodernway.server.core.file.vfs.FolderItemWrapper;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFileItemAttributes;
-import com.themodernway.server.core.file.vfs.IFileItemCache;
 import com.themodernway.server.core.file.vfs.IFileItemMetaDataFactory;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemWrapper;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 import com.themodernway.server.core.file.vfs.IFolderItemWrapper;
 import com.themodernway.server.core.file.vfs.ItemsOptions;
+import com.themodernway.server.core.file.vfs.cache.IFileItemCache;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.logging.LoggingOps;
@@ -253,12 +253,12 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
         private IOException        m_oops = null;
 
-        protected static final int doSet(final int bits, final int flag)
+        protected static final int BITS(final int bits, final int flag)
         {
             return (bits | flag);
         }
 
-        protected static final boolean isSet(final int bits, final int flag)
+        protected static final boolean TEST(final int bits, final int flag)
         {
             return ((bits & flag) == flag);
         }
@@ -271,27 +271,27 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
 
                 if (item.isHidden())
                 {
-                    m_bits = doSet(m_bits, FLAG_H);
+                    m_bits = BITS(m_bits, FLAG_H);
                 }
                 if (item.exists(file))
                 {
-                    m_bits = doSet(m_bits, FLAG_E);
+                    m_bits = BITS(m_bits, FLAG_E);
 
                     if (item.isReadable(file))
                     {
-                        m_bits = doSet(m_bits, FLAG_R);
+                        m_bits = BITS(m_bits, FLAG_R);
                     }
                     if (item.isWritable(file, item.getFileItemStorage()))
                     {
-                        m_bits = doSet(m_bits, FLAG_W);
+                        m_bits = BITS(m_bits, FLAG_W);
                     }
                     if (item.isFile(file))
                     {
-                        m_bits = doSet(m_bits, FLAG_F);
+                        m_bits = BITS(m_bits, FLAG_F);
                     }
                     else if (item.isFolder(file))
                     {
-                        m_bits = doSet(m_bits, FLAG_D);
+                        m_bits = BITS(m_bits, FLAG_D);
                     }
                 }
             }
@@ -306,37 +306,43 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         @Override
         public boolean exists()
         {
-            return isSet(m_bits, FLAG_E);
+            return TEST(m_bits, FLAG_E);
         }
 
         @Override
         public boolean isHidden()
         {
-            return isSet(m_bits, FLAG_H);
+            return TEST(m_bits, FLAG_H);
         }
 
         @Override
         public boolean isReadable()
         {
-            return isSet(m_bits, FLAG_R);
+            return TEST(m_bits, FLAG_R);
         }
 
         @Override
         public boolean isWritable()
         {
-            return isSet(m_bits, FLAG_W);
+            return TEST(m_bits, FLAG_W);
         }
 
         @Override
         public boolean isFile()
         {
-            return isSet(m_bits, FLAG_F);
+            return TEST(m_bits, FLAG_F);
         }
 
         @Override
         public boolean isFolder()
         {
-            return isSet(m_bits, FLAG_D);
+            return TEST(m_bits, FLAG_D);
+        }
+
+        @Override
+        public boolean isValidForReading()
+        {
+            return exists() && isFile() && isReadable() && (false == isHidden());
         }
 
         public IOException getException()

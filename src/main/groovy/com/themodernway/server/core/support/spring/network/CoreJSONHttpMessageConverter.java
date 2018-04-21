@@ -18,7 +18,6 @@ package com.themodernway.server.core.support.spring.network;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -28,8 +27,7 @@ import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
 
-import com.fasterxml.jackson.dataformat.yaml.UTF8Reader;
-import com.fasterxml.jackson.dataformat.yaml.UTF8Writer;
+import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
@@ -41,15 +39,15 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
 {
     private static final IBinder         BINDER = BinderType.JSON.getBinder();
 
-    private static final List<Charset>   ACCEPT = Arrays.asList(IO.UTF_8_CHARSET);
+    private static final List<Charset>   ACCEPT = CommonOps.toList(IO.UTF_8_CHARSET);
 
-    private static final List<MediaType> MEDIAT = Arrays.asList(MediaType.APPLICATION_JSON_UTF8);
+    private static final List<MediaType> MEDIAT = CommonOps.toList(MediaType.APPLICATION_JSON_UTF8, MediaType.APPLICATION_JSON);
 
     private static final Logger          LOGGER = LoggingOps.getLogger(CoreJSONHttpMessageConverter.class);
 
     public CoreJSONHttpMessageConverter()
     {
-        super(IO.UTF_8_CHARSET, MediaType.APPLICATION_JSON_UTF8, MediaType.TEXT_PLAIN, MediaType.ALL);
+        super(IO.UTF_8_CHARSET, MediaType.APPLICATION_JSON_UTF8, MediaType.APPLICATION_JSON);
     }
 
     @Override
@@ -63,7 +61,7 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
     {
         try
         {
-            return BINDER.bindJSON(new UTF8Reader(message.getBody(), true));
+            return BINDER.bindJSON(message.getBody());
         }
         catch (final ParserException e)
         {
@@ -88,7 +86,7 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
 
         try
         {
-            BINDER.send(new UTF8Writer(message.getBody()), json);
+            BINDER.send(message.getBody(), json);
         }
         catch (final ParserException e)
         {

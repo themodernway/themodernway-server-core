@@ -28,9 +28,9 @@ public class ContentDownloadServlet extends ContentGetServlet
 {
     private static final long serialVersionUID = 1L;
 
-    public ContentDownloadServlet(final String name, final boolean nocache, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr)
+    public ContentDownloadServlet(final String name, final boolean nocache, final double rate, final List<String> role, final IServletResponseErrorCodeManager code, final ISessionIDFromRequestExtractor extr, final IServletExceptionHandler excp)
     {
-        super(name, nocache, rate, role, code, extr);
+        super(name, nocache, rate, role, code, extr, excp);
     }
 
     @Override

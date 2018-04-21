@@ -26,49 +26,45 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
-import com.themodernway.common.api.types.Activatable;
 import com.themodernway.server.core.ICoreBase;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public class ServerSessionRepositoryProvider extends Activatable implements IServerSessionRepositoryProvider, ICoreBase, BeanFactoryAware
+public class ServerSessionRepositoryProvider implements IServerSessionRepositoryProvider, ICoreBase, BeanFactoryAware
 {
     private static final Logger                                   logger         = LoggingOps.getLogger(ServerSessionRepositoryProvider.class);
 
-    private final LinkedHashMap<String, IServerSessionRepository> m_repositories = new LinkedHashMap<>();
+    private final LinkedHashMap<String, IServerSessionRepository> m_repositories = linkedMap();
 
     public ServerSessionRepositoryProvider()
     {
-        super(true);
     }
 
     protected void addSessionRepository(final IServerSessionRepository repository)
     {
         if (null != repository)
         {
-            final String domain = toTrimOrNull(repository.getDomain());
+            final String realm = toTrimOrNull(repository.getRealm());
 
-            if (null != domain)
+            if (null != realm)
             {
-                if (null == m_repositories.get(domain))
+                if (null == m_repositories.get(realm))
                 {
-                    m_repositories.put(domain, repository);
-
-                    repository.setActive(true);
+                    m_repositories.put(realm, repository);
 
                     if (logger.isInfoEnabled())
                     {
-                        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, format("ServerSessionRepositoryProvider.addSessionRepository(%s) Registered", domain));
+                        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, format("ServerSessionRepositoryProvider.addSessionRepository(%s) Registered", realm));
                     }
                 }
                 else if (logger.isErrorEnabled())
                 {
-                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, format("ServerSessionRepositoryProvider.addSessionRepository(%s) Duplicate ignored", domain));
+                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, format("ServerSessionRepositoryProvider.addSessionRepository(%s) Duplicate ignored", realm));
                 }
             }
             else if (logger.isErrorEnabled())
             {
-                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null domain name");
+                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "ServerSessionRepositoryProvider.addSessionRepository() null realm name");
             }
         }
         else if (logger.isErrorEnabled())
@@ -80,13 +76,11 @@ public class ServerSessionRepositoryProvider extends Activatable implements ISer
     @Override
     public void close() throws IOException
     {
-        setActive(false);
-
         IO.close(m_repositories.values());
     }
 
     @Override
-    public List<String> getServerSessionRepositoryDomains()
+    public List<String> getServerSessionRepositoryRealms()
     {
         return toUnmodifiableList(m_repositories.keySet());
     }

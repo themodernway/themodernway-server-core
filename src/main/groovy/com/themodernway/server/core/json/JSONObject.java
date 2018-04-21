@@ -67,6 +67,12 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     }
 
     @Override
+    public Object get(final Object key)
+    {
+        return super.get(CommonOps.requireNonNull(key));
+    }
+
+    @Override
     public JSONObject set(final String key, final Object value)
     {
         put(CommonOps.requireNonNull(key), value);
@@ -111,109 +117,119 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public boolean isArray(final String key)
     {
-        return JSONUtils.isArray(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.isArray(get(key));
     }
 
     @Override
     public boolean isObject(final String key)
     {
-        return JSONUtils.isObject(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.isObject(get(key));
     }
 
     @Override
     public boolean isString(final String key)
     {
-        return JSONUtils.isString(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.isString(get(key));
     }
 
     @Override
     public boolean isBoolean(final String key)
     {
-        return JSONUtils.isBoolean(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.isBoolean(get(key));
     }
 
     @Override
     public boolean isDate(final String key)
     {
-        return JSONUtils.isDate(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.isDate(get(key));
     }
 
     @Override
     public boolean isNumber(final String key)
     {
-        return JSONUtils.isNumber(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.isNumber(get(key));
     }
 
     @Override
     public boolean isInteger(final String key)
     {
-        return JSONUtils.isInteger(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.isInteger(get(key));
     }
 
     @Override
     public boolean isDouble(final String key)
     {
-        return JSONUtils.isDouble(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.isDouble(get(key));
     }
 
     @Override
     public boolean isNativeFunction(final String key)
     {
-        return JSONUtils.isNativeFunction(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.isNativeFunction(get(key));
+    }
+
+    public boolean isLong(final String key)
+    {
+        return JSONUtils.isLong(get(key));
     }
 
     @Override
     public JSONArray getAsArray(final String key)
     {
-        return JSONUtils.asArray(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.asArray(get(key));
     }
 
     @Override
     public JSONObject getAsObject(final String key)
     {
-        return JSONUtils.asObject(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.asObject(get(key));
     }
 
     @Override
     public String getAsString(final String key)
     {
-        return JSONUtils.asString(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.asString(get(key));
     }
 
     @Override
     public Date getAsDate(final String key)
     {
-        return JSONUtils.asDate(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.asDate(get(key));
     }
 
     @Override
     public Boolean getAsBoolean(final String key)
     {
-        return JSONUtils.asBoolean(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.asBoolean(get(key));
     }
 
     @Override
     public Number getAsNumber(final String key)
     {
-        return JSONUtils.asNumber(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.asNumber(get(key));
     }
 
     @Override
     public Integer getAsInteger(final String key)
     {
-        return JSONUtils.asInteger(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.asInteger(get(key));
     }
 
     @Override
     public Double getAsDouble(final String key)
     {
-        return JSONUtils.asDouble(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.asDouble(get(key));
     }
 
     @Override
     public INativeFunction<?> getAsNativeFunction(final String key)
     {
-        return JSONUtils.asNativeFunction(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.asNativeFunction(get(key));
+    }
+
+    public Long getAsLong(final String key)
+    {
+        return JSONUtils.asLong(get(key));
     }
 
     @Override
@@ -316,7 +332,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     @Override
     public JSONType getJSONType(final String key)
     {
-        return JSONUtils.getJSONType(get(CommonOps.requireNonNull(key)));
+        return JSONUtils.getJSONType(get(key));
     }
 
     @Override

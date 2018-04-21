@@ -199,6 +199,11 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         return JSONUtils.isNativeFunction(get(index));
     }
 
+    public boolean isLong(final int index)
+    {
+        return JSONUtils.isLong(get(index));
+    }
+
     @Override
     public JSONArray getAsArray(final int index)
     {
@@ -251,6 +256,11 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     public INativeFunction<?> getAsNativeFunction(final int index)
     {
         return JSONUtils.asNativeFunction(get(index));
+    }
+
+    public Long getAsLong(final int index)
+    {
+        return JSONUtils.asLong(get(index));
     }
 
     public <T> T asType(final Class<T> type)

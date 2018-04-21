@@ -23,19 +23,36 @@ import com.themodernway.common.api.java.util.StringOps;
 
 public class CSPHeaderInjector extends HeaderInjectorBase
 {
-    private final String m_directive;
+    private String m_directive;
+
+    public CSPHeaderInjector()
+    {
+        this(null);
+    }
 
     public CSPHeaderInjector(final String directive)
     {
+        setDirective(directive);
+    }
+
+    public void setDirective(final String directive)
+    {
         m_directive = StringOps.toTrimOrNull(directive);
+    }
+
+    public String getDirective()
+    {
+        return m_directive;
     }
 
     @Override
     public int inject(final HttpServletRequest request, final HttpServletResponse response)
     {
-        if (null != m_directive)
+        final String directive = StringOps.toTrimOrNull(getDirective());
+
+        if (null != directive)
         {
-            response.setHeader(CONTENT_SECURITY_POLICY_HEADER, m_directive);
+            response.setHeader(CONTENT_SECURITY_POLICY_HEADER, directive);
         }
         return HttpServletResponse.SC_OK;
     }

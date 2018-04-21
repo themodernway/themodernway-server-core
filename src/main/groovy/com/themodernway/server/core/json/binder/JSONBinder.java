@@ -23,9 +23,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.json.binder.ICoreObjectMapper.Modules;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
 
@@ -46,31 +44,6 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
             Modules.withStrict(copy());
         }
         return this;
-    }
-
-    @Override
-    public <T> T convert(final Object object, final Class<T> claz) throws ParserException
-    {
-        if (null == object)
-        {
-            return null;
-        }
-        if (claz.isAssignableFrom(object.getClass()))
-        {
-            return claz.cast(object);
-        }
-        if (String.class.equals(claz))
-        {
-            return CommonOps.CAST(toJSONString(object));
-        }
-        try
-        {
-            return getMapper().convertValue(object, claz);
-        }
-        catch (final IllegalArgumentException e)
-        {
-            throw new ParserException(e);
-        }
     }
 
     @Override

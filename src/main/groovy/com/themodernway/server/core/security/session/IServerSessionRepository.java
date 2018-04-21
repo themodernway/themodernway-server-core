@@ -22,18 +22,17 @@ import java.util.List;
 
 import org.springframework.session.SessionRepository;
 
-import com.themodernway.common.api.types.IActivatable;
 import com.themodernway.server.core.json.JSONObject;
 
-public interface IServerSessionRepository extends SessionRepository<IServerSession>, IActivatable, Serializable, Closeable
+public interface IServerSessionRepository extends SessionRepository<IServerSession>, Serializable, Closeable
 {
-    public String getDomain();
+    public String getRealm();
 
-    public void touch(String id);
+    public boolean touch(String id);
 
-    public void touch(IServerSession session);
+    public boolean touch(IServerSession session);
 
-    public void delete(IServerSession session);
+    public boolean delete(IServerSession session);
 
     public void cleanExpiredSessions();
 
