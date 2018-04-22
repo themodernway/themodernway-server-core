@@ -83,7 +83,7 @@ public final class JSONUtils
             {
                 return CommonOps.CAST(OBJECT_BINDER.toString(self));
             }
-            if (OBJECT_BINDER.canSerializeType(type))
+            if (OBJECT_BINDER.canSerialize(type))
             {
                 final T valu = OBJECT_BINDER.convert(self, type);
 

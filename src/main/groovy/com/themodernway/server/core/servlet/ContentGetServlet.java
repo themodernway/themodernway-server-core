@@ -45,13 +45,45 @@ public class ContentGetServlet extends AbstractContentServlet
     @Override
     protected void doHead(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        content(request, response, false);
+        try
+        {
+            content(request, response, false);
+        }
+        catch (ServletException | IOException e)
+        {
+            final IServletExceptionHandler handler = getServletExceptionHandler();
+
+            if ((null == handler) || (false == handler.handle(request, response, getServletResponseErrorCodeManagerOrDefault(), e)))
+            {
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
+                }
+                sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
     }
 
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
     {
-        content(request, response, true);
+        try
+        {
+            content(request, response, true);
+        }
+        catch (ServletException | IOException e)
+        {
+            final IServletExceptionHandler handler = getServletExceptionHandler();
+
+            if ((null == handler) || (false == handler.handle(request, response, getServletResponseErrorCodeManagerOrDefault(), e)))
+            {
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
+                }
+                sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
     }
 
     public boolean isRedirectOn()

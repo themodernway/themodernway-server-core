@@ -19,7 +19,7 @@ package com.themodernway.server.core.json.binder;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.themodernway.server.core.json.binder.XMLBinder.CoreXMLMapper;
 
-public class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
+public final class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
 {
     public XMLBinder()
     {
@@ -32,7 +32,7 @@ public class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
         return BinderType.XML;
     }
 
-    public static class CoreXMLMapper extends XmlMapper implements ICoreObjectMapper
+    public static final class CoreXMLMapper extends XmlMapper implements ICoreObjectMapper
     {
         private static final long serialVersionUID = 1L;
 
@@ -41,7 +41,7 @@ public class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
             withDefaults(this);
         }
 
-        protected CoreXMLMapper(final CoreXMLMapper parent)
+        private CoreXMLMapper(final CoreXMLMapper parent)
         {
             super(parent);
         }

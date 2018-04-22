@@ -16,13 +16,14 @@
 
 package com.themodernway.server.core.security.session;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 
-public interface IServerSessionHelper
+public interface IServerSessionHelper extends Serializable
 {
     public static final String               SP_REALM_KEY                            = "realm";
 
@@ -50,11 +51,14 @@ public interface IServerSessionHelper
 
     public static class SimpleServerSessionHelper implements IServerSessionHelper
     {
+        private static final long serialVersionUID = 1L;
     }
 
     public static class MappingServerSessionHelper extends SimpleServerSessionHelper
     {
-        private final UnaryOperator<String> m_maps;
+        private static final long               serialVersionUID = 1477503900486043576L;
+
+        private transient UnaryOperator<String> m_maps;
 
         public MappingServerSessionHelper(final UnaryOperator<String> maps)
         {
@@ -129,6 +133,8 @@ public interface IServerSessionHelper
 
     public static class PrefixServerSessionHelper extends MappingServerSessionHelper
     {
+        private static final long serialVersionUID = 1679972757762285866L;
+
         private static final UnaryOperator<String> mapper(final String prefix)
         {
             return s -> prefix + s;

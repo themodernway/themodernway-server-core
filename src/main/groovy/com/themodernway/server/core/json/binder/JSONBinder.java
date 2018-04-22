@@ -27,7 +27,7 @@ import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.json.binder.ICoreObjectMapper.Modules;
 import com.themodernway.server.core.json.binder.JSONBinder.CoreObjectMapper;
 
-public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
+public final class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
 {
     private final AtomicBoolean m_strict = new AtomicBoolean(false);
 
@@ -52,16 +52,14 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
         return BinderType.JSON;
     }
 
-    public static class CoreObjectMapper extends ObjectMapper implements ICoreObjectMapper
+    public static final class CoreObjectMapper extends ObjectMapper implements ICoreObjectMapper
     {
         private static final long                 serialVersionUID = 1L;
 
-        private static final DefaultPrettyPrinter PRETTY_PRINTER   = buildPrettyPrinter(4);
+        private static final DefaultPrettyPrinter PRETTY_PRINTER   = pretty(StringOps.repeat(StringOps.SPACE_STRING, 4));
 
-        private static final DefaultPrettyPrinter buildPrettyPrinter(final int repeat)
+        private static final DefaultPrettyPrinter pretty(final String indent)
         {
-            final String indent = StringOps.repeat(StringOps.SPACE_STRING, repeat);
-
             return new DefaultPrettyPrinter().withArrayIndenter(new DefaultIndenter().withIndent(indent)).withObjectIndenter(new DefaultIndenter().withIndent(indent));
         }
 
@@ -70,7 +68,7 @@ public class JSONBinder extends AbstractDataBinder<CoreObjectMapper>
             withDefaults(this);
         }
 
-        protected CoreObjectMapper(final CoreObjectMapper parent)
+        private CoreObjectMapper(final CoreObjectMapper parent)
         {
             super(parent);
         }

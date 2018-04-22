@@ -123,7 +123,7 @@ public class ContentUploadServlet extends AbstractContentServlet
 
                             final IServletExceptionHandler handler = getServletExceptionHandler();
 
-                            if ((null == handler) || (false == handler.handle(request, response, getServletResponseErrorCodeManager(), e)))
+                            if ((null == handler) || (false == handler.handle(request, response, getServletResponseErrorCodeManagerOrDefault(), e)))
                             {
                                 if (logger().isErrorEnabled())
                                 {
@@ -150,13 +150,18 @@ public class ContentUploadServlet extends AbstractContentServlet
                 item.delete();
             }
         }
-        catch (final IOException e)
+        catch (IOException | FileUploadException e)
         {
-            throw e;
-        }
-        catch (final FileUploadException e)
-        {
-            throw new IOException(e);
+            final IServletExceptionHandler handler = getServletExceptionHandler();
+
+            if ((null == handler) || (false == handler.handle(request, response, getServletResponseErrorCodeManagerOrDefault(), e)))
+            {
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "captured overall exception for security.", e);
+                }
+                sendErrorCode(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
     }
 

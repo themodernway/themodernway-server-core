@@ -23,7 +23,7 @@ import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 import com.themodernway.common.api.types.ParserException;
 import com.themodernway.server.core.json.binder.PropertiesBinder.CorePropertiesMapper;
 
-public class PropertiesBinder extends AbstractDataBinder<CorePropertiesMapper>
+public final class PropertiesBinder extends AbstractDataBinder<CorePropertiesMapper>
 {
     public PropertiesBinder()
     {
@@ -49,7 +49,7 @@ public class PropertiesBinder extends AbstractDataBinder<CorePropertiesMapper>
         return BinderType.PROPERTIES;
     }
 
-    public static class CorePropertiesMapper extends JavaPropsMapper implements ICoreObjectMapper
+    public static final class CorePropertiesMapper extends JavaPropsMapper implements ICoreObjectMapper
     {
         private static final long serialVersionUID = 1L;
 
@@ -58,7 +58,7 @@ public class PropertiesBinder extends AbstractDataBinder<CorePropertiesMapper>
             withDefaults(this);
         }
 
-        protected CorePropertiesMapper(final CorePropertiesMapper parent)
+        private CorePropertiesMapper(final CorePropertiesMapper parent)
         {
             super(parent);
         }

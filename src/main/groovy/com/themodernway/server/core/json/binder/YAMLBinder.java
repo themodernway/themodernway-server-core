@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.themodernway.server.core.json.binder.YAMLBinder.CoreYAMLMapper;
 
-public class YAMLBinder extends AbstractDataBinder<CoreYAMLMapper>
+public final class YAMLBinder extends AbstractDataBinder<CoreYAMLMapper>
 {
     public YAMLBinder()
     {
@@ -34,7 +34,7 @@ public class YAMLBinder extends AbstractDataBinder<CoreYAMLMapper>
         return BinderType.YAML;
     }
 
-    public static class CoreYAMLMapper extends YAMLMapper implements ICoreObjectMapper
+    public static final class CoreYAMLMapper extends YAMLMapper implements ICoreObjectMapper
     {
         private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class YAMLBinder extends AbstractDataBinder<CoreYAMLMapper>
             withDefaults(this);
         }
 
-        protected CoreYAMLMapper(final CoreYAMLMapper parent)
+        private CoreYAMLMapper(final CoreYAMLMapper parent)
         {
             super(parent);
         }

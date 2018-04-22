@@ -38,6 +38,10 @@ public class ServerSessionRepositoryProvider implements IServerSessionRepository
 
     public ServerSessionRepositoryProvider()
     {
+        if (logger.isInfoEnabled())
+        {
+            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, format("ServerSessionRepositoryProvider()"));
+        }
     }
 
     protected void addSessionRepository(final IServerSessionRepository repository)

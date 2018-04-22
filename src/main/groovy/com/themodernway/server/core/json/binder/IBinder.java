@@ -125,7 +125,5 @@ public interface IBinder
 
     public ObjectMapper getMapper();
 
-    public boolean canSerializeType(Class<?> type);
-
-    public boolean canSerializeObject(Object object);
+    public boolean canSerialize(Class<?> type);
 }

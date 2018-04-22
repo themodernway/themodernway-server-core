@@ -71,7 +71,7 @@ public class CoreStrictBinderModule extends SimpleModule
         {
             final Properties properties = IO.toProperties(new ClassPathResource("strictbinder.properties", CoreStrictBinderModule.class));
 
-            final String mversion = properties.getProperty("strictbinder.mversion", "2.1.6");
+            final String mversion = properties.getProperty("strictbinder.mversion", "2.2.0");
 
             final String group_id = properties.getProperty("strictbinder.group_id", "com.themodernway");
 
@@ -91,13 +91,13 @@ public class CoreStrictBinderModule extends SimpleModule
         }
     }
 
-    public static final class CoreStrictLongSerializer extends StdSerializer<Long>
+    private static final class CoreStrictLongSerializer extends StdSerializer<Long>
     {
-        private static final long                    serialVersionUID = 1L;
+        private static final long                     serialVersionUID = 1L;
 
-        public static final CoreStrictLongSerializer INSTANCE         = new CoreStrictLongSerializer();
+        private static final CoreStrictLongSerializer INSTANCE         = new CoreStrictLongSerializer();
 
-        protected CoreStrictLongSerializer()
+        private CoreStrictLongSerializer()
         {
             super(Long.class);
         }
@@ -118,13 +118,13 @@ public class CoreStrictBinderModule extends SimpleModule
         }
     }
 
-    public static final class CoreStrictBigIntegerSerializer extends StdSerializer<BigInteger>
+    private static final class CoreStrictBigIntegerSerializer extends StdSerializer<BigInteger>
     {
-        private static final long                          serialVersionUID = 1L;
+        private static final long                           serialVersionUID = 1L;
 
-        public static final CoreStrictBigIntegerSerializer INSTANCE         = new CoreStrictBigIntegerSerializer();
+        private static final CoreStrictBigIntegerSerializer INSTANCE         = new CoreStrictBigIntegerSerializer();
 
-        protected CoreStrictBigIntegerSerializer()
+        private CoreStrictBigIntegerSerializer()
         {
             super(BigInteger.class);
         }
@@ -145,13 +145,13 @@ public class CoreStrictBinderModule extends SimpleModule
         }
     }
 
-    public static final class CoreStrictBigDecimalSerializer extends StdSerializer<BigDecimal>
+    private static final class CoreStrictBigDecimalSerializer extends StdSerializer<BigDecimal>
     {
-        private static final long                          serialVersionUID = 1L;
+        private static final long                           serialVersionUID = 1L;
 
-        public static final CoreStrictBigDecimalSerializer INSTANCE         = new CoreStrictBigDecimalSerializer();
+        private static final CoreStrictBigDecimalSerializer INSTANCE         = new CoreStrictBigDecimalSerializer();
 
-        protected CoreStrictBigDecimalSerializer()
+        private CoreStrictBigDecimalSerializer()
         {
             super(BigDecimal.class);
         }

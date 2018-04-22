@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
-import org.springframework.http.HttpMethod;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.themodernway.common.api.java.util.CommonOps;
@@ -126,14 +125,19 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
         return m_extractor;
     }
 
+    public IServletResponseErrorCodeManager getServletResponseErrorCodeManagerOrDefault()
+    {
+        return requireNonNullOrElse(getServletResponseErrorCodeManager(), CoreServletResponseErrorCodeManager.DEFAULT);
+    }
+
     protected void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code)
     {
-        getServletResponseErrorCodeManager().sendErrorCode(request, response, code);
+        getServletResponseErrorCodeManagerOrDefault().sendErrorCode(request, response, code);
     }
 
     protected void sendErrorCode(final HttpServletRequest request, final HttpServletResponse response, final int code, final String mess)
     {
-        getServletResponseErrorCodeManager().sendErrorCode(request, response, code, mess);
+        getServletResponseErrorCodeManagerOrDefault().sendErrorCode(request, response, code, mess);
     }
 
     protected void doPatch(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException
@@ -233,71 +237,63 @@ public abstract class HTTPServletBase extends HttpServlet implements IRateLimite
             }
             response.setCharacterEncoding(CHARSET_UTF_8);
 
-            final HttpMethod meth = HttpMethod.resolve(toTrimOrElse(request.getMethod(), StringOps.EMPTY_STRING).toUpperCase());
+            final String meth = toTrimOrElse(request.getMethod(), StringOps.EMPTY_STRING).toUpperCase();
 
-            switch (meth)
+            if (HTTP_METHOD_GET.equals(meth))
             {
-                case GET:
-                {
-                    doGet(request, response);
+                doGet(request, response);
 
-                    return;
-                }
-                case HEAD:
-                {
-                    doHead(request, response);
-
-                    return;
-                }
-                case POST:
-                {
-                    doPost(request, response);
-
-                    return;
-                }
-                case PUT:
-                {
-                    doPut(request, response);
-
-                    return;
-                }
-                case DELETE:
-                {
-                    doDelete(request, response);
-
-                    return;
-                }
-                case PATCH:
-                {
-                    doPatch(request, response);
-
-                    return;
-                }
-                case OPTIONS:
-                {
-                    doOptions(request, response);
-
-                    return;
-                }
-                case TRACE:
-                {
-                    doTrace(request, response);
-
-                    return;
-                }
-                default:
-                {
-                    super.service(request, response);
-
-                    return;
-                }
+                return;
             }
+            else if (HTTP_METHOD_HEAD.equals(meth))
+            {
+                doHead(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_POST.equals(meth))
+            {
+                doPost(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_PUT.equals(meth))
+            {
+                doPut(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_DELETE.equals(meth))
+            {
+                doDelete(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_PATCH.equals(meth))
+            {
+                doPatch(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_OPTIONS.equals(meth))
+            {
+                doOptions(request, response);
+
+                return;
+            }
+            else if (HTTP_METHOD_TRACE.equals(meth))
+            {
+                doTrace(request, response);
+
+                return;
+            }
+            super.service(request, response);
         }
         catch (final Exception e)
         {
             final IServletExceptionHandler handler = getServletExceptionHandler();
 
-            if ((null == handler) || (false == handler.handle(request, response, getServletResponseErrorCodeManager(), e)))
+            if ((null == handler) || (false == handler.handle(request, response, getServletResponseErrorCodeManagerOrDefault(), e)))
             {
                 if (logger().isErrorEnabled())
                 {
