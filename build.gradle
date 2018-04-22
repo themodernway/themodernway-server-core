@@ -374,6 +374,7 @@ def List<String> springCorePackages() {
         'spring-tx',
         'spring-web',
         'spring-webmvc',
+        'spring-webflux',
         'spring-test'
     ]
 }
