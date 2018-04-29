@@ -64,21 +64,6 @@ public final class LoggingOps
         return LoggerFactory.getLogger(CommonOps.requireNonNull(type));
     }
 
-    public static final ILoggingProxy getLoggingProxy(final String name)
-    {
-        return () -> getLogger(name);
-    }
-
-    public static final ILoggingProxy getLoggingProxy(final Class<?> type)
-    {
-        return () -> getLogger(type);
-    }
-
-    public static final ILoggingProxy getLoggingProxy(final IHasLogging logger)
-    {
-        return () -> logger.logger();
-    }
-
     public static final boolean isStarted()
     {
         return context().isStarted();
