@@ -21,9 +21,8 @@ import java.util.List;
 import org.springframework.mail.MailMessage;
 
 import com.themodernway.common.api.types.json.JSONStringify;
-import com.themodernway.server.core.json.JSONObjectSupplier;
 
-public interface ICoreSimpleMailMessage extends ISmartMailMessage, MailMessage, JSONObjectSupplier, JSONStringify
+public interface ICoreSimpleMailMessage extends ISmartMailMessage, MailMessage, JSONStringify
 {
     public List<String> getMailBccList();
 

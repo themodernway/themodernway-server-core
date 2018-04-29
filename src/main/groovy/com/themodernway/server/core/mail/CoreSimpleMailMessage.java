@@ -28,7 +28,7 @@ import com.themodernway.server.core.json.JSONObject;
 
 public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSimpleMailMessage
 {
-    private static final long serialVersionUID = 1L;
+    private static final long     serialVersionUID = 1L;
 
     private transient IMailSender m_send;
 
@@ -110,7 +110,6 @@ public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSim
         return StringOps.getSupplierUniqueStringArray(this::getBcc);
     }
 
-    @Override
     public JSONObject toJSONObject()
     {
         final JSONObject json = new JSONObject();
