@@ -16,9 +16,9 @@
 
 package com.themodernway.server.core.support.spring;
 
-import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.json.JSONObjectSupplier;
 
-public interface IBuildDescriptor
+public interface IBuildDescriptor extends JSONObjectSupplier
 {
     public String getNameSpace();
 
@@ -39,6 +39,4 @@ public interface IBuildDescriptor
     public String getBuildGITCommitMessage();
 
     public String getBuildModuleVersion();
-
-    public JSONObject toJSONObject();
 }

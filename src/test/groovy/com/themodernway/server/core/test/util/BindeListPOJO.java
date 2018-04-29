@@ -16,18 +16,20 @@
 
 package com.themodernway.server.core.test.util;
 
-import java.util.Arrays;
 import java.util.List;
+
+import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.server.core.ITimeSupplier;
 
 public class BindeListPOJO
 {
-    private String       m_name = "";
+    private String  m_name = "";
 
-    private List<String> m_scrp = Arrays.asList("a", "b");
+    private List<?> m_scrp = CommonOps.toList(3.5, "a", "b", 1, true);
 
-    private double       m_cost = 0d;
+    private double  m_cost = 0d;
 
-    private long         m_time = System.currentTimeMillis();
+    private long    m_time = ITimeSupplier.now();
 
     public BindeListPOJO()
     {
@@ -45,12 +47,12 @@ public class BindeListPOJO
         m_cost = cost;
     }
 
-    public List<String> getValue()
+    public List<?> getValue()
     {
         return m_scrp;
     }
 
-    public void setValue(final List<String> scrp)
+    public void setValue(final List<?> scrp)
     {
         m_scrp = scrp;
     }

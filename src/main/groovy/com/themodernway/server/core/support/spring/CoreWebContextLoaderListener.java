@@ -24,81 +24,97 @@ import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public class CoreWebContextLoaderListener extends ContextLoaderListener
+public class CoreWebContextLoaderListener extends ContextLoaderListener implements IHasLogging
 {
-    private static final Logger logger = LoggingOps.getLogger(CoreWebContextLoaderListener.class);
+    private final Logger m_logger = LoggingOps.getLogger(getClass());
+
+    public CoreWebContextLoaderListener()
+    {
+        super();
+
+        if (logger().isInfoEnabled())
+        {
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener()");
+        }
+    }
+
+    public CoreWebContextLoaderListener(final WebApplicationContext context)
+    {
+        super(context);
+
+        if (logger().isInfoEnabled())
+        {
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener(WebApplicationContext)");
+        }
+    }
 
     @Override
     public void contextInitialized(final ServletContextEvent event)
     {
-        if (logger.isInfoEnabled())
+        if (logger().isInfoEnabled())
         {
-            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextInitialized() STARTING");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextInitialized() STARTING");
         }
         super.contextInitialized(event);
 
-        if (isServletContextCustomizerEnabled())
+        final WebApplicationContext context = ServerContextInstance.getServerContextInstance().getWebApplicationContext();
+
+        if (null != context)
         {
-            final WebApplicationContext context = getServerContext().getWebApplicationContext();
+            final ServletContext sc = event.getServletContext();
 
-            if (null != context)
+            for (final IServletContextCustomizer customizer : ServerContextInstance.getServerContextInstance().getServletContextCustomizerProvider().getServletContextCustomizers())
             {
-                final ServletContext sc = event.getServletContext();
-
-                for (final IServletContextCustomizer customizer : getServerContext().getServletContextCustomizerProvider().getServletContextCustomizers())
-                {
-                    customizer.customize(sc, context);
-                }
+                customizer.customize(sc, context);
             }
         }
-        if (logger.isInfoEnabled())
+        if (logger().isInfoEnabled())
         {
-            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextInitialized() COMPLETE");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextInitialized() COMPLETE");
         }
     }
 
     @Override
     public void contextDestroyed(final ServletContextEvent event)
     {
-        if (logger.isInfoEnabled())
+        if (logger().isInfoEnabled())
         {
-            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() STARTING");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() STARTING");
         }
         super.contextDestroyed(event);
 
-        if (logger.isInfoEnabled())
+        if (logger().isInfoEnabled())
         {
-            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() COMPLETE");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.contextDestroyed() COMPLETE");
         }
         ServerContextInstance.setApplicationContext(null);
+
+        LoggingOps.stop();
     }
 
     @Override
     protected void customizeContext(final ServletContext sc, final ConfigurableWebApplicationContext context)
     {
-        if (logger.isInfoEnabled())
+        if (logger().isInfoEnabled())
         {
-            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.customizeContext() STARTING");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.customizeContext() STARTING");
         }
         super.customizeContext(sc, context);
 
         ServerContextInstance.setApplicationContext(context);
 
-        if (logger.isInfoEnabled())
+        if (logger().isInfoEnabled())
         {
-            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.customizeContext() COMPLETE");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "CoreWebContextLoaderListener.customizeContext() COMPLETE");
         }
     }
 
-    protected boolean isServletContextCustomizerEnabled()
+    @Override
+    public Logger logger()
     {
-        return true;
-    }
-
-    public IServerContext getServerContext()
-    {
-        return ServerContextInstance.getServerContextInstance();
+        return m_logger;
     }
 }

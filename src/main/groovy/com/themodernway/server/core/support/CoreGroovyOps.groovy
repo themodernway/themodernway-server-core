@@ -23,7 +23,7 @@ import groovyx.gpars.GParsPoolUtil
 import groovyx.gpars.ParallelEnhancer
 
 @CompileStatic
-public class CoreGroovyParallel
+public class CoreGroovyOps
 {
     public static final <T> T parallel(final T collection)
     {

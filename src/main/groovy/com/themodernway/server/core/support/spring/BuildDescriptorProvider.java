@@ -24,61 +24,89 @@ import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
-import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.java.util.StringOps;
-import com.themodernway.server.core.json.JSONArray;
+import com.themodernway.server.core.ICoreBase;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.json.JSONUtils;
+import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFactoryAware
+public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFactoryAware, ICoreBase, IHasLogging
 {
-    private static final Logger                           logger        = LoggingOps.getLogger(BuildDescriptorProvider.class);
+    private final Logger                                  m_logging = LoggingOps.getLogger(getClass());
 
-    private final LinkedHashMap<String, IBuildDescriptor> m_descriptors = new LinkedHashMap<>();
+    private final LinkedHashMap<String, IBuildDescriptor> m_storage = linkedMap();
+
+    @Value("${core.server.build.descriptor.list.name:descriptors}")
+    private String                                        m_oflist;
+
+    public BuildDescriptorProvider()
+    {
+        if (logger().isInfoEnabled())
+        {
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "BuildDescriptorProvider().");
+        }
+    }
 
     protected void addDescriptor(final IBuildDescriptor descriptor)
     {
         if (null != descriptor)
         {
-            final String name = StringOps.toTrimOrNull(descriptor.getNameSpace());
+            final String name = toTrimOrNull(descriptor.getNameSpace());
 
             if ((null != name) && (false == name.startsWith("@GRADLE")))
             {
-                if (null == m_descriptors.get(name))
+                if (null == m_storage.get(name))
                 {
-                    m_descriptors.put(name, descriptor);
+                    m_storage.put(name, descriptor);
 
-                    if (logger.isInfoEnabled())
+                    if (logger().isInfoEnabled())
                     {
-                        logger.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("BuildDescriptorProvider.addDescriptor(%s) Registered", name));
+                        logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("BuildDescriptorProvider.addDescriptor(%s) added.", name));
                     }
                 }
-                else if (logger.isErrorEnabled())
+                else if (logger().isErrorEnabled())
                 {
-                    logger.error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("BuildDescriptorProvider.addDescriptor(%s) Duplicate ignored", name));
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("BuildDescriptorProvider.addDescriptor(%s) duplicate value.", name));
                 }
             }
+        }
+        else if (logger().isErrorEnabled())
+        {
+            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "BuildDescriptorProvider.addDescriptor() null value.");
         }
     }
 
     @Override
     public IBuildDescriptor getBuildDescriptor(final String name)
     {
-        return m_descriptors.get(StringOps.requireTrimOrNull(name));
+        return m_storage.get(requireTrimOrNull(name));
     }
 
     @Override
     public List<String> getBuildDescriptorNames()
     {
-        return CommonOps.toUnmodifiableList(m_descriptors.keySet());
+        return toUnmodifiableList(m_storage.keySet());
     }
 
     @Override
     public List<IBuildDescriptor> getBuildDescriptors()
     {
-        return CommonOps.toUnmodifiableList(m_descriptors.values());
+        return toUnmodifiableList(m_storage.values());
+    }
+
+    @Override
+    public JSONObject toJSONObject()
+    {
+        return new JSONObject(toTrimOrElse(m_oflist, JSONUtils.JSON_OBJECT_DEFAULT_ARRAY_NAME), m_storage.values());
+    }
+
+    @Override
+    public Logger logger()
+    {
+        return m_logging;
     }
 
     @Override
@@ -96,30 +124,9 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
     @Override
     public void close() throws IOException
     {
-        // empty by design.
-    }
-
-    @Override
-    public JSONArray toJSONArray()
-    {
-        final JSONArray list = new JSONArray();
-
-        for (final IBuildDescriptor descriptor : m_descriptors.values())
+        if (logger().isInfoEnabled())
         {
-            list.add(descriptor.toJSONObject());
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "close().");
         }
-        return list;
-    }
-
-    @Override
-    public JSONObject toJSONObject()
-    {
-        return toJSONObject("descriptors");
-    }
-
-    @Override
-    public JSONObject toJSONObject(final String label)
-    {
-        return new JSONObject(StringOps.requireTrimOrNull(label), toJSONArray());
     }
 }

@@ -262,17 +262,17 @@ public class CoreGroovySupport implements IServerContext, Closeable
 
     public <T> T parallel(T collection)
     {
-        CoreGroovyParallel.parallel(collection)
+        CoreGroovyOps.parallel(collection)
     }
 
     public void pause(long time)
     {
-        CoreGroovyParallel.pause(time)
+        CoreGroovyOps.pause(time)
     }
 
     public void pause(long time, Closure closure)
     {
-        CoreGroovyParallel.pause(time, closure)
+        CoreGroovyOps.pause(time, closure)
     }
 
     @Override

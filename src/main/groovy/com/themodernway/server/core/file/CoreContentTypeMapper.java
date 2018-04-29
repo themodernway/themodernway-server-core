@@ -31,17 +31,17 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.logging.LoggingOps;
 
 @NotThreadSafe
-public class CoreContentTypeMapper implements ICoreContentTypeMapper, InitializingBean
+public class CoreContentTypeMapper implements ICoreContentTypeMapper, InitializingBean, IHasLogging
 {
     private final Logger         m_logs = LoggingOps.getLogger(getClass());
 
-    private String[]             m_type = null;
+    private String[]             m_type = CommonOps.NULL();
 
-    private MimetypesFileTypeMap m_maps = null;
+    private MimetypesFileTypeMap m_maps = CommonOps.NULL();
 
     private Resource             m_rsrc = new ClassPathResource("mime.types", getClass());
 
@@ -60,34 +60,26 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
         {
             return m_maps;
         }
-        InputStream stream = null;
-
-        try
+        if (logger().isInfoEnabled())
         {
-            if (m_logs.isInfoEnabled())
-            {
-                m_logs.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("loading (%s) mime file.", m_rsrc));
-            }
-            stream = m_rsrc.getInputStream();
-
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("loading (%s) mime file.", m_rsrc));
+        }
+        try (InputStream stream = m_rsrc.getInputStream())
+        {
             m_maps = new MimetypesFileTypeMap(stream);
 
             if (null != m_type)
             {
                 for (final String type : m_type)
                 {
-                    if (m_logs.isInfoEnabled())
+                    if (logger().isInfoEnabled())
                     {
-                        m_logs.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("adding to (%s) mime type (%s).", m_rsrc, type));
+                        logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("adding to (%s) mime type (%s).", m_rsrc, type));
                     }
                     m_maps.addMimeTypes(type);
                 }
             }
             return m_maps;
-        }
-        finally
-        {
-            IO.close(stream);
         }
     }
 
@@ -102,7 +94,13 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
             }
             catch (final IOException e)
             {
-                throw new IllegalStateException("Could not load specified MIME type mapping file: " + m_rsrc, e);
+                final String oops = String.format("can not load specified MIME type mapping file (%s).", m_rsrc);
+
+                if (logger().isErrorEnabled())
+                {
+                    logger().error(LoggingOps.THE_MODERN_WAY_MARKER, oops, e);
+                }
+                throw new IllegalStateException(oops, e);
             }
         }
         return m_maps;
@@ -135,5 +133,11 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
     public void afterPropertiesSet() throws Exception
     {
         getFileTypeMap();
+    }
+
+    @Override
+    public Logger logger()
+    {
+        return m_logs;
     }
 }

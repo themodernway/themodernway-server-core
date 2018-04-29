@@ -17,6 +17,7 @@
 package com.themodernway.server.core.json.binder;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.themodernway.server.core.json.binder.XMLBinder.CoreXMLMapper;
 
 public final class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
@@ -38,7 +39,7 @@ public final class XMLBinder extends AbstractDataBinder<CoreXMLMapper>
 
         public CoreXMLMapper()
         {
-            withDefaults(this);
+            withDefaults(this).enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION);
         }
 
         private CoreXMLMapper(final CoreXMLMapper parent)

@@ -18,6 +18,7 @@ package com.themodernway.server.core.security.session;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.themodernway.server.core.json.JSONObject;
@@ -84,7 +85,7 @@ public class SimpleJSONServerSessionRepository extends AbstractServerSessionRepo
     }
 
     @Override
-    public IServerSession createSession(final JSONObject keys)
+    public IServerSession createSession(final Map<String, ?> keys)
     {
         return new SimpleJSONServerSession(keys, this);
     }

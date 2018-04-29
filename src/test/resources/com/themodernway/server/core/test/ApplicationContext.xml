@@ -22,15 +22,15 @@
 						http://www.springframework.org/schema/context
 						http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="BootstrapStringCryptoProvider" class="com.themodernway.server.core.security.BootstrapStringCryptoProvider">
+	<bean id="BootstrapStringCryptoProvider" class="com.themodernway.server.core.security.BootstrapStringCryptoProvider" lazy-init="true">
 		<constructor-arg>
 			<value>file:/opt/development/properties/themodernway-server-core/crypto.properties</value>
 		</constructor-arg>
 	</bean>
 
 	<bean id="PropertiesProvider" class="com.themodernway.server.core.support.spring.CoreEncryptedPropertiesProviderPlaceholderConfigurer">
-		<constructor-arg ref="BootstrapStringCryptoProvider"/>
-		<constructor-arg value="0xCAFEBABE;"/>
+		<constructor-arg ref="BootstrapStringCryptoProvider" />
+		<constructor-arg value="0xCAFEBABE;" />
 		<property name="locations">
 			<list>
 				<value>file:/opt/development/properties/themodernway-server-core/webapp.properties</value>
@@ -38,21 +38,40 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="TestingServerBuildDescriptor" class="com.themodernway.server.core.support.spring.BuildDescriptor" lazy-init="true">
+		<constructor-arg value="TheModernWay-Testing" />
+		<property name="buildUser">
+			<value><![CDATA[deanjones]]></value>
+		</property>
+		<property name="buildDate" value="Tue Apr 10 23:17:25 EDT 2018" />
+		<property name="javaVersion" value="1.8.0_162" />
+		<property name="buildGITCommitHash" value="https://github.com/themodernway/themodernway-common/commit/bd634a6149d00f207a0d03e755f0f7898f333885" />
+		<property name="buildGITCommitUser">
+			<value><![CDATA[deanjones@deans-imac-pro]]></value>
+		</property>
+		<property name="buildGITCommitMessage">
+			<value><![CDATA[2.2.0-RELEASE]]></value>
+		</property>
+		<property name="buildServerHost" value="Deans-iMac-Pro" />
+		<property name="buildServerBuild" value="Gradle version 4.6" />
+		<property name="buildModuleVersion" value="themodernway-common-2.2.0-RELEASE.jar" />
+	</bean>
 
-	<bean id="ScriptingProvider" class="com.themodernway.server.core.scripting.ScriptingProvider" destroy-method="close">
+	<bean id="ScriptingProvider" class="com.themodernway.server.core.scripting.ScriptingProvider" destroy-method="close" lazy-init="true">
 		<constructor-arg>
 			<list>
-				<bean class="com.themodernway.server.core.scripting.GroovyScriptingProperties"/>
-				<bean class="com.themodernway.server.core.scripting.JavaScriptScriptingProperties"/>
+				<bean class="com.themodernway.server.core.scripting.GroovyScriptingProperties" />
+				<bean class="com.themodernway.server.core.scripting.JavaScriptScriptingProperties" />
 			</list>
 		</constructor-arg>
 	</bean>
 	
-	<bean id="GoogleMailSender" class="com.themodernway.server.core.mail.CoreMailSender">
-		<property name="host" value="smtp.gmail.com"/>
-		<property name="port" value="587"/>
-		<property name="username" value="${mailsender.google.user}"/>
-		<property name="password" value="${mailsender.google.pass}"/>
+	<bean id="GoogleMailSender" class="com.themodernway.server.core.mail.CoreMailSender" lazy-init="true">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="${mailsender.google.user}" />
+		<property name="password" value="${mailsender.google.pass}" />
 		<property name="javaMailProperties">
 			<props>
        	      <prop key="mail.smtp.auth">true</prop>

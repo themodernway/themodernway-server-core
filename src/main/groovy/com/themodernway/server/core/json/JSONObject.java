@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.json;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ import com.themodernway.server.core.json.path.JSONPath;
 import com.themodernway.server.core.json.validation.IJSONValidator;
 import com.themodernway.server.core.json.validation.IValidationContext;
 
-@JacksonXmlRootElement(localName = "result")
+@JacksonXmlRootElement(localName = JSONUtils.JSON_OBJECT_DEFAULT_VALUE_NAME)
 public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, JSONObjectSupplier, JSONStreamAware, IJSONPathEnabled
 {
     private static final long serialVersionUID = 6519927319475402111L;
@@ -53,12 +54,22 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
 
     public JSONObject(final List<?> list)
     {
-        put("list", CommonOps.requireNonNull(list));
+        put(JSONUtils.JSON_OBJECT_DEFAULT_ARRAY_NAME, CommonOps.requireNonNull(list));
+    }
+
+    public JSONObject(final Collection<? extends JSONObjectSupplier> source)
+    {
+        this(JSONUtils.JSON_OBJECT_DEFAULT_ARRAY_NAME, CommonOps.requireNonNull(source));
     }
 
     public JSONObject(final String name, final Object value)
     {
         put(CommonOps.requireNonNull(name), value);
+    }
+
+    public JSONObject(final String name, final Collection<? extends JSONObjectSupplier> source)
+    {
+        put(CommonOps.requireNonNull(name), new JSONArray(CommonOps.requireNonNull(source)));
     }
 
     public IValidationContext validate(final IJSONValidator validator)

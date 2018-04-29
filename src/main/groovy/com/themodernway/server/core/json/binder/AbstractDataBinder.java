@@ -50,14 +50,21 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
     protected AbstractDataBinder(final M mapper)
     {
-        m_mapper = mapper;
+        m_mapper = CommonOps.requireNonNull(mapper);
     }
 
     protected M copy()
     {
-        m_mapper = CommonOps.CAST(m_mapper.copy());
+        setMapper(CommonOps.CAST(getMapper().copy()));
 
-        return m_mapper;
+        return getMapper();
+    }
+
+    protected IBinder setMapper(final M mapper)
+    {
+        m_mapper = CommonOps.requireNonNull(mapper);
+
+        return this;
     }
 
     @Override
@@ -101,11 +108,11 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder enable(final SerializationFeature... features)
     {
-        copy();
+        final M mapper = copy();
 
         for (final SerializationFeature feature : features)
         {
-            m_mapper.enable(feature);
+            mapper.enable(feature);
         }
         return this;
     }
@@ -113,11 +120,11 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder enable(final DeserializationFeature... features)
     {
-        copy();
+        final M mapper = copy();
 
         for (final DeserializationFeature feature : features)
         {
-            m_mapper.enable(feature);
+            mapper.enable(feature);
         }
         return this;
     }
@@ -133,11 +140,11 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder disable(final SerializationFeature... features)
     {
-        copy();
+        final M mapper = copy();
 
         for (final SerializationFeature feature : features)
         {
-            m_mapper.disable(feature);
+            mapper.disable(feature);
         }
         return this;
     }
@@ -145,11 +152,11 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public IBinder disable(final DeserializationFeature... features)
     {
-        copy();
+        final M mapper = copy();
 
         for (final DeserializationFeature feature : features)
         {
-            m_mapper.disable(feature);
+            mapper.disable(feature);
         }
         return this;
     }
@@ -179,19 +186,19 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     @Override
     public boolean isEnabled(final MapperFeature feature)
     {
-        return m_mapper.isEnabled(feature);
+        return getMapper().isEnabled(feature);
     }
 
     @Override
     public boolean isEnabled(final SerializationFeature feature)
     {
-        return m_mapper.isEnabled(feature);
+        return getMapper().isEnabled(feature);
     }
 
     @Override
     public boolean isEnabled(final DeserializationFeature feature)
     {
-        return m_mapper.isEnabled(feature);
+        return getMapper().isEnabled(feature);
     }
 
     @Override
@@ -199,7 +206,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try (BufferedReader reader = IO.toBufferedReader(path))
         {
-            return m_mapper.readValue(reader, claz);
+            return getMapper().readValue(reader, claz);
         }
         catch (final IOException e)
         {
@@ -212,7 +219,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try (BufferedReader reader = IO.toBufferedReader(file))
         {
-            return m_mapper.readValue(reader, claz);
+            return getMapper().readValue(reader, claz);
         }
         catch (final IOException e)
         {
@@ -225,7 +232,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try (BufferedReader reader = file.getBufferedReader())
         {
-            return m_mapper.readValue(reader, claz);
+            return getMapper().readValue(reader, claz);
         }
         catch (final IOException e)
         {
@@ -238,7 +245,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try
         {
-            return m_mapper.readValue(stream, claz);
+            return getMapper().readValue(stream, claz);
         }
         catch (final IOException e)
         {
@@ -251,7 +258,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try
         {
-            return m_mapper.readValue(reader, claz);
+            return getMapper().readValue(reader, claz);
         }
         catch (final IOException e)
         {
@@ -264,7 +271,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try (InputStream stream = resource.getInputStream())
         {
-            return m_mapper.readValue(stream, claz);
+            return getMapper().readValue(stream, claz);
         }
         catch (final IOException e)
         {
@@ -277,7 +284,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try
         {
-            return m_mapper.readValue(url, claz);
+            return getMapper().readValue(url, claz);
         }
         catch (final IOException e)
         {
@@ -290,7 +297,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try
         {
-            return m_mapper.readValue(text.toString(), claz);
+            return getMapper().readValue(text.toString(), claz);
         }
         catch (final IOException e)
         {
@@ -390,7 +397,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
         try (BufferedWriter buff = IO.toBufferedWriter(path))
         {
-            m_mapper.writeValue(buff, object);
+            getMapper().writeValue(buff, object);
 
             buff.flush();
         }
@@ -407,7 +414,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
         try
         {
-            m_mapper.writeValue(file, object);
+            getMapper().writeValue(file, object);
         }
         catch (final IOException e)
         {
@@ -422,7 +429,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
         try
         {
-            m_mapper.writeValue(stream, object);
+            getMapper().writeValue(stream, object);
         }
         catch (final IOException e)
         {
@@ -437,7 +444,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
         try
         {
-            m_mapper.writeValue(writer, object);
+            getMapper().writeValue(writer, object);
 
             writer.flush();
         }
@@ -454,7 +461,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
 
         try
         {
-            return m_mapper.writeValueAsString(object);
+            return getMapper().writeValueAsString(object);
         }
         catch (final IOException e)
         {
@@ -495,9 +502,19 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     }
 
     @Override
-    public boolean canSerialize(final Class<?> type)
+    public boolean canSerializeClass(final Class<?> type)
     {
-        return m_mapper.canSerialize(CommonOps.requireNonNull(type));
+        return getMapper().canSerialize(CommonOps.requireNonNull(type));
+    }
+
+    @Override
+    public boolean canSerializeValue(final Object object)
+    {
+        if (null != object)
+        {
+            return getMapper().canSerialize(object.getClass());
+        }
+        return false;
     }
 
     @Override

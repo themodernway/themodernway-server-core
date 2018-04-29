@@ -37,17 +37,13 @@ public interface IServerCoreTesting
             logger = LoggingOps.getLogger(type);
         }
 
-        public static final void setupServerCoreLogging(final Class<?> type, final String location)
-        {
-            logger = LoggingOps.getLogger(type);
-        }
-
         public static final void closeServerCoreLogging()
         {
             if (logger.isInfoEnabled())
             {
                 logger.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("finished TestingOps.closeServerCoreLogging()."));
             }
+            LoggingOps.stop();
         }
 
         public static final void setupServerCoreContext(final Class<?> type, final String name, final String... locations)

@@ -19,20 +19,13 @@ package com.themodernway.server.core.support.spring;
 import java.io.Closeable;
 import java.util.List;
 
-import com.themodernway.server.core.json.JSONArray;
-import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.json.JSONObjectSupplier;
 
-public interface IBuildDescriptorProvider extends Closeable
+public interface IBuildDescriptorProvider extends JSONObjectSupplier, Closeable
 {
     public List<String> getBuildDescriptorNames();
 
     public List<IBuildDescriptor> getBuildDescriptors();
 
     public IBuildDescriptor getBuildDescriptor(String name);
-
-    public JSONArray toJSONArray();
-
-    public JSONObject toJSONObject();
-
-    public JSONObject toJSONObject(String label);
 }

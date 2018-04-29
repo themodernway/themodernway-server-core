@@ -26,8 +26,10 @@ import com.themodernway.server.core.test.util.AdminUserPOJO
 import com.themodernway.server.core.test.util.AuthAllPOJO
 import com.themodernway.server.core.test.util.AuthAnyPOJO
 
+import spock.lang.Title
 import spock.lang.Unroll
 
+@Title('Test Cryptography')
 public class CryptoTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
     def setupSpec()

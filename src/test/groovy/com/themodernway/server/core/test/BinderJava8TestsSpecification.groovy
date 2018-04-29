@@ -16,8 +16,6 @@
 
 package com.themodernway.server.core.test
 
-import com.themodernway.server.core.json.JSONObject
-import com.themodernway.server.core.json.binder.BinderType
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 import com.themodernway.server.core.test.util.BinderJava8POJO
@@ -37,15 +35,15 @@ public class BinderJava8TestsSpecification extends ServerCoreSpecification imple
         closeServerCoreDefault()
     }
 
-    def "test binder 1"()
+    def "test binder pojo 1"()
     {
         setup:
-        def bind = BinderType.JSON.getBinder()
-        BinderJava8POJO pojo = new BinderJava8POJO()
+        def bind = binder()
+        def pojo = new BinderJava8POJO()
         pojo.setName('Dean S. Jones')
-        String text = bind.toJSONString(pojo)
+        def text = bind.toJSONString(pojo)
         pojo = bind.bind(text, BinderJava8POJO)
-        String valu = bind.toJSONString(pojo)
+        def valu = bind.toJSONString(pojo)
         echo text
         echo valu
 
@@ -53,16 +51,16 @@ public class BinderJava8TestsSpecification extends ServerCoreSpecification imple
         text == valu
     }
 
-    def "test binder 2"()
+    def "test binder pojo 2"()
     {
         setup:
-        def bind = BinderType.JSON.getBinder()
-        BinderJava8POJO pojo = new BinderJava8POJO()
+        def bind = binder()
+        def pojo = new BinderJava8POJO()
         pojo.setName('Maël Hörz\u00A9\n')
-        String text = bind.toJSONString(pojo)
-        JSONObject json = bind.toJSONObject(pojo)
+        def text = bind.toJSONString(pojo)
+        def json = bind.toJSONObject(pojo)
         pojo = json as BinderJava8POJO
-        String valu = bind.toJSONString(pojo)
+        def valu = bind.toJSONString(pojo)
         echo text
         echo valu
 
@@ -70,10 +68,27 @@ public class BinderJava8TestsSpecification extends ServerCoreSpecification imple
         text == valu
     }
 
-    def "test binder 3"()
+    def "test binder pojo strict 1"()
     {
         setup:
-        def bind = BinderType.JSON.getBinder().setStrict()
+        def bind = binder().setStrict()
+        def pojo = new BinderJava8POJO()
+        pojo.setName('Maël Hörz\u00A9\n')
+        def text = bind.toJSONString(pojo)
+        def json = bind.toJSONObject(pojo)
+        pojo = json as BinderJava8POJO
+        def valu = bind.toJSONString(pojo)
+        echo text + " text"
+        echo valu + " valu"
+
+        expect:
+        text == valu
+    }
+
+    def "test binder strict 1"()
+    {
+        setup:
+        def bind = binder().setStrict()
         def text = bind.toString(json(name: 'Dean', value: new BigInteger(3)))
 
         echo text
@@ -82,10 +97,10 @@ public class BinderJava8TestsSpecification extends ServerCoreSpecification imple
         text == text
     }
 
-    def "test binder 4"()
+    def "test binder strict 2"()
     {
         setup:
-        def bind = BinderType.JSON.getBinder().setStrict()
+        def bind = binder().setStrict()
         def text = bind.toString(json(name: 'Dean', value: BigInteger.valueOf(Long.MAX_VALUE)))
 
         echo text
@@ -94,10 +109,10 @@ public class BinderJava8TestsSpecification extends ServerCoreSpecification imple
         text == text
     }
 
-    def "test binder 5"()
+    def "test binder strict 3"()
     {
         setup:
-        def bind = BinderType.JSON.getBinder().setStrict()
+        def bind = binder().setStrict()
         def text = bind.toString(json(name: 'Dean', value: 5L))
 
         echo text
@@ -106,10 +121,10 @@ public class BinderJava8TestsSpecification extends ServerCoreSpecification imple
         text == text
     }
 
-    def "test binder 6"()
+    def "test binder strict 4"()
     {
         setup:
-        def bind = BinderType.JSON.getBinder().setStrict()
+        def bind = binder().setStrict()
         def text = bind.toString(json(name: 'Dean', value: Long.MAX_VALUE))
 
         echo text

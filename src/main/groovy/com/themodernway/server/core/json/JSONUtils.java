@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,33 +36,37 @@ import com.themodernway.server.core.json.binder.IBinder;
 
 public final class JSONUtils
 {
-    public static final BigDecimal BIG_DECIMAL_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
+    public static final String     JSON_OBJECT_DEFAULT_ARRAY_NAME = "list";
 
-    public static final BigDecimal BIG_DECIMAL_MIN = BigDecimal.valueOf(-Double.MAX_VALUE);
+    public static final String     JSON_OBJECT_DEFAULT_VALUE_NAME = "value";
 
-    public static final BigInteger BIG_INTEGER_MAX = BigInteger.valueOf(Integer.MAX_VALUE);
+    public static final BigDecimal BIG_DECIMAL_MAX                = BigDecimal.valueOf(Double.MAX_VALUE);
 
-    public static final BigInteger BIG_INTEGER_MIN = BigInteger.valueOf(Integer.MIN_VALUE);
+    public static final BigDecimal BIG_DECIMAL_MIN                = BigDecimal.valueOf(-Double.MAX_VALUE);
 
-    public static final BigInteger BIG_INTLONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);
+    public static final BigInteger BIG_INTEGER_MAX                = BigInteger.valueOf(Integer.MAX_VALUE);
 
-    public static final BigInteger BIG_INTLONG_MIN = BigInteger.valueOf(Long.MIN_VALUE);
+    public static final BigInteger BIG_INTEGER_MIN                = BigInteger.valueOf(Integer.MIN_VALUE);
 
-    public static final BigDecimal BIG_DEC_INT_MAX = BigDecimal.valueOf(Integer.MAX_VALUE);
+    public static final BigInteger BIG_INTLONG_MAX                = BigInteger.valueOf(Long.MAX_VALUE);
 
-    public static final BigDecimal BIG_DEC_INT_MIN = BigDecimal.valueOf(Integer.MIN_VALUE);
+    public static final BigInteger BIG_INTLONG_MIN                = BigInteger.valueOf(Long.MIN_VALUE);
 
-    public static final BigDecimal BIG_DEC_LONGMAX = BigDecimal.valueOf(Long.MAX_VALUE);
+    public static final BigDecimal BIG_DEC_INT_MAX                = BigDecimal.valueOf(Integer.MAX_VALUE);
 
-    public static final BigDecimal BIG_DEC_LONGMIN = BigDecimal.valueOf(Long.MIN_VALUE);
+    public static final BigDecimal BIG_DEC_INT_MIN                = BigDecimal.valueOf(Integer.MIN_VALUE);
 
-    public static final BigInteger BIG_INT_DEC_MAX = BIG_DECIMAL_MAX.toBigInteger();
+    public static final BigDecimal BIG_DEC_LONGMAX                = BigDecimal.valueOf(Long.MAX_VALUE);
 
-    public static final BigInteger BIG_INT_DEC_MIN = BIG_DECIMAL_MIN.toBigInteger();
+    public static final BigDecimal BIG_DEC_LONGMIN                = BigDecimal.valueOf(Long.MIN_VALUE);
 
-    private static final IBinder   OBJECT_BINDER   = BinderType.JSON.getBinder();
+    public static final BigInteger BIG_INT_DEC_MAX                = BIG_DECIMAL_MAX.toBigInteger();
 
-    private static final IBinder   STRICT_BINDER   = BinderType.JSON.getBinder().setStrict();
+    public static final BigInteger BIG_INT_DEC_MIN                = BIG_DECIMAL_MIN.toBigInteger();
+
+    private static final IBinder   OBJECT_BINDER                  = BinderType.JSON.getBinder();
+
+    private static final IBinder   STRICT_BINDER                  = BinderType.JSON.getBinder().setStrict();
 
     private JSONUtils()
     {
@@ -71,7 +76,7 @@ public final class JSONUtils
     {
         if (null == self)
         {
-            return null;
+            return CommonOps.NULL();
         }
         if (type.isAssignableFrom(self.getClass()))
         {
@@ -79,11 +84,11 @@ public final class JSONUtils
         }
         try
         {
-            if (String.class.equals(type))
+            if (String.class.equals(type) || CharSequence.class.equals(type))
             {
                 return CommonOps.CAST(OBJECT_BINDER.toString(self));
             }
-            if (OBJECT_BINDER.canSerialize(type))
+            if (OBJECT_BINDER.canSerializeClass(type))
             {
                 final T valu = OBJECT_BINDER.convert(self, type);
 
@@ -100,11 +105,21 @@ public final class JSONUtils
         throw new ClassCastException(self.getClass().getName() + " cannot be coerced into " + type.getName());
     }
 
+    public static final JSONObject json(final Collection<? extends JSONObjectSupplier> source)
+    {
+        return new JSONObject(source);
+    }
+
+    public static final JSONObject json(final String name, final Collection<? extends JSONObjectSupplier> source)
+    {
+        return new JSONObject(name, source);
+    }
+
     public static final JSONObject deep(final JSONObject object)
     {
         if (null == object)
         {
-            return null;
+            return CommonOps.NULL();
         }
         if (object.isEmpty())
         {
@@ -124,7 +139,7 @@ public final class JSONUtils
     {
         if (null == array)
         {
-            return null;
+            return CommonOps.NULL();
         }
         if (array.isEmpty())
         {
@@ -132,7 +147,7 @@ public final class JSONUtils
         }
         try
         {
-            return OBJECT_BINDER.bindJSON(OBJECT_BINDER.toString(new JSONObject("array", array))).getAsArray("array");
+            return OBJECT_BINDER.bindJSON(OBJECT_BINDER.toString(new JSONObject(JSON_OBJECT_DEFAULT_ARRAY_NAME, array))).getAsArray(JSON_OBJECT_DEFAULT_ARRAY_NAME);
         }
         catch (final ParserException e)
         {
@@ -272,7 +287,7 @@ public final class JSONUtils
             {
                 final Long value = ((Long) object);
 
-                return (((value > Integer.MAX_VALUE) || (value < Integer.MIN_VALUE)) ? null : value.intValue());
+                return (((value > Integer.MAX_VALUE) || (value < Integer.MIN_VALUE)) ? CommonOps.NULL() : value.intValue());
             }
             if (object instanceof Short)
             {
@@ -282,19 +297,19 @@ public final class JSONUtils
             {
                 final BigInteger value = ((BigInteger) object);
 
-                return (((value.compareTo(BIG_INTEGER_MAX) > 0) || (value.compareTo(BIG_INTEGER_MIN) < 0)) ? null : value.intValue());
+                return (((value.compareTo(BIG_INTEGER_MAX) > 0) || (value.compareTo(BIG_INTEGER_MIN) < 0)) ? CommonOps.NULL() : value.intValue());
             }
             if (object instanceof BigDecimal)
             {
                 final BigDecimal value = ((BigDecimal) object);
 
-                return (((value.compareTo(BIG_DEC_INT_MAX) > 0) || (value.compareTo(BIG_DEC_INT_MIN) < 0)) ? null : value.intValue());
+                return (((value.compareTo(BIG_DEC_INT_MAX) > 0) || (value.compareTo(BIG_DEC_INT_MIN) < 0)) ? CommonOps.NULL() : value.intValue());
             }
             final long lval = ((Number) object).longValue();
 
-            return (((lval > Integer.MAX_VALUE) || (lval < Integer.MIN_VALUE)) ? null : ((int) lval));
+            return (((lval > Integer.MAX_VALUE) || (lval < Integer.MIN_VALUE)) ? CommonOps.NULL() : ((int) lval));
         }
-        return null;
+        return CommonOps.NULL();
     }
 
     public static final Long asLong(final Object object)
@@ -313,23 +328,23 @@ public final class JSONUtils
             {
                 final Double dval = ((Double) object);
 
-                return (((isDoubleInfiniteOrNan(dval)) || ((dval.doubleValue() > Long.MAX_VALUE) || (dval.doubleValue() < Long.MIN_VALUE))) ? null : dval.longValue());
+                return (((isDoubleInfiniteOrNan(dval)) || ((dval.doubleValue() > Long.MAX_VALUE) || (dval.doubleValue() < Long.MIN_VALUE))) ? CommonOps.NULL() : dval.longValue());
             }
             if (object instanceof BigInteger)
             {
                 final BigInteger value = ((BigInteger) object);
 
-                return (((value.compareTo(BIG_INTLONG_MAX) > 0) || (value.compareTo(BIG_INTLONG_MIN) < 0)) ? null : value.longValue());
+                return (((value.compareTo(BIG_INTLONG_MAX) > 0) || (value.compareTo(BIG_INTLONG_MIN) < 0)) ? CommonOps.NULL() : value.longValue());
             }
             if (object instanceof BigDecimal)
             {
                 final BigDecimal value = ((BigDecimal) object);
 
-                return (((value.compareTo(BIG_DEC_LONGMAX) > 0) || (value.compareTo(BIG_DEC_LONGMIN) < 0)) ? null : value.longValue());
+                return (((value.compareTo(BIG_DEC_LONGMAX) > 0) || (value.compareTo(BIG_DEC_LONGMIN) < 0)) ? CommonOps.NULL() : value.longValue());
             }
             return ((Number) object).longValue();
         }
-        return null;
+        return CommonOps.NULL();
     }
 
     public static final Double asDouble(final Object object)
@@ -340,31 +355,31 @@ public final class JSONUtils
             {
                 final Double dval = ((Double) object);
 
-                return ((isDoubleInfiniteOrNan(dval)) ? null : dval);
+                return ((isDoubleInfiniteOrNan(dval)) ? CommonOps.NULL() : dval);
             }
             if (object instanceof Float)
             {
                 final Float fval = ((Float) object);
 
-                return ((isFloatInfiniteOrNan(fval)) ? null : fval.doubleValue());
+                return ((isFloatInfiniteOrNan(fval)) ? CommonOps.NULL() : fval.doubleValue());
             }
             if (object instanceof BigDecimal)
             {
                 final BigDecimal value = ((BigDecimal) object);
 
-                return ((((value.compareTo(BIG_DECIMAL_MAX) > 0) || (value.compareTo(BIG_DECIMAL_MIN) < 0)) || (isDoubleInfiniteOrNan(value.doubleValue()))) ? null : value.doubleValue());
+                return ((((value.compareTo(BIG_DECIMAL_MAX) > 0) || (value.compareTo(BIG_DECIMAL_MIN) < 0)) || (isDoubleInfiniteOrNan(value.doubleValue()))) ? CommonOps.NULL() : value.doubleValue());
             }
             if (object instanceof BigInteger)
             {
                 final BigInteger value = ((BigInteger) object);
 
-                return (((value.compareTo(BIG_INT_DEC_MAX) > 0) || (value.compareTo(BIG_INT_DEC_MIN) < 0)) ? null : value.doubleValue());
+                return (((value.compareTo(BIG_INT_DEC_MAX) > 0) || (value.compareTo(BIG_INT_DEC_MIN) < 0)) ? CommonOps.NULL() : value.doubleValue());
             }
             final Double dval = ((Number) object).doubleValue();
 
-            return ((isDoubleInfiniteOrNan(dval)) ? null : dval);
+            return ((isDoubleInfiniteOrNan(dval)) ? CommonOps.NULL() : dval);
         }
-        return null;
+        return CommonOps.NULL();
     }
 
     public static final Number asNumber(final Object object)
@@ -381,7 +396,7 @@ public final class JSONUtils
             }
             return asLong(object);
         }
-        return null;
+        return CommonOps.NULL();
     }
 
     static final JSONArray toJSONArray(final List<?> list)
@@ -391,7 +406,7 @@ public final class JSONUtils
 
     public static final JSONArray asArray(final Object object)
     {
-        return ((object instanceof List) ? toJSONArray((List<?>) object) : null);
+        return ((object instanceof List) ? toJSONArray((List<?>) object) : CommonOps.NULL());
     }
 
     static final JSONObject toJSONObject(final Map<String, ?> json)
@@ -402,12 +417,12 @@ public final class JSONUtils
     @SuppressWarnings("unchecked")
     public static final JSONObject asObject(final Object object)
     {
-        return ((object instanceof Map) ? toJSONObject((Map<String, ?>) object) : null);
+        return ((object instanceof Map) ? toJSONObject((Map<String, ?>) object) : CommonOps.NULL());
     }
 
     public static final String asString(final Object object)
     {
-        return ((object instanceof CharSequence) ? ((CharSequence) object).toString() : null);
+        return ((object instanceof CharSequence) ? ((CharSequence) object).toString() : CommonOps.NULL());
     }
 
     public static final Boolean asBoolean(final Object object)
@@ -417,12 +432,12 @@ public final class JSONUtils
 
     public static final Date asDate(final Object object)
     {
-        return ((object instanceof Date) ? new Date(((Date) object).getTime()) : null);
+        return ((object instanceof Date) ? new Date(((Date) object).getTime()) : CommonOps.NULL());
     }
 
     public static final <T> INativeFunction<T> asNativeFunction(final Object object)
     {
-        return null;
+        return CommonOps.NULL();
     }
 
     public static final JSONType getJSONType(final Object object)

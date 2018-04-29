@@ -16,6 +16,9 @@
 
 package com.themodernway.server.core.test.util;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import com.themodernway.server.core.ITimeSupplier;
+
 public class BinderPOJO
 {
     private String m_name = "";
@@ -24,7 +27,7 @@ public class BinderPOJO
 
     private double m_cost = 0d;
 
-    private long   m_time = System.currentTimeMillis();
+    private long   m_time = ITimeSupplier.now();
 
     public BinderPOJO()
     {
@@ -42,6 +45,7 @@ public class BinderPOJO
         m_cost = cost;
     }
 
+    @JacksonXmlCData
     public String getValue()
     {
         return m_scrp;

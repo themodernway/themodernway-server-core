@@ -20,14 +20,17 @@
 	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/context
-						http://www.springframework.org/schema/context/spring-context.xsd">
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/cache
+						http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 	<import resource="classpath:/com/themodernway/common/server/config/CommonServerApplicationContext.xml" />
 		
-	<bean id="CoreBuildDescriptor" class="com.themodernway.server.core.support.spring.BuildDescriptor">
+	<bean id="CoreBuildDescriptor" class="com.themodernway.server.core.support.spring.BuildDescriptor" lazy-init="true">
 		<constructor-arg value="@GRADLE_BUILD_PROJECT_TITLE@" />
 		<property name="buildUser">
 			<value><![CDATA[@GRADLE_BUILD_USER@]]></value>
@@ -48,7 +51,7 @@
 		
 	<bean id="CorePropertiesResolver" class="com.themodernway.server.core.support.spring.CorePropertiesResolver" destroy-method="close" />
 
-	<bean id="BuildDescriptorProvider" class="com.themodernway.server.core.support.spring.BuildDescriptorProvider" destroy-method="close" />
+	<bean id="BuildDescriptorProvider" class="com.themodernway.server.core.support.spring.BuildDescriptorProvider" destroy-method="close" lazy-init="true" />
 
 	<bean id="CryptoProvider" class="com.themodernway.server.core.security.CryptoProvider" destroy-method="close">
 		<constructor-arg value="${crypto.provider.pass}" />
@@ -56,19 +59,19 @@
 		<constructor-arg value="${crypto.provider.bcrypt.iters}" />
 	</bean>
 	
-	<bean id="MailSenderProvider" class="com.themodernway.server.core.mail.MailSenderProvider" destroy-method="close" />
+	<bean id="MailSenderProvider" class="com.themodernway.server.core.mail.MailSenderProvider" destroy-method="close" lazy-init="true" />
 	
-	<bean id="NetworkProvider" class="com.themodernway.server.core.support.spring.network.CoreNetworkProvider" destroy-method="close">
+	<bean id="NetworkProvider" class="com.themodernway.server.core.support.spring.network.CoreNetworkProvider" destroy-method="close" lazy-init="true">
 		<property name="parsePath" value="${core.network.provider.parse:true}" />
 		<property name="strictEncoding" value="${core.network.provider.strict:true}" />
 		<property name="httpFactoryByName" value="${core.network.provider.http.factory:native}" />
 	</bean>
 		
-	<bean id="FileItemStorageProvider" class="com.themodernway.server.core.file.vfs.FileItemStorageProvider" destroy-method="close" />
+	<bean id="FileItemStorageProvider" class="com.themodernway.server.core.file.vfs.FileItemStorageProvider" destroy-method="close" lazy-init="true" />
 
-	<bean id="ServerSessionRepositoryProvider" class="com.themodernway.server.core.security.session.ServerSessionRepositoryProvider" destroy-method="close" />
+	<bean id="ServerSessionRepositoryProvider" class="com.themodernway.server.core.security.session.ServerSessionRepositoryProvider" destroy-method="close" lazy-init="true" />
 		
-	<bean id="ServletContextCustomizerProvider" class="com.themodernway.server.core.support.spring.ServletContextCustomizerProvider" destroy-method="close" />
+	<bean id="ServletContextCustomizerProvider" class="com.themodernway.server.core.support.spring.ServletContextCustomizerProvider" destroy-method="close" lazy-init="true" />
 	
 	<context:annotation-config />
 	

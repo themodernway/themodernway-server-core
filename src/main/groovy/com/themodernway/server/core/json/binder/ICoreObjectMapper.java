@@ -16,10 +16,13 @@
 
 package com.themodernway.server.core.json.binder;
 
+import static com.fasterxml.jackson.core.JsonGenerator.Feature.AUTO_CLOSE_TARGET;
+import static com.fasterxml.jackson.core.JsonGenerator.Feature.FLUSH_PASSED_TO_STREAM;
+import static com.fasterxml.jackson.core.JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN;
+import static com.fasterxml.jackson.core.JsonParser.Feature.AUTO_CLOSE_SOURCE;
+
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -66,7 +69,7 @@ public interface ICoreObjectMapper
 
         public static final <M extends ObjectMapper> M withModules(final M mapper, final List<Module> list)
         {
-            mapper.registerModules(list).disable(JsonParser.Feature.AUTO_CLOSE_SOURCE).disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
+            mapper.registerModules(list).disable(AUTO_CLOSE_SOURCE).disable(AUTO_CLOSE_TARGET).enable(WRITE_BIGDECIMAL_AS_PLAIN).enable(FLUSH_PASSED_TO_STREAM);
 
             return mapper;
         }

@@ -16,11 +16,10 @@
 
 package com.themodernway.server.core.support.spring.testing.spock
 
-import static java.lang.System.err
-
 import org.slf4j.Logger
 
 import com.themodernway.common.api.types.json.JSONStringify
+import com.themodernway.server.core.json.JSONObjectSupplier
 import com.themodernway.server.core.logging.LoggingOps
 import com.themodernway.server.core.support.spring.testing.IServerCoreTesting
 
@@ -47,9 +46,11 @@ public abstract class ServerCoreSpecification extends Specification implements I
     def setup()
     {
         m_logging = true
+
+        echo "RUNNING TEST ${testname()}"
     }
 
-    public Logger logger()
+    def Logger logger()
     {
         if (null == m_logger)
         {
@@ -58,12 +59,17 @@ public abstract class ServerCoreSpecification extends Specification implements I
         m_logger
     }
 
-    public void logging(boolean on = true)
+    def String testname()
+    {
+        specificationContext.currentIteration.name
+    }
+
+    def logging(boolean on = true)
     {
         m_logging = on
     }
 
-    public void echo(JSONStringify o)
+    def echo(JSONStringify o)
     {
         if (m_logging)
         {
@@ -71,11 +77,23 @@ public abstract class ServerCoreSpecification extends Specification implements I
         }
         else
         {
-            println "" + o?.toJSONString()
+            println("" + o?.toJSONString())
         }
     }
 
-    public void echo(def o)
+    def echo(JSONObjectSupplier o)
+    {
+        if (m_logging)
+        {
+            logger().info("" + o?.toJSONObject()?.toJSONString())
+        }
+        else
+        {
+            println("" + o?.toJSONObject()?.toJSONString())
+        }
+    }
+
+    def echo(def o)
     {
         if (m_logging)
         {
@@ -83,11 +101,11 @@ public abstract class ServerCoreSpecification extends Specification implements I
         }
         else
         {
-            println "" + o?.toString()
+            println("" + o?.toString())
         }
     }
 
-    public void oops(JSONStringify o)
+    def oops(JSONStringify o)
     {
         if (m_logging)
         {
@@ -95,11 +113,23 @@ public abstract class ServerCoreSpecification extends Specification implements I
         }
         else
         {
-            err.println "" + o?.toJSONString()
+            System.err.println("" + o?.toJSONString())
         }
     }
 
-    public void oops(def o)
+    def oops(JSONObjectSupplier o)
+    {
+        if (m_logging)
+        {
+            logger().error("" + o?.toJSONObject()?.toJSONString())
+        }
+        else
+        {
+            System.err.println("" + o?.toJSONObject()?.toJSONString())
+        }
+    }
+
+    def oops(def o)
     {
         if (m_logging)
         {
@@ -107,7 +137,7 @@ public abstract class ServerCoreSpecification extends Specification implements I
         }
         else
         {
-            err.println "" + o?.toString()
+            System.err.println("" + o?.toString())
         }
     }
 }

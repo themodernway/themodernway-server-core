@@ -16,17 +16,27 @@
 
 package com.themodernway.server.core.test.util;
 
+import java.math.BigInteger;
+import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
+
+import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.server.core.ITimeSupplier;
 
 public class BinderJava8POJO
 {
-    private String  m_name = "";
+    private String               m_name = "";
 
-    private double  m_cost = 0d;
+    private double               m_cost = 0d;
 
-    private long    m_time = System.currentTimeMillis();
+    private long                 m_time = ITimeSupplier.now();
 
-    private Instant m_inst = Instant.now();
+    private Instant              m_inst = Instant.now();
+
+    private Duration             m_dist = Duration.ofSeconds(60L);
+
+    private Optional<BigInteger> m_valu = CommonOps.toOptional(BigInteger.valueOf(Long.MAX_VALUE));
 
     public BinderJava8POJO()
     {
@@ -42,6 +52,16 @@ public class BinderJava8POJO
         m_name = name;
 
         m_cost = cost;
+    }
+
+    public Optional<BigInteger> getOptionalValue()
+    {
+        return m_valu;
+    }
+
+    public void setOptionalValue(final Optional<BigInteger> valu)
+    {
+        m_valu = valu;
     }
 
     public String getName()
@@ -62,6 +82,16 @@ public class BinderJava8POJO
     public void setInstant(final Instant inst)
     {
         m_inst = inst;
+    }
+
+    public Duration getDuration()
+    {
+        return m_dist;
+    }
+
+    public void setDuration(final Duration dist)
+    {
+        m_dist = dist;
     }
 
     public double getCost()

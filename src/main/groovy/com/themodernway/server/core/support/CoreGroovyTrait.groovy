@@ -57,7 +57,7 @@ import groovy.transform.CompileStatic
 import groovy.transform.Memoized
 
 @CompileStatic
-public trait CoreGroovyTrait implements CoreGroovyParallelTrait, JSONTrait
+public trait CoreGroovyTrait implements CoreGroovyOpsTrait, JSONTrait
 {
     @Memoized
     public IServerContext getServerContext()

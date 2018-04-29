@@ -49,9 +49,9 @@ public interface IServerSessionHelper extends Serializable
 
     public static final IServerSessionHelper SP_DEFAULT_HELPER_INSTANCE              = new SimpleServerSessionHelper();
 
+    @SuppressWarnings("serial")
     public static class SimpleServerSessionHelper implements IServerSessionHelper
     {
-        private static final long serialVersionUID = 1L;
     }
 
     public static class MappingServerSessionHelper extends SimpleServerSessionHelper

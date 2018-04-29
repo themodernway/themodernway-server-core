@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.test
 
-import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.binder.BinderType
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
@@ -42,12 +41,12 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.JSON.getBinder()
-        BinderPOJO pojo = new BinderPOJO()
+        def pojo = new BinderPOJO()
         pojo.setName('Dean S. /Jones')
-        String text = bind.toJSONString(pojo)
-        BinderPOJO make = bind.bind(text, BinderPOJO)
-        JSONObject json = bind.toJSONObject(make)
-        String valu = json.toJSONString(false)
+        def text = bind.toJSONString(pojo)
+        def make = bind.bind(text, BinderPOJO)
+        def json = bind.toJSONObject(make)
+        def valu = json.toJSONString(false)
         pojo = json as BinderPOJO
         pojo.setName('Bob')
         echo bind.toJSONString(pojo)
@@ -75,8 +74,8 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.YAML.getBinder()
-        BinderPOJO make = bind.bind(resource('classpath:/com/themodernway/server/core/test/pojo.yml'), BinderPOJO)
-        String valu = bind.toString(make)
+        def make = bind.bind(resource('classpath:/com/themodernway/server/core/test/pojo.yml'), BinderPOJO)
+        def valu = bind.toString(make)
         echo valu
 
         expect:
@@ -87,8 +86,8 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.YAML.getBinder()
-        JSONObject json = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/pojo.yml'))
-        String valu = json.toJSONString()
+        def json = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/pojo.yml'))
+        def valu = json.toJSONString()
         echo valu
 
         expect:
@@ -99,8 +98,8 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.YAML.getBinder()
-        JSONObject json = json(type: 'API', active: true, versions: [1, 2, 3, false], pojo: new BinderPOJO("Rosaria", 100), list: [])
-        String valu = bind.toString(json)
+        def json = json(type: 'API', active: true, versions: [1, 2, 3, false], pojo: new BinderPOJO("Rosaria", 100), list: [])
+        def valu = bind.toString(json)
         echo valu
         echo json.toJSONString()
 
@@ -112,8 +111,8 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.YAML.getBinder()
-        JSONObject json = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/test.yml'))
-        String valu = json.toJSONString()
+        def json = bind.bindJSON(resource('classpath:/com/themodernway/server/core/test/test.yml'))
+        def valu = json.toJSONString()
         echo valu
 
         expect:
@@ -124,12 +123,12 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.YAML.getBinder()
-        BinderPOJO pojo = new BinderPOJO()
+        def pojo = new BinderPOJO()
         pojo.setName('Dean S. Jones')
         pojo.setCost(9.99)
-        String text = bind.toString(pojo)
-        BinderPOJO make = bind.bind(text, BinderPOJO)
-        String valu = bind.toString(make)
+        def text = bind.toString(pojo)
+        def make = bind.bind(text, BinderPOJO)
+        def valu = bind.toString(make)
         echo text
         echo valu
 
@@ -141,12 +140,12 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.XML.getBinder()
-        BinderPOJO pojo = new BinderPOJO()
+        def pojo = new BinderPOJO()
         pojo.setName('Dean S. Jones')
         pojo.setCost(9.99)
-        String text = bind.toString(pojo)
-        BinderPOJO make = bind.bind(text, BinderPOJO)
-        String valu = bind.toString(make)
+        def text = bind.toString(pojo)
+        def make = bind.bind(text, BinderPOJO)
+        def valu = bind.toString(make)
         echo text
         echo valu
 
@@ -158,12 +157,12 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.XML.getBinder().pretty()
-        BinderPOJO pojo = new BinderPOJO()
+        def pojo = new BinderPOJO()
         pojo.setName('Dean S. Jones')
         pojo.setCost(9.99)
-        String text = bind.toString(pojo)
-        BinderPOJO make = bind.bind(text, BinderPOJO)
-        String valu = bind.toString(make)
+        def text = bind.toString(pojo)
+        def make = bind.bind(text, BinderPOJO)
+        def valu = bind.toString(make)
         echo text
         echo valu
 
@@ -175,12 +174,12 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.PROPERTIES.getBinder()
-        BinderPOJO pojo = new BinderPOJO()
+        def pojo = new BinderPOJO()
         pojo.setName('Dean S. Jones')
         pojo.setCost(9.99)
-        String text = bind.toString(pojo)
-        BinderPOJO make = bind.bind(text, BinderPOJO)
-        String valu = bind.toString(make)
+        def text = bind.toString(pojo)
+        def make = bind.bind(text, BinderPOJO)
+        def valu = bind.toString(make)
         echo text
         echo valu
 
@@ -192,14 +191,14 @@ public class BinderTestsSpecification extends ServerCoreSpecification implements
     {
         setup:
         def bind = BinderType.PROPERTIES.getBinder()
-        BindeListPOJO pojo = new BindeListPOJO()
+        def pojo = new BindeListPOJO()
         pojo.setName('Dean S. Jones')
         pojo.setCost(9.99)
-        String text = bind.toString(pojo)
-        BindeListPOJO make = bind.bind(text, BindeListPOJO)
-        String valu = bind.toString(make)
-        String json = bind.bindJSON(valu).toString()
-        echo json
+        def text = bind.toString(pojo)
+        def make = bind.bind(text, BindeListPOJO)
+        def valu = bind.toString(make)
+        def json = bind.bindJSON(valu).toString()
+        echo json + " json"
         echo text
         echo valu
 
