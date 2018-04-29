@@ -37,7 +37,7 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
 {
     private static final long                      serialVersionUID = 1L;
 
-    private static final Logger                    logger           = LoggingOps.getLogger(CoreSpringDispatcherServlet.class);
+    private static final Logger                    LOGGER           = LoggingOps.getLogger(CoreSpringDispatcherServlet.class);
 
     private transient RateLimiter                  m_ratelimit;
 
@@ -67,7 +67,7 @@ public class CoreSpringDispatcherServlet extends DispatcherServlet implements IR
     @Override
     public Logger logger()
     {
-        return logger;
+        return LOGGER;
     }
 
     @Override
