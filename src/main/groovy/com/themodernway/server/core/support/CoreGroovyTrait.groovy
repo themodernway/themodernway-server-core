@@ -34,6 +34,7 @@ import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.common.api.java.util.StringOps
 import com.themodernway.common.api.types.ICursor
 import com.themodernway.common.api.types.IFixedIterable
+import com.themodernway.server.core.content.ICoreContentTypeMapper
 import com.themodernway.server.core.file.vfs.IFileItemStorage
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
 import com.themodernway.server.core.json.support.JSONTrait
@@ -163,6 +164,18 @@ public trait CoreGroovyTrait implements CoreGroovyOpsTrait, JSONTrait
     public ICoreNetworkProvider network()
     {
         getServerContext().network()
+    }
+
+    @Memoized
+    public ICoreContentTypeMapper getContentTypeMapper()
+    {
+        getServerContext().getContentTypeMapper()
+    }
+
+    @Memoized
+    public ICoreContentTypeMapper getContentTypeMapper(String name)
+    {
+        getServerContext().getContentTypeMapper(name)
     }
 
     public PathParameters parameters(Map<String, ?> vars)

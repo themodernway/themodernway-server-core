@@ -14,26 +14,29 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file.vfs;
+package com.themodernway.server.core.test
 
-import com.themodernway.common.api.types.FrameworkException;
+import com.themodernway.server.core.support.CoreGroovyTrait
+import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
-public class FileStorageException extends FrameworkException
+public class NoTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
-    private static final long serialVersionUID = 2020414959954647036L;
-
-    public FileStorageException(final Throwable e)
+    def setupSpec()
     {
-        super(e);
+        setupServerCoreDefault(NoTestsSpecification,
+                "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
+                "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
+                )
     }
 
-    public FileStorageException(final String message)
+    def cleanupSpec()
     {
-        super(message);
+        closeServerCoreDefault()
     }
 
-    public FileStorageException(final String message, final Throwable e)
+    def "test 0"()
     {
-        super(message, e);
+        expect:
+        "dean" == "dean"
     }
 }

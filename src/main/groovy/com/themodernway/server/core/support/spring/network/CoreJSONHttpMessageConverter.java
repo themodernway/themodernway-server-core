@@ -17,33 +17,26 @@
 package com.themodernway.server.core.support.spring.network;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.List;
 
-import org.slf4j.Logger;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
 
-import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.common.api.types.ParserException;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.binder.BinderType;
 import com.themodernway.server.core.json.binder.IBinder;
-import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<JSONObject>
 {
-    private static final IBinder         BINDER = BinderType.JSON.getBinder();
+    private final IBinder      m_binder = BinderType.JSON.getBinder();
 
-    private static final List<Charset>   ACCEPT = CommonOps.toList(IO.UTF_8_CHARSET);
+    private final ObjectReader m_reader = m_binder.getMapper().readerFor(JSONObject.class);
 
-    private static final List<MediaType> MEDIAT = CommonOps.toList(MediaType.APPLICATION_JSON_UTF8, MediaType.APPLICATION_JSON);
-
-    private static final Logger          LOGGER = LoggingOps.getLogger(CoreJSONHttpMessageConverter.class);
+    private final ObjectWriter m_sender = m_binder.getMapper().writerFor(JSONObject.class);
 
     public CoreJSONHttpMessageConverter()
     {
@@ -59,42 +52,14 @@ public class CoreJSONHttpMessageConverter extends AbstractHttpMessageConverter<J
     @Override
     protected JSONObject readInternal(final Class<? extends JSONObject> claz, final HttpInputMessage message) throws IOException
     {
-        try
-        {
-            return BINDER.bindJSON(message.getBody());
-        }
-        catch (final ParserException e)
-        {
-            if (LOGGER.isErrorEnabled())
-            {
-                LOGGER.error(LoggingOps.THE_MODERN_WAY_MARKER, "bind().", e);
-            }
-            throw new IOException("bind", e);
-        }
+        return m_reader.readValue(message.getBody());
     }
 
     @Override
     protected void writeInternal(final JSONObject json, final HttpOutputMessage message) throws IOException
     {
-        final HttpHeaders head = message.getHeaders();
+        new HTTPHeaders(message.getHeaders()).setIfAccept().setIfAcceptCharset().setIfContentType();
 
-        head.setAccept(MEDIAT);
-
-        head.setAcceptCharset(ACCEPT);
-
-        head.setContentType(MediaType.APPLICATION_JSON_UTF8);
-
-        try
-        {
-            BINDER.send(message.getBody(), json);
-        }
-        catch (final ParserException e)
-        {
-            if (LOGGER.isErrorEnabled())
-            {
-                LOGGER.error(LoggingOps.THE_MODERN_WAY_MARKER, "send().", e);
-            }
-            throw new IOException("send", e);
-        }
+        m_sender.writeValue(message.getBody(), json);
     }
 }

@@ -22,31 +22,38 @@ import java.util.List;
 
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.DisposableBean;
 
+import com.themodernway.common.api.types.ICloseable;
 import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, BeanNameAware, Closeable, ICoreCommon, INamed
+public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, BeanNameAware, DisposableBean, ICloseable, INamed, IHasLogging
 {
     @Override
     default void close() throws IOException
     {
-        if (logger().isInfoEnabled())
+        if (isOpen())
         {
-            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("starting close (%s).", getName()));
+            if (logger().isInfoEnabled())
+            {
+                logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("starting close (%s).", getName()));
+            }
+            for (final T item : items())
+            {
+                death(item);
+            }
+            if (logger().isInfoEnabled())
+            {
+                logger().info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("finished close (%s).", getName()));
+            }
         }
-        for (final T item : items())
-        {
-            destroy(item);
-        }
-        if (logger().isInfoEnabled())
-        {
-            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("finished close (%s).", getName()));
-        }
+        reset();
     }
 
-    default void destroy(final T item) throws IOException
+    default void death(final T item) throws IOException
     {
         if (null != item)
         {
@@ -54,9 +61,11 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
         }
         else if (logger().isErrorEnabled())
         {
-            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, format("null item close (%s).", getName()));
+            logger().error(LoggingOps.THE_MODERN_WAY_MARKER, String.format("null item close (%s).", getName()));
         }
     }
+
+    public void reset();
 
     public List<T> items();
 

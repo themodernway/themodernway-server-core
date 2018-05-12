@@ -17,9 +17,9 @@
 package com.themodernway.server.core;
 
 import java.io.Closeable;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
@@ -28,15 +28,17 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.themodernway.server.core.logging.LoggingOps;
 
-public abstract class AbstractBeanFactoryProvider<T extends Closeable> implements IBeanFactoryProvider<T>
+public abstract class AbstractBeanFactoryProvider<T extends Closeable> implements ICoreCommon, IBeanFactoryProvider<T>
 {
-    private String                         m_beansid;
+    private String               m_beansid;
 
-    private final Class<T>                 m_classof;
+    private final Class<T>       m_classof;
 
-    private final LinkedHashMap<String, T> m_storage = linkedMap();
+    private final Map<String, T> m_storage = linkedMap();
 
-    private final Logger                   m_logging = LoggingOps.getLogger(getClass());
+    private final AtomicBoolean  m_is_open = new AtomicBoolean(false);
+
+    private final Logger         m_logging = LoggingOps.getLogger(getClass());
 
     protected AbstractBeanFactoryProvider(final Class<T> classof)
     {
@@ -60,6 +62,7 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
         {
             m_beansid = getOriginalBeanName(name);
         }
+        m_is_open.set(true);
     }
 
     @Override
@@ -144,6 +147,29 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
     public boolean isDefined(final String name)
     {
         return (null != getItem(name));
+    }
+
+    @Override
+    public void reset()
+    {
+        m_storage.clear();
+
+        m_is_open.set(false);
+    }
+
+    @Override
+    public void destroy() throws Exception
+    {
+        if (logger().isInfoEnabled())
+        {
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("destroy (%s).", getName()));
+        }
+    }
+
+    @Override
+    public boolean isOpen()
+    {
+        return m_is_open.get();
     }
 
     protected Map<String, T> getBeansOfType(final BeanFactory factory) throws BeansException

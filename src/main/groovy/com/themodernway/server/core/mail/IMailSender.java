@@ -21,15 +21,11 @@ import java.io.Closeable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import com.themodernway.server.core.file.ICoreContentTypeMapper;
-
 public interface IMailSender extends JavaMailSender, Closeable
 {
     public CoreSimpleMailMessage getTemplateMailMessage();
 
     public void setTemplateMailMessage(CoreSimpleMailMessage template);
-
-    public void setContentTypeMapper(ICoreContentTypeMapper mapper);
 
     public ISimpleMailMessageBuilder builder();
 

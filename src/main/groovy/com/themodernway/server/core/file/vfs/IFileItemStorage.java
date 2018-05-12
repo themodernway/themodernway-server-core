@@ -16,20 +16,24 @@
 
 package com.themodernway.server.core.file.vfs;
 
-import java.io.Closeable;
 import java.io.IOException;
 
+import com.themodernway.common.api.types.ICloseable;
 import com.themodernway.common.api.types.INamed;
-import com.themodernway.server.core.file.ICoreContentTypeMapper;
+import com.themodernway.server.core.content.ICoreContentTypeMapper;
 import com.themodernway.server.core.file.vfs.cache.IFileItemCache;
 
-public interface IFileItemStorage extends INamed, Closeable
+public interface IFileItemStorage extends INamed, ICloseable
 {
-    public boolean isOpen();
+    public void setOpen(boolean open);
 
     public boolean isWritable();
 
+    public void setWritable(boolean mods);
+
     public boolean isAttributesPreferred();
+
+    public void setAttributesPreferred(boolean attr);
 
     public void validate() throws IOException;
 
@@ -48,4 +52,8 @@ public interface IFileItemStorage extends INamed, Closeable
     public IFileItemCache getFileItemCache();
 
     public void setFileItemCache(IFileItemCache keep);
+
+    public IFileItem find(String name) throws IOException;
+
+    public IFileItem file(String name) throws IOException;
 }

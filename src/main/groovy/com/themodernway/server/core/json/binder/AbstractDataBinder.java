@@ -206,7 +206,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try (BufferedReader reader = IO.toBufferedReader(path))
         {
-            return getMapper().readValue(reader, claz);
+            return getMapper().readerFor(claz).readValue(reader);
         }
         catch (final IOException e)
         {
@@ -219,7 +219,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try (BufferedReader reader = IO.toBufferedReader(file))
         {
-            return getMapper().readValue(reader, claz);
+            return getMapper().readerFor(claz).readValue(reader);
         }
         catch (final IOException e)
         {
@@ -232,7 +232,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try (BufferedReader reader = file.getBufferedReader())
         {
-            return getMapper().readValue(reader, claz);
+            return getMapper().readerFor(claz).readValue(reader);
         }
         catch (final IOException e)
         {
@@ -245,7 +245,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try
         {
-            return getMapper().readValue(stream, claz);
+            return getMapper().readerFor(claz).readValue(stream);
         }
         catch (final IOException e)
         {
@@ -258,7 +258,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try
         {
-            return getMapper().readValue(reader, claz);
+            return getMapper().readerFor(claz).readValue(reader);
         }
         catch (final IOException e)
         {
@@ -271,7 +271,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try (InputStream stream = resource.getInputStream())
         {
-            return getMapper().readValue(stream, claz);
+            return getMapper().readerFor(claz).readValue(stream);
         }
         catch (final IOException e)
         {
@@ -284,7 +284,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try
         {
-            return getMapper().readValue(url, claz);
+            return getMapper().readerFor(claz).readValue(url);
         }
         catch (final IOException e)
         {
@@ -297,7 +297,7 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         try
         {
-            return getMapper().readValue(text.toString(), claz);
+            return getMapper().readerFor(claz).readValue(text.toString());
         }
         catch (final IOException e)
         {
@@ -412,9 +412,11 @@ public abstract class AbstractDataBinder<M extends ObjectMapper> implements IBin
     {
         CommonOps.requireNonNull(object);
 
-        try
+        try (BufferedWriter buff = IO.toBufferedWriter(file))
         {
-            getMapper().writeValue(file, object);
+            getMapper().writeValue(buff, object);
+
+            buff.flush();
         }
         catch (final IOException e)
         {

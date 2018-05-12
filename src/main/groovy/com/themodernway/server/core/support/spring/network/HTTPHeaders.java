@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.support.spring.network;
 
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.IHTTPConstants;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.json.JSONStringifyStrict;
+import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.JSONObjectSupplier;
 
@@ -39,7 +41,7 @@ public class HTTPHeaders extends HttpHeaders implements JSONObjectSupplier, JSON
 {
     private static final long            serialVersionUID       = 1L;
 
-    public static final String           DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.2.1 (Language=Java/%s)", System.getProperty("java.version"));
+    public static final String           DEFAULT_USER_AGENT     = String.format("The-Modern-Way/2.2.2 (Language=Java/%s)", System.getProperty("java.version"));
 
     public static final MediaType        XML_MEDIA_TYPE         = MediaType.APPLICATION_XML;
 
@@ -50,6 +52,8 @@ public class HTTPHeaders extends HttpHeaders implements JSONObjectSupplier, JSON
     public static final MediaType        YAML_MEDIA_TYPE        = MediaType.valueOf(IHTTPConstants.CONTENT_TYPE_APPLICATION_YAML);
 
     public static final MediaType        PROPERTIES_MEDIA_TYPE  = MediaType.valueOf(IHTTPConstants.CONTENT_TYPE_TEXT_PROPERTIES);
+
+    private static final List<Charset>   JSON_ACCEPT_CHARSET    = CommonOps.toList(IO.UTF_8_CHARSET);
 
     private static final List<MediaType> JSON_ACCEPT_MEDIA_TYPE = CommonOps.toList(JSON_MEDIA_TYPE, JSON_MEDIA_TYPE_UTF8);
 
@@ -85,6 +89,24 @@ public class HTTPHeaders extends HttpHeaders implements JSONObjectSupplier, JSON
         return this;
     }
 
+    public HTTPHeaders setIfAcceptCharset()
+    {
+        if (null == get(ACCEPT_CHARSET))
+        {
+            setAcceptCharset();
+        }
+        return this;
+    }
+
+    public HTTPHeaders setIfContentType()
+    {
+        if (null == get(CONTENT_TYPE))
+        {
+            setContentType();
+        }
+        return this;
+    }
+
     public HTTPHeaders setIfUserAgent(final String ua)
     {
         if (null == get(USER_AGENT))
@@ -97,6 +119,20 @@ public class HTTPHeaders extends HttpHeaders implements JSONObjectSupplier, JSON
     public HTTPHeaders setAccept()
     {
         setAccept(JSON_ACCEPT_MEDIA_TYPE);
+
+        return this;
+    }
+
+    public HTTPHeaders setAcceptCharset()
+    {
+        setAcceptCharset(JSON_ACCEPT_CHARSET);
+
+        return this;
+    }
+
+    public HTTPHeaders setContentType()
+    {
+        setContentType(JSON_MEDIA_TYPE_UTF8);
 
         return this;
     }

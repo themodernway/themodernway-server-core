@@ -44,12 +44,13 @@ import java.util.stream.Stream;
 
 import org.apache.commons.io.input.ReaderInputStream;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.server.core.content.ICoreContentTypeMapper;
 import com.themodernway.server.core.file.FileAndPathUtils;
-import com.themodernway.server.core.file.ICoreContentTypeMapper;
 import com.themodernway.server.core.file.vfs.FileItemWrapper;
 import com.themodernway.server.core.file.vfs.FolderItemWrapper;
 import com.themodernway.server.core.file.vfs.IFileItem;
@@ -65,7 +66,7 @@ import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
+public class SimpleFileItemStorage implements IFileItemStorage, InitializingBean, ICoreCommon
 {
     protected static final IFileItem make(final File file, final IFileItemStorage stor)
     {
@@ -137,6 +138,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         return m_mods.get();
     }
 
+    @Override
     public void setWritable(final boolean mods)
     {
         m_mods.set(mods);
@@ -194,6 +196,33 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
     }
 
     @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        if (null == getContentTypeMapper())
+        {
+            setContentTypeMapper(getServerContext().getContentTypeMapper());
+        }
+    }
+
+    @Override
+    public void setOpen(final boolean open)
+    {
+        m_open.set(open);
+    }
+
+    @Override
+    public IFileItem find(final String name) throws IOException
+    {
+        return getRoot().find(name);
+    }
+
+    @Override
+    public IFileItem file(final String name) throws IOException
+    {
+        return getRoot().file(name);
+    }
+
+    @Override
     public IFolderItem getRoot() throws IOException
     {
         validate();
@@ -230,6 +259,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         return m_attr.get();
     }
 
+    @Override
     public void setAttributesPreferred(final boolean attr)
     {
         m_attr.set(attr);
@@ -391,13 +421,7 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
         {
             validate();
 
-            final ICoreContentTypeMapper maps = getFileItemStorage().getContentTypeMapper();
-
-            if (null != maps)
-            {
-                return maps.getContentType(getFile());
-            }
-            return FileAndPathUtils.getContentType(getFile());
+            return getFileItemStorage().getContentTypeMapper().getContentType(getFile());
         }
 
         @Override
@@ -1048,4 +1072,5 @@ public class SimpleFileItemStorage implements IFileItemStorage, ICoreCommon
             throw new IOException(format("Can't write folder (%s).", getPath()));
         }
     }
+
 }

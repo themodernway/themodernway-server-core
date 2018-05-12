@@ -3,7 +3,7 @@ https://docs.oracle.com/javaee/7/api
 https://www.slf4j.org/apidocs/
 http://docs.groovy-lang.org/docs/groovy-2.4.15/html/gapi
 http://spockframework.github.io/spock/javadoc/1.0
-https://docs.spring.io/spring/docs/5.0.5.RELEASE/javadoc-api
-https://docs.spring.io/spring-security/site/docs/5.0.4.RELEASE/api
-https://docs.spring.io/spring-session/docs/2.0.2.RELEASE/api
+https://docs.spring.io/spring/docs/5.0.6.RELEASE/javadoc-api
+https://docs.spring.io/spring-security/site/docs/5.0.5.RELEASE/api
+https://docs.spring.io/spring-session/docs/2.0.3.RELEASE/api
 http://docs.themodernway.com/docs/javadoc/themodernway-common-v2/

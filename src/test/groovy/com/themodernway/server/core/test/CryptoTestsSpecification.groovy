@@ -16,9 +16,6 @@
 
 package com.themodernway.server.core.test
 
-import java.security.Provider
-import java.security.Security
-
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 import com.themodernway.server.core.test.util.AdminPOJO
@@ -26,10 +23,8 @@ import com.themodernway.server.core.test.util.AdminUserPOJO
 import com.themodernway.server.core.test.util.AuthAllPOJO
 import com.themodernway.server.core.test.util.AuthAnyPOJO
 
-import spock.lang.Title
 import spock.lang.Unroll
 
-@Title('Test Cryptography')
 public class CryptoTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
     def setupSpec()
@@ -43,23 +38,6 @@ public class CryptoTestsSpecification extends ServerCoreSpecification implements
     def cleanupSpec()
     {
         closeServerCoreDefault()
-    }
-
-    def "Test Providers"()
-    {
-        setup:
-        def prov = Security.getProviders()
-
-        expect:
-        prov != null
-
-        cleanup:
-        prov?.each { Provider p ->
-            echo "Provider: " + p
-            p.getServices().each { s ->
-                echo "Service: " + s
-            }
-        }
     }
 
     def "Test Random Password"()

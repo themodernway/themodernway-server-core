@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.file;
+package com.themodernway.server.core.content;
 
 import java.io.File;
 import java.io.IOException;

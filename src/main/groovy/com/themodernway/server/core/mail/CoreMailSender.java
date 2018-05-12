@@ -21,21 +21,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import javax.activation.FileTypeMap;
-
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import com.themodernway.server.core.file.FileAndPathUtils;
-import com.themodernway.server.core.file.ICoreContentTypeMapper;
 import com.themodernway.server.core.io.IO;
 
-public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, InitializingBean
+public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
 {
-    private ICoreContentTypeMapper m_ctmapper;
-
     private CoreSimpleMailMessage  m_template;
 
     public CoreMailSender()
@@ -62,31 +55,6 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, I
     public void setTemplateMailMessage(final CoreSimpleMailMessage template)
     {
         m_template = template;
-    }
-
-    @Override
-    public void setContentTypeMapper(final ICoreContentTypeMapper ctmapper)
-    {
-        if (null != ctmapper)
-        {
-            final FileTypeMap fmap = ctmapper.getFileTypeMap();
-
-            if (null != fmap)
-            {
-                m_ctmapper = ctmapper;
-
-                setDefaultFileTypeMap(fmap);
-            }
-        }
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception
-    {
-        if (null == m_ctmapper)
-        {
-            setContentTypeMapper(FileAndPathUtils.CORE_MIMETYPE_MAPPER);
-        }
     }
 
     @Override

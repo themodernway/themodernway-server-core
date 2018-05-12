@@ -17,18 +17,21 @@
 package com.themodernway.server.core.json.binder;
 
 import static com.fasterxml.jackson.core.JsonGenerator.Feature.AUTO_CLOSE_TARGET;
-import static com.fasterxml.jackson.core.JsonGenerator.Feature.FLUSH_PASSED_TO_STREAM;
 import static com.fasterxml.jackson.core.JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN;
 import static com.fasterxml.jackson.core.JsonParser.Feature.AUTO_CLOSE_SOURCE;
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 import java.util.List;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.server.core.json.JSONObject;
 
 public interface ICoreObjectMapper
 {
@@ -47,6 +50,33 @@ public interface ICoreObjectMapper
         return Modules.withModules(mapper, list);
     }
 
+    public static final class TypedFor
+    {
+        private TypedFor()
+        {
+        }
+
+        public static final ObjectReader reader(final ObjectMapper mapper)
+        {
+            return reader(mapper, JSONObject.class);
+        }
+
+        public static final ObjectWriter sender(final ObjectMapper mapper)
+        {
+            return sender(mapper, JSONObject.class);
+        }
+
+        public static final ObjectReader reader(final ObjectMapper mapper, final Class<?> type)
+        {
+            return mapper.readerFor(type);
+        }
+
+        public static final ObjectWriter sender(final ObjectMapper mapper, final Class<?> type)
+        {
+            return mapper.writerFor(type);
+        }
+    }
+
     public static final class Modules
     {
         private static final List<Module> STRICT_BINDER_MODULES = CommonOps.toList(new CoreStrictBinderModule());
@@ -55,6 +85,16 @@ public interface ICoreObjectMapper
 
         private Modules()
         {
+        }
+
+        public static final ObjectReader reader(final ObjectMapper mapper)
+        {
+            return mapper.readerFor(JSONObject.class);
+        }
+
+        public static final ObjectWriter sender(final ObjectMapper mapper)
+        {
+            return mapper.writerFor(JSONObject.class);
         }
 
         public static final <M extends ObjectMapper> M withStrict(final M mapper)
@@ -69,7 +109,7 @@ public interface ICoreObjectMapper
 
         public static final <M extends ObjectMapper> M withModules(final M mapper, final List<Module> list)
         {
-            mapper.registerModules(list).disable(AUTO_CLOSE_SOURCE).disable(AUTO_CLOSE_TARGET).enable(WRITE_BIGDECIMAL_AS_PLAIN).enable(FLUSH_PASSED_TO_STREAM);
+            mapper.registerModules(list).disable(AUTO_CLOSE_SOURCE).disable(AUTO_CLOSE_TARGET).disable(FAIL_ON_UNKNOWN_PROPERTIES).enable(WRITE_BIGDECIMAL_AS_PLAIN);
 
             return mapper;
         }

@@ -33,6 +33,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.themodernway.server.core.content.ICoreContentTypeMapper;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.io.IO;
@@ -183,6 +184,18 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     public final String getOriginalBeanName(final String name)
     {
         return toTrimOrNull(BeanFactoryUtils.originalBeanName(requireNonNull(name)));
+    }
+
+    @Override
+    public final ICoreContentTypeMapper getContentTypeMapper()
+    {
+        return requireNonNull(getContentTypeMapper("CoreContentTypeMapper"), "CoreContentTypeMapper is null, initialization error.");
+    }
+
+    @Override
+    public final ICoreContentTypeMapper getContentTypeMapper(final String name)
+    {
+        return getBeanSafely(name, ICoreContentTypeMapper.class);
     }
 
     @Override

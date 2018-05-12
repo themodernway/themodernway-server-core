@@ -48,12 +48,14 @@
 		<property name="buildServerBuild" value="@GRADLE_BUILD_SERVER_BUILD@" />
 		<property name="buildModuleVersion" value="@GRADLE_BUILD_ARTIFACT_ID@-@GRADLE_BUILD_MODULE_VERSION@.jar" />
 	</bean>
+	
+	<bean id="CoreContentTypeMapper" class="com.themodernway.server.core.content.CoreContentTypeMapper" lazy-init="true" />
 		
-	<bean id="CorePropertiesResolver" class="com.themodernway.server.core.support.spring.CorePropertiesResolver" destroy-method="close" />
+	<bean id="CorePropertiesResolver" class="com.themodernway.server.core.support.spring.CorePropertiesResolver" destroy-method="close" lazy-init="true" />
 
 	<bean id="BuildDescriptorProvider" class="com.themodernway.server.core.support.spring.BuildDescriptorProvider" destroy-method="close" lazy-init="true" />
 
-	<bean id="CryptoProvider" class="com.themodernway.server.core.security.CryptoProvider" destroy-method="close">
+	<bean id="CryptoProvider" class="com.themodernway.server.core.security.CryptoProvider" destroy-method="close" lazy-init="true">
 		<constructor-arg value="${crypto.provider.pass}" />
 		<constructor-arg value="${crypto.provider.salt}" />
 		<constructor-arg value="${crypto.provider.bcrypt.iters}" />

@@ -29,6 +29,8 @@ public interface IFileItem
 {
     public IFileItemWrapper wrap();
 
+    public void validate() throws IOException;
+
     public String getName() throws IOException;
 
     public String getBaseName() throws IOException;
@@ -72,8 +74,6 @@ public interface IFileItem
     public IFolderItem getParent() throws IOException;
 
     public IFolderItem getAsFolderItem() throws IOException;
-
-    public void validate() throws IOException;
 
     public Stream<String> lines() throws IOException;
 

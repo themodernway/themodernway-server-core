@@ -17,7 +17,6 @@
 package com.themodernway.server.core.file;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
@@ -27,63 +26,46 @@ import com.themodernway.common.api.java.util.StringOps;
 
 public final class FileAndPathUtils
 {
-    public static final char                   SINGLE_PREFIX_CHAR   = '~';
+    public static final char    SINGLE_PREFIX_CHAR   = '~';
 
-    public static final char                   EXT_SEPARATOR_CHAR   = '.';
+    public static final char    EXT_SEPARATOR_CHAR   = '.';
 
-    public static final char                   UNX_SEPARATOR_CHAR   = '/';
+    public static final char    UNX_SEPARATOR_CHAR   = '/';
 
-    public static final char                   WIN_SEPARATOR_CHAR   = '\\';
+    public static final char    WIN_SEPARATOR_CHAR   = '\\';
 
-    public static final char                   SYS_SEPARATOR_CHAR   = File.separatorChar;
+    public static final char    SYS_SEPARATOR_CHAR   = File.separatorChar;
 
-    public static final String                 SYS_JOIN_NL_STRING   = "\n";
+    public static final String  SYS_JOIN_NL_STRING   = "\n";
 
-    public static final String                 SYS_JOIN_CR_STRING   = "\r";
+    public static final String  SYS_JOIN_CR_STRING   = "\r";
 
-    public static final String                 EXT_SEPARATOR_STRING = Character.toString(EXT_SEPARATOR_CHAR);
+    public static final String  EXT_SEPARATOR_STRING = Character.toString(EXT_SEPARATOR_CHAR);
 
-    public static final String                 UNX_SEPARATOR_STRING = Character.toString(UNX_SEPARATOR_CHAR);
+    public static final String  UNX_SEPARATOR_STRING = Character.toString(UNX_SEPARATOR_CHAR);
 
-    public static final String                 WIN_SEPARATOR_STRING = Character.toString(WIN_SEPARATOR_CHAR);
+    public static final String  WIN_SEPARATOR_STRING = Character.toString(WIN_SEPARATOR_CHAR);
 
-    public static final String                 SYS_SEPARATOR_STRING = Character.toString(SYS_SEPARATOR_CHAR);
+    public static final String  SYS_SEPARATOR_STRING = Character.toString(SYS_SEPARATOR_CHAR);
 
-    public static final String                 SINGLE_TILDE         = Character.toString(SINGLE_PREFIX_CHAR);
+    public static final String  SINGLE_TILDE         = Character.toString(SINGLE_PREFIX_CHAR);
 
-    public static final String                 SINGLE_SLASH         = Character.toString(UNX_SEPARATOR_CHAR);
+    public static final String  SINGLE_SLASH         = Character.toString(UNX_SEPARATOR_CHAR);
 
-    public static final String                 DOUBLE_SLASH         = SINGLE_SLASH + SINGLE_SLASH;
+    public static final String  DOUBLE_SLASH         = SINGLE_SLASH + SINGLE_SLASH;
 
-    public static final String                 SLASHY_TILDE         = SINGLE_SLASH + SINGLE_TILDE;
+    public static final String  SLASHY_TILDE         = SINGLE_SLASH + SINGLE_TILDE;
 
-    public static final String                 TILDE_SLASHY         = SINGLE_TILDE + SINGLE_SLASH;
+    public static final String  TILDE_SLASHY         = SINGLE_TILDE + SINGLE_SLASH;
 
-    public static final String                 POINT_SLASHY         = EXT_SEPARATOR_STRING + UNX_SEPARATOR_STRING;
+    public static final String  POINT_SLASHY         = EXT_SEPARATOR_STRING + UNX_SEPARATOR_STRING;
 
-    public static final Pattern                NOWHITESPACE_PATTERN = Pattern.compile("\\s");
+    public static final Pattern NOWHITESPACE_PATTERN = Pattern.compile("\\s");
 
-    public static final Pattern                DOUBLE_SLASH_PATTERN = Pattern.compile(DOUBLE_SLASH);
-
-    public static final ICoreContentTypeMapper CORE_MIMETYPE_MAPPER = new CoreContentTypeMapper();
+    public static final Pattern DOUBLE_SLASH_PATTERN = Pattern.compile(DOUBLE_SLASH);
 
     private FileAndPathUtils()
     {
-    }
-
-    public static final String getContentType(final File file)
-    {
-        return CORE_MIMETYPE_MAPPER.getContentType(file);
-    }
-
-    public static final String getContentType(final Path path)
-    {
-        return CORE_MIMETYPE_MAPPER.getContentType(path);
-    }
-
-    public static final String getContentType(final String path)
-    {
-        return CORE_MIMETYPE_MAPPER.getContentType(path);
     }
 
     public static final boolean isSystemUnix()

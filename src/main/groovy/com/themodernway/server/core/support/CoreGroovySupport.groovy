@@ -39,6 +39,7 @@ import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.common.api.java.util.StringOps
 import com.themodernway.common.api.types.ICursor
 import com.themodernway.common.api.types.IFixedIterable
+import com.themodernway.server.core.content.ICoreContentTypeMapper
 import com.themodernway.server.core.file.vfs.IFileItemStorage
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
 import com.themodernway.server.core.json.JSONArray
@@ -193,6 +194,18 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public ICoreNetworkProvider network()
     {
         getServerContext().network()
+    }
+
+    @Memoized
+    public ICoreContentTypeMapper getContentTypeMapper()
+    {
+        getServerContext().getContentTypeMapper()
+    }
+
+    @Memoized
+    public ICoreContentTypeMapper getContentTypeMapper(String name)
+    {
+        getServerContext().getContentTypeMapper(name)
     }
 
     @Override

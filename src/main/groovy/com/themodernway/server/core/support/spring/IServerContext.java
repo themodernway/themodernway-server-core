@@ -28,6 +28,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.server.core.ICoreBase;
+import com.themodernway.server.core.content.ICoreContentTypeMapper;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider;
 import com.themodernway.server.core.json.support.ICoreJSONOperations;
@@ -82,6 +83,10 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public ICryptoProvider getCryptoProvider();
 
     public ICoreNetworkProvider network();
+
+    public ICoreContentTypeMapper getContentTypeMapper();
+
+    public ICoreContentTypeMapper getContentTypeMapper(String name);
 
     public PathParameters parameters(Map<String, ?> vars);
 
