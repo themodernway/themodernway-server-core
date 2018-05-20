@@ -26,10 +26,6 @@ public abstract class AbstractResponseAction implements IResponseAction
 {
     private Supplier<Map<String, ?>> m_supplier = null;
 
-    protected AbstractResponseAction()
-    {
-    }
-
     protected void setHeaders(final HttpServletResponse response)
     {
         if (null != m_supplier)
@@ -56,9 +52,13 @@ public abstract class AbstractResponseAction implements IResponseAction
         return withHeaders(() -> headers);
     }
 
-    protected static class ResponseActionHelper
+    protected static final class ResponseActionHelper
     {
-        protected static void addHeader(final HttpServletResponse response, final String k, final Object v)
+        private ResponseActionHelper()
+        {
+        }
+
+        protected static final void addHeader(final HttpServletResponse response, final String k, final Object v)
         {
             if (v instanceof Collection)
             {
