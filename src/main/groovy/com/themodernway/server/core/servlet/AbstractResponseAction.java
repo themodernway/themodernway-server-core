@@ -26,6 +26,10 @@ public abstract class AbstractResponseAction implements IResponseAction
 {
     private Supplier<Map<String, ?>> m_supplier = null;
 
+    protected AbstractResponseAction()
+    {
+    }
+
     protected void setHeaders(final HttpServletResponse response)
     {
         if (null != m_supplier)
