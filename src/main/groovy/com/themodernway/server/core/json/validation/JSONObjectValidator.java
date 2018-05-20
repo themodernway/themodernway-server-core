@@ -30,7 +30,7 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
 
     public JSONObjectValidator()
     {
-        this("JSONObject");
+        super(JSONObject.class);
     }
 
     public JSONObjectValidator(final String name)
@@ -54,9 +54,9 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
         return this;
     }
 
-    public void setValidators(final List<IValidaorShuttle> validators)
+    public void setValidators(final List<IValidatorShuttle> validators)
     {
-        for (final IValidaorShuttle shuttle : validators)
+        for (final IValidatorShuttle shuttle : validators)
         {
             add(shuttle.getName(), shuttle.getValidator(), shuttle.isRequired());
         }
@@ -73,22 +73,24 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getName());
 
-            return;
+            return false;
         }
         final JSONObject jobj = json.getAsObject();
 
         if (null == jobj)
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getName());
 
-            return;
+            return false;
         }
+        boolean good = true;
+
         final List<String> keys = jobj.keys();
 
         for (final String name : m_required)
@@ -97,7 +99,9 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
 
             if (false == keys.contains(name))
             {
-                ctx.addRequiredError(name);
+                ctx.addRequiredAttributeValidationError(name);
+
+                good = false;
             }
             ctx.pop();
         }
@@ -109,13 +113,16 @@ public class JSONObjectValidator extends AbstractAttributeTypeValidator implemen
 
             if (null == validator)
             {
-                ctx.addInvalidAttributeError(name, getName());
+                ctx.addInvalidAttributeValidationError(name, getName());
+
+                good = false;
             }
             else if (false == validator.isIgnored())
             {
-                validator.validate(new JSONValue(jobj.get(name)), ctx);
+                good = good && validator.validate(new JSONValue(jobj.get(name)), ctx);
             }
             ctx.pop();
         }
+        return good;
     }
 }

@@ -11,7 +11,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. ThreadLocal.withInitial(supplier);
+ * limitations under the License.
  */
 
 package com.themodernway.server.core.cache;
@@ -53,7 +53,7 @@ public abstract class AbstractCoreConcurrentCache<K, T> implements ICoreCache<K,
     @Override
     public T get(final K name)
     {
-        return m_cache.computeIfAbsent(CommonOps.requireNonNull(name), CommonOps.requireNonNull(getMappingFunction()));
+        return m_cache.computeIfAbsent(CommonOps.requireNonNull(name), getMappingFunction());
     }
 
     @Override

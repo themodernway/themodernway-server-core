@@ -22,7 +22,9 @@ import javax.servlet.ServletContext;
 
 import org.springframework.web.context.WebApplicationContext;
 
-public interface IServletContextCustomizer extends Closeable
+import com.themodernway.server.core.logging.IHasLogging;
+
+public interface IServletContextCustomizer extends IHasLogging, Closeable
 {
     public void customize(ServletContext sc, WebApplicationContext context);
 }

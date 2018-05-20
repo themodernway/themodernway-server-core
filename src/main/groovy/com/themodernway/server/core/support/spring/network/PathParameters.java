@@ -16,12 +16,11 @@
 
 package com.themodernway.server.core.support.spring.network;
 
-import java.util.Collections;
 import java.util.Map;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public final class PathParameters
+public class PathParameters
 {
     private final Map<String, ?> m_parameters;
 
@@ -32,15 +31,15 @@ public final class PathParameters
 
     public PathParameters(final String parameter, final Object value)
     {
-        m_parameters = Collections.singletonMap(parameter, value);
+        m_parameters = CommonOps.singletonMap(parameter, value);
     }
 
-    public final Map<String, ?> getParameters()
+    public Map<String, ?> getParameters()
     {
         return m_parameters;
     }
 
-    public static final Map<String, ?> parameters(final PathParameters parameters)
+    public static Map<String, ?> parameters(final PathParameters parameters)
     {
         return (null != parameters) ? parameters.getParameters() : CommonOps.emptyMap();
     }

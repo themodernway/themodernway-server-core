@@ -24,11 +24,11 @@ public interface IEvaluationContext
 
     public <T> T model();
 
-    public <T> T eval(String path);
+    public <T> T eval(CharSequence path);
 
-    public <T> T eval(String path, Class<T> type);
+    public <T> T eval(CharSequence path, Class<T> type);
 
-    public <T> T eval(String path, TypeRef<T> type);
+    public <T> T eval(CharSequence path, TypeRef<T> type);
 
     public <T> T eval(ICompiledPath path);
 
@@ -38,7 +38,7 @@ public interface IEvaluationContext
 
     public IEvaluationContext set(ICompiledPath path, Object valu);
 
-    public IEvaluationContext put(ICompiledPath path, String pkey, Object valu);
+    public IEvaluationContext put(ICompiledPath path, CharSequence pkey, Object valu);
 
     public IEvaluationContext add(ICompiledPath path, Object valu);
 

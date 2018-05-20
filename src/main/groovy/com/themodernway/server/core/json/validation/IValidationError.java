@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.security;
+package com.themodernway.server.core.json.validation;
 
-public interface IBCryptHashProvider
+public interface IValidationError
 {
-    public static final int DEFAULT_BCRYPT_ITERATION = 31;
+    public String getMessage();
 
-    public String encode(CharSequence text);
+    public String getContext();
 
-    public boolean matches(CharSequence text, String value);
+    public String getAsError();
 }

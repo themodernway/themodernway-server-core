@@ -21,25 +21,28 @@ import java.util.List;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.INamed;
+import com.themodernway.server.core.IClassHolder;
 
-public interface IAttributeTypeValidator extends INamed
+public interface IAttributeTypeValidator extends INamed, IClassHolder
 {
     public boolean isIgnored();
 
-    public void validate(IJSONValue json, ValidationContext ctx);
+    public String getClassSimpleName();
+
+    public boolean validate(IJSONValue json, IMutableValidationContext ctx);
 
     public static List<IAttributeTypeValidator> concat(final IAttributeTypeValidator type, final IAttributeTypeValidator... list)
     {
-        final ArrayList<IAttributeTypeValidator> temp = CommonOps.arrayList(CommonOps.requireNonNull(list));
+        final ArrayList<IAttributeTypeValidator> temp = CommonOps.arrayList(list);
 
-        temp.add(0, CommonOps.requireNonNull(type));
+        temp.add(0, type);
 
         return repair(temp);
     }
 
     public static List<IAttributeTypeValidator> repair(final List<IAttributeTypeValidator> list)
     {
-        final ArrayList<IAttributeTypeValidator> temp = CommonOps.arrayList(CommonOps.requireNonNull(list));
+        final ArrayList<IAttributeTypeValidator> temp = CommonOps.arrayList(list);
 
         temp.removeIf(type -> null == type);
 

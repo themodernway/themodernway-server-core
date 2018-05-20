@@ -37,7 +37,7 @@ public class CoreTestsSpecification extends ServerCoreSpecification implements C
     def "test 0"()
     {
         setup:
-        echo getBuildDescriptorProvider()
+        echo getBuildDescriptors()
 
         expect:
         "dean" == "dean"

@@ -22,17 +22,20 @@ public class LongPredicateValidator extends AbstractPredicateAttributeTypeValida
 {
     public LongPredicateValidator(final Predicate<Long> pred)
     {
-        super("LongPredicate", pred);
+        super(Long.class, pred);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         Long valu;
 
         if ((null == json) || (null == (valu = json.getAsLong())) || (false == test(valu)))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

@@ -22,17 +22,20 @@ public class BooleanPredicateValidator extends AbstractPredicateAttributeTypeVal
 {
     public BooleanPredicateValidator(final Predicate<Boolean> pred)
     {
-        super("BooleanPredicate", pred);
+        super(Boolean.class, pred);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         Boolean valu;
 
         if ((null == json) || (null == (valu = json.getAsBoolean())) || (false == test(valu)))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

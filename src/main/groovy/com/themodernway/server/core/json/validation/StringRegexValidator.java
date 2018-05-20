@@ -26,31 +26,34 @@ public class StringRegexValidator extends AbstractAttributeTypeValidator
 
     public StringRegexValidator(final String regex)
     {
-        super("StringRegex");
+        super(String.class);
 
         m_regex = Pattern.compile(StringOps.requireTrimOrNull(regex));
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
 
-            return;
+            return false;
         }
         final String value = json.getAsString();
 
         if (null == value)
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
 
-            return;
+            return false;
         }
         if (false == m_regex.matcher(value).matches())
         {
-            ctx.addError(String.format("String doesn't match %s", m_regex.pattern()));
+            ctx.addValidationError(String.format("String doesn't match %s", m_regex.pattern()));
+
+            return false;
         }
+        return true;
     }
 }

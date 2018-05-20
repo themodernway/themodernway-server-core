@@ -16,24 +16,21 @@
 
 package com.themodernway.server.core.json.validation;
 
-import java.sql.Date;
-
-public class DateValidator extends AbstractAttributeTypeValidator
+public interface IMutableValidationContext extends IValidationContext
 {
-    public DateValidator()
-    {
-        super(Date.class);
-    }
+    public void pop();
 
-    @Override
-    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
-    {
-        if ((null == json) || (null == json.getAsDate()))
-        {
-            ctx.addTypeValidationError(getClassSimpleName());
+    public void push(int place);
 
-            return false;
-        }
-        return true;
-    }
+    public void push(String place);
+
+    public void addValidationError(String error);
+
+    public void addValidationError(IValidationError error);
+
+    public void addTypeValidationError(String type);
+
+    public void addRequiredAttributeValidationError(String attr);
+
+    public void addInvalidAttributeValidationError(String attr, String type);
 }

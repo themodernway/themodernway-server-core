@@ -18,7 +18,7 @@ package com.themodernway.server.core.security;
 
 public interface IStringCryptoProvider
 {
-    public String encrypt(String text);
+    public String encrypt(CharSequence text);
 
-    public String decrypt(String text);
+    public String decrypt(CharSequence text);
 }

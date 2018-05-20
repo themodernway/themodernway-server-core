@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.security;
+package com.themodernway.server.core;
 
-public interface IBCryptHashProvider
+@FunctionalInterface
+public interface IClassHolder
 {
-    public static final int DEFAULT_BCRYPT_ITERATION = 31;
-
-    public String encode(CharSequence text);
-
-    public boolean matches(CharSequence text, String value);
+    public Class<?> getClassOf();
 }

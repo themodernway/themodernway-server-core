@@ -59,6 +59,19 @@ public interface IRateLimited
             return RateLimiter.create(normalize(rate));
         }
 
+        public static final RateLimiter create(final double rate, final long warm, final TimeUnit unit)
+        {
+            if (rate <= NO_RATE_LIMITS)
+            {
+                return null;
+            }
+            if (warm <= NO_WARMUP_TIME)
+            {
+                return create(rate);
+            }
+            return RateLimiter.create(normalize(rate), warm, CommonOps.requireNonNullOrElse(unit, TimeUnit.MILLISECONDS));
+        }
+
         public static final RateLimiter create(final Class<?> claz)
         {
             if ((null != claz) && (claz.isAnnotationPresent(RateLimit.class)))
@@ -67,19 +80,7 @@ public interface IRateLimited
 
                 if (null != anno)
                 {
-                    final double rate = anno.value();
-
-                    if (rate <= NO_RATE_LIMITS)
-                    {
-                        return null;
-                    }
-                    final long warm = anno.warmup();
-
-                    if (warm <= NO_WARMUP_TIME)
-                    {
-                        return create(rate);
-                    }
-                    return RateLimiter.create(normalize(rate), warm, CommonOps.requireNonNullOrElse(anno.unit(), TimeUnit.MILLISECONDS));
+                    return create(anno.value(), anno.warmup(), anno.unit());
                 }
             }
             return null;

@@ -25,6 +25,20 @@ public abstract class AbstractPredicateFunctionAttributeTypeValidator<T> extends
 {
     private final Function<IJSONValue, T> m_func;
 
+    protected AbstractPredicateFunctionAttributeTypeValidator(final Predicate<T> pred, final Function<IJSONValue, T> func)
+    {
+        super(pred);
+
+        m_func = CommonOps.requireNonNull(func);
+    }
+
+    protected AbstractPredicateFunctionAttributeTypeValidator(final Class<T> type, final Predicate<T> pred, final Function<IJSONValue, T> func)
+    {
+        super(type, pred);
+
+        m_func = CommonOps.requireNonNull(func);
+    }
+
     protected AbstractPredicateFunctionAttributeTypeValidator(final String name, final Predicate<T> pred, final Function<IJSONValue, T> func)
     {
         super(name, pred);
@@ -33,13 +47,16 @@ public abstract class AbstractPredicateFunctionAttributeTypeValidator<T> extends
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         T valu;
 
         if ((null == json) || (null == (valu = m_func.apply(json))) || (false == test(valu)))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

@@ -30,7 +30,9 @@ public class JSONArrayValidator extends AbstractAttributeTypeValidator
 
     public JSONArrayValidator(final IAttributeTypeValidator validator)
     {
-        this("JSONArray", validator);
+        super(JSONArray.class);
+
+        m_validator = CommonOps.requireNonNull(validator);
     }
 
     public JSONArrayValidator(final String name, final IAttributeTypeValidator validator)
@@ -41,21 +43,21 @@ public class JSONArrayValidator extends AbstractAttributeTypeValidator
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
 
-            return;
+            return false;
         }
         final JSONArray jarr = json.getAsArray();
 
         if (null == jarr)
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
 
-            return;
+            return false;
         }
         if (false == m_validator.isIgnored())
         {
@@ -69,10 +71,11 @@ public class JSONArrayValidator extends AbstractAttributeTypeValidator
 
                 if (false == ctx.isValid())
                 {
-                    return;
+                    return false;
                 }
                 ctx.pop();
             }
         }
+        return true;
     }
 }

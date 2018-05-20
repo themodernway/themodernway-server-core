@@ -20,15 +20,18 @@ public class StringValidator extends AbstractAttributeTypeValidator
 {
     public StringValidator()
     {
-        super("String");
+        super(String.class);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         if ((null == json) || (null == json.getAsString()))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

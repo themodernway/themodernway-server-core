@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.cache;
+package com.themodernway.server.core.annotation;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
+import java.lang.annotation.Annotation;
 
-import com.themodernway.common.api.java.util.CommonOps;
-
-public final class FunctionMemoizer<T, R>
+public final class Annotations
 {
-    private final ConcurrentHashMap<T, R> m_cache = new ConcurrentHashMap<>();
-
-    private FunctionMemoizer()
+    private Annotations()
     {
     }
 
-    private final Function<T, R> remember(final Function<T, R> function)
+    public static final <A extends Annotation> A getAnnotation(final Object target, final Class<A> annotation)
     {
-        return input -> m_cache.computeIfAbsent(input, function);
+        if (null == target)
+        {
+            return null;
+        }
+        return getAnnotation(target.getClass(), annotation);
     }
 
-    public static final <T, R> Function<T, R> memoize(final Function<T, R> function)
+    public static final <A extends Annotation> A getAnnotation(final Class<?> target, final Class<A> annotation)
     {
-        CommonOps.requireNonNull(function);
-
-        return new FunctionMemoizer<T, R>().remember(function);
+        if (null == target)
+        {
+            return null;
+        }
+        return target.getAnnotation(annotation);
     }
 }

@@ -18,31 +18,29 @@ package com.themodernway.server.core.security;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.themodernway.common.api.java.util.CommonOps;
-
 public final class SimpleBCryptHashProvider implements IBCryptHashProvider
 {
     private final BCryptPasswordEncoder m_bcrypt;
 
     public SimpleBCryptHashProvider()
     {
-        m_bcrypt = new BCryptPasswordEncoder(DEFAULT_STRENGTH);
+        this(DEFAULT_BCRYPT_ITERATION);
     }
 
-    public SimpleBCryptHashProvider(final int strength)
+    public SimpleBCryptHashProvider(final int iteration)
     {
-        m_bcrypt = new BCryptPasswordEncoder(strength);
-    }
-
-    @Override
-    public final String makeBCrypt(final String text)
-    {
-        return m_bcrypt.encode(CommonOps.requireNonNull(text));
+        m_bcrypt = new BCryptPasswordEncoder(iteration);
     }
 
     @Override
-    public final synchronized boolean testBCrypt(final String text, final String value)
+    public final String encode(final CharSequence text)
     {
-        return m_bcrypt.matches(CommonOps.requireNonNull(text), CommonOps.requireNonNull(value));
+        return m_bcrypt.encode(text);
+    }
+
+    @Override
+    public final synchronized boolean matches(final CharSequence text, final String value)
+    {
+        return m_bcrypt.matches(text, value);
     }
 }

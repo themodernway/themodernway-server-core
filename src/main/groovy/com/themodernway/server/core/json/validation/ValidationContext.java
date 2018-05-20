@@ -16,19 +16,18 @@
 
 package com.themodernway.server.core.json.validation;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.ICoreBase;
 
-public class ValidationContext implements IValidationContext
+public class ValidationContext implements IMutableValidationContext, ICoreBase
 {
-    private final String                m_root;
+    private final String                 m_root;
 
-    private final List<String>          m_stack  = new ArrayList<>();
+    private final List<String>           m_fifo = arrayList();
 
-    private final List<ValidationError> m_errors = new ArrayList<>();
+    private final List<IValidationError> m_list = arrayList();
 
     public ValidationContext()
     {
@@ -37,80 +36,89 @@ public class ValidationContext implements IValidationContext
 
     public ValidationContext(final String root)
     {
-        m_root = StringOps.requireTrimOrNull(root);
+        m_root = requireTrimOrNull(root);
     }
 
-    public ValidationContext(final ValidationContext ctx)
+    public ValidationContext(final IValidationContext ctx)
     {
         this(ctx.getRootName());
     }
 
-    private final String getRootName()
+    @Override
+    public String getRootName()
     {
         return m_root;
     }
 
-    public void push(final String context)
+    @Override
+    public void push(final String place)
     {
-        m_stack.add(StringOps.PLACE_STRING + context);
+        m_fifo.add(StringOps.PLACE_STRING + place);
     }
 
-    public void push(final int index)
+    @Override
+    public void push(final int place)
     {
-        m_stack.add(StringOps.START_ARRAY_STRING + index + StringOps.CLOSE_ARRAY_STRING);
+        m_fifo.add(StringOps.START_ARRAY_STRING + place + StringOps.CLOSE_ARRAY_STRING);
     }
 
+    @Override
     public void pop()
     {
-        m_stack.remove(m_stack.size() - 1);
+        m_fifo.remove(m_fifo.size() - 1);
     }
 
-    protected void addError(final ValidationError e)
+    @Override
+    public void addValidationError(final IValidationError error)
     {
-        m_errors.add(e);
+        m_list.add(error);
     }
 
-    public void addError(final String msg)
+    @Override
+    public void addValidationError(final String error)
     {
         final StringBuilder b = new StringBuilder(getRootName());
 
-        for (final String s : m_stack)
+        for (final String s : m_fifo)
         {
             b.append(s);
         }
-        addError(new ValidationError(msg, b.toString()));
+        addValidationError(new ValidationError(error, b.toString()));
     }
 
-    public void addRequiredError(final String name)
+    @Override
+    public void addRequiredAttributeValidationError(final String name)
     {
-        addError(String.format("attribute (%s) is required.", name));
+        addValidationError(format("attribute (%s) is required.", name));
     }
 
-    public void addBadTypeError(final String type)
+    @Override
+    public void addTypeValidationError(final String type)
     {
-        addError(String.format("value should be (%s).", type));
+        addValidationError(format("value should be (%s).", type));
     }
 
-    public void addInvalidAttributeError(final String name, final String type)
+    @Override
+    public void addInvalidAttributeValidationError(final String name, final String type)
     {
-        addError(String.format("attribute (%s) is invalid for type (%s).", name, type));
+        addValidationError(format("attribute (%s) is invalid for type (%s).", name, type));
     }
 
     @Override
     public boolean isValid()
     {
-        return m_errors.isEmpty();
+        return m_list.isEmpty();
     }
 
     @Override
-    public List<ValidationError> getErrors()
+    public List<IValidationError> getErrors()
     {
-        return CommonOps.toUnmodifiableList(m_errors);
+        return toUnmodifiableList(m_list);
     }
 
     @Override
     public String getErrorString()
     {
-        return StringOps.toCommaSeparated(getErrors().stream().map(e -> e.toString()));
+        return toCommaSeparated(getErrors().stream().map(e -> e.getAsError()));
     }
 }

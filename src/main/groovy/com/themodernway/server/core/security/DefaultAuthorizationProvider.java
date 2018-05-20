@@ -22,9 +22,10 @@ import java.util.List;
 import org.slf4j.Logger;
 
 import com.themodernway.server.core.ICoreCommon;
+import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICoreCommon
+public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICoreCommon, IHasLogging
 {
     private final Logger m_logger = LoggingOps.getLogger(getClass());
 

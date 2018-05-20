@@ -18,13 +18,13 @@ package com.themodernway.server.core.json.validation;
 
 import com.themodernway.common.api.java.util.CommonOps;
 
-public class ValidatorShuttle implements IValidaorShuttle
+public class ValidatorShuttle implements IValidatorShuttle
 {
-    final String                  m_name;
+    private final String                  m_name;
 
-    final boolean                 m_need;
+    private final boolean                 m_need;
 
-    final IAttributeTypeValidator m_type;
+    private final IAttributeTypeValidator m_type;
 
     public ValidatorShuttle(final String name, final IAttributeTypeValidator type)
     {

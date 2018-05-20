@@ -18,7 +18,7 @@ package com.themodernway.server.core.json.validation;
 
 import com.themodernway.common.api.types.INamed;
 
-public interface IValidaorShuttle extends INamed
+public interface IValidatorShuttle extends INamed
 {
     public boolean isRequired();
 

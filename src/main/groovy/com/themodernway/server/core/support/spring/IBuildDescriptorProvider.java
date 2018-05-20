@@ -19,9 +19,10 @@ package com.themodernway.server.core.support.spring;
 import java.io.Closeable;
 import java.util.List;
 
+import com.themodernway.common.api.types.json.JSONStringify;
 import com.themodernway.server.core.json.JSONObjectSupplier;
 
-public interface IBuildDescriptorProvider extends JSONObjectSupplier, Closeable
+public interface IBuildDescriptorProvider extends JSONObjectSupplier, JSONStringify, Closeable
 {
     public List<String> getBuildDescriptorNames();
 

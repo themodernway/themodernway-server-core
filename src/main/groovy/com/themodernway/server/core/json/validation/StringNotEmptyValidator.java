@@ -22,23 +22,26 @@ public class StringNotEmptyValidator extends AbstractAttributeTypeValidator
 {
     public StringNotEmptyValidator()
     {
-        super("StringNotEmpty");
+        super();
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         if (null == json)
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
 
-            return;
+            return false;
         }
         final String value = StringOps.toTrimOrNull(json.getAsString());
 
         if (null == value)
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

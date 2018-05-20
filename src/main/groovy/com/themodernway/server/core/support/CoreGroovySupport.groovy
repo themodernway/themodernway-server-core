@@ -39,12 +39,15 @@ import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.common.api.java.util.StringOps
 import com.themodernway.common.api.types.ICursor
 import com.themodernway.common.api.types.IFixedIterable
+import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.content.ICoreContentTypeMapper
 import com.themodernway.server.core.file.vfs.IFileItemStorage
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.binder.IBinder
+import com.themodernway.server.core.json.path.IJSONPathOperations
+import com.themodernway.server.core.json.path.JSONPathOperations
 import com.themodernway.server.core.logging.LoggingOps
 import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
@@ -86,6 +89,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public Logger logger()
     {
         m_logger
+    }
+
+    @Memoized
+    public IJSONPathOperations jsonpath()
+    {
+        new JSONPathOperations()
     }
 
     @Memoized
@@ -134,6 +143,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public IBuildDescriptorProvider getBuildDescriptorProvider()
     {
         getServerContext().getBuildDescriptorProvider()
+    }
+
+    @Memoized
+    public JSONObject getBuildDescriptors()
+    {
+        getBuildDescriptorProvider().toJSONObject()
     }
 
     @Memoized
@@ -196,16 +211,15 @@ public class CoreGroovySupport implements IServerContext, Closeable
         getServerContext().network()
     }
 
+    public NanoTimer nstimer()
+    {
+        new NanoTimer()
+    }
+
     @Memoized
     public ICoreContentTypeMapper getContentTypeMapper()
     {
         getServerContext().getContentTypeMapper()
-    }
-
-    @Memoized
-    public ICoreContentTypeMapper getContentTypeMapper(String name)
-    {
-        getServerContext().getContentTypeMapper(name)
     }
 
     @Override
@@ -298,6 +312,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public JSONArray jarr()
     {
         new JSONArray()
+    }
+
+    @Override
+    public JSONArray jarr(Object... objects)
+    {
+        jarr(CommonOps.toList(objects))
     }
 
     @Override
@@ -412,6 +432,12 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public JSONObject json(String name, Object value)
     {
         new JSONObject(name, value)
+    }
+
+    @Override
+    public JSONObject json(Object... args)
+    {
+        json(jarr(args))
     }
 
     @Memoized

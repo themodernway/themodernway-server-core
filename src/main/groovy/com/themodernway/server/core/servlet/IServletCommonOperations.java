@@ -23,7 +23,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -32,6 +31,7 @@ import com.themodernway.common.api.types.INamed;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.ITimeSupplier;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.security.IAuthorizationResult;
 import com.themodernway.server.core.security.session.IServerSession;
@@ -39,7 +39,7 @@ import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 import com.themodernway.server.core.support.spring.network.HTTPHeaders;
 
-public interface IServletCommonOperations extends ICoreCommon, ICoreServletConstants, INamed
+public interface IServletCommonOperations extends ICoreCommon, ICoreServletConstants, INamed, IHasLogging
 {
     public static IServerContext getServerContextInstance()
     {
@@ -194,12 +194,6 @@ public interface IServletCommonOperations extends ICoreCommon, ICoreServletConst
         response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_MAX_AGE_PREFIX + WEEK_IN_SECONDS);
 
         response.setDateHeader(EXPIRES_HEADER, ITimeSupplier.now() + WEEK_IN_MILLISECONDS);
-    }
-
-    @Override
-    default Logger logger()
-    {
-        return getServerContext().logger();
     }
 
     default int getMaxContentTypeLength()

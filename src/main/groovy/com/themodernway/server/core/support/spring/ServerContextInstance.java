@@ -189,13 +189,7 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     @Override
     public final ICoreContentTypeMapper getContentTypeMapper()
     {
-        return requireNonNull(getContentTypeMapper("CoreContentTypeMapper"), "CoreContentTypeMapper is null, initialization error.");
-    }
-
-    @Override
-    public final ICoreContentTypeMapper getContentTypeMapper(final String name)
-    {
-        return getBeanSafely(name, ICoreContentTypeMapper.class);
+        return requireNonNull(getBeanSafely("CoreContentTypeMapper", ICoreContentTypeMapper.class), "CoreContentTypeMapper is null, initialization error.");
     }
 
     @Override

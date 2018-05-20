@@ -75,14 +75,14 @@ public final class BootstrapStringCryptoProvider implements IStringCryptoProvide
     }
 
     @Override
-    public final String encrypt(final String text)
+    public final String encrypt(final CharSequence text)
     {
-        return m_pcrypt.encrypt(requireNonNull(text));
+        return m_pcrypt.encrypt(text.toString());
     }
 
     @Override
-    public final String decrypt(final String text)
+    public final String decrypt(final CharSequence text)
     {
-        return m_pcrypt.decrypt(requireNonNull(text));
+        return m_pcrypt.decrypt(text.toString());
     }
 }

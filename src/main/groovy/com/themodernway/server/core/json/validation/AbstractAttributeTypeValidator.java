@@ -20,11 +20,49 @@ import com.themodernway.common.api.java.util.StringOps;
 
 public abstract class AbstractAttributeTypeValidator implements IAttributeTypeValidator
 {
-    private final String m_name;
+    private final String   m_name;
+
+    private final String   m_simp;
+
+    private final Class<?> m_claz;
 
     protected AbstractAttributeTypeValidator(final String name)
     {
+        m_claz = getClass();
+
+        m_simp = m_claz.getSimpleName();
+
         m_name = StringOps.requireTrimOrNull(name);
+    }
+
+    protected AbstractAttributeTypeValidator(final Class<?> claz)
+    {
+        m_claz = claz;
+
+        m_simp = m_claz.getSimpleName();
+
+        m_name = m_claz.getSimpleName();
+    }
+
+    protected AbstractAttributeTypeValidator()
+    {
+        m_claz = getClass();
+
+        m_simp = m_claz.getSimpleName();
+
+        m_name = m_claz.getSimpleName();
+    }
+
+    @Override
+    public Class<?> getClassOf()
+    {
+        return m_claz;
+    }
+
+    @Override
+    public String getClassSimpleName()
+    {
+        return m_simp;
     }
 
     @Override

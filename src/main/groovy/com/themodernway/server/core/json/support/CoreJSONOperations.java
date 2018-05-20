@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.json.support;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +28,8 @@ import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.json.binder.JSONBinder;
+import com.themodernway.server.core.json.path.IJSONPathOperations;
+import com.themodernway.server.core.json.path.JSONPathOperations;
 
 public class CoreJSONOperations implements ICoreJSONOperations
 {
@@ -47,6 +48,12 @@ public class CoreJSONOperations implements ICoreJSONOperations
     public final IBinder binder()
     {
         return new JSONBinder();
+    }
+
+    @Override
+    public IJSONPathOperations jsonpath()
+    {
+        return new JSONPathOperations();
     }
 
     @Override
@@ -69,7 +76,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
         {
             return jarr((Map<String, ?>) collection);
         }
-        return jarr(new ArrayList<Object>(collection));
+        return jarr(CommonOps.toList(collection));
     }
 
     @Override
@@ -193,7 +200,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
         {
             return json((List<?>) collection);
         }
-        return json(new ArrayList<Object>(collection));
+        return json(CommonOps.toList(collection));
     }
 
     @Override
@@ -274,5 +281,17 @@ public class CoreJSONOperations implements ICoreJSONOperations
     public final JSONObject json(final String name, final Object value)
     {
         return new JSONObject(CommonOps.requireNonNull(name), value);
+    }
+
+    @Override
+    public JSONArray jarr(final Object... objects)
+    {
+        return jarr(CommonOps.toList(objects));
+    }
+
+    @Override
+    public JSONObject json(final Object... objects)
+    {
+        return json(jarr(objects));
     }
 }

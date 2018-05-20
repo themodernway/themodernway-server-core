@@ -26,10 +26,13 @@ import java.util.stream.Stream;
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.binder.IBinder;
+import com.themodernway.server.core.json.path.IJSONPathOperations;
 
 public interface ICoreJSONOperations
 {
     public IBinder binder();
+
+    public IJSONPathOperations jsonpath();
 
     public JSONArray jarr();
 
@@ -44,6 +47,8 @@ public interface ICoreJSONOperations
     public JSONArray jarr(Map<String, ?> map);
 
     public JSONArray jarr(Object object);
+
+    public JSONArray jarr(Object... objects);
 
     public JSONArray jarr(Optional<?> optional);
 
@@ -64,6 +69,8 @@ public interface ICoreJSONOperations
     public JSONObject json(Future<?> future);
 
     public JSONObject json(Object object);
+
+    public JSONObject json(Object... objects);
 
     public JSONObject json(Optional<?> optional);
 

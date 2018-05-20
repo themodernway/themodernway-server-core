@@ -469,4 +469,16 @@ public class JsonPathTestsSpecification extends ServerCoreSpecification implemen
         cleanup:
         echo json(result: look)
     }
+
+    def "test binder perf 8"()
+    {
+        setup:
+        def bind = json(2, 3.5, 'hi', true)
+
+        expect:
+        bind != null
+
+        cleanup:
+        echo json(result: bind)
+    }
 }

@@ -34,17 +34,7 @@ public abstract class AbstractResponseAction implements IResponseAction
 
             if ((null != maps) && (false == maps.isEmpty()))
             {
-                maps.forEach((k, v) -> {
-
-                    if (v instanceof Collection)
-                    {
-                        ((Collection<?>) v).forEach(m -> response.addHeader(k, m.toString()));
-                    }
-                    else
-                    {
-                        response.addHeader(k, v.toString());
-                    }
-                });
+                maps.forEach((k, v) -> ResponseActionHelper.addHeader(response, k, v));
             }
         }
     }
@@ -60,5 +50,20 @@ public abstract class AbstractResponseAction implements IResponseAction
     public IResponseAction withHeaders(final Map<String, ?> headers)
     {
         return withHeaders(() -> headers);
+    }
+
+    protected static class ResponseActionHelper
+    {
+        protected static void addHeader(final HttpServletResponse response, final String k, final Object v)
+        {
+            if (v instanceof Collection)
+            {
+                ((Collection<?>) v).forEach(m -> response.addHeader(k, m.toString()));
+            }
+            else
+            {
+                response.addHeader(k, v.toString());
+            }
+        }
     }
 }

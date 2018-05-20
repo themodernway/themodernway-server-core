@@ -20,15 +20,18 @@ public class BooleanValidator extends AbstractAttributeTypeValidator
 {
     public BooleanValidator()
     {
-        super("Boolean");
+        super(Boolean.class);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         if ((null == json) || (null == json.getAsBoolean()))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

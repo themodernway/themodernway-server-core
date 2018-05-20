@@ -22,5 +22,5 @@ public interface ICryptoKeysGenerator
 
     public String getRandomSalt();
 
-    public boolean isPassValid(String pass);
+    public boolean isPassValid(CharSequence pass);
 }

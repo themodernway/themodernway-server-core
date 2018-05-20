@@ -22,7 +22,9 @@ public interface IValidationContext
 {
     public boolean isValid();
 
+    public String getRootName();
+
     public String getErrorString();
 
-    public List<ValidationError> getErrors();
+    public List<IValidationError> getErrors();
 }

@@ -23,17 +23,20 @@ public class DatePredicateValidator extends AbstractPredicateAttributeTypeValida
 {
     public DatePredicateValidator(final Predicate<Date> pred)
     {
-        super("DatePredicate", pred);
+        super(Date.class, pred);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         Date valu;
 
         if ((null == json) || (null == (valu = json.getAsDate())) || (false == test(valu)))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

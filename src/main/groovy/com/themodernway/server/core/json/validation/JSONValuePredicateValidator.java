@@ -22,15 +22,18 @@ public class JSONValuePredicateValidator extends AbstractPredicateAttributeTypeV
 {
     public JSONValuePredicateValidator(final Predicate<IJSONValue> pred)
     {
-        super("JSONValuePredicate", pred);
+        super(IJSONValue.class, pred);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         if ((null == json) || (false == test(json)))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

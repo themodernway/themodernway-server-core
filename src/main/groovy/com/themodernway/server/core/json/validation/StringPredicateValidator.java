@@ -22,17 +22,20 @@ public class StringPredicateValidator extends AbstractPredicateAttributeTypeVali
 {
     public StringPredicateValidator(final Predicate<String> pred)
     {
-        super("StringPredicate", pred);
+        super(String.class, pred);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         String valu;
 
         if ((null == json) || (null == (valu = json.getAsString())) || (false == test(valu)))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

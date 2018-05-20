@@ -11,14 +11,13 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. ThreadLocal.withInitial(supplier);
+ * limitations under the License.
  */
 
 package com.themodernway.server.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -244,7 +243,7 @@ public interface ICoreBase
 
     default <T> Set<T> toUnmodifiableSet(final Collection<? extends T> source)
     {
-        return Collections.unmodifiableSet(linkedSet(requireNonNull(source)));
+        return CommonOps.toUnmodifiableSet(source);
     }
 
     default <T> ArrayList<T> arrayListOfSize(final int size)
@@ -328,12 +327,12 @@ public interface ICoreBase
 
     default double project(final double value, final double istart, final double istop, final double ostart, final double ostop)
     {
-        return ostart + ((ostop - ostart) * ((value - istart) / (istop - istart)));
+        return CommonOps.project(value, istart, istop, ostart, ostop);
     }
 
     default String getEnvironmentProperty(final String name)
     {
-        return System.getenv(requireNonNull(name));
+        return System.getenv(name);
     }
 
     default String getEnvironmentProperty(final String name, final String otherwise)
@@ -360,7 +359,7 @@ public interface ICoreBase
 
     default String getSystemProperty(final String name)
     {
-        return System.getProperty(requireNonNull(name));
+        return System.getProperty(name);
     }
 
     default String getSystemProperty(final String name, final String otherwise)
@@ -387,7 +386,7 @@ public interface ICoreBase
 
     default String format(final String format, final Object... args)
     {
-        return String.format(requireNonNull(format), args);
+        return String.format(format, args);
     }
 
     default String repeat(final String string, final int times)

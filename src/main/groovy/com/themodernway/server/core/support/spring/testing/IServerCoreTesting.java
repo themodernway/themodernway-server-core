@@ -43,7 +43,6 @@ public interface IServerCoreTesting
             {
                 logger.info(LoggingOps.THE_MODERN_WAY_MARKER, String.format("finished TestingOps.closeServerCoreLogging()."));
             }
-            LoggingOps.stop();
         }
 
         public static final void setupServerCoreContext(final Class<?> type, final String name, final String... locations)

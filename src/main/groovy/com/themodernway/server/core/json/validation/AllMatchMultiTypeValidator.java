@@ -20,13 +20,33 @@ import java.util.List;
 
 public class AllMatchMultiTypeValidator extends AbstractMultiTypeValidator
 {
+    public AllMatchMultiTypeValidator(final List<IAttributeTypeValidator> list)
+    {
+        super(true, list);
+    }
+
+    public AllMatchMultiTypeValidator(final IAttributeTypeValidator valu, final IAttributeTypeValidator... list)
+    {
+        super(true, valu, list);
+    }
+
+    public AllMatchMultiTypeValidator(final Class<?> type, final List<IAttributeTypeValidator> list)
+    {
+        super(type, true, list);
+    }
+
+    public AllMatchMultiTypeValidator(final Class<?> type, final IAttributeTypeValidator valu, final IAttributeTypeValidator... list)
+    {
+        super(type, true, valu, list);
+    }
+
     public AllMatchMultiTypeValidator(final String name, final List<IAttributeTypeValidator> list)
     {
         super(name, true, list);
     }
 
-    public AllMatchMultiTypeValidator(final String name, final IAttributeTypeValidator type, final IAttributeTypeValidator... list)
+    public AllMatchMultiTypeValidator(final String name, final IAttributeTypeValidator valu, final IAttributeTypeValidator... list)
     {
-        super(name, true, type, list);
+        super(name, true, valu, list);
     }
 }

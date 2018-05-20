@@ -17,7 +17,6 @@
 package com.themodernway.server.core.security;
 
 import com.themodernway.common.api.hash.Hasher;
-import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.security.tools.Digests;
 
@@ -25,32 +24,27 @@ public final class SimpleSHA512HashProvider implements ISHA512HashProvider
 {
     private final Hasher m_hasher = new Hasher(this);
 
-    public SimpleSHA512HashProvider()
+    @Override
+    public String sha512(final CharSequence text)
     {
-        // empty by design.
+        return SimpleHexEncoder.get().encode(Digests.sha512().digest(text.toString().getBytes(IO.UTF_8_CHARSET)));
     }
 
     @Override
-    public String sha512(final String text)
+    public String sha512(final CharSequence text, final String salt)
     {
-        return SimpleHexEncoder.get().encode(Digests.sha512().digest(text.getBytes(IO.UTF_8_CHARSET)));
+        return m_hasher.sha512(text, salt);
     }
 
     @Override
-    public String sha512(final String text, final String salt)
+    public String sha512(final CharSequence text, final String salt, final int iter)
     {
-        return m_hasher.sha512(CommonOps.requireNonNull(text), CommonOps.requireNonNull(salt));
+        return m_hasher.sha512(text, salt, iter);
     }
 
     @Override
-    public String sha512(final String text, final String salt, final int iter)
+    public String sha512(final CharSequence text, final int iter)
     {
-        return m_hasher.sha512(CommonOps.requireNonNull(text), salt, iter);
-    }
-
-    @Override
-    public String sha512(final String text, final int iter)
-    {
-        return m_hasher.sha512(CommonOps.requireNonNull(text), null, iter);
+        return m_hasher.sha512(text, null, iter);
     }
 }

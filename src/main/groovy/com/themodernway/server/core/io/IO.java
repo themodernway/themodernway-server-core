@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.io;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Closeable;
@@ -276,7 +277,7 @@ public final class IO
 
     public static final long copy(final IFileItem file, final OutputStream output) throws IOException
     {
-        try (InputStream stream =  file.getInputStream())
+        try (InputStream stream = file.getInputStream())
         {
             return IO.copy(stream, output);
         }
@@ -286,7 +287,7 @@ public final class IO
     {
         if ((length = Math.max(0L, length)) > 0L)
         {
-            try (InputStream stream =  file.getInputStream())
+            try (InputStream stream = file.getInputStream())
             {
                 return IO.copy(stream, output, length);
             }
@@ -296,7 +297,7 @@ public final class IO
 
     public static final long copy(final IFileItem file, final Writer output) throws IOException
     {
-        try (InputStream stream =  file.getInputStream())
+        try (InputStream stream = file.getInputStream())
         {
             return IO.copy(stream, output);
         }
@@ -306,7 +307,7 @@ public final class IO
     {
         if ((length = Math.max(0L, length)) > 0L)
         {
-            try (InputStream stream =  file.getInputStream())
+            try (InputStream stream = file.getInputStream())
             {
                 return IO.copy(stream, output, length);
             }
@@ -578,28 +579,22 @@ public final class IO
 
     public static final Properties toProperties(final Properties prop, final InputStream stream) throws IOException
     {
-        try
+        try (BufferedInputStream i = new BufferedInputStream(stream))
         {
-            prop.load(CommonOps.requireNonNull(stream));
+            prop.load(i);
+
+            return prop;
         }
-        finally
-        {
-            IO.close(stream);
-        }
-        return prop;
     }
 
     public static final Properties toProperties(final Properties prop, final Reader reader) throws IOException
     {
-        try
+        try (BufferedReader i = new BufferedReader(reader))
         {
-            prop.load(CommonOps.requireNonNull(reader));
+            prop.load(i);
+
+            return prop;
         }
-        finally
-        {
-            IO.close(reader);
-        }
-        return prop;
     }
 
     public static final Properties toProperties(final InputStream stream) throws IOException
@@ -714,7 +709,7 @@ public final class IO
 
     public static final String getStringAtMost(final Resource resource, final long leng, final long slop) throws IOException
     {
-        try (InputStream stream =  resource.getInputStream())
+        try (InputStream stream = resource.getInputStream())
         {
             return IO.getStringAtMost(stream, leng, slop);
         }
@@ -776,14 +771,14 @@ public final class IO
 
     public static final byte[] getbytes(final InputStream stream, final long leng) throws IOException
     {
-        return IOUtils.toByteArray(stream, leng);
+        try (BufferedInputStream input = new BufferedInputStream(stream))
+        {
+            return IOUtils.toByteArray(input, leng);
+        }
     }
 
     public static final byte[] getbytes(final IFileItem file, final long leng) throws IOException
     {
-        try (InputStream stream = file.getInputStream())
-        {
-            return IO.getbytes(stream, leng);
-        }
+        return IO.getbytes(file.getInputStream(), leng);
     }
 }

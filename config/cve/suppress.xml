@@ -9,11 +9,11 @@
 		<cpe>cpe:/a:apple:java</cpe>
 	</suppress>
 	<suppress>
-		<notes><![CDATA[
-   		file name: spring-session-core-2.0.2.RELEASE.jar
+   		<notes><![CDATA[
+   		file name: spring-session-core-2.0.3.RELEASE.jar
    		]]></notes>
-		<sha1>9ed548958dde7eed436d03faaa24bddac4d42d42</sha1>
-		<cpe>cpe:/a:pivotal:spring_framework</cpe>
+   		<gav regex="true">^org\.springframework\.session:spring-session-core:.*$</gav>
+   		<cve>CVE-2018-1270</cve>
 	</suppress>
 	<suppress>
         <notes><![CDATA[

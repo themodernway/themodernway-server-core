@@ -20,15 +20,18 @@ public class DoubleValidator extends AbstractAttributeTypeValidator
 {
     public DoubleValidator()
     {
-        super("Double");
+        super(Double.class);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         if ((null == json) || (null == json.getAsDouble()))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

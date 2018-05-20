@@ -30,18 +30,18 @@ public final class CryptoProvider implements ICryptoProvider
 
     private final SimpleCryptoKeysGenerator m_keygen;
 
-    public CryptoProvider(final String pass, final String salt)
+    public CryptoProvider(final CharSequence pass, final CharSequence salt)
     {
-        this(pass, salt, DEFAULT_STRENGTH);
+        this(pass, salt, DEFAULT_BCRYPT_ITERATION);
     }
 
-    public CryptoProvider(final String pass, final String salt, final int strength)
+    public CryptoProvider(final CharSequence pass, final CharSequence salt, final int iteration)
     {
         m_hasher = new SimpleSHA512HashProvider();
 
-        m_bcrypt = new SimpleBCryptHashProvider(strength);
+        m_bcrypt = new SimpleBCryptHashProvider(iteration);
 
-        m_pcrypt = new AESStringCryptoProvider(CommonOps.requireNonNull(pass), CommonOps.requireNonNull(salt));
+        m_pcrypt = new AESStringCryptoProvider(pass, salt);
 
         m_keygen = SimpleCryptoKeysGenerator.getCryptoKeysGenerator();
     }
@@ -59,55 +59,55 @@ public final class CryptoProvider implements ICryptoProvider
     }
 
     @Override
-    public final boolean isPassValid(final String pass)
+    public final boolean isPassValid(final CharSequence pass)
     {
         return m_keygen.isPassValid(pass);
     }
 
     @Override
-    public final String makeBCrypt(final String text)
+    public final String encode(final CharSequence text)
     {
-        return m_bcrypt.makeBCrypt(CommonOps.requireNonNull(text));
+        return m_bcrypt.encode(text);
     }
 
     @Override
-    public final String encrypt(final String text)
+    public final String encrypt(final CharSequence text)
     {
-        return m_pcrypt.encrypt(CommonOps.requireNonNull(text));
+        return m_pcrypt.encrypt(text);
     }
 
     @Override
-    public final String decrypt(final String text)
+    public final String decrypt(final CharSequence text)
     {
-        return m_pcrypt.decrypt(CommonOps.requireNonNull(text));
+        return m_pcrypt.decrypt(text);
     }
 
     @Override
-    public final boolean testBCrypt(final String text, final String value)
+    public final boolean matches(final CharSequence text, final String value)
     {
-        return m_bcrypt.testBCrypt(CommonOps.requireNonNull(text), CommonOps.requireNonNull(value));
+        return m_bcrypt.matches(CommonOps.requireNonNull(text), CommonOps.requireNonNull(value));
     }
 
     @Override
-    public final String sha512(final String text, final String salt)
+    public final String sha512(final CharSequence text, final String salt)
     {
         return m_hasher.sha512(CommonOps.requireNonNull(text), salt);
     }
 
     @Override
-    public final String sha512(final String text, final String salt, final int iter)
+    public final String sha512(final CharSequence text, final String salt, final int iter)
     {
         return m_hasher.sha512(CommonOps.requireNonNull(text), salt, iter);
     }
 
     @Override
-    public final String sha512(final String text, final int iter)
+    public final String sha512(final CharSequence text, final int iter)
     {
         return m_hasher.sha512(CommonOps.requireNonNull(text), null, iter);
     }
 
     @Override
-    public final String sha512(final String text)
+    public final String sha512(final CharSequence text)
     {
         return m_hasher.sha512(CommonOps.requireNonNull(text));
     }

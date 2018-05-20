@@ -18,15 +18,45 @@ package com.themodernway.server.core.json.validation;
 
 import java.util.List;
 
+import com.themodernway.common.api.java.util.CommonOps;
+
 public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeValidator
 {
     private final boolean                       m_must;
 
     private final List<IAttributeTypeValidator> m_list;
 
-    protected AbstractMultiTypeValidator(final String name, final boolean must, final IAttributeTypeValidator type, final IAttributeTypeValidator... list)
+    protected AbstractMultiTypeValidator(final boolean must, final IAttributeTypeValidator valu, final IAttributeTypeValidator... list)
     {
-        this(name, must, IAttributeTypeValidator.concat(type, list));
+        this(must, IAttributeTypeValidator.concat(valu, list));
+    }
+
+    protected AbstractMultiTypeValidator(final boolean must, final List<IAttributeTypeValidator> list)
+    {
+        super();
+
+        m_must = must;
+
+        m_list = IAttributeTypeValidator.repair(list);
+    }
+
+    protected AbstractMultiTypeValidator(final Class<?> type, final boolean must, final IAttributeTypeValidator valu, final IAttributeTypeValidator... list)
+    {
+        this(type, must, IAttributeTypeValidator.concat(valu, list));
+    }
+
+    protected AbstractMultiTypeValidator(final Class<?> type, final boolean must, final List<IAttributeTypeValidator> list)
+    {
+        super(type);
+
+        m_must = must;
+
+        m_list = IAttributeTypeValidator.repair(list);
+    }
+
+    protected AbstractMultiTypeValidator(final String name, final boolean must, final IAttributeTypeValidator valu, final IAttributeTypeValidator... list)
+    {
+        this(name, must, IAttributeTypeValidator.concat(valu, list));
     }
 
     protected AbstractMultiTypeValidator(final String name, final boolean must, final List<IAttributeTypeValidator> list)
@@ -38,18 +68,18 @@ public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeVa
         m_list = IAttributeTypeValidator.repair(list);
     }
 
-    protected final boolean getMust()
+    protected boolean getMust()
     {
         return m_must;
     }
 
-    protected final List<IAttributeTypeValidator> getList()
+    protected List<IAttributeTypeValidator> getList()
     {
-        return m_list;
+        return CommonOps.toUnmodifiableList(m_list);
     }
 
     @Override
-    public void validate(final IJSONValue jval, final ValidationContext ctx)
+    public boolean validate(final IJSONValue jval, final IMutableValidationContext ctx)
     {
         final List<IAttributeTypeValidator> list = getList();
 
@@ -57,9 +87,9 @@ public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeVa
 
         if (size == 0)
         {
-            ctx.addBadTypeError(getName() + ".isEmpty()");
+            ctx.addTypeValidationError(getName() + ".isEmpty()");
 
-            return;
+            return false;
         }
         final boolean must = getMust();
 
@@ -75,18 +105,20 @@ public abstract class AbstractMultiTypeValidator extends AbstractAttributeTypeVa
             {
                 if ((false == must) || (i == (size - 1)))
                 {
-                    return;
+                    return true;
                 }
             }
             else if (must)
             {
-                tmp.getErrors().forEach(e -> ctx.addError(e));
+                tmp.getErrors().forEach(e -> ctx.addValidationError(e));
 
-                ctx.addBadTypeError(getName());
+                ctx.addTypeValidationError(getName());
 
-                return;
+                return false;
             }
         }
-        ctx.addBadTypeError(getName());
+        ctx.addTypeValidationError(getName());
+
+        return false;
     }
 }

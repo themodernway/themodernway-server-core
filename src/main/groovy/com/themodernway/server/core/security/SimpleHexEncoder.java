@@ -19,8 +19,6 @@ package com.themodernway.server.core.security;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
-import com.themodernway.common.api.java.util.CommonOps;
-
 public class SimpleHexEncoder implements IHexEncoder
 {
     private static final SimpleHexEncoder INSTANCE = new SimpleHexEncoder();
@@ -33,7 +31,7 @@ public class SimpleHexEncoder implements IHexEncoder
     @Override
     public String encode(final byte[] src)
     {
-        return Hex.encodeHexString(CommonOps.requireNonNull(src));
+        return Hex.encodeHexString(src);
     }
 
     @Override
@@ -41,7 +39,7 @@ public class SimpleHexEncoder implements IHexEncoder
     {
         try
         {
-            return Hex.decodeHex(CommonOps.requireNonNull(src));
+            return Hex.decodeHex(src);
         }
         catch (final DecoderException e)
         {

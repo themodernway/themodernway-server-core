@@ -22,17 +22,20 @@ public class IntegerPredicateValidator extends AbstractPredicateAttributeTypeVal
 {
     public IntegerPredicateValidator(final Predicate<Integer> pred)
     {
-        super("IntegerPredicate", pred);
+        super(Integer.class, pred);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         Integer valu;
 
         if ((null == json) || (null == (valu = json.getAsInteger())) || (false == test(valu)))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

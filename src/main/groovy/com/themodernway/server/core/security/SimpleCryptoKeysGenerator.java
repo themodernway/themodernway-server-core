@@ -18,26 +18,19 @@ package com.themodernway.server.core.security;
 
 import java.security.MessageDigest;
 
+import com.themodernway.common.api.hash.IHasher;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.security.tools.Digests;
 import com.themodernway.server.core.security.tools.Hashing;
-import com.themodernway.server.core.security.tools.ICheckSum;
 import com.themodernway.server.core.security.tools.Randoms.Secure;
 
 public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 {
-    private static final ICheckSum                 CRC_HASH = Hashing.crc32();
-
     private static final SimpleCryptoKeysGenerator INSTANCE = new SimpleCryptoKeysGenerator();
 
     public static final SimpleCryptoKeysGenerator getCryptoKeysGenerator()
     {
         return INSTANCE;
-    }
-
-    public SimpleCryptoKeysGenerator()
-    {
-        // empty by design.
     }
 
     @Override
@@ -49,7 +42,7 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
         {
             builder.append(Secure.getString(8)).append(StringOps.MINUS_STRING);
         }
-        return builder.append(CRC_HASH.tohex(builder.toString())).toString();
+        return builder.append(Hashing.crc32().tohex(builder.toString())).toString();
     }
 
     @Override
@@ -59,7 +52,7 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
 
         byte[] bytes = Secure.nextBytes(64);
 
-        for (int i = 0; i < 20000; i++)
+        for (int i = 0; i < IHasher.SHA512_ITERATIONS; i++)
         {
             bytes = md.digest(bytes);
 
@@ -69,14 +62,16 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
     }
 
     @Override
-    public boolean isPassValid(final String pass)
+    public boolean isPassValid(final CharSequence pass)
     {
-        final int last = pass.lastIndexOf(StringOps.MINUS_STRING);
+        final String text = pass.toString();
+
+        final int last = text.lastIndexOf(StringOps.MINUS_STRING);
 
         if (last <= 0)
         {
             return false;
         }
-        return pass.endsWith(CRC_HASH.tohex(pass.substring(0, last + 1)));
+        return text.endsWith(Hashing.crc32().tohex(text.substring(0, last + 1)));
     }
 }

@@ -20,15 +20,18 @@ public class LongValidator extends AbstractAttributeTypeValidator
 {
     public LongValidator()
     {
-        super("Long");
+        super(Long.class);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         if ((null == json) || (null == json.getAsLong()))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

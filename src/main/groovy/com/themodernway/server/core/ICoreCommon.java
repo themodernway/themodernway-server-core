@@ -11,35 +11,30 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. ThreadLocal.withInitial(supplier);
+ * limitations under the License.
  */
 
 package com.themodernway.server.core;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-
-import org.slf4j.Logger;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.common.api.types.TaggingValues;
+import com.themodernway.server.core.annotation.Annotations;
 import com.themodernway.server.core.limiting.IRateLimited.RateLimiterFactory;
-import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.support.spring.IPropertiesResolver;
 import com.themodernway.server.core.support.spring.IServerContext;
 import com.themodernway.server.core.support.spring.ServerContextInstance;
 
-public interface ICoreCommon extends ICoreBase, IPropertiesResolver, IHasLogging
+public interface ICoreCommon extends ICoreBase, IPropertiesResolver
 {
     public static List<String> toTaggingValues(final Object target)
     {
-        if (null == target)
-        {
-            return CommonOps.emptyList();
-        }
-        final TaggingValues tagging = target.getClass().getAnnotation(TaggingValues.class);
+        final TaggingValues tagging = Annotations.getAnnotation(target, TaggingValues.class);
 
         if (null == tagging)
         {
@@ -63,10 +58,9 @@ public interface ICoreCommon extends ICoreBase, IPropertiesResolver, IHasLogging
         return RateLimiterFactory.create(claz);
     }
 
-    @Override
-    default Logger logger()
+    default RateLimiter limiter(final double rate, final long warm, final TimeUnit unit)
     {
-        return getServerContext().logger();
+        return RateLimiterFactory.create(rate, warm, unit);
     }
 
     default String getOriginalBeanName(final String name)

@@ -20,15 +20,18 @@ public class IntegerValidator extends AbstractAttributeTypeValidator
 {
     public IntegerValidator()
     {
-        super("Integer");
+        super(Integer.class);
     }
 
     @Override
-    public void validate(final IJSONValue json, final ValidationContext ctx)
+    public boolean validate(final IJSONValue json, final IMutableValidationContext ctx)
     {
         if ((null == json) || (null == json.getAsInteger()))
         {
-            ctx.addBadTypeError(getName());
+            ctx.addTypeValidationError(getClassSimpleName());
+
+            return false;
         }
+        return true;
     }
 }

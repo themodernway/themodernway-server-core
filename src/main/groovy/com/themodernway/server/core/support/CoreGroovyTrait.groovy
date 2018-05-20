@@ -34,9 +34,11 @@ import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.common.api.java.util.StringOps
 import com.themodernway.common.api.types.ICursor
 import com.themodernway.common.api.types.IFixedIterable
+import com.themodernway.server.core.NanoTimer
 import com.themodernway.server.core.content.ICoreContentTypeMapper
 import com.themodernway.server.core.file.vfs.IFileItemStorage
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
+import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.support.JSONTrait
 import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
@@ -108,6 +110,12 @@ public trait CoreGroovyTrait implements CoreGroovyOpsTrait, JSONTrait
     }
 
     @Memoized
+    public JSONObject getBuildDescriptors()
+    {
+        getBuildDescriptorProvider().toJSONObject()
+    }
+
+    @Memoized
     public IFileItemStorageProvider getFileItemStorageProvider()
     {
         getServerContext().getFileItemStorageProvider()
@@ -160,6 +168,11 @@ public trait CoreGroovyTrait implements CoreGroovyOpsTrait, JSONTrait
         getServerContext().getCryptoProvider()
     }
 
+    public NanoTimer nstimer()
+    {
+        new NanoTimer()
+    }
+
     @Memoized
     public ICoreNetworkProvider network()
     {
@@ -170,12 +183,6 @@ public trait CoreGroovyTrait implements CoreGroovyOpsTrait, JSONTrait
     public ICoreContentTypeMapper getContentTypeMapper()
     {
         getServerContext().getContentTypeMapper()
-    }
-
-    @Memoized
-    public ICoreContentTypeMapper getContentTypeMapper(String name)
-    {
-        getServerContext().getContentTypeMapper(name)
     }
 
     public PathParameters parameters(Map<String, ?> vars)

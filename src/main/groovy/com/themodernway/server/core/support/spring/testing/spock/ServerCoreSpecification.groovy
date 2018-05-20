@@ -19,7 +19,6 @@ package com.themodernway.server.core.support.spring.testing.spock
 import org.slf4j.Logger
 
 import com.themodernway.common.api.types.json.JSONStringify
-import com.themodernway.server.core.json.JSONObjectSupplier
 import com.themodernway.server.core.logging.LoggingOps
 import com.themodernway.server.core.support.spring.testing.IServerCoreTesting
 
@@ -29,9 +28,9 @@ import spock.lang.Specification
 @CompileStatic
 public abstract class ServerCoreSpecification extends Specification implements IServerCoreTesting
 {
-    private Logger                  m_logger
+    private Logger      m_logger    = LoggingOps.getLogger(getClass())
 
-    private boolean                 m_logging = true
+    private boolean     m_logging   = true
 
     public static final void setupServerCoreDefault(final Class type, final String... locations) throws Exception
     {
@@ -52,10 +51,6 @@ public abstract class ServerCoreSpecification extends Specification implements I
 
     def Logger logger()
     {
-        if (null == m_logger)
-        {
-            m_logger = LoggingOps.getLogger(getClass())
-        }
         m_logger
     }
 
@@ -81,18 +76,6 @@ public abstract class ServerCoreSpecification extends Specification implements I
         }
     }
 
-    def echo(JSONObjectSupplier o)
-    {
-        if (m_logging)
-        {
-            logger().info("" + o?.toJSONObject()?.toJSONString())
-        }
-        else
-        {
-            println("" + o?.toJSONObject()?.toJSONString())
-        }
-    }
-
     def echo(def o)
     {
         if (m_logging)
@@ -114,18 +97,6 @@ public abstract class ServerCoreSpecification extends Specification implements I
         else
         {
             System.err.println("" + o?.toJSONString())
-        }
-    }
-
-    def oops(JSONObjectSupplier o)
-    {
-        if (m_logging)
-        {
-            logger().error("" + o?.toJSONObject()?.toJSONString())
-        }
-        else
-        {
-            System.err.println("" + o?.toJSONObject()?.toJSONString())
         }
     }
 

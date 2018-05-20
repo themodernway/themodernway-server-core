@@ -86,8 +86,6 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
 
     public ICoreContentTypeMapper getContentTypeMapper();
 
-    public ICoreContentTypeMapper getContentTypeMapper(String name);
-
     public PathParameters parameters(Map<String, ?> vars);
 
     public String uuid();

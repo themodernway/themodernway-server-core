@@ -11,7 +11,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. ThreadLocal.withInitial(supplier);
+ * limitations under the License.
  */
 
 package com.themodernway.server.core;
@@ -30,7 +30,7 @@ import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, BeanNameAware, DisposableBean, ICloseable, INamed, IHasLogging
+public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAware, BeanNameAware, DisposableBean, ICloseable, INamed, IHasLogging, IClassHolder
 {
     @Override
     default void close() throws IOException
@@ -74,6 +74,4 @@ public interface IBeanFactoryProvider<T extends Closeable> extends BeanFactoryAw
     public T getItem(String name);
 
     public boolean isDefined(String name);
-
-    public Class<T> getClassOf();
 }

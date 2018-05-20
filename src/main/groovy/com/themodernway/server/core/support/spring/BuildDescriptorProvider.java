@@ -129,4 +129,10 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
             logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "close().");
         }
     }
+
+    @Override
+    public String toJSONString()
+    {
+        return toJSONObject().toJSONString();
+    }
 }
