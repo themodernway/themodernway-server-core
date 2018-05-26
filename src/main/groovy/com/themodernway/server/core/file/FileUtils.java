@@ -24,7 +24,7 @@ import org.apache.commons.io.FilenameUtils;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
 
-public final class FileAndPathUtils
+public final class FileUtils
 {
     public static final char    SINGLE_PREFIX_CHAR   = '~';
 
@@ -64,7 +64,7 @@ public final class FileAndPathUtils
 
     public static final Pattern DOUBLE_SLASH_PATTERN = Pattern.compile(DOUBLE_SLASH);
 
-    private FileAndPathUtils()
+    private FileUtils()
     {
     }
 

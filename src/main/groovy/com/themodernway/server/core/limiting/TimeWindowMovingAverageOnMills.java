@@ -24,6 +24,6 @@ public class TimeWindowMovingAverageOnMills extends BaseTimeWindowMovingAverage
 {
     public TimeWindowMovingAverageOnMills(final long window, final TimeUnit unit)
     {
-        super(TimeUnit.MILLISECONDS, window, CommonOps.requireNonNull(unit), System::currentTimeMillis);
+        super(TimeUnit.MILLISECONDS, window, CommonOps.requireNonNull(unit), CommonOps::getCurrentClock);
     }
 }

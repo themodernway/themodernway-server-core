@@ -16,18 +16,11 @@
 
 package com.themodernway.server.core.json;
 
+import java.util.Collection;
+
+import com.themodernway.common.api.types.IBuilder;
+
 @FunctionalInterface
-public interface JSONObjectSupplier
+public interface JSONObjectSuppliersBuilder extends IBuilder<Collection<? extends JSONObjectSupplier>>
 {
-    public JSONObject toJSONObject();
-
-    default JSONObject getAsObject(final String name)
-    {
-        return toJSONObject().getAsObject(name);
-    }
-
-    default JSONArray getAsArray(final String name)
-    {
-        return toJSONObject().getAsArray(name);
-    }
 }

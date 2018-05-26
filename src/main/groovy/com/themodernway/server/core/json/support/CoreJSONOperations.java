@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.json.JSONObjectSuppliersBuilder;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.json.binder.JSONBinder;
 import com.themodernway.server.core.json.path.IJSONPathOperations;
@@ -51,7 +52,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     }
 
     @Override
-    public IJSONPathOperations jsonpath()
+    public final IJSONPathOperations jsonpath()
     {
         return new JSONPathOperations();
     }
@@ -163,7 +164,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     }
 
     @Override
-    public JSONArray jarr(final Stream<?> stream)
+    public final JSONArray jarr(final Stream<?> stream)
     {
         return jarr(CommonOps.toList(stream));
     }
@@ -219,7 +220,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     }
 
     @Override
-    public JSONObject json(final Stream<?> stream)
+    public final JSONObject json(final Stream<?> stream)
     {
         return json(CommonOps.toList(stream));
     }
@@ -284,14 +285,26 @@ public class CoreJSONOperations implements ICoreJSONOperations
     }
 
     @Override
-    public JSONArray jarr(final Object... objects)
+    public final JSONArray jarr(final Object... objects)
     {
         return jarr(CommonOps.toList(objects));
     }
 
     @Override
-    public JSONObject json(final Object... objects)
+    public final JSONObject json(final Object... objects)
     {
         return json(jarr(objects));
+    }
+
+    @Override
+    public final JSONArray jarr(final JSONObjectSuppliersBuilder builder)
+    {
+        return new JSONArray(CommonOps.requireNonNull(builder));
+    }
+
+    @Override
+    public final JSONObject json(final JSONObjectSuppliersBuilder builder)
+    {
+        return new JSONObject(CommonOps.requireNonNull(builder));
     }
 }

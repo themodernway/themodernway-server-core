@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.server.core.CoreThrowables;
 import com.themodernway.server.core.ITimeSupplier;
 
 public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
@@ -191,7 +192,7 @@ public class BaseTimeWindowMovingAverage implements ITimeWindowMovingAverage
                             }
                             catch (final Exception e)
                             {
-                                // do nothing, still loop
+                                CoreThrowables.handle(e);
                             }
                         }
                     }

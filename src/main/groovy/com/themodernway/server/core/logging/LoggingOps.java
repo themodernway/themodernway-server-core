@@ -167,14 +167,16 @@ public final class LoggingOps
         classic(Logger.ROOT_LOGGER_NAME).setLevel(level);
     }
 
-    public static final void setLevel(final Logger logger, final Level level)
+    public static final Logger setLevel(final Logger logger, final Level level)
     {
         classic(logger.getName()).setLevel(level);
+
+        return logger;
     }
 
-    public static final void setLevel(final Logger logger, final String level)
+    public static final Logger setLevel(final Logger logger, final String level)
     {
-        setLevel(logger, Level.toLevel(level, Level.INFO));
+        return setLevel(logger, Level.toLevel(level, Level.INFO));
     }
 
     public static final LoggerContext context()

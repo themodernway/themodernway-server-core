@@ -16,7 +16,6 @@
 
 package com.themodernway.server.core.file.vfs;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
@@ -80,7 +79,7 @@ public enum ItemsOptions implements IStringValued
         {
             return EnumSet.noneOf(ItemsOptions.class);
         }
-        final ArrayList<ItemsOptions> list = new ArrayList<>();
+        final List<ItemsOptions> list = CommonOps.arrayList();
 
         for (final String option : options)
         {

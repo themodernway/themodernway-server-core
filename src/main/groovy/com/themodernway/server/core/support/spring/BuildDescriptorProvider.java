@@ -20,23 +20,20 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
+import com.themodernway.server.core.AbstractCoreLoggingBase;
 import com.themodernway.server.core.ICoreBase;
 import com.themodernway.server.core.json.JSONObject;
 import com.themodernway.server.core.json.JSONUtils;
-import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFactoryAware, ICoreBase, IHasLogging
+public class BuildDescriptorProvider extends AbstractCoreLoggingBase implements IBuildDescriptorProvider, BeanFactoryAware, ICoreBase
 {
-    private final Logger                                  m_logging = LoggingOps.getLogger(getClass());
-
     private final LinkedHashMap<String, IBuildDescriptor> m_storage = linkedMap();
 
     @Value("${core.server.build.descriptor.list.name:descriptors}")
@@ -101,12 +98,6 @@ public class BuildDescriptorProvider implements IBuildDescriptorProvider, BeanFa
     public JSONObject toJSONObject()
     {
         return new JSONObject(toTrimOrElse(m_oflist, JSONUtils.JSON_OBJECT_DEFAULT_ARRAY_NAME), m_storage.values());
-    }
-
-    @Override
-    public Logger logger()
-    {
-        return m_logging;
     }
 
     @Override

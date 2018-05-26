@@ -21,15 +21,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import com.themodernway.server.core.io.IO;
+import com.themodernway.server.core.logging.IHasLogging;
+import com.themodernway.server.core.logging.LoggingOps;
 
-public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
+public class CoreMailSender extends JavaMailSenderImpl implements IMailSender, IHasLogging
 {
-    private CoreSimpleMailMessage  m_template;
+    private CoreSimpleMailMessage m_message;
+
+    private final Logger          m_logging = LoggingOps.getLogger(getClass());
 
     public CoreMailSender()
     {
@@ -48,13 +53,13 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
     @Override
     public CoreSimpleMailMessage getTemplateMailMessage()
     {
-        return m_template;
+        return m_message;
     }
 
     @Override
     public void setTemplateMailMessage(final CoreSimpleMailMessage template)
     {
-        m_template = template;
+        m_message = template;
     }
 
     @Override
@@ -76,27 +81,36 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
     @Override
     public void close() throws IOException
     {
-        // empty by design.
+        if (logger().isInfoEnabled())
+        {
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "close().");
+        }
+    }
+
+    @Override
+    public Logger logger()
+    {
+        return m_logging;
     }
 
     protected static class SimpleMailMessageBuilderDefault implements ISimpleMailMessageBuilder
     {
-        private final CoreSimpleMailMessage m_mess;
+        private final CoreSimpleMailMessage m_message;
 
         public SimpleMailMessageBuilderDefault(final IMailSender sender)
         {
-            m_mess = new CoreSimpleMailMessage(sender);
+            m_message = new CoreSimpleMailMessage(sender);
         }
 
         public SimpleMailMessageBuilderDefault(final SimpleMailMessage original, final IMailSender sender)
         {
-            m_mess = new CoreSimpleMailMessage(original, sender);
+            m_message = new CoreSimpleMailMessage(original, sender);
         }
 
         @Override
         public ISimpleMailMessageBuilder to(final List<String> list)
         {
-            m_mess.setMailToList(list);
+            m_message.setMailToList(list);
 
             return this;
         }
@@ -104,7 +118,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
         @Override
         public ISimpleMailMessageBuilder cc(final List<String> list)
         {
-            m_mess.setMailCcList(list);
+            m_message.setMailCcList(list);
 
             return this;
         }
@@ -112,7 +126,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
         @Override
         public ISimpleMailMessageBuilder bcc(final List<String> list)
         {
-            m_mess.setMailBccList(list);
+            m_message.setMailBccList(list);
 
             return this;
         }
@@ -120,7 +134,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
         @Override
         public ISimpleMailMessageBuilder date(final Date valu)
         {
-            m_mess.setSentDate(valu);
+            m_message.setSentDate(valu);
 
             return this;
         }
@@ -128,7 +142,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
         @Override
         public ISimpleMailMessageBuilder from(final String valu)
         {
-            m_mess.setFrom(valu);
+            m_message.setFrom(valu);
 
             return this;
         }
@@ -136,7 +150,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
         @Override
         public ISimpleMailMessageBuilder text(final String valu)
         {
-            m_mess.setText(valu);
+            m_message.setText(valu);
 
             return this;
         }
@@ -144,7 +158,7 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
         @Override
         public ISimpleMailMessageBuilder reply(final String valu)
         {
-            m_mess.setReplyTo(valu);
+            m_message.setReplyTo(valu);
 
             return this;
         }
@@ -152,15 +166,15 @@ public class CoreMailSender extends JavaMailSenderImpl implements IMailSender
         @Override
         public ISimpleMailMessageBuilder subject(final String valu)
         {
-            m_mess.setSubject(valu);
+            m_message.setSubject(valu);
 
             return this;
         }
 
         @Override
-        public CoreSimpleMailMessage make()
+        public CoreSimpleMailMessage build()
         {
-            return m_mess;
+            return m_message;
         }
     }
 }

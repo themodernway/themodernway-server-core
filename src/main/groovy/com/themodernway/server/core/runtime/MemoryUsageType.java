@@ -14,20 +14,30 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.runtime;
 
-@FunctionalInterface
-public interface JSONObjectSupplier
+import com.themodernway.common.api.types.IStringValued;
+
+public enum MemoryUsageType implements IStringValued
 {
-    public JSONObject toJSONObject();
+    HEAP("HEAP"), OTHER("OTHER");
 
-    default JSONObject getAsObject(final String name)
+    private final String m_value;
+
+    private MemoryUsageType(final String value)
     {
-        return toJSONObject().getAsObject(name);
+        m_value = value;
     }
 
-    default JSONArray getAsArray(final String name)
+    @Override
+    public final String getValue()
     {
-        return toJSONObject().getAsArray(name);
+        return m_value;
+    }
+
+    @Override
+    public final String toString()
+    {
+        return getValue();
     }
 }

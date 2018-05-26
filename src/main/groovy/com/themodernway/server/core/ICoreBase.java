@@ -43,9 +43,19 @@ import com.themodernway.common.api.types.IFixedIterable;
 
 public interface ICoreBase
 {
+    default <T> T NULL()
+    {
+        return CommonOps.NULL();
+    }
+
     default <T> T CAST(final Object value)
     {
         return CommonOps.CAST(value);
+    }
+
+    default <T> T SAFE(final Object valu, final Class<T> type)
+    {
+        return CommonOps.SAFE(valu, type);
     }
 
     default boolean isNull(final Object value)
@@ -113,6 +123,42 @@ public interface ICoreBase
         return CommonOps.toOptional(value);
     }
 
+    default Predicate<String> isStringInListTest(final String... list)
+    {
+        return StringOps.isStringInListTest(list);
+    }
+
+    default Predicate<String> isStringInListTest(final List<String> list)
+    {
+        return StringOps.isStringInListTest(list);
+    }
+
+    default Predicate<String> isStringInListTest(final Stream<String> stream)
+    {
+        return StringOps.isStringInListTest(stream);
+    }
+
+    default Predicate<String> isStringInListContainsTest(final String... list)
+    {
+        return StringOps.isStringInListContainsTest(list);
+    }
+
+    default Predicate<String> isStringInListContainsTest(final List<String> list)
+    {
+        return StringOps.isStringInListContainsTest(list);
+    }
+
+    default Predicate<String> isStringInListContainsTest(final Stream<String> stream)
+    {
+        return StringOps.isStringInListContainsTest(stream);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T> Set<T> toSet(final T... source)
+    {
+        return CommonOps.toSet(source);
+    }
+
     @SuppressWarnings("unchecked")
     default <T> List<T> toList(final T... source)
     {
@@ -157,6 +203,11 @@ public interface ICoreBase
     default <T> List<T> emptyList()
     {
         return CommonOps.emptyList();
+    }
+
+    default <T> Enumeration<T> emptyEnumeration()
+    {
+        return CommonOps.emptyEnumeration();
     }
 
     default <K, V> Map<K, V> emptyMap()
@@ -602,5 +653,15 @@ public interface ICoreBase
             return toList(toUnique(list.stream().filter(o -> o instanceof CharSequence).map(o -> toTrimOrNull(o.toString()))));
         }
         return emptyList();
+    }
+
+    default long getCurrentClock()
+    {
+        return CommonOps.getCurrentClock();
+    }
+
+    default long getCurrentNanos()
+    {
+        return CommonOps.getCurrentNanos();
     }
 }

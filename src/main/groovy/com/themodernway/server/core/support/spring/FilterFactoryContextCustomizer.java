@@ -25,18 +25,16 @@ import javax.servlet.Filter;
 import javax.servlet.FilterRegistration.Dynamic;
 import javax.servlet.ServletContext;
 
-import org.slf4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.server.core.AbstractCoreLoggingBase;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public class FilterFactoryContextCustomizer implements IServletContextCustomizer, ICoreCommon
+public class FilterFactoryContextCustomizer extends AbstractCoreLoggingBase implements IServletContextCustomizer, ICoreCommon
 {
-    private final Logger   m_logs = LoggingOps.getLogger(getClass());
-
     private final String   m_name;
 
     private final String[] m_maps;
@@ -62,12 +60,6 @@ public class FilterFactoryContextCustomizer implements IServletContextCustomizer
         m_fact = CommonOps.requireNonNull(fact);
     }
 
-    @Override
-    public Logger logger()
-    {
-        return m_logs;
-    }
-
     public void setMatchAfter(final boolean when)
     {
         m_when = when;
@@ -91,7 +83,10 @@ public class FilterFactoryContextCustomizer implements IServletContextCustomizer
     @Override
     public void close() throws IOException
     {
-        // empty by design.
+        if (logger().isInfoEnabled())
+        {
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "close().");
+        }
     }
 
     @Override

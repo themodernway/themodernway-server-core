@@ -19,11 +19,11 @@ package com.themodernway.server.core.test
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
-public class MailTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
+public class ManagementTestsSpecification extends ServerCoreSpecification implements CoreGroovyTrait
 {
     def setupSpec()
     {
-        setupServerCoreDefault(MailTestsSpecification,
+        setupServerCoreDefault(ManagementTestsSpecification,
                 "classpath:/com/themodernway/server/core/test/ApplicationContext.xml",
                 "classpath:/com/themodernway/server/core/config/CoreApplicationContext.xml"
                 )
@@ -34,16 +34,13 @@ public class MailTestsSpecification extends ServerCoreSpecification implements C
         closeServerCoreDefault()
     }
 
-    def "test mail sender"()
+    def "test 1"()
     {
         setup:
-        def mess = getMailSender("GoogleMailSender").builder().to(['deansjones@icloud.com']).from('deansjones@gmail.com').subject('Testing Mail Sender ' + uuid()).text("Test\n1\n2\n3\n\n\nDean S. Jones").reply('deansjones@gmail.com').build()
-        mess.send()
+        def valu = getManagementOperations()
+        echo valu
 
         expect:
         "dean" == "dean"
-
-        cleanup:
-        echo mess
     }
 }

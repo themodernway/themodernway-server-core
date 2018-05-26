@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 
 import com.themodernway.server.core.json.JSONArray;
 import com.themodernway.server.core.json.JSONObject;
+import com.themodernway.server.core.json.JSONObjectSuppliersBuilder;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.json.path.IJSONPathOperations;
 
@@ -56,6 +57,8 @@ public interface ICoreJSONOperations
 
     public JSONArray jarr(String name, Object value);
 
+    public JSONArray jarr(JSONObjectSuppliersBuilder builder);
+
     public JSONObject json();
 
     public JSONObject json(JSONObject object);
@@ -77,4 +80,6 @@ public interface ICoreJSONOperations
     public JSONObject json(Stream<?> stream);
 
     public JSONObject json(String name, Object value);
+
+    public JSONObject json(JSONObjectSuppliersBuilder builder);
 }

@@ -21,16 +21,12 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-
-import com.themodernway.server.core.logging.IHasLogging;
+import com.themodernway.server.core.AbstractCoreLoggingBase;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public class CoreServletResponseErrorCodeManager implements IServletResponseErrorCodeManager, IHasLogging
+public class CoreServletResponseErrorCodeManager extends AbstractCoreLoggingBase implements IServletResponseErrorCodeManager
 {
     private static final long                            serialVersionUID = 1L;
-
-    private static final Logger                          LOGGING          = LoggingOps.getLogger(CoreServletResponseErrorCodeManager.class);
 
     public static final IServletResponseErrorCodeManager DEFAULT          = new CoreServletResponseErrorCodeManager();
 
@@ -92,11 +88,5 @@ public class CoreServletResponseErrorCodeManager implements IServletResponseErro
         debug(code, mess, debg);
 
         response.setStatus(code);
-    }
-
-    @Override
-    public Logger logger()
-    {
-        return LOGGING;
     }
 }

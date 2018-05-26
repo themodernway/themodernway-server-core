@@ -34,7 +34,7 @@ public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSim
 
     public CoreSimpleMailMessage()
     {
-        m_send = null;
+        m_send = CommonOps.NULL();
     }
 
     public CoreSimpleMailMessage(final IMailSender send)
@@ -46,7 +46,7 @@ public class CoreSimpleMailMessage extends SimpleMailMessage implements ICoreSim
     {
         super(CommonOps.requireNonNull(original));
 
-        m_send = null;
+        m_send = CommonOps.NULL();
     }
 
     public CoreSimpleMailMessage(final SimpleMailMessage original, final IMailSender send)

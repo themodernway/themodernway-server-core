@@ -25,20 +25,17 @@ import javax.activation.FileTypeMap;
 import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.server.core.logging.IHasLogging;
+import com.themodernway.server.core.AbstractCoreLoggingBase;
 import com.themodernway.server.core.logging.LoggingOps;
 
 @NotThreadSafe
-public class CoreContentTypeMapper implements ICoreContentTypeMapper, InitializingBean, IHasLogging
+public class CoreContentTypeMapper  extends AbstractCoreLoggingBase implements ICoreContentTypeMapper, InitializingBean
 {
-    private final Logger         m_logs = LoggingOps.getLogger(getClass());
-
     private String[]             m_type = CommonOps.NULL();
 
     private MimetypesFileTypeMap m_maps = CommonOps.NULL();
@@ -133,11 +130,5 @@ public class CoreContentTypeMapper implements ICoreContentTypeMapper, Initializi
     public void afterPropertiesSet() throws Exception
     {
         getFileTypeMap();
-    }
-
-    @Override
-    public Logger logger()
-    {
-        return m_logs;
     }
 }

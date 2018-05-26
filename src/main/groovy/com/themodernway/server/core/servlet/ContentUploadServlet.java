@@ -30,7 +30,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.server.core.file.FileAndPathUtils;
+import com.themodernway.server.core.file.FileUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 import com.themodernway.server.core.logging.LoggingOps;
@@ -75,7 +75,7 @@ public class ContentUploadServlet extends AbstractContentServlet
 
                 return;
             }
-            final String path = getPathNormalized(toTrimOrElse(request.getPathInfo(), FileAndPathUtils.SINGLE_SLASH));
+            final String path = getPathNormalized(toTrimOrElse(request.getPathInfo(), FileUtils.SINGLE_SLASH));
 
             if (null == path)
             {
@@ -109,7 +109,7 @@ public class ContentUploadServlet extends AbstractContentServlet
 
                         return;
                     }
-                    final IFileItem file = fold.file(FileAndPathUtils.concat(path, item.getName()));
+                    final IFileItem file = fold.file(FileUtils.concat(path, item.getName()));
 
                     if (null != file)
                     {

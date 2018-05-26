@@ -18,17 +18,13 @@ package com.themodernway.server.core.servlet.filter;
 
 import javax.servlet.FilterConfig;
 
-import org.slf4j.Logger;
+import com.themodernway.server.core.AbstractCoreLoggingBase;
 
-import com.themodernway.server.core.logging.LoggingOps;
-
-public abstract class HTTPFilterBase implements IHTTPFilter
+public abstract class HTTPFilterBase extends AbstractCoreLoggingBase implements IHTTPFilter
 {
     private boolean      m_isonceper = false;
 
     private FilterConfig m_config    = null;
-
-    private final Logger m_logger    = LoggingOps.getLogger(getClass());
 
     protected HTTPFilterBase()
     {
@@ -43,12 +39,6 @@ public abstract class HTTPFilterBase implements IHTTPFilter
     public boolean isOncePerRequest()
     {
         return m_isonceper;
-    }
-
-    @Override
-    public Logger logger()
-    {
-        return m_logger;
     }
 
     @Override

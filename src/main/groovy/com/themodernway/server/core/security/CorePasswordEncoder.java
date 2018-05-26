@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.themodernway.common.api.hash.IHasher;
 import com.themodernway.common.api.java.util.CommonOps;
-import com.themodernway.server.core.security.tools.Hashing;
+import com.themodernway.server.core.security.tools.CheckSums;
 import com.themodernway.server.core.security.tools.ICheckSum;
 
 public class CorePasswordEncoder implements PasswordEncoder
@@ -40,7 +40,7 @@ public class CorePasswordEncoder implements PasswordEncoder
     {
         m_iters = iters;
 
-        m_crc32 = Hashing.crc32();
+        m_crc32 = CheckSums.crc32();
 
         m_crypt = CommonOps.requireNonNull(crypt, "CryptoProvider was null.");
     }

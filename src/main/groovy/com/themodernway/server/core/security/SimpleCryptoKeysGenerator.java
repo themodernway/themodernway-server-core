@@ -21,7 +21,7 @@ import java.security.MessageDigest;
 import com.themodernway.common.api.hash.IHasher;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.security.tools.Digests;
-import com.themodernway.server.core.security.tools.Hashing;
+import com.themodernway.server.core.security.tools.CheckSums;
 import com.themodernway.server.core.security.tools.Randoms.Secure;
 
 public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
@@ -38,11 +38,11 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
     {
         final StringBuilder builder = new StringBuilder();
 
-        for (int i = 0; i < 11; i++)
+        for (int i = 0; i < 16; i++)
         {
             builder.append(Secure.getString(8)).append(StringOps.MINUS_STRING);
         }
-        return builder.append(Hashing.crc32().tohex(builder.toString())).toString();
+        return builder.append(CheckSums.crc32().tohex(builder.toString())).toString();
     }
 
     @Override
@@ -72,6 +72,6 @@ public class SimpleCryptoKeysGenerator implements ICryptoKeysGenerator
         {
             return false;
         }
-        return text.endsWith(Hashing.crc32().tohex(text.substring(0, last + 1)));
+        return text.endsWith(CheckSums.crc32().tohex(text.substring(0, last + 1)));
     }
 }

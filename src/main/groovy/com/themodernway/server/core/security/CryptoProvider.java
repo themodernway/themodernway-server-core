@@ -19,8 +19,10 @@ package com.themodernway.server.core.security;
 import java.io.IOException;
 
 import com.themodernway.common.api.java.util.CommonOps;
+import com.themodernway.server.core.AbstractCoreLoggingBase;
+import com.themodernway.server.core.logging.LoggingOps;
 
-public final class CryptoProvider implements ICryptoProvider
+public final class CryptoProvider extends AbstractCoreLoggingBase implements ICryptoProvider
 {
     private final AESStringCryptoProvider   m_pcrypt;
 
@@ -115,6 +117,9 @@ public final class CryptoProvider implements ICryptoProvider
     @Override
     public final void close() throws IOException
     {
-        // empty by design.
+        if (logger().isInfoEnabled())
+        {
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "close().");
+        }
     }
 }

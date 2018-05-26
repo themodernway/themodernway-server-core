@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.runtime;
 
-@FunctionalInterface
-public interface JSONObjectSupplier
+import com.themodernway.common.api.java.util.StringOps;
+import com.themodernway.common.api.types.json.JSONStringify;
+import com.themodernway.server.core.json.JSONObjectSupplier;
+
+public interface IRuntimeStatistics extends JSONObjectSupplier, JSONStringify
 {
-    public JSONObject toJSONObject();
+    public static final String UNKNOWN_PROCESS_ID = StringOps.repeat("?", 4);
 
-    default JSONObject getAsObject(final String name)
-    {
-        return toJSONObject().getAsObject(name);
-    }
+    public String getProcessID();
 
-    default JSONArray getAsArray(final String name)
-    {
-        return toJSONObject().getAsArray(name);
-    }
+    public Long getStartedTime();
+
+    public Long getElapsedTime();
 }

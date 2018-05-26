@@ -17,7 +17,6 @@
 package com.themodernway.server.core.json;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +34,7 @@ import com.themodernway.server.core.json.path.IJSONPathEnabled;
 import com.themodernway.server.core.json.path.JSONPath;
 
 @JacksonXmlRootElement(localName = JSONUtils.JSON_OBJECT_DEFAULT_ARRAY_NAME)
-public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, JSONObjectSupplier, JSONStreamAware, IJSONPathEnabled
+public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, JSONObjectSupplier, IJSONPathEnabled
 {
     private static final long serialVersionUID = 928145403133304801L;
 
@@ -68,12 +67,9 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
         append(source);
     }
 
-    public JSONArray(final Collection<? extends JSONObjectSupplier> source)
+    public JSONArray(final JSONObjectSuppliersBuilder source)
     {
-        for (final JSONObjectSupplier supp : source)
-        {
-            add(supp.toJSONObject());
-        }
+        source.build().forEach(supp -> add(supp.toJSONObject()));
     }
 
     public JSONArray append(final List<?> source)

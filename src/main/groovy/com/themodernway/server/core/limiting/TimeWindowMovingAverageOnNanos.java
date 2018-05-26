@@ -24,6 +24,6 @@ public class TimeWindowMovingAverageOnNanos extends BaseTimeWindowMovingAverage
 {
     public TimeWindowMovingAverageOnNanos(final long window, final TimeUnit unit)
     {
-        super(TimeUnit.NANOSECONDS, window, CommonOps.requireNonNull(unit), System::nanoTime);
+        super(TimeUnit.NANOSECONDS, window, CommonOps.requireNonNull(unit), CommonOps::getCurrentNanos);
     }
 }

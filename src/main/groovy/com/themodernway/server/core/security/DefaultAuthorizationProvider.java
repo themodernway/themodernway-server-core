@@ -19,16 +19,13 @@ package com.themodernway.server.core.security;
 import java.io.IOException;
 import java.util.List;
 
-import org.slf4j.Logger;
-
+import com.themodernway.server.core.AbstractCoreLoggingBase;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICoreCommon, IHasLogging
+public class DefaultAuthorizationProvider extends AbstractCoreLoggingBase implements IAuthorizationProvider, ICoreCommon, IHasLogging
 {
-    private final Logger m_logger = LoggingOps.getLogger(getClass());
-
     public DefaultAuthorizationProvider()
     {
         if (logger().isInfoEnabled())
@@ -178,12 +175,6 @@ public class DefaultAuthorizationProvider implements IAuthorizationProvider, ICo
             logger().debug(LoggingOps.THE_MODERN_WAY_MARKER, "pass no authorizations matched in roles " + toPrintableString(roles));
         }
         return new AuthorizationResult(true, I_WASVALIDATED, "pass no authorizations matched");
-    }
-
-    @Override
-    public Logger logger()
-    {
-        return m_logger;
     }
 
     @Override

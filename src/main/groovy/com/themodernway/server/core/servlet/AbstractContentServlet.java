@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-import com.themodernway.server.core.file.FileAndPathUtils;
+import com.themodernway.server.core.file.FileUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFileItemAttributes;
 import com.themodernway.server.core.file.vfs.IFileItemStorage;
@@ -46,7 +46,7 @@ public abstract class AbstractContentServlet extends HTTPServletBase
 
     public String getPathNormalized(final String path)
     {
-        return FileAndPathUtils.normalize(path);
+        return FileUtils.normalize(path);
     }
 
     public String getFileItemStorageName()

@@ -42,6 +42,10 @@ import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.support.JSONTrait
 import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
+import com.themodernway.server.core.runtime.IManagementOperations
+import com.themodernway.server.core.runtime.IMemoryStatistics
+import com.themodernway.server.core.runtime.IOperatingSystemStatistics
+import com.themodernway.server.core.runtime.IRuntimeStatistics
 import com.themodernway.server.core.scripting.IScriptingProvider
 import com.themodernway.server.core.security.IAuthorizationProvider
 import com.themodernway.server.core.security.IAuthorizationResult
@@ -89,6 +93,30 @@ public trait CoreGroovyTrait implements CoreGroovyOpsTrait, JSONTrait
     public Environment getEnvironment()
     {
         getServerContext().getEnvironment()
+    }
+
+    @Memoized
+    public IManagementOperations getManagementOperations()
+    {
+        getServerContext().getManagementOperations()
+    }
+
+    @Memoized
+    public IMemoryStatistics getMemoryStatistics()
+    {
+        getManagementOperations().getMemoryStatistics()
+    }
+
+    @Memoized
+    public IRuntimeStatistics getRuntimeStatistics()
+    {
+        getManagementOperations().getRuntimeStatistics()
+    }
+
+    @Memoized
+    public IOperatingSystemStatistics getOperatingSystemStatistics()
+    {
+        getManagementOperations().getOperatingSystemStatistics()
     }
 
     @Memoized

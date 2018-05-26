@@ -25,9 +25,9 @@ import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.security.SimpleHexEncoder;
 
-public final class Hashing
+public final class CheckSums
 {
-    private Hashing()
+    private CheckSums()
     {
     }
 
@@ -45,7 +45,7 @@ public final class Hashing
     {
         private final ICheckSumSupplier m_supp;
 
-        public CheckSumBuilder(final ICheckSumSupplier supp)
+        private CheckSumBuilder(final ICheckSumSupplier supp)
         {
             m_supp = CommonOps.requireNonNull(supp);
         }

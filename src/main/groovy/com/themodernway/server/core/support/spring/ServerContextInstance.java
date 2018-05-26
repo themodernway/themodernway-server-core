@@ -41,6 +41,8 @@ import com.themodernway.server.core.json.support.CoreJSONOperations;
 import com.themodernway.server.core.logging.LoggingOps;
 import com.themodernway.server.core.mail.IMailSender;
 import com.themodernway.server.core.mail.IMailSenderProvider;
+import com.themodernway.server.core.runtime.IManagementOperations;
+import com.themodernway.server.core.runtime.ManagementOperations;
 import com.themodernway.server.core.scripting.IScriptingProvider;
 import com.themodernway.server.core.security.DefaultAuthorizationProvider;
 import com.themodernway.server.core.security.IAuthorizationProvider;
@@ -184,6 +186,12 @@ public class ServerContextInstance extends CoreJSONOperations implements IServer
     public final String getOriginalBeanName(final String name)
     {
         return toTrimOrNull(BeanFactoryUtils.originalBeanName(requireNonNull(name)));
+    }
+
+    @Override
+    public final IManagementOperations getManagementOperations()
+    {
+        return ManagementOperations.get();
     }
 
     @Override

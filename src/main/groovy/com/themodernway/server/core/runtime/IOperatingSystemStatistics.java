@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core.runtime;
 
-@FunctionalInterface
-public interface JSONObjectSupplier
+import com.themodernway.common.api.types.INamed;
+import com.themodernway.common.api.types.IVersioned;
+import com.themodernway.common.api.types.json.JSONStringify;
+import com.themodernway.server.core.json.JSONObjectSupplier;
+
+public interface IOperatingSystemStatistics extends JSONObjectSupplier, JSONStringify, INamed, IVersioned
 {
-    public JSONObject toJSONObject();
+    public String getArchitecture();
 
-    default JSONObject getAsObject(final String name)
-    {
-        return toJSONObject().getAsObject(name);
-    }
+    public Double getSystemLoadAverage();
 
-    default JSONArray getAsArray(final String name)
-    {
-        return toJSONObject().getAsArray(name);
-    }
+    public Integer getAvailableProcessors();
 }

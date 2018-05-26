@@ -45,12 +45,17 @@ import com.themodernway.server.core.file.vfs.IFileItemStorage
 import com.themodernway.server.core.file.vfs.IFileItemStorageProvider
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
+import com.themodernway.server.core.json.JSONObjectSuppliersBuilder
 import com.themodernway.server.core.json.binder.IBinder
 import com.themodernway.server.core.json.path.IJSONPathOperations
 import com.themodernway.server.core.json.path.JSONPathOperations
 import com.themodernway.server.core.logging.LoggingOps
 import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
+import com.themodernway.server.core.runtime.IManagementOperations
+import com.themodernway.server.core.runtime.IMemoryStatistics
+import com.themodernway.server.core.runtime.IOperatingSystemStatistics
+import com.themodernway.server.core.runtime.IRuntimeStatistics
 import com.themodernway.server.core.scripting.IScriptingProvider
 import com.themodernway.server.core.security.IAuthorizationProvider
 import com.themodernway.server.core.security.IAuthorizationResult
@@ -119,6 +124,30 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public WebApplicationContext getWebApplicationContext()
     {
         getServerContext().getWebApplicationContext()
+    }
+
+    @Memoized
+    public IManagementOperations getManagementOperations()
+    {
+        getServerContext().getManagementOperations()
+    }
+
+    @Memoized
+    public IMemoryStatistics getMemoryStatistics()
+    {
+        getManagementOperations().getMemoryStatistics()
+    }
+
+    @Memoized
+    public IRuntimeStatistics getRuntimeStatistics()
+    {
+        getManagementOperations().getRuntimeStatistics()
+    }
+
+    @Memoized
+    public IOperatingSystemStatistics getOperatingSystemStatistics()
+    {
+        getManagementOperations().getOperatingSystemStatistics()
     }
 
     @Memoized
@@ -438,6 +467,18 @@ public class CoreGroovySupport implements IServerContext, Closeable
     public JSONObject json(Object... args)
     {
         json(jarr(args))
+    }
+
+    @Override
+    public JSONArray jarr(JSONObjectSuppliersBuilder builder)
+    {
+        new JSONArray(CommonOps.requireNonNull(builder))
+    }
+
+    @Override
+    public JSONObject json(JSONObjectSuppliersBuilder builder)
+    {
+        new JSONObject(CommonOps.requireNonNull(builder))
     }
 
     @Memoized

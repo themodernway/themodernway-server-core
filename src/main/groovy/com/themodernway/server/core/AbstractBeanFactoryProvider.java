@@ -21,14 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.themodernway.server.core.logging.LoggingOps;
 
-public abstract class AbstractBeanFactoryProvider<T extends Closeable> implements ICoreCommon, IBeanFactoryProvider<T>
+public abstract class AbstractBeanFactoryProvider<T extends Closeable> extends AbstractCoreLoggingBase implements ICoreCommon, IBeanFactoryProvider<T>
 {
     private String               m_beansid;
 
@@ -37,8 +36,6 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
     private final Map<String, T> m_storage = linkedMap();
 
     private final AtomicBoolean  m_is_open = new AtomicBoolean(false);
-
-    private final Logger         m_logging = LoggingOps.getLogger(getClass());
 
     protected AbstractBeanFactoryProvider(final Class<T> classof)
     {
@@ -111,12 +108,6 @@ public abstract class AbstractBeanFactoryProvider<T extends Closeable> implement
             logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("stored name(%s) in (%s).", name, getName()));
         }
         return true;
-    }
-
-    @Override
-    public Logger logger()
-    {
-        return m_logging;
     }
 
     @Override

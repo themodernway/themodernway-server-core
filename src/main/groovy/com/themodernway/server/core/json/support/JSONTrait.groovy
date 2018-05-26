@@ -22,6 +22,7 @@ import java.util.stream.Stream
 import com.themodernway.common.api.java.util.CommonOps
 import com.themodernway.server.core.json.JSONArray
 import com.themodernway.server.core.json.JSONObject
+import com.themodernway.server.core.json.JSONObjectSuppliersBuilder
 import com.themodernway.server.core.json.binder.IBinder
 import com.themodernway.server.core.json.path.IJSONPathOperations
 import com.themodernway.server.core.json.path.JSONPathOperations
@@ -147,5 +148,15 @@ public trait JSONTrait
     public JSONObject json(String name, Object value)
     {
         new JSONObject(name, value)
+    }
+
+    public JSONArray jarr(JSONObjectSuppliersBuilder builder)
+    {
+        new JSONArray(CommonOps.requireNonNull(builder))
+    }
+
+    public JSONObject json(JSONObjectSuppliersBuilder builder)
+    {
+        new JSONObject(CommonOps.requireNonNull(builder))
     }
 }

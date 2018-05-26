@@ -77,7 +77,7 @@ public final class MDC
         }
     }
 
-    public static final Object get(final String key)
+    public static final String get(final String key)
     {
         StringOps.requireTrimOrNull(key);
 

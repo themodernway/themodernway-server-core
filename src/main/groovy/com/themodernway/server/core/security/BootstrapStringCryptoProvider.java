@@ -19,19 +19,17 @@ package com.themodernway.server.core.security;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 
+import com.themodernway.server.core.AbstractCoreLoggingBase;
 import com.themodernway.server.core.ICoreBase;
 import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.logging.LoggingOps;
 
-public final class BootstrapStringCryptoProvider implements IStringCryptoProvider, ICoreBase
+public final class BootstrapStringCryptoProvider extends AbstractCoreLoggingBase implements IStringCryptoProvider, ICoreBase
 {
-    private static final Logger logger = LoggingOps.getLogger(BootstrapStringCryptoProvider.class);
-
     private final TextEncryptor m_pcrypt;
 
     public BootstrapStringCryptoProvider(final Resource resource) throws IOException
@@ -41,9 +39,9 @@ public final class BootstrapStringCryptoProvider implements IStringCryptoProvide
 
     public BootstrapStringCryptoProvider(final Resource resource, final String passname, final String saltname) throws IOException
     {
-        if (logger.isInfoEnabled())
+        if (logger().isInfoEnabled())
         {
-            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, format("BootstrapStringCryptoProvider(%s, %s, %s)", resource.getURI().toString(), passname, saltname));
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, format("BootstrapStringCryptoProvider(%s, %s, %s)", resource.getURI().toString(), passname, saltname));
         }
         final Properties properties = IO.toProperties(resource);
 
@@ -53,24 +51,24 @@ public final class BootstrapStringCryptoProvider implements IStringCryptoProvide
 
         if (SimpleCryptoKeysGenerator.getCryptoKeysGenerator().isPassValid(pass))
         {
-            if (logger.isInfoEnabled())
+            if (logger().isInfoEnabled())
             {
-                logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "BootstrapStringCryptoProvider password has validated.");
+                logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "BootstrapStringCryptoProvider password has validated.");
             }
         }
         else
         {
-            if (logger.isErrorEnabled())
+            if (logger().isErrorEnabled())
             {
-                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "BootstrapStringCryptoProvider password is not valid.");
+                logger().error(LoggingOps.THE_MODERN_WAY_MARKER, "BootstrapStringCryptoProvider password is not valid.");
             }
             throw new IllegalArgumentException("BootstrapStringCryptoProvider password is not valid.");
         }
         m_pcrypt = Encryptors.delux(pass, salt);
 
-        if (logger.isInfoEnabled())
+        if (logger().isInfoEnabled())
         {
-            logger.info(LoggingOps.THE_MODERN_WAY_MARKER, "BootstrapStringCryptoProvider done.");
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "BootstrapStringCryptoProvider done.");
         }
     }
 

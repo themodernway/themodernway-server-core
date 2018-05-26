@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.themodernway.server.core.ITimeSupplier;
-import com.themodernway.server.core.file.FileAndPathUtils;
+import com.themodernway.server.core.file.FileUtils;
 import com.themodernway.server.core.file.vfs.IFileItem;
 import com.themodernway.server.core.file.vfs.IFolderItem;
 import com.themodernway.server.core.logging.LoggingOps;
@@ -98,7 +98,7 @@ public class ContentGetServlet extends AbstractContentServlet
 
     protected void content(final HttpServletRequest request, final HttpServletResponse response, final boolean send) throws ServletException, IOException
     {
-        String path = toTrimOrElse(request.getPathInfo(), FileAndPathUtils.SINGLE_SLASH);
+        String path = toTrimOrElse(request.getPathInfo(), FileUtils.SINGLE_SLASH);
 
         if (isRedirectOn())
         {
@@ -110,9 +110,9 @@ public class ContentGetServlet extends AbstractContentServlet
 
                 return;
             }
-            if (path.endsWith(FileAndPathUtils.SINGLE_SLASH))
+            if (path.endsWith(FileUtils.SINGLE_SLASH))
             {
-                response.sendRedirect(FileAndPathUtils.POINT_SLASHY + "index.html");
+                response.sendRedirect(FileUtils.POINT_SLASHY + "index.html");
 
                 return;
             }

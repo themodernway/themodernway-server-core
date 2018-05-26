@@ -71,7 +71,7 @@ public class CoreStrictBinderModule extends SimpleModule
         {
             final Properties properties = IO.toProperties(new ClassPathResource("strictbinder.properties", CoreStrictBinderModule.class));
 
-            final String mversion = properties.getProperty("strictbinder.mversion", "2.2.2");
+            final String mversion = properties.getProperty("strictbinder.mversion", "2.2.6-RELEASE");
 
             final String group_id = properties.getProperty("strictbinder.group_id", "com.themodernway");
 

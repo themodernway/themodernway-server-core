@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -103,16 +102,6 @@ public final class JSONUtils
             CoreThrowables.handle(e);
         }
         throw new ClassCastException(self.getClass().getName() + " cannot be coerced into " + type.getName());
-    }
-
-    public static final JSONObject json(final Collection<? extends JSONObjectSupplier> source)
-    {
-        return new JSONObject(source);
-    }
-
-    public static final JSONObject json(final String name, final Collection<? extends JSONObjectSupplier> source)
-    {
-        return new JSONObject(name, source);
     }
 
     public static final JSONObject deep(final JSONObject object)

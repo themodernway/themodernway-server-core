@@ -19,7 +19,9 @@ package com.themodernway.server.core.mail;
 import java.util.Date;
 import java.util.List;
 
-public interface ISimpleMailMessageBuilder
+import com.themodernway.common.api.types.IBuilder;
+
+public interface ISimpleMailMessageBuilder extends IBuilder<CoreSimpleMailMessage>
 {
     public ISimpleMailMessageBuilder to(List<String> list);
 
@@ -36,6 +38,4 @@ public interface ISimpleMailMessageBuilder
     public ISimpleMailMessageBuilder reply(String valu);
 
     public ISimpleMailMessageBuilder subject(String valu);
-
-    public CoreSimpleMailMessage make();
 }

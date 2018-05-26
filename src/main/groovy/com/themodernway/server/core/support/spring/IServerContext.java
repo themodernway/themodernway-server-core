@@ -35,6 +35,7 @@ import com.themodernway.server.core.json.support.ICoreJSONOperations;
 import com.themodernway.server.core.logging.IHasLogging;
 import com.themodernway.server.core.mail.IMailSender;
 import com.themodernway.server.core.mail.IMailSenderProvider;
+import com.themodernway.server.core.runtime.IManagementOperations;
 import com.themodernway.server.core.scripting.IScriptingProvider;
 import com.themodernway.server.core.security.IAuthorizationProvider;
 import com.themodernway.server.core.security.IAuthorizer;
@@ -85,6 +86,8 @@ public interface IServerContext extends ICoreJSONOperations, IAuthorizer, IPrope
     public ICoreNetworkProvider network();
 
     public ICoreContentTypeMapper getContentTypeMapper();
+
+    public IManagementOperations getManagementOperations();
 
     public PathParameters parameters(Map<String, ?> vars);
 

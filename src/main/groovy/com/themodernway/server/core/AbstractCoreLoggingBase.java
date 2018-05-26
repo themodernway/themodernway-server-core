@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package com.themodernway.server.core.json;
+package com.themodernway.server.core;
 
-@FunctionalInterface
-public interface JSONObjectSupplier
+import org.slf4j.Logger;
+
+import com.themodernway.server.core.logging.IHasLogging;
+import com.themodernway.server.core.logging.LoggingOps;
+
+public abstract class AbstractCoreLoggingBase implements IHasLogging
 {
-    public JSONObject toJSONObject();
+    private final Logger m_logging = LoggingOps.getLogger(getClass());
 
-    default JSONObject getAsObject(final String name)
+    @Override
+    public Logger logger()
     {
-        return toJSONObject().getAsObject(name);
-    }
-
-    default JSONArray getAsArray(final String name)
-    {
-        return toJSONObject().getAsArray(name);
+        return m_logging;
     }
 }

@@ -19,24 +19,26 @@ package com.themodernway.server.core;
 import static com.themodernway.common.api.java.util.IHTTPConstants.NANOSECONDS_IN_MILLISECOND;
 import static com.themodernway.common.api.java.util.IHTTPConstants.NANOSECONDS_TO_MILLISECOND;
 
+import com.themodernway.common.api.java.util.CommonOps;
+
 public final class NanoTimer
 {
     private long m_nanos;
 
     public NanoTimer()
     {
-        m_nanos = System.nanoTime();
+        m_nanos = CommonOps.getCurrentNanos();
     }
 
     public synchronized void reset()
     {
-        m_nanos = System.nanoTime();
+        m_nanos = CommonOps.getCurrentNanos();
     }
 
     @Override
     public String toString()
     {
-        final long ndiff = System.nanoTime() - m_nanos;
+        final long ndiff = CommonOps.getCurrentNanos() - m_nanos;
 
         if (ndiff < NANOSECONDS_IN_MILLISECOND)
         {

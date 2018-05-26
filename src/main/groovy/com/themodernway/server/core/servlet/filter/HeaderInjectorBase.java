@@ -16,24 +16,14 @@
 
 package com.themodernway.server.core.servlet.filter;
 
-import org.slf4j.Logger;
+import com.themodernway.server.core.AbstractCoreLoggingBase;
 
-import com.themodernway.server.core.logging.LoggingOps;
-
-public abstract class HeaderInjectorBase implements IHeaderInjector
+public abstract class HeaderInjectorBase extends AbstractCoreLoggingBase implements IHeaderInjector
 {
     private IHeaderInjectorFilter m_filter;
 
-    private final Logger          m_logger = LoggingOps.getLogger(getClass());
-
     protected HeaderInjectorBase()
     {
-    }
-
-    @Override
-    public Logger logger()
-    {
-        return m_logger;
     }
 
     @Override

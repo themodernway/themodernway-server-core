@@ -145,7 +145,10 @@ public class ServletFactoryContextCustomizer implements IServletContextCustomize
     @Override
     public void close() throws IOException
     {
-        // empty by design.
+        if (logger().isInfoEnabled())
+        {
+            logger().info(LoggingOps.THE_MODERN_WAY_MARKER, "close().");
+        }
     }
 
     @Override

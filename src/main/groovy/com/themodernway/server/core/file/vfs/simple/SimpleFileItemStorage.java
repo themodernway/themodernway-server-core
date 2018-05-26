@@ -16,9 +16,9 @@
 
 package com.themodernway.server.core.file.vfs.simple;
 
-import static com.themodernway.server.core.file.FileAndPathUtils.SINGLE_SLASH;
-import static com.themodernway.server.core.file.FileAndPathUtils.concat;
-import static com.themodernway.server.core.file.FileAndPathUtils.normalize;
+import static com.themodernway.server.core.file.FileUtils.SINGLE_SLASH;
+import static com.themodernway.server.core.file.FileUtils.concat;
+import static com.themodernway.server.core.file.FileUtils.normalize;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,7 +50,7 @@ import org.springframework.core.io.Resource;
 import com.themodernway.common.api.java.util.StringOps;
 import com.themodernway.server.core.ICoreCommon;
 import com.themodernway.server.core.content.ICoreContentTypeMapper;
-import com.themodernway.server.core.file.FileAndPathUtils;
+import com.themodernway.server.core.file.FileUtils;
 import com.themodernway.server.core.file.vfs.FileItemWrapper;
 import com.themodernway.server.core.file.vfs.FolderItemWrapper;
 import com.themodernway.server.core.file.vfs.IFileItem;
@@ -433,13 +433,13 @@ public class SimpleFileItemStorage implements IFileItemStorage, InitializingBean
 
             if (isFolder(file))
             {
-                return getAsFolderItem().items().map(f -> f.wrap().getName()).collect(Collectors.joining(FileAndPathUtils.SYS_JOIN_NL_STRING)).concat(FileAndPathUtils.SYS_JOIN_NL_STRING);
+                return getAsFolderItem().items().map(f -> f.wrap().getName()).collect(Collectors.joining(FileUtils.SYS_JOIN_NL_STRING)).concat(FileUtils.SYS_JOIN_NL_STRING);
             }
             else
             {
-                if (FileAndPathUtils.isSystemWindows())
+                if (FileUtils.isSystemWindows())
                 {
-                    return IO.getStringAtMost(file, file.length()).replace(FileAndPathUtils.SYS_JOIN_CR_STRING, StringOps.EMPTY_STRING);
+                    return IO.getStringAtMost(file, file.length()).replace(FileUtils.SYS_JOIN_CR_STRING, StringOps.EMPTY_STRING);
                 }
                 else
                 {
@@ -503,19 +503,19 @@ public class SimpleFileItemStorage implements IFileItemStorage, InitializingBean
         @Override
         public String getName() throws IOException
         {
-            return toTrimOrElse(FileAndPathUtils.name(getPath()), SINGLE_SLASH);
+            return toTrimOrElse(FileUtils.name(getPath()), SINGLE_SLASH);
         }
 
         @Override
         public String getBaseName() throws IOException
         {
-            return toTrimOrElse(FileAndPathUtils.base(getPath()), StringOps.EMPTY_STRING);
+            return toTrimOrElse(FileUtils.base(getPath()), StringOps.EMPTY_STRING);
         }
 
         @Override
         public String getExtension() throws IOException
         {
-            return toTrimOrElse(FileAndPathUtils.extn(getAbsolutePath()), StringOps.EMPTY_STRING);
+            return toTrimOrElse(FileUtils.extn(getAbsolutePath()), StringOps.EMPTY_STRING);
         }
 
         @Override

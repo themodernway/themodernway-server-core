@@ -18,8 +18,40 @@ package com.themodernway.server.core.logging;
 
 import org.slf4j.Logger;
 
+import ch.qos.logback.classic.Level;
+
 @FunctionalInterface
 public interface IHasLogging
 {
     public Logger logger();
+
+    default Level getLoggingLevel()
+    {
+        return getLoggingLevel(logger());
+    }
+
+    default Level getLoggingLevel(final Logger logger)
+    {
+        return LoggingOps.getLevel(logger);
+    }
+
+    default Logger setLoggingLevel(final Level level)
+    {
+        return setLoggingLevel(logger(), level);
+    }
+
+    default Logger setLoggingLevel(final String level)
+    {
+        return setLoggingLevel(logger(), level);
+    }
+
+    default Logger setLoggingLevel(final Logger logger, final Level level)
+    {
+        return LoggingOps.setLevel(logger, level);
+    }
+
+    default Logger setLoggingLevel(final Logger logger, final String level)
+    {
+        return LoggingOps.setLevel(logger, level);
+    }
 }

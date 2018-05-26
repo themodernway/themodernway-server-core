@@ -18,6 +18,8 @@ package com.themodernway.server.core;
 
 import java.util.function.LongSupplier;
 
+import com.themodernway.common.api.java.util.CommonOps;
+
 @FunctionalInterface
 public interface ITimeSupplier
 {
@@ -25,17 +27,17 @@ public interface ITimeSupplier
 
     public static long now()
     {
-        return System.currentTimeMillis();
+        return CommonOps.getCurrentClock();
     }
 
     public static ITimeSupplier mills()
     {
-        return System::currentTimeMillis;
+        return CommonOps::getCurrentClock;
     }
 
     public static ITimeSupplier nanos()
     {
-        return System::nanoTime;
+        return CommonOps::getCurrentNanos;
     }
 
     public static ITimeSupplier of(final LongSupplier time)
