@@ -247,7 +247,7 @@ public final class ManagementOperations implements IManagementOperations
             {
                 return bean.getName().split("@")[0];
             }
-            catch (final Throwable ex)
+            catch (final Exception e)
             {
                 return CommonOps.NULL();
             }

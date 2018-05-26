@@ -16,6 +16,7 @@
 
 package com.themodernway.server.core.support.spring.boot;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -142,41 +143,41 @@ public class BootServiceSupport extends AbstractCoreLoggingBase
         return CommonOps.toUnmodifiableList(CommonOps.requireNonNullOrElse(sess.getAttributeNames(), () -> CommonOps.emptyEnumeration()));
     }
 
-    protected <T> T getAttribute(final HttpSession sess, final String name)
+    protected <T extends Serializable> T getAttribute(final HttpSession sess, final String name)
     {
         return CommonOps.CAST(sess.getAttribute(name));
     }
 
-    protected <T> T getAttribute(final HttpSession sess, final String name, final Class<T> type)
+    protected <T extends Serializable> T getAttribute(final HttpSession sess, final String name, final Class<T> type)
     {
         return CommonOps.SAFE(sess.getAttribute(name), type);
     }
 
-    protected <T> T getAttributeOrElse(final HttpSession sess, final String name, final Class<T> type, final T otherwise)
+    protected <T extends Serializable> T getAttributeOrElse(final HttpSession sess, final String name, final Class<T> type, final T otherwise)
     {
         return CommonOps.requireNonNullOrElse(getAttribute(sess, name, type), otherwise);
     }
 
-    protected <T> T getAttributeOrElse(final HttpSession sess, final String name, final Class<T> type, final Supplier<T> otherwise)
+    protected <T extends Serializable> T getAttributeOrElse(final HttpSession sess, final String name, final Class<T> type, final Supplier<T> otherwise)
     {
         return CommonOps.requireNonNullOrElse(getAttribute(sess, name, type), otherwise);
     }
 
-    protected <T> T getAttributeOrElseSet(final HttpSession sess, final String name, final Class<T> type, final T otherwise)
+    protected <T extends Serializable> T getAttributeOrElseSet(final HttpSession sess, final String name, final Class<T> type, final T otherwise)
     {
         final T attr = getAttribute(sess, name, type);
 
         return (null == attr) ? setAttribute(sess, name, otherwise) : CommonOps.NULL();
     }
 
-    protected <T> T getAttributeOrElseSet(final HttpSession sess, final String name, final Class<T> type, final Supplier<T> otherwise)
+    protected <T extends Serializable> T getAttributeOrElseSet(final HttpSession sess, final String name, final Class<T> type, final Supplier<T> otherwise)
     {
         final T attr = getAttribute(sess, name, type);
 
         return (null == attr) ? setAttribute(sess, name, otherwise.get()) : CommonOps.NULL();
     }
 
-    protected <T> T setAttribute(final HttpSession sess, final String name, final T attr)
+    protected <T extends Serializable> T setAttribute(final HttpSession sess, final String name, final T attr)
     {
         if (null == attr)
         {
@@ -189,7 +190,7 @@ public class BootServiceSupport extends AbstractCoreLoggingBase
         return attr;
     }
 
-    protected <T> T setAttribute(final HttpSession sess, final String name, final Supplier<T> otherwise)
+    protected <T extends Serializable> T setAttribute(final HttpSession sess, final String name, final Supplier<T> otherwise)
     {
         return setAttribute(sess, name, otherwise.get());
     }
