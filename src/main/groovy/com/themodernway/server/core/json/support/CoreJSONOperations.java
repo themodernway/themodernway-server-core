@@ -30,7 +30,7 @@ import com.themodernway.server.core.json.JSONObjectSuppliersBuilder;
 import com.themodernway.server.core.json.binder.IBinder;
 import com.themodernway.server.core.json.binder.JSONBinder;
 import com.themodernway.server.core.json.path.IJSONPathOperations;
-import com.themodernway.server.core.json.path.JSONPathOperations;
+import com.themodernway.server.core.json.path.JSONPath;
 
 public class CoreJSONOperations implements ICoreJSONOperations
 {
@@ -54,7 +54,7 @@ public class CoreJSONOperations implements ICoreJSONOperations
     @Override
     public final IJSONPathOperations jsonpath()
     {
-        return new JSONPathOperations();
+        return JSONPath.operations();
     }
 
     @Override

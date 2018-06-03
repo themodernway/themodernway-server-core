@@ -16,6 +16,8 @@
 
 package com.themodernway.server.core.test
 
+import org.springframework.context.ConfigurableApplicationContext
+
 import com.themodernway.server.core.support.CoreGroovyTrait
 import com.themodernway.server.core.support.spring.testing.spock.ServerCoreSpecification
 
@@ -38,5 +40,59 @@ public class NoTestsSpecification extends ServerCoreSpecification implements Cor
     {
         expect:
         "dean" == "dean"
+    }
+
+    def "test 1"()
+    {
+        setup:
+        def ctxt = getApplicationContext() as ConfigurableApplicationContext
+
+        ctxt.refresh()
+
+        def list = parallel(0..9).collect { int i ->
+            pause(5000)
+            "val_${i}"
+        }
+        echo list[0].getClass().getName()
+
+        expect:
+        list.size() == 10
+
+        cleanup:
+        echo json(list: list)
+    }
+
+    def "test 2"()
+    {
+        setup:
+        def valu = json(name: 'Dean').set('also', true).with {
+
+            put('dean', 1)
+
+            echo "hello"
+        }
+
+        expect:
+        "dean" == "dean"
+
+        cleanup:
+        echo json(test: valu)
+    }
+
+    def "test 3"()
+    {
+        setup:
+        def valu = json(name: 'Dean').set('also', false).identity {
+
+            put('dean', 1)
+
+            echo "hello"
+        }
+
+        expect:
+        "dean" == "dean"
+
+        cleanup:
+        echo json(test: valu)
     }
 }

@@ -48,7 +48,7 @@ import com.themodernway.server.core.json.JSONObject
 import com.themodernway.server.core.json.JSONObjectSuppliersBuilder
 import com.themodernway.server.core.json.binder.IBinder
 import com.themodernway.server.core.json.path.IJSONPathOperations
-import com.themodernway.server.core.json.path.JSONPathOperations
+import com.themodernway.server.core.json.path.JSONPath
 import com.themodernway.server.core.logging.LoggingOps
 import com.themodernway.server.core.mail.IMailSender
 import com.themodernway.server.core.mail.IMailSenderProvider
@@ -99,7 +99,7 @@ public class CoreGroovySupport implements IServerContext, Closeable
     @Memoized
     public IJSONPathOperations jsonpath()
     {
-        new JSONPathOperations()
+         JSONPath.operations()
     }
 
     @Memoized

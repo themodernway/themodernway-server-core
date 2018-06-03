@@ -45,9 +45,11 @@ import com.themodernway.server.core.json.binder.IBinder;
 
 public final class JSONPath
 {
-    private static final IBinder       BINDER = BinderType.JSON.getBinder();
+    private static final IBinder             BINDER = BinderType.JSON.getBinder();
 
-    private static final Configuration CONFIG = builder(BINDER.getMapper());
+    private static final Configuration       CONFIG = builder(BINDER.getMapper());
+
+    private static final IJSONPathOperations PATHOP = new InternaPathOperations();
 
     private static final Configuration builder(final ObjectMapper mapper)
     {
@@ -56,6 +58,11 @@ public final class JSONPath
 
     private JSONPath()
     {
+    }
+
+    public static final IJSONPathOperations operations()
+    {
+        return PATHOP;
     }
 
     public static final ICompiledPath compile(final CharSequence path)
@@ -319,6 +326,79 @@ public final class JSONPath
             m_ctxt = CommonOps.CAST(m_ctxt.withListeners(list));
 
             return this;
+        }
+    }
+
+    private static final class InternaPathOperations implements IJSONPathOperations
+    {
+        InternaPathOperations()
+        {
+        }
+
+        @Override
+        public ICompiledPath compile(final CharSequence target)
+        {
+            return JSONPath.compile(target);
+        }
+
+        @Override
+        public IEvaluationContext parse(final Object target)
+        {
+            return JSONPath.parse(target);
+        }
+
+        @Override
+        public IEvaluationContext parse(final CharSequence target) throws ParserException
+        {
+            return JSONPath.parse(target);
+        }
+
+        @Override
+        public IEvaluationContext parse(final URL target) throws ParserException
+        {
+            return JSONPath.parse(target);
+        }
+
+        @Override
+        public IEvaluationContext parse(final InputStream target) throws ParserException
+        {
+            return JSONPath.parse(target);
+        }
+
+        @Override
+        public IEvaluationContext parse(final Reader target) throws ParserException
+        {
+            return JSONPath.parse(target);
+        }
+
+        @Override
+        public IEvaluationContext parse(final File target) throws ParserException
+        {
+            return JSONPath.parse(target);
+        }
+
+        @Override
+        public IEvaluationContext parse(final Path target) throws ParserException
+        {
+            return JSONPath.parse(target);
+        }
+
+        @Override
+        public IEvaluationContext parse(final IFileItem target) throws ParserException
+        {
+            return JSONPath.parse(target);
+        }
+
+        @Override
+        public IEvaluationContext parse(final Resource target) throws ParserException
+        {
+            return JSONPath.parse(target);
+        }
+
+        @Override
+        public IEvaluationContext parse(final Properties target) throws ParserException
+        {
+            return JSONPath.parse(target);
         }
     }
 }

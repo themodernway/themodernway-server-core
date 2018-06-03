@@ -50,38 +50,11 @@ public interface ICoreObjectMapper
         return Modules.withModules(mapper, list);
     }
 
-    public static final class TypedFor
-    {
-        private TypedFor()
-        {
-        }
-
-        public static final ObjectReader reader(final ObjectMapper mapper)
-        {
-            return reader(mapper, JSONObject.class);
-        }
-
-        public static final ObjectWriter sender(final ObjectMapper mapper)
-        {
-            return sender(mapper, JSONObject.class);
-        }
-
-        public static final ObjectReader reader(final ObjectMapper mapper, final Class<?> type)
-        {
-            return mapper.readerFor(type);
-        }
-
-        public static final ObjectWriter sender(final ObjectMapper mapper, final Class<?> type)
-        {
-            return mapper.writerFor(type);
-        }
-    }
-
     public static final class Modules
     {
         private static final List<Module> STRICT_BINDER_MODULES = CommonOps.toList(new CoreStrictBinderModule());
 
-        private static final List<Module> EXTENDED_MODULES_LIST = CommonOps.toList(new ParameterNamesModule(), new Jdk8Module(), new JavaTimeModule());
+        private static final List<Module> EXTENDED_MODULES_LIST = CommonOps.toList(new ParameterNamesModule(), new Jdk8Module(), new JavaTimeModule(), new CoreExtendedModule());
 
         private Modules()
         {

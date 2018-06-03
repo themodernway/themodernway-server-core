@@ -19,32 +19,20 @@ package com.themodernway.server.core.json.binder;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.springframework.core.io.ClassPathResource;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.themodernway.server.core.io.IO;
 import com.themodernway.server.core.json.JSONUtils;
-import com.themodernway.server.core.logging.LoggingOps;
 
 public class CoreStrictBinderModule extends SimpleModule
 {
-    private static final long    serialVersionUID = 1L;
-
-    private static final Logger  logger           = LoggingOps.getLogger(CoreStrictBinderModule.class);
-
-    private static final Version VERSION          = buildVersion();
+    private static final long serialVersionUID = 1L;
 
     public CoreStrictBinderModule()
     {
-        super("CoreStrictBinderModule", VERSION);
+        super("CoreStrictBinderModule", PackageVersion.VERSION);
 
         addSerializer(Long.class, CoreStrictLongSerializer.INSTANCE);
 
@@ -63,32 +51,6 @@ public class CoreStrictBinderModule extends SimpleModule
     public boolean equals(final Object o)
     {
         return this == o;
-    }
-
-    private static final Version buildVersion()
-    {
-        try
-        {
-            final Properties properties = IO.toProperties(new ClassPathResource("strictbinder.properties", CoreStrictBinderModule.class));
-
-            final String mversion = properties.getProperty("strictbinder.mversion", "2.2.6-RELEASE");
-
-            final String group_id = properties.getProperty("strictbinder.group_id", "com.themodernway");
-
-            final String artifact = properties.getProperty("strictbinder.artifact", "themodernway-server-core");
-
-            final String gversion = properties.getProperty("strictbinder.gversion", "@GRADLE_BUILD_MODULE_VERSION@");
-
-            return VersionUtil.parseVersion(gversion.equals("@GRADLE_BUILD_MODULE_VERSION@") ? mversion : gversion, group_id, artifact);
-        }
-        catch (final IOException e)
-        {
-            if (logger.isErrorEnabled())
-            {
-                logger.error(LoggingOps.THE_MODERN_WAY_MARKER, "strictbinder.properties", e);
-            }
-            return Version.unknownVersion();
-        }
     }
 
     private static final class CoreStrictLongSerializer extends StdSerializer<Long>

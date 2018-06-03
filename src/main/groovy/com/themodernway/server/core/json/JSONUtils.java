@@ -16,9 +16,6 @@
 
 package com.themodernway.server.core.json;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -153,54 +150,6 @@ public final class JSONUtils
         catch (final ParserException e)
         {
             throw new IllegalArgumentException(e);
-        }
-    }
-
-    static final void writeObjectAsJSON(final Writer out, final Object object) throws IOException
-    {
-        try
-        {
-            OBJECT_BINDER.send(out, object);
-        }
-        catch (final ParserException e)
-        {
-            throw new IOException(e);
-        }
-    }
-
-    static final void writeObjectAsJSON(final Writer out, final Object object, final boolean strict) throws IOException
-    {
-        try
-        {
-            (strict ? STRICT_BINDER : OBJECT_BINDER).send(out, object);
-        }
-        catch (final ParserException e)
-        {
-            throw new IOException(e);
-        }
-    }
-
-    static final void writeObjectAsJSON(final OutputStream out, final Object object) throws IOException
-    {
-        try
-        {
-            OBJECT_BINDER.send(out, object);
-        }
-        catch (final ParserException e)
-        {
-            throw new IOException(e);
-        }
-    }
-
-    static final void writeObjectAsJSON(final OutputStream out, final Object object, final boolean strict) throws IOException
-    {
-        try
-        {
-            (strict ? STRICT_BINDER : OBJECT_BINDER).send(out, object);
-        }
-        catch (final ParserException e)
-        {
-            throw new IOException(e);
         }
     }
 
