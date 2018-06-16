@@ -21,8 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.INativeFunction;
@@ -33,8 +31,6 @@ import com.themodernway.server.core.json.path.IJSONPathEnabled;
 import com.themodernway.server.core.json.path.JSONPath;
 import com.themodernway.server.core.json.validation.IJSONValidator;
 import com.themodernway.server.core.json.validation.IValidationContext;
-
-import groovy.lang.Closure;
 
 @JacksonXmlRootElement(localName = JSONUtils.JSON_OBJECT_DEFAULT_VALUE_NAME)
 public class JSONObject extends LinkedHashMap<String, Object> implements JSONObjectDefinition<JSONArray, JSONObject>, JSONObjectSupplier, IJSONPathEnabled
@@ -90,13 +86,6 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSONObj
     public JSONObject set(final String key, final Object value)
     {
         put(CommonOps.requireNonNull(key), value);
-
-        return this;
-    }
-
-    public JSONObject identity(final Closure<JSONObject> closure)
-    {
-        DefaultGroovyMethods.identity(this, closure);
 
         return this;
     }

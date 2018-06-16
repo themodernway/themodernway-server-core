@@ -67,9 +67,13 @@ public class NoTestsSpecification extends ServerCoreSpecification implements Cor
         setup:
         def valu = json(name: 'Dean').set('also', true).with {
 
-            put('dean', 1)
+            logger().info("hello 1")
 
-            echo "hello"
+            set('dean', 1)
+
+            logger().info("hello 2")
+
+            it
         }
 
         expect:
@@ -84,9 +88,9 @@ public class NoTestsSpecification extends ServerCoreSpecification implements Cor
         setup:
         def valu = json(name: 'Dean').set('also', false).identity {
 
-            put('dean', 1)
+            logger().info("hi 1")
 
-            echo "hello"
+            set('dean', 1)
         }
 
         expect:

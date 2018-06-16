@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.themodernway.common.api.java.util.CommonOps;
 import com.themodernway.common.api.types.ICursor;
@@ -34,8 +32,6 @@ import com.themodernway.common.api.types.json.JSONType;
 import com.themodernway.server.core.json.path.IEvaluationContext;
 import com.themodernway.server.core.json.path.IJSONPathEnabled;
 import com.themodernway.server.core.json.path.JSONPath;
-
-import groovy.lang.Closure;
 
 @JacksonXmlRootElement(localName = JSONUtils.JSON_OBJECT_DEFAULT_ARRAY_NAME)
 public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<JSONArray, JSONObject>, JSONObjectSupplier, IJSONPathEnabled
@@ -138,13 +134,6 @@ public class JSONArray extends ArrayList<Object> implements JSONArrayDefinition<
     public JSONArray append(final int beg, final IFixedIterable<?> source)
     {
         return append(beg, CommonOps.toList(source));
-    }
-
-    public JSONArray identity(final Closure<JSONArray> closure)
-    {
-        DefaultGroovyMethods.identity(this, closure);
-
-        return this;
     }
 
     @Override
